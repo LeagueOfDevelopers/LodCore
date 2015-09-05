@@ -14,7 +14,7 @@ namespace ProjectManagement
             string info, 
             Uri versionControlSystemUri, 
             Uri projectManagementSystemUri, 
-            List<Issue> issues, 
+            IReadOnlyList<Issue> issues, 
             List<UserSummary> projectUsers)
         {
             Require.NotEmpty(projectId, nameof(projectId));
@@ -27,7 +27,7 @@ namespace ProjectManagement
             Info = info;
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
-            Issues = issues ?? new List<Issue>();
+            Issues = issues;
             ProjectUsers = projectUsers ?? new List<UserSummary>();
         }
 
@@ -43,8 +43,10 @@ namespace ProjectManagement
 
         public Uri ProjectManagementSystemUri { get; private set; }
 
-        public List<Issue> Issues { get; private set; }
+        public IReadOnlyList<Issue> Issues { get; private set; }
 
-        public List<UserSummary> ProjectUsers { get; private set; } 
+        public IReadOnlyList<UserSummary> ProjectUsers { get; private set; } 
+
+        private List<> 
     }
 }
