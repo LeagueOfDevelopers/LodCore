@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UserManagement\UserManagement.csproj">
-      <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
+      <Project>{56B90624-417A-4998-83C8-68A34DAE0AB0}</Project>
       <Name>UserManagement</Name>
     </ProjectReference>
   </ItemGroup>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Journalist;
 using UserManagement;
+using UserManagement.Domain;
 
 namespace ProjectManagement
 {
@@ -15,7 +16,7 @@ namespace ProjectManagement
             Uri versionControlSystemUri, 
             Uri projectManagementSystemUri, 
             IReadOnlyList<Issue> issues, 
-            List<UserSummary> projectUsers)
+            List<Account> projectUsers)
         {
             Require.NotEmpty(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
@@ -28,7 +29,7 @@ namespace ProjectManagement
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues;
-            ProjectUsers = projectUsers ?? new List<UserSummary>();
+            ProjectUsers = projectUsers ?? new List<Account>();
         }
 
         public Guid ProjectId { get; private set; }
@@ -45,8 +46,6 @@ namespace ProjectManagement
 
         public IReadOnlyList<Issue> Issues { get; private set; }
 
-        public IReadOnlyList<UserSummary> ProjectUsers { get; private set; } 
-
-        private List<> 
+        public IReadOnlyList<Account> ProjectUsers { get; private set; } 
     }
 }

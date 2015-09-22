@@ -1,4 +1,4 @@
-﻿namespace UserManagement.Confirmation
+﻿namespace UserManagement.Domain
 {
     public enum ConfirmationStatus
     {

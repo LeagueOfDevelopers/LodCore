@@ -14,7 +14,5 @@ namespace ProjectManagement
         Task UpdateProject(Project project);
 
         Task AddUserToProject(Guid projectId, uint userId);
-
-        EventJournal GetEventJournal(Guid projectId);
     }
 }

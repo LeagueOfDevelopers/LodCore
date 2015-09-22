@@ -34,6 +34,10 @@
     <Reference Include="Journalist.LanguageExtensions">
       <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.4\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,12 +48,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Confirmation\ConfirmationStatus.cs" />
-    <Compile Include="Confirmation\IConfirmationService.cs" />
-    <Compile Include="IUserManager.cs" />
+    <Compile Include="Application\CreateAccountRequest.cs" />
+    <Compile Include="Application\IConfirmationService.cs" />
+    <Compile Include="Application\IUserManager.cs" />
+    <Compile Include="Application\UserManager.cs" />
+    <Compile Include="Domain\Account.cs" />
+    <Compile Include="Domain\ConfirmationStatus.cs" />
+    <Compile Include="Domain\Profile.cs" />
+    <Compile Include="Infrastructure\ProfileMap.cs" />
+    <Compile Include="Infrastructure\UserMap.cs" />
+    <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="UserSummary.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\DataAccess\DataAccess.csproj">
+      <Project>{6E6BCA8C-2B4D-4867-AE47-64565E64357C}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

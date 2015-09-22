@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace UserManagement.Confirmation
+namespace UserManagement.Application
 {
     public interface IConfirmationService
     {
-        Task SetupEmailConfirmation(uint userId);
+        Task SetupEmailConfirmation(int userId);
 
         Task ConfirmEmail(string confirmationToken);
 
