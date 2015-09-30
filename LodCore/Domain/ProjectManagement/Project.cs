@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Journalist;
-using UserManagement;
 using UserManagement.Domain;
 
 namespace ProjectManagement
@@ -9,7 +8,7 @@ namespace ProjectManagement
     public class Project
     {
         public Project(
-            Guid projectId, 
+            int projectId, 
             string name, 
             ProjectType projectType, 
             string info, 
@@ -18,7 +17,6 @@ namespace ProjectManagement
             IReadOnlyList<Issue> issues, 
             List<Account> projectUsers)
         {
-            Require.NotEmpty(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
 
@@ -32,7 +30,7 @@ namespace ProjectManagement
             ProjectUsers = projectUsers ?? new List<Account>();
         }
 
-        public Guid ProjectId { get; private set; }
+        public int ProjectId { get; private set; }
 
         public string Name { get; private set; }
 

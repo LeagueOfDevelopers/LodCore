@@ -1,12 +1,10 @@
-﻿using System;
-using Journalist;
+﻿using Journalist;
 
 namespace UserManagement.Domain
 {
     public class Account
     {
         public Account(
-            int userId, 
             string firstname, 
             string lastname, 
             string email,
@@ -18,8 +16,7 @@ namespace UserManagement.Domain
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotEmpty(email, nameof(email));
             Require.NotEmpty(passwordHash, nameof(passwordHash));
-
-            UserId = userId;
+            
             Firstname = firstname;
             Lastname = lastname;
             Email = email;
