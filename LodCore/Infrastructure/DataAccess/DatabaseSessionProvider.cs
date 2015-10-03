@@ -1,4 +1,5 @@
-﻿using NHibernate;
+﻿using DataAccess.Mappings;
+using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Tool.hbm2ddl;
@@ -7,11 +8,14 @@ namespace DataAccess
 {
     public class DatabaseSessionProvider
     {
-        public DatabaseSessionProvider(ModelMapper entityMapper)
+        public DatabaseSessionProvider()
         {
             var configuration = new Configuration();
             configuration.Configure();
-            configuration.AddDeserializedMapping(entityMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
+            var modelMapper = new ModelMapper();
+            modelMapper.AddMapping<ProfileMap>();
+            modelMapper.AddMapping<UserMap>();
+            configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
 
             _factory = configuration.BuildSessionFactory();
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ProjectManagement
+﻿namespace ProjectManagement.Domain
 {
     public class Issue
     {

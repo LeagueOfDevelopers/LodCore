@@ -44,13 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessLevel.cs" />
-    <Compile Include="IProjectProvider.cs" />
-    <Compile Include="Issue.cs" />
-    <Compile Include="IssueCompletionStatus.cs" />
-    <Compile Include="IssueType.cs" />
-    <Compile Include="Project.cs" />
-    <Compile Include="ProjectType.cs" />
+    <Compile Include="Domain\AccessLevel.cs" />
+    <Compile Include="Application\IProjectProvider.cs" />
+    <Compile Include="Domain\Issue.cs" />
+    <Compile Include="Domain\IssueCompletionStatus.cs" />
+    <Compile Include="Domain\IssueType.cs" />
+    <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\ProjectType.cs" />
+    <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
+    <Compile Include="Infrastructure\IProjectRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +61,7 @@
       <Name>UserManagement</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

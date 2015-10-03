@@ -51,23 +51,15 @@
     <Compile Include="Application\CreateAccountRequest.cs" />
     <Compile Include="Application\IConfirmationService.cs" />
     <Compile Include="Application\IUserManager.cs" />
-    <Compile Include="Application\UserManager.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\ConfirmationStatus.cs" />
     <Compile Include="Domain\Profile.cs" />
-    <Compile Include="Infrastructure\ProfileMap.cs" />
-    <Compile Include="Infrastructure\UserMap.cs" />
+    <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\DataAccess\DataAccess.csproj">
-      <Project>{6E6BCA8C-2B4D-4867-AE47-64565E64357C}</Project>
-      <Name>DataAccess</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

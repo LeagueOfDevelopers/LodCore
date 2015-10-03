@@ -1,6 +1,6 @@
-﻿using ProjectManagement;
+﻿using ProjectManagement.Domain;
 
-namespace Gateways
+namespace ProjectManagement.Infrastructure
 {
     public interface IProjectManagerGateway
     {

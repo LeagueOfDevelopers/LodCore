@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement
+﻿namespace ProjectManagement.Domain
 {
     public enum AccessLevel
     {

@@ -1,8 +1,7 @@
 ﻿using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
-using UserManagement.Domain;
 
-namespace UserManagement.Infrastructure
+namespace DataAccess.Mappings
 {
     public class UserMap : ClassMapping<Account>
     {

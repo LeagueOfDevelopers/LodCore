@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Journalist;
 using UserManagement.Domain;
 
-namespace ProjectManagement
+namespace ProjectManagement.Domain
 {
     public class Project
     {

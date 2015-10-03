@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ProjectManagement.Domain;
 
-namespace ProjectManagement
+namespace ProjectManagement.Application
 {
     public interface IProjectProvider
     {

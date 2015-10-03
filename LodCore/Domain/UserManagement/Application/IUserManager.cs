@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UserManagement.Domain;
 
 namespace UserManagement.Application
@@ -13,6 +12,6 @@ namespace UserManagement.Application
         
         void CreateUser(CreateAccountRequest request);
 
-        Task UpdateUser(Account account);
+        void UpdateUser(Account account);
     }
 }
