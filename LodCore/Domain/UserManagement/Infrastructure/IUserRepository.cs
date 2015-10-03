@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using UserManagement.Domain;
 
 namespace UserManagement.Infrastructure
 {
     public interface IUserRepository
     {
-        void CreateAccount(Account account);
+        int CreateAccount(Account account);
 
         void UpdateAccount(Account account);
 
         Account GetAccount(int accountId);
 
-        Account GetAllAccounts(Func<bool> predicate = null);
+        List<Account> GetAllAccounts(Func<Account, bool> predicate = null);
     }
 }
