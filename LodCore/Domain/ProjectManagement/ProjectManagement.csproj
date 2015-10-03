@@ -46,6 +46,9 @@
   <ItemGroup>
     <Compile Include="Domain\AccessLevel.cs" />
     <Compile Include="Application\IProjectProvider.cs" />
+    <Compile Include="Domain\Events\NewIssueEventType.cs" />
+    <Compile Include="Domain\Events\ProjectBoundedDistributionPolicy.cs" />
+    <Compile Include="Domain\Events\ProjectEventSink.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />
@@ -56,6 +59,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
+      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
+      <Name>NotificationService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UserManagement\UserManagement.csproj">
       <Project>{56B90624-417A-4998-83C8-68A34DAE0AB0}</Project>
       <Name>UserManagement</Name>

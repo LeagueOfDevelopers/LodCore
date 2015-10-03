@@ -1,19 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Application
 {
     public interface IProjectProvider
     {
-        Task<Project[]> GetProjects();
+        List<Project> GetProjects();
         
-        Task<Project> GetProject(Guid projectId);
+        Project GetProject(int projectId);
 
-        Task CreateProject(Project project);
+        void CreateProject(Project project);
 
-        Task UpdateProject(Project project);
+        void UpdateProject(Project project);
 
-        Task AddUserToProject(Guid projectId, uint userId);
+        void AddUserToProject(int projectId, int userId);
     }
 }

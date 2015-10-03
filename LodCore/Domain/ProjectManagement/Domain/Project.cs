@@ -15,7 +15,7 @@ namespace ProjectManagement.Domain
             Uri versionControlSystemUri, 
             Uri projectManagementSystemUri, 
             IReadOnlyList<Issue> issues, 
-            List<Account> projectUsers)
+            List<int> projectUserIds)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
@@ -27,7 +27,7 @@ namespace ProjectManagement.Domain
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues;
-            ProjectUsers = projectUsers ?? new List<Account>();
+            ProjectUserIds = projectUserIds ?? new List<int>();
         }
 
         public int ProjectId { get; private set; }
@@ -44,6 +44,6 @@ namespace ProjectManagement.Domain
 
         public IReadOnlyList<Issue> Issues { get; private set; }
 
-        public IReadOnlyList<Account> ProjectUsers { get; private set; } 
+        public IReadOnlyList<int> ProjectUserIds { get; private set; } 
     }
 }
