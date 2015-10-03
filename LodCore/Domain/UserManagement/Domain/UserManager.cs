@@ -36,6 +36,8 @@ namespace UserManagement.Domain
 
         public void CreateUser(CreateAccountRequest request)
         {
+            Require.NotNull(request, nameof(request));
+
             var doesExist = GetUserList(account => account.Email == request.Email).Any();
             if (doesExist)
             {
@@ -57,6 +59,8 @@ namespace UserManagement.Domain
 
         public void UpdateUser(Account account)
         {
+            Require.NotNull(account, nameof(account));
+
             var accountExists = _repository.GetAccount(account.UserId) != null;
             if (!accountExists)
             {

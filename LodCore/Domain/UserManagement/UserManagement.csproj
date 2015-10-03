@@ -52,8 +52,11 @@
     <Compile Include="Application\IConfirmationService.cs" />
     <Compile Include="Application\IUserManager.cs" />
     <Compile Include="Domain\Account.cs" />
+    <Compile Include="Domain\AccountAlreadyExistsException.cs" />
+    <Compile Include="Domain\AccountNotFoundException.cs" />
     <Compile Include="Domain\ConfirmationStatus.cs" />
     <Compile Include="Domain\Profile.cs" />
+    <Compile Include="Domain\UserManager.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

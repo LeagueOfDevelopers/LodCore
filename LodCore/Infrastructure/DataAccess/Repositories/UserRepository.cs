@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Journalist;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
@@ -13,7 +14,7 @@ namespace DataAccess.Repositories
             _sessionProvider = sessionProvider;
         }
 
-        public void CreateAccount(Account account)
+        public int CreateAccount(Account account)
         {
             throw new NotImplementedException();
         }
@@ -28,7 +29,7 @@ namespace DataAccess.Repositories
             throw new NotImplementedException();
         }
 
-        public Account GetAllAccounts(Func<bool> predicate = null)
+        public List<Account> GetAllAccounts(Func<Account, bool> predicate = null)
         {
             throw new NotImplementedException();
         }
