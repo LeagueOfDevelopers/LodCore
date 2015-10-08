@@ -1,11 +1,7 @@
 ﻿namespace NotificationService
 {
-    public class Event
+    public abstract class Event
     {
-        public int EventId { get; set; }
-
-        public EventType Type { get; set; }
-
-        public string Content { get; set; }
+        public virtual string EventType => GetType().ToString();
     }
 }

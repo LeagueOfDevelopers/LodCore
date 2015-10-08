@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NotificationService
+﻿namespace NotificationService
 {
     public interface IEventRepository
     {
-        void PutEvent(Event @event);
+        void DistrubuteEvent(Event @event, DistributionPolicy distributionPolicy);
 
-        List<Event> GetEvents(Func<Event, bool> predicate);
+        Event[] GetEventsByUser(int userId);
+
+        void MarkEventsAsRead(int[] eventIds);
     }
 }
