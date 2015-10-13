@@ -46,9 +46,8 @@
   <ItemGroup>
     <Compile Include="Domain\AccessLevel.cs" />
     <Compile Include="Application\IProjectProvider.cs" />
-    <Compile Include="Domain\Events\NewIssueEventType.cs" />
-    <Compile Include="Domain\Events\ProjectBoundedDistributionPolicy.cs" />
-    <Compile Include="Domain\Events\ProjectEventSink.cs" />
+    <Compile Include="Domain\Events\EventSink.cs" />
+    <Compile Include="Domain\Events\NewIssueCreated.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />

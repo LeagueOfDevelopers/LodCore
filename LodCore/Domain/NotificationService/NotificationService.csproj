@@ -44,12 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractEventSink.cs" />
-    <Compile Include="Delivery.cs" />
-    <Compile Include="EventType.cs" />
-    <Compile Include="IDistributionPolicy.cs" />
+    <Compile Include="DistributionPolicy.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="IDistributionPolicyFactory.cs" />
     <Compile Include="IEventRepository.cs" />
+    <Compile Include="EventSink.cs" />
+    <Compile Include="INotificationService.cs" />
+    <Compile Include="IProjectRelativesRepository.cs" />
+    <Compile Include="IUsersRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

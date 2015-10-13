@@ -1,8 +1,9 @@
-﻿using Journalist;
+﻿using System.Linq;
+using Journalist;
 
 namespace NotificationService
 {
-    internal class DistributionPolicy
+    public class DistributionPolicy
     {
         internal DistributionPolicy(int[] receiverIds)
         {
@@ -10,6 +11,14 @@ namespace NotificationService
 
             ReceiverIds = receiverIds;
         }
+
+        public DistributionPolicy Merge(DistributionPolicy policy)
+        {
+            var mergingIds = policy.ReceiverIds;
+            var newIdsArr = ReceiverIds.Union(mergingIds).ToArray();
+            return new DistributionPolicy(newIdsArr);
+        }
+
         internal int[] ReceiverIds { get; private set; } 
     }
 }

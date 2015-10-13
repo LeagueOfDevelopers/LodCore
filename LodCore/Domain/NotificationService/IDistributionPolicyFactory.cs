@@ -1,6 +1,6 @@
 ﻿namespace NotificationService
 {
-    internal interface IDistributionPolicyFactory
+    public interface IDistributionPolicyFactory
     {
         DistributionPolicy GetAllPolicy();
 
