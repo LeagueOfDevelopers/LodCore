@@ -1,7 +1,19 @@
-﻿namespace ProjectManagement.Domain
+﻿using Journalist;
+
+namespace ProjectManagement.Domain
 {
     public class Issue
     {
+        public Issue(string header, string descripton, IssueType issueType)
+        {
+            Require.NotEmpty(header, nameof(header));
+            Require.NotEmpty(descripton, nameof(descripton));
+
+            Header = header;
+            Descripton = descripton;
+            IssueType = issueType;
+        }
+
         public string Header { get; private set; }
         
         public string Descripton { get; private set; }

@@ -53,6 +53,7 @@
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\ProjectProvider.cs" />
     <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
