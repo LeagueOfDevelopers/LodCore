@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Journalist;
-using UserManagement.Domain;
 
 namespace ProjectManagement.Domain
 {
     public class Project
     {
         public Project(
-            int projectId, 
             string name, 
             ProjectType projectType, 
             string info, 
@@ -19,8 +17,7 @@ namespace ProjectManagement.Domain
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-
-            ProjectId = projectId;
+            
             Name = name;
             ProjectType = projectType;
             Info = info;

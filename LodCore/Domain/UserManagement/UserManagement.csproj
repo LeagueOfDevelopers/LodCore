@@ -55,6 +55,9 @@
     <Compile Include="Domain\AccountAlreadyExistsException.cs" />
     <Compile Include="Domain\AccountNotFoundException.cs" />
     <Compile Include="Domain\ConfirmationStatus.cs" />
+    <Compile Include="Domain\Events\NewFullConfirmedDeveloper.cs" />
+    <Compile Include="Domain\Events\NewEmailConfirmedDeveloper.cs" />
+    <Compile Include="Domain\Events\UserManagementEventSink.cs" />
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\UserManager.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
@@ -63,6 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
+      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
+      <Name>NotificationService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

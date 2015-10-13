@@ -25,6 +25,8 @@ namespace UserManagement.Domain
 
         public Account GetUser(int userId)
         {
+            Require.Positive(userId, nameof(userId));
+
             var account = _repository.GetAccount(userId);
             if (account == null)
             {
