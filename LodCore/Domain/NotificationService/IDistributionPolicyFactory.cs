@@ -6,7 +6,7 @@
 
         DistributionPolicy GetProjectRelatedPolicy(int projectId);
 
-        DistributionPolicy GetAdminRelatedPolicy(int projectId);
+        DistributionPolicy GetAdminRelatedPolicy();
 
         DistributionPolicy GetUserSpecifiedPolicy(params int[] userIds);
     }

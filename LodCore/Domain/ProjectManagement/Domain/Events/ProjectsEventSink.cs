@@ -4,7 +4,8 @@ namespace ProjectManagement.Domain.Events
 {
     public class ProjectsEventSink : EventSink
     {
-        public ProjectsEventSink(IDistributionPolicyFactory distributionPolicyFactory) : base(distributionPolicyFactory)
+        public ProjectsEventSink(IEventRepository repository, IDistributionPolicyFactory distributionPolicyFactory) 
+            : base(repository, distributionPolicyFactory)
         {
         }
 

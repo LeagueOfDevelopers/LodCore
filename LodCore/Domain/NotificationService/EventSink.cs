@@ -1,5 +1,4 @@
-﻿using System;
-using Journalist;
+﻿using Journalist;
 
 namespace NotificationService
 {
@@ -18,9 +17,11 @@ namespace NotificationService
 
         protected void ConsumeEvent(Event @event)
         {
-            throw new NotImplementedException();
+            Require.NotNull(@event, nameof(@event));
+
+            _repository.DistrubuteEvent(@event);
         }
 
-        private IEventRepository _repository;
+        private readonly IEventRepository _repository;
     }
 }
