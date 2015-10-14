@@ -23,9 +23,9 @@ namespace DataAccess.Repositories
 
             using (var session = _sessionProvider.OpenSession())
             {
-                var savedAccount = session.Save(account) as Account;
+                var savedAccountId = (int) session.Save(account);
                 // todo: perform check for NRE
-                return savedAccount.UserId;
+                return savedAccountId;
             }
         }
 
