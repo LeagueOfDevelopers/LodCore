@@ -1,4 +1,5 @@
-﻿using Journalist;
+﻿using System;
+using Journalist;
 
 namespace NotificationService
 {
@@ -9,11 +10,15 @@ namespace NotificationService
             Require.NotNull(distributionPolicy, nameof(distributionPolicy));
 
             DistributionPolicy = distributionPolicy;
+
+            Timestamp = DateTime.Now;
         }
 
         public int Id { get; set; }
 
         public DistributionPolicy DistributionPolicy { get; private set; }
+
+        public DateTime Timestamp { get; private set; }
 
         public virtual string EventType => GetType().ToString();
     }

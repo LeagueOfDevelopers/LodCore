@@ -9,12 +9,6 @@ namespace ProjectManagement.Domain.Events
         {
         }
 
-        public void SendNewIssueEvent(int projectId, Issue issue)
-        {
-            var distributionPolicy = DistributionPolicyFactory.GetProjectRelatedPolicy(projectId);
-            ConsumeEvent(new NewIssueCreated(issue, projectId, distributionPolicy));
-        }
-
         public void SendNewDeveloperEvent(int projectId, int userId)
         {
             ConsumeEvent(new NewDeveloperOnProject(
@@ -23,5 +17,17 @@ namespace ProjectManagement.Domain.Events
                 DistributionPolicyFactory.GetProjectRelatedPolicy(projectId)));
         }
 
+        public void SendNewProjectCreatedEvent(int projectId)
+        {
+            ConsumeEvent(new NewProjectCreated(projectId, DistributionPolicyFactory.GetAllPolicy()));
+        }
+
+        public void SendDeveloperHasLeftProjectEvent(int projectId, int userId)
+        {
+            ConsumeEvent(new DeveloperHasLeftProject(
+                userId, 
+                projectId, 
+                DistributionPolicyFactory.GetProjectRelatedPolicy(projectId)));
+        }
     }
 }

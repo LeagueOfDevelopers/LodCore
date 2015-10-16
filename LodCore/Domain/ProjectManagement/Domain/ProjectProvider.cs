@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Journalist;
 using ProjectManagement.Application;
+using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
 
 namespace ProjectManagement.Domain
@@ -12,15 +13,18 @@ namespace ProjectManagement.Domain
         public ProjectProvider(
             IProjectManagerGateway projectManagerGateway,
             IVersionControlSystemGateway versionControlSystemGateway, 
-            IProjectRepository repository)
+            IProjectRepository repository,
+            ProjectsEventSink eventSink)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
             Require.NotNull(repository, nameof(repository));
+            Require.NotNull(eventSink, nameof(eventSink));
 
             _projectManagerGateway = projectManagerGateway;
             _versionControlSystemGateway = versionControlSystemGateway;
             _repository = repository;
+            _eventSink = eventSink;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
@@ -62,7 +66,9 @@ namespace ProjectManagement.Domain
                 pmLink, 
                 new List<Issue>(), 
                 new List<int>());
-            _repository.SaveProject(project);
+            var projectId = _repository.SaveProject(project);
+
+            _eventSink.SendNewProjectCreatedEvent(projectId);
         }
 
         public void UpdateProject(Project project)
@@ -78,16 +84,45 @@ namespace ProjectManagement.Domain
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
+            if (project.ProjectUserIds.Contains(userId))
+            {
+                throw new InvalidOperationException("Attempt to add developer who is already on project");
+            }
+
             project.ProjectUserIds.Add(userId);
 
             _projectManagerGateway.AddNewUserToProject(project, userId);
             _versionControlSystemGateway.AddUserToProject(project, userId);
 
             UpdateProject(project);
+
+            _eventSink.SendNewDeveloperEvent(projectId, userId);
+        }
+
+        public void RemoveUserFromProject(int projectId, int userId)
+        {
+            Require.Positive(projectId, nameof(projectId));
+            Require.Positive(userId, nameof(userId));
+
+            var project = GetProject(projectId);
+            if (!project.ProjectUserIds.Contains(userId))
+            {
+                throw new InvalidOperationException("Attempt to remove developer who is not on project");
+            }
+
+            project.ProjectUserIds.Remove(userId);
+
+            _projectManagerGateway.RemoveUserFromProject(project, userId);
+            _versionControlSystemGateway.RemoveUserFromProject(project, userId);
+
+            UpdateProject(project);
+
+            _eventSink.SendDeveloperHasLeftProjectEvent(projectId, userId);
         }
 
         private readonly IProjectManagerGateway _projectManagerGateway;
         private readonly IVersionControlSystemGateway _versionControlSystemGateway;
         private readonly IProjectRepository _repository;
+        private readonly ProjectsEventSink _eventSink;
     }
 }

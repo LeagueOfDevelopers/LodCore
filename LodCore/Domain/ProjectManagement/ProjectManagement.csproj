@@ -47,9 +47,10 @@
     <Compile Include="Application\CreateProjectRequest.cs" />
     <Compile Include="Domain\AccessLevel.cs" />
     <Compile Include="Application\IProjectProvider.cs" />
+    <Compile Include="Domain\Events\DeveloperHasLeftProject.cs" />
+    <Compile Include="Domain\Events\NewProjectCreated.cs" />
     <Compile Include="Domain\Events\ProjectsEventSink.cs" />
     <Compile Include="Domain\Events\NewDeveloperOnProject.cs" />
-    <Compile Include="Domain\Events\NewIssueCreated.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />

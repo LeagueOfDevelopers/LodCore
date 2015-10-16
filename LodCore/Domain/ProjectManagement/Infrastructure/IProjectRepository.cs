@@ -9,7 +9,7 @@ namespace ProjectManagement.Infrastructure
 
         Project GetProject(int projectId);
 
-        void SaveProject(Project project);
+        int SaveProject(Project project);
 
         void UpdateProject(Project project);
     }
