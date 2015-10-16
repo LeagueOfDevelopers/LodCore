@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Journalist;
+using NHibernate.Exceptions;
+using NHibernate.Linq;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 
@@ -16,24 +19,47 @@ namespace DataAccess.Repositories
 
         public int CreateAccount(Account account)
         {
-            throw new NotImplementedException();
+            Require.NotNull(account, nameof(account));
+
+            using (var session = _sessionProvider.OpenSession())
+            {
+                var savedAccountId = (int) session.Save(account);
+                // todo: perform check for NRE
+                return savedAccountId;
+            }
         }
 
         public void UpdateAccount(Account account)
         {
-            throw new NotImplementedException();
+            Require.NotNull(account, nameof(account));
+
+            using (var session = _sessionProvider.OpenSession())
+            {
+                session.Update(account);
+            }
         }
 
         public Account GetAccount(int accountId)
         {
-            throw new NotImplementedException();
+            Require.Positive(accountId, nameof(accountId));
+
+            using (var session = _sessionProvider.OpenSession())
+            {
+                var account = session.Get<Account>(accountId);
+                return account;
+            }
         }
 
         public List<Account> GetAllAccounts(Func<Account, bool> predicate = null)
         {
-            throw new NotImplementedException();
+            using (var session = _sessionProvider.OpenSession())
+            {
+                return predicate == null 
+                    ? session.Query<Account>().ToList() 
+                    : session.Query<Account>().Where(predicate).ToList();
+            }
         }
 
-        private DatabaseSessionProvider _sessionProvider;
+        private readonly DatabaseSessionProvider _sessionProvider;
     }
 }
