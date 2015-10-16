@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Journalist;
+using Journalist.Collections;
 using ProjectManagement.Application;
 using ProjectManagement.Infrastructure;
 
@@ -8,41 +10,95 @@ namespace ProjectManagement.Domain
 {
     public class ProjectProvider : IProjectProvider
     {
-        public ProjectProvider(IProjectManagerGateway gateway, IProjectRepository repository)
+        public ProjectProvider(
+            IProjectManagerGateway projectManagerGateway,
+            IVersionControlSystemGateway versionControlSystemGateway, 
+            IProjectRepository repository)
         {
-            Require.NotNull(gateway, nameof(gateway));
+            Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
+            Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
             Require.NotNull(repository, nameof(repository));
 
-            _gateway = gateway;
+            _projectManagerGateway = projectManagerGateway;
+            _versionControlSystemGateway = versionControlSystemGateway;
             _repository = repository;
         }
 
-        public List<Project> GetProjects()
+        public List<Project> GetProjects(Func<Project, bool> predicate = null)
         {
-            return _repository.GetAllProjects().ToList();
+            return _repository.GetAllProjects(predicate).ToList();
         }
 
         public Project GetProject(int projectId)
         {
-            throw new System.NotImplementedException();
+            Require.Positive(projectId, nameof(projectId));
+            var project = _repository.GetProject(projectId);
+
+            if (project == null)
+            {
+                throw new ProjectNotFoundException();
+            }
+
+            return project;
         }
 
-        public void CreateProject(Project project)
+        public void CreateProject(CreateProjectRequest request)
         {
-            throw new System.NotImplementedException();
+            Require.NotNull(request, nameof(request));
+
+            var vcsLink = _versionControlSystemGateway.CreateRepositoryForProject(request);
+            var pmLink = _projectManagerGateway.CreateProject(request);
+            if (vcsLink == null || pmLink == null)
+            {
+                throw new ProjectCreationFailedException("Failed to create repository or project");
+            }
+
+            var project = new Project(
+                request.Name, 
+                request.ProjectType, 
+                request.Info, 
+                ProjectStatus.Planned, 
+                vcsLink, 
+                pmLink, 
+                new List<Issue>(), 
+                new List<int>());
+            _repository.SaveProject(project);
         }
 
         public void UpdateProject(Project project)
         {
-            throw new System.NotImplementedException();
+            Require.NotNull(project, nameof(project));
+
+            _repository.UpdateProject(project);
         }
 
         public void AddUserToProject(int projectId, int userId)
         {
-            throw new System.NotImplementedException();
+            Require.Positive(projectId, nameof(projectId));
+            Require.Positive(userId, nameof(userId));
+
+            var project = GetProject(projectId);
+            project.ProjectUserIds.Add(userId);
+
+            _projectManagerGateway.AddNewUserToProject(project, userId);
+            _versionControlSystemGateway.AddUserToProject(project, userId);
+
+            UpdateProject(project);
         }
 
-        private IProjectManagerGateway _gateway;
-        private IProjectRepository _repository;
+        public void AddIssueToProject(int projectId, Issue issue)
+        {
+            Require.Positive(projectId, nameof(projectId));
+            Require.NotNull(issue, nameof(issue));
+
+            var project = GetProject(projectId);
+            project.Issues.Add(issue);
+
+            UpdateProject(project);
+        }
+
+        private readonly IProjectManagerGateway _projectManagerGateway;
+        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
+        private readonly IProjectRepository _repository;
     }
 }

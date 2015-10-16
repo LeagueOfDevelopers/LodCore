@@ -1,15 +1,15 @@
-﻿using ProjectManagement.Domain;
+﻿using System;
+using ProjectManagement.Application;
+using ProjectManagement.Domain;
 
 namespace ProjectManagement.Infrastructure
 {
     public interface IProjectManagerGateway
     {
-        void AddNewUserToProject(int userId, int projectId);
+        void AddNewUserToProject(Project project, int userId);
+        
+        void RemoveUserFromProject(Project project, int userId);
 
-        void RemoveUserFromProject(int userId, int projectId);
-
-        void CreateProject(Project project);
-
-        Project GetProject(int projectId);
+        Uri CreateProject(CreateProjectRequest request);
     }
 }

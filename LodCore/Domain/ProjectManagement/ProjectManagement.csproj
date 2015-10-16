@@ -57,6 +57,7 @@
     <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
+    <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

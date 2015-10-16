@@ -10,24 +10,30 @@ namespace ProjectManagement.Domain
             string name, 
             ProjectType projectType, 
             string info, 
+            ProjectStatus projectStatus, 
             Uri versionControlSystemUri, 
             Uri projectManagementSystemUri, 
-            IReadOnlyList<Issue> issues, 
+            List<Issue> issues, 
             List<int> projectUserIds)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            
+            Require.NotNull(versionControlSystemUri, nameof(versionControlSystemUri));
+            Require.NotNull(projectManagementSystemUri, nameof(projectManagementSystemUri));
+            Require.NotNull(issues, nameof(issues));
+            Require.NotNull(projectUserIds, nameof(projectUserIds));
+
             Name = name;
             ProjectType = projectType;
             Info = info;
+            ProjectStatus = projectStatus;
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues;
-            ProjectUserIds = projectUserIds ?? new List<int>();
+            ProjectUserIds = projectUserIds;
         }
 
-        public int ProjectId { get; private set; }
+        public int ProjectId { get; protected set; }
 
         public string Name { get; private set; }
 
@@ -35,12 +41,14 @@ namespace ProjectManagement.Domain
 
         public string Info { get; private set; }
 
+        public ProjectStatus ProjectStatus { get; private set; }
+
         public Uri VersionControlSystemUri { get; private set; }
 
         public Uri ProjectManagementSystemUri { get; private set; }
 
-        public IReadOnlyList<Issue> Issues { get; private set; }
+        public List<Issue> Issues { get; private set; }
 
-        public IReadOnlyList<int> ProjectUserIds { get; private set; } 
+        public List<int> ProjectUserIds { get; private set; } 
     }
 }
