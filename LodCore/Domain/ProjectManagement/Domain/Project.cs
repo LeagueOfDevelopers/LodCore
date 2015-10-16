@@ -11,6 +11,7 @@ namespace ProjectManagement.Domain
             ProjectType projectType, 
             string info, 
             ProjectStatus projectStatus, 
+            AccessLevel accessLevel, 
             Uri versionControlSystemUri, 
             Uri projectManagementSystemUri, 
             List<Issue> issues, 
@@ -27,6 +28,7 @@ namespace ProjectManagement.Domain
             ProjectType = projectType;
             Info = info;
             ProjectStatus = projectStatus;
+            AccessLevel = accessLevel;
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues;
@@ -38,6 +40,8 @@ namespace ProjectManagement.Domain
         public string Name { get; private set; }
 
         public ProjectType ProjectType { get; private set; }
+
+        public AccessLevel AccessLevel { get; private set; }
 
         public string Info { get; private set; }
 

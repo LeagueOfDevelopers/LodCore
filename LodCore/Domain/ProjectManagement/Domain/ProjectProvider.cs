@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Journalist;
-using Journalist.Collections;
 using ProjectManagement.Application;
 using ProjectManagement.Infrastructure;
 
@@ -57,7 +56,8 @@ namespace ProjectManagement.Domain
                 request.Name, 
                 request.ProjectType, 
                 request.Info, 
-                ProjectStatus.Planned, 
+                ProjectStatus.Planned,
+                request.AccessLevel, 
                 vcsLink, 
                 pmLink, 
                 new List<Issue>(), 
@@ -82,17 +82,6 @@ namespace ProjectManagement.Domain
 
             _projectManagerGateway.AddNewUserToProject(project, userId);
             _versionControlSystemGateway.AddUserToProject(project, userId);
-
-            UpdateProject(project);
-        }
-
-        public void AddIssueToProject(int projectId, Issue issue)
-        {
-            Require.Positive(projectId, nameof(projectId));
-            Require.NotNull(issue, nameof(issue));
-
-            var project = GetProject(projectId);
-            project.Issues.Add(issue);
 
             UpdateProject(project);
         }

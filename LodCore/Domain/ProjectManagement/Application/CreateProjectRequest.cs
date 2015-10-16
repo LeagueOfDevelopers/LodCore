@@ -5,7 +5,11 @@ namespace ProjectManagement.Application
 {
     public class CreateProjectRequest
     {
-        public CreateProjectRequest(string name, ProjectType projectType, string info)
+        public CreateProjectRequest(
+            string name, 
+            ProjectType projectType, 
+            string info, 
+            AccessLevel accessLevel)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotEmpty(info, nameof(info));
@@ -13,6 +17,7 @@ namespace ProjectManagement.Application
             Name = name;
             ProjectType = projectType;
             Info = info;
+            AccessLevel = accessLevel;
         }
 
         public string Name { get; private set; }
@@ -20,5 +25,7 @@ namespace ProjectManagement.Application
         public ProjectType ProjectType { get; private set; }
 
         public string Info { get; private set; }
+
+        public AccessLevel AccessLevel { get; private set; }
     }
 }

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\CreateProjectRequest.cs" />
     <Compile Include="Domain\AccessLevel.cs" />
     <Compile Include="Application\IProjectProvider.cs" />
     <Compile Include="Domain\Events\ProjectsEventSink.cs" />
@@ -53,11 +54,14 @@
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\ProjectNotFoundException.cs" />
     <Compile Include="Domain\ProjectProvider.cs" />
+    <Compile Include="Domain\ProjectStatus.cs" />
     <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
     <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />
+    <Compile Include="ProjectCreationFailedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
