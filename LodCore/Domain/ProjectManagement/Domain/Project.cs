@@ -10,29 +10,31 @@ namespace ProjectManagement.Domain
             string name, 
             ProjectType projectType, 
             string info, 
-            ProjectStatus projectStatus, 
+            ProjectStatus projectStatus,
+            Uri landingImageUri, 
             AccessLevel accessLevel, 
             Uri versionControlSystemUri, 
             Uri projectManagementSystemUri, 
             List<Issue> issues, 
-            List<int> projectUserIds)
+            List<int> projectUserIds,
+            List<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
             Require.NotNull(versionControlSystemUri, nameof(versionControlSystemUri));
             Require.NotNull(projectManagementSystemUri, nameof(projectManagementSystemUri));
-            Require.NotNull(issues, nameof(issues));
-            Require.NotNull(projectUserIds, nameof(projectUserIds));
 
             Name = name;
             ProjectType = projectType;
+            AccessLevel = accessLevel;
             Info = info;
             ProjectStatus = projectStatus;
-            AccessLevel = accessLevel;
+            LandingImageUri = landingImageUri;
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
-            Issues = issues;
-            ProjectUserIds = projectUserIds;
+            Issues = issues ?? new List<Issue>();
+            ProjectUserIds = projectUserIds ?? new List<int>();
+            Screenshots = screenshots ?? new List<Uri>();
         }
 
         public int ProjectId { get; protected set; }
@@ -47,6 +49,8 @@ namespace ProjectManagement.Domain
 
         public ProjectStatus ProjectStatus { get; private set; }
 
+        public Uri LandingImageUri { get; private set; }
+
         public Uri VersionControlSystemUri { get; private set; }
 
         public Uri ProjectManagementSystemUri { get; private set; }
@@ -54,5 +58,7 @@ namespace ProjectManagement.Domain
         public List<Issue> Issues { get; private set; }
 
         public List<int> ProjectUserIds { get; private set; } 
+
+        public List<Uri> Screenshots { get; private set; } 
     }
 }

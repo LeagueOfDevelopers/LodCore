@@ -1,4 +1,5 @@
-﻿using Journalist;
+﻿using System;
+using Journalist;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Application
@@ -9,7 +10,8 @@ namespace ProjectManagement.Application
             string name, 
             ProjectType projectType, 
             string info, 
-            AccessLevel accessLevel)
+            AccessLevel accessLevel, 
+            Uri landingImageUri)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotEmpty(info, nameof(info));
@@ -18,6 +20,7 @@ namespace ProjectManagement.Application
             ProjectType = projectType;
             Info = info;
             AccessLevel = accessLevel;
+            LandingImageUri = landingImageUri;
         }
 
         public string Name { get; private set; }
@@ -27,5 +30,7 @@ namespace ProjectManagement.Application
         public string Info { get; private set; }
 
         public AccessLevel AccessLevel { get; private set; }
+
+        public Uri LandingImageUri { get; private set; }
     }
 }

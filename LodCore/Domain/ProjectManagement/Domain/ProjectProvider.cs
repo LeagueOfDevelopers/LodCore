@@ -58,14 +58,16 @@ namespace ProjectManagement.Domain
 
             var project = new Project(
                 request.Name, 
-                request.ProjectType, 
-                request.Info, 
+                request.ProjectType,
+                request.Info,
                 ProjectStatus.Planned,
-                request.AccessLevel, 
+                request.LandingImageUri,
+                request.AccessLevel,
                 vcsLink, 
                 pmLink, 
-                new List<Issue>(), 
-                new List<int>());
+                null, 
+                null,
+                null);
             var projectId = _repository.SaveProject(project);
 
             _eventSink.SendNewProjectCreatedEvent(projectId);
