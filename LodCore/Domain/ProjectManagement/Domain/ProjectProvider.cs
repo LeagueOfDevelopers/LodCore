@@ -36,12 +36,13 @@ namespace ProjectManagement.Domain
         {
             Require.Positive(projectId, nameof(projectId));
             var project = _repository.GetProject(projectId);
-
             if (project == null)
             {
                 throw new ProjectNotFoundException();
             }
 
+            var issues = _projectManagerGateway.GetProjectIssues(project.ProjectManagementSystemId);
+            project.Issues.AddRange(issues);
             return project;
         }
 
@@ -51,10 +52,6 @@ namespace ProjectManagement.Domain
 
             var vcsLink = _versionControlSystemGateway.CreateRepositoryForProject(request);
             var pmLink = _projectManagerGateway.CreateProject(request);
-            if (vcsLink == null || pmLink == null)
-            {
-                throw new ProjectCreationFailedException("Failed to create repository or project");
-            }
 
             var project = new Project(
                 request.Name, 

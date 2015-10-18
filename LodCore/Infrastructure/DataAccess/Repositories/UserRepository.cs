@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Journalist;
-using NHibernate.Exceptions;
+using Journalist.Extensions;
 using NHibernate.Linq;
+using NotificationService;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository, IUsersRepository
     {
         public UserRepository(DatabaseSessionProvider sessionProvider)
         {
@@ -60,6 +61,25 @@ namespace DataAccess.Repositories
             }
         }
 
+        public int[] GetAllUsersIds()
+        {
+            using (var session = _sessionProvider.OpenSession())
+            {
+                return session.Query<Account>().SelectToArray(account => account.UserId);
+            }
+        }
+
+        public int[] GetAllAdminIds()
+        {
+            using (var session = _sessionProvider.OpenSession())
+            {
+                return session.Query<Account>()
+                    .Where(account => account.Role == AccountRole.Administrator)
+                    .SelectToArray(account => account.UserId);
+            }
+        }
+
         private readonly DatabaseSessionProvider _sessionProvider;
+        
     }
 }

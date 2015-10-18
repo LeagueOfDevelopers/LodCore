@@ -15,6 +15,7 @@ namespace DataAccess
             var modelMapper = new ModelMapper();
             modelMapper.AddMapping<ProfileMap>();
             modelMapper.AddMapping<UserMap>();
+            modelMapper.AddMapping<ProjectMap>();
             configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
 
             _factory = configuration.BuildSessionFactory();

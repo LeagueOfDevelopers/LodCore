@@ -7,9 +7,10 @@ namespace UserManagement.Domain
         public Account(
             string firstname, 
             string lastname, 
-            string email,
-            string passwordHash,
-            ConfirmationStatus confirmationStatus,
+            string email, 
+            string passwordHash, 
+            AccountRole role, 
+            ConfirmationStatus confirmationStatus, 
             Profile profile)
         {
             Require.NotEmpty(firstname, nameof(firstname));
@@ -21,6 +22,7 @@ namespace UserManagement.Domain
             Lastname = lastname;
             Email = email;
             PasswordHash = passwordHash;
+            Role = role;
             ConfirmationStatus = confirmationStatus;
             Profile = profile;
         }
@@ -35,6 +37,8 @@ namespace UserManagement.Domain
         public virtual string Email { get; protected set; }
 
         public virtual string PasswordHash { get; protected set; }
+
+        public virtual AccountRole Role { get; protected set; }
 
         public virtual ConfirmationStatus ConfirmationStatus { get; protected set; }
 

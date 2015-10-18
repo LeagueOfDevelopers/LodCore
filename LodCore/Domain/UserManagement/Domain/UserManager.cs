@@ -51,6 +51,7 @@ namespace UserManagement.Domain
                 request.Lastname, 
                 request.Email, 
                 request.Password, 
+                AccountRole.User, 
                 ConfirmationStatus.Unconfirmed, 
                 null);
 
