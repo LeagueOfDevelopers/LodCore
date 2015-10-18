@@ -94,7 +94,7 @@ namespace ProjectManagement.Domain
             project.ProjectUserIds.Add(userId);
 
             _projectManagerGateway.AddNewUserToProject(project, userId);
-            _versionControlSystemGateway.AddUserToProject(project, userId);
+            _versionControlSystemGateway.AddUserToRepository(project, userId);
 
             UpdateProject(project);
 

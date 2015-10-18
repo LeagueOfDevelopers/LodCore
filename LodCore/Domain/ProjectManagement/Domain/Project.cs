@@ -13,16 +13,16 @@ namespace ProjectManagement.Domain
             ProjectStatus projectStatus,
             Uri landingImageUri, 
             AccessLevel accessLevel, 
-            Uri versionControlSystemUri, 
-            Uri projectManagementSystemUri, 
+            int versionControlSystemId, 
+            int projectManagementSystemId, 
             List<Issue> issues, 
             List<int> projectUserIds,
             List<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            Require.NotNull(versionControlSystemUri, nameof(versionControlSystemUri));
-            Require.NotNull(projectManagementSystemUri, nameof(projectManagementSystemUri));
+            Require.NotNull(versionControlSystemId, nameof(versionControlSystemId));
+            Require.NotNull(projectManagementSystemId, nameof(projectManagementSystemId));
 
             Name = name;
             ProjectType = projectType;
@@ -30,8 +30,8 @@ namespace ProjectManagement.Domain
             Info = info;
             ProjectStatus = projectStatus;
             LandingImageUri = landingImageUri;
-            VersionControlSystemUri = versionControlSystemUri;
-            ProjectManagementSystemUri = projectManagementSystemUri;
+            VersionControlSystemId = versionControlSystemId;
+            ProjectManagementSystemId = projectManagementSystemId;
             Issues = issues ?? new List<Issue>();
             ProjectUserIds = projectUserIds ?? new List<int>();
             Screenshots = screenshots ?? new List<Uri>();
@@ -51,9 +51,9 @@ namespace ProjectManagement.Domain
 
         public Uri LandingImageUri { get; private set; }
 
-        public Uri VersionControlSystemUri { get; private set; }
+        public int VersionControlSystemId { get; private set; }
 
-        public Uri ProjectManagementSystemUri { get; private set; }
+        public int ProjectManagementSystemId { get; private set; }
 
         public List<Issue> Issues { get; private set; }
 

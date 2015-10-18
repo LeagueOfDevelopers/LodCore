@@ -24,10 +24,10 @@ namespace ProjectManagementTests
 
             _pmGateway
                 .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<Uri>());
+                .Returns(_fixture.Create<int>());
             _vcsGateway
                 .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<Uri>());
+                .Returns(_fixture.Create<int>());
             _repository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);
