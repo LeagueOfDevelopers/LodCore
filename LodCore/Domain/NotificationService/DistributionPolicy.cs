@@ -5,9 +5,9 @@ namespace NotificationService
 {
     public class DistributionPolicy
     {
-        internal DistributionPolicy(int[] receiverIds)
+        public DistributionPolicy(int[] receiverIds)
         {
-            Require.NotEmpty(receiverIds, nameof(receiverIds));
+            Require.NotNull(receiverIds, nameof(receiverIds));
 
             ReceiverIds = receiverIds;
         }
