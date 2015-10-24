@@ -57,10 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseSessionProvider.cs" />
+    <Compile Include="Entities\EventDto.cs" />
     <Compile Include="Mappings\ProfileMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
