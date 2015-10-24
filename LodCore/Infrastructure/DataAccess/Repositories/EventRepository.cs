@@ -4,7 +4,7 @@ namespace DataAccess.Repositories
 {
     public class EventRepository : IEventRepository
     {
-        public void DistrubuteEvent(Event @event)
+        public void DistrubuteEvent(Event @event, DistributionPolicy distributionPolicy)
         {
             throw new System.NotImplementedException();
         }

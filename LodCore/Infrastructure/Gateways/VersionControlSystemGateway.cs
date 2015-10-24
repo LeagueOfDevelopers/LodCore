@@ -7,7 +7,7 @@ namespace Gateways
 {
     public class VersionControlSystemGateway : IVersionControlSystemGateway
     {
-        public Uri CreateRepositoryForProject(Project project)
+        public int CreateRepositoryForProject(CreateProjectRequest request)
         {
             throw new NotImplementedException();
         }

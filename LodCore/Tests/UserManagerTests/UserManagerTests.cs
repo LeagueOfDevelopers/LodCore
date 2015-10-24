@@ -3,7 +3,6 @@ using DataAccess;
 using DataAccess.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Ploeh.AutoFixture;
 using UserManagement.Application;
 using UserManagement.Domain;
 

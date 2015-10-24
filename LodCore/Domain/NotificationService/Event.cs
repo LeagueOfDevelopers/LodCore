@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace NotificationService
 {
-    public sealed class Event
+    public class Event
     {
         public Event(IEventInfo eventInfo)
         {
@@ -15,11 +15,15 @@ namespace NotificationService
             EventInfo = SerializeEventInfo(eventInfo);
         }
 
-        public DateTime OccuredOn { get; private set; }
+        protected Event() { }
 
-        public string EventType { get; private set; }
+        public virtual int Id { get; protected set; }
 
-        public string EventInfo { get; private set; }
+        public virtual DateTime OccuredOn { get; protected set; }
+
+        public virtual string EventType { get; protected set; }
+
+        public virtual string EventInfo { get; protected set; }
 
         private static string SerializeEventInfo(IEventInfo eventInfo)
         {

@@ -16,6 +16,7 @@ namespace DataAccess
             modelMapper.AddMapping<ProfileMap>();
             modelMapper.AddMapping<UserMap>();
             modelMapper.AddMapping<ProjectMap>();
+            modelMapper.AddMapping<EventMap>();
             configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
 
             _factory = configuration.BuildSessionFactory();

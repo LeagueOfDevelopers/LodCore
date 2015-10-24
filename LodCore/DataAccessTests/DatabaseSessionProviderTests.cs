@@ -1,7 +1,5 @@
 ﻿using DataAccess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ploeh.AutoFixture;
-using UserManagement.Domain;
 
 namespace DataAccessTests
 {
