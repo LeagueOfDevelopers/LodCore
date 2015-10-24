@@ -3,25 +3,32 @@ using NotificationService;
 
 namespace UserManagement.Domain.Events
 {
-    public class UserManagementEventSink : EventSink
+    public class UserManagementEventSink : EventSinkBase
     {
-        public UserManagementEventSink(IEventRepository repository, IDistributionPolicyFactory distributionPolicyFactory)
-            : base(repository, distributionPolicyFactory)
+        public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository) 
+            : base(distributionPolicyFactory, eventRepository)
         {
         }
 
-        public void SendNewFullConfirmedDeveloperEvent(int userId)
+        public override void ConsumeEvent(IEventInfo eventInfo)
         {
-            Require.Positive(userId, nameof(userId));
+            Require.NotNull(eventInfo, nameof(eventInfo));
 
-            ConsumeEvent(new NewFullConfirmedDeveloper(userId, DistributionPolicyFactory.GetAllPolicy()));
+            var @event = new Event(eventInfo);
+
+            var distributionPolicy = GetDistributionPolicyForEvent((dynamic)eventInfo);
+
+            EventRepository.DistrubuteEvent(@event, distributionPolicy);
         }
 
-        public void SendNewEmailConfirmedDeveloperEvent(int userId)
+        private DistributionPolicy GetDistributionPolicyForEvent(NewEmailConfirmedDeveloper eventInfo)
         {
-            Require.Positive(userId, nameof(userId));
+            return DistributionPolicyFactory.GetAdminRelatedPolicy();
+        }
 
-            ConsumeEvent(new NewEmailConfirmedDeveloper(userId, DistributionPolicyFactory.GetAdminRelatedPolicy()));
+        private DistributionPolicy GetDistributionPolicyForEvent(NewFullConfirmedDeveloper eventInfo)
+        {
+            return DistributionPolicyFactory.GetAllPolicy();
         }
     }
 }

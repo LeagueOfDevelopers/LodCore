@@ -3,9 +3,9 @@ using NotificationService;
 
 namespace ProjectManagement.Domain.Events
 {
-    public class DeveloperHasLeftProject : Event
+    public class DeveloperHasLeftProject : EventInfoBase
     {
-        public DeveloperHasLeftProject(int userId, int projectId, DistributionPolicy distributionPolicy) : base(distributionPolicy)
+        public DeveloperHasLeftProject(int userId, int projectId)
         {
             Require.Positive(userId, nameof(userId));
             Require.Positive(projectId, nameof(projectId));
