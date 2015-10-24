@@ -1,25 +1,29 @@
 ﻿using System;
 using Journalist;
+using Newtonsoft.Json;
 
 namespace NotificationService
 {
-    public abstract class Event
+    public sealed class Event
     {
-        protected Event(DistributionPolicy distributionPolicy)
+        public Event(IEventInfo eventInfo)
         {
-            Require.NotNull(distributionPolicy, nameof(distributionPolicy));
+            Require.NotNull(eventInfo, nameof(eventInfo));
 
-            DistributionPolicy = distributionPolicy;
-
-            Timestamp = DateTime.Now;
+            OccuredOn = DateTime.UtcNow;
+            EventType = eventInfo.GetEventType();
+            EventInfo = SerializeEventInfo(eventInfo);
         }
 
-        public int Id { get; set; }
+        public DateTime OccuredOn { get; private set; }
 
-        public DistributionPolicy DistributionPolicy { get; private set; }
+        public string EventType { get; private set; }
 
-        public DateTime Timestamp { get; private set; }
+        public string EventInfo { get; private set; }
 
-        public virtual string EventType => GetType().Name;
+        private static string SerializeEventInfo(IEventInfo eventInfo)
+        {
+            return JsonConvert.SerializeObject((dynamic) eventInfo);
+        }
     }
 }

@@ -70,7 +70,7 @@ namespace ProjectManagement.Domain
                 null);
             var projectId = _repository.SaveProject(project);
 
-            _eventSink.SendNewProjectCreatedEvent(projectId);
+            _eventSink.ConsumeEvent(new NewProjectCreated(projectId));
         }
 
         public void UpdateProject(Project project)
@@ -98,7 +98,7 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            _eventSink.SendNewDeveloperEvent(projectId, userId);
+            _eventSink.ConsumeEvent(new NewDeveloperOnProject(userId, projectId));
         }
 
         public void RemoveUserFromProject(int projectId, int userId)
@@ -119,7 +119,7 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            _eventSink.SendDeveloperHasLeftProjectEvent(projectId, userId);
+            _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
         }
 
         private readonly IProjectManagerGateway _projectManagerGateway;

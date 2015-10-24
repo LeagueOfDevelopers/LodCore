@@ -47,15 +47,15 @@ namespace ProjectManagementTests
             _distributionPolicyFactory
                 .Setup(factory => factory.GetAdminRelatedPolicy())
                 .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _eventRepository.Setup(repository => repository.DistrubuteEvent(It.IsAny<Event>()));
+            _eventRepository.Setup(repository => repository.DistrubuteEvent(It.IsAny<Event>(), It.IsAny<DistributionPolicy>()));
 
             _projectProvider = new ProjectProvider(
                 _pmGateway.Object, 
                 _vcsGateway.Object, 
                 _repository.Object, 
                 new ProjectsEventSink(
-                    _eventRepository.Object, 
-                    _distributionPolicyFactory.Object));
+                    _distributionPolicyFactory.Object,
+                    _eventRepository.Object));
 
         }
 
@@ -81,8 +81,10 @@ namespace ProjectManagementTests
             _pmGateway.Verify(pm => pm.CreateProject(It.Is<CreateProjectRequest>(
                 request => request.Equals(createRequest))),
                 Times.Once);
-            _eventRepository.Verify(repo => repo.DistrubuteEvent(It.Is<Event>(
-                @event => @event.EventType == typeof (NewProjectCreated).Name)),
+            _eventRepository.Verify(repo => repo.DistrubuteEvent(
+                It.Is<Event>(
+                    @event => @event.EventType == typeof (NewProjectCreated).Name),
+                It.IsAny<DistributionPolicy>()),
                 Times.Once);
         }
 
