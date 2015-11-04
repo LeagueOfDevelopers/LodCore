@@ -1,33 +1,43 @@
-﻿using NotificationService;
+﻿using Journalist;
+using NotificationService;
 
 namespace ProjectManagement.Domain.Events
 {
-    public class ProjectsEventSink : EventSink
+    public class ProjectsEventSink : EventSinkBase
     {
-        public ProjectsEventSink(IEventRepository repository, IDistributionPolicyFactory distributionPolicyFactory) 
-            : base(repository, distributionPolicyFactory)
+        public ProjectsEventSink(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository)
+            : base(distributionPolicyFactory, eventRepository)
         {
         }
 
-        public void SendNewDeveloperEvent(int projectId, int userId)
+        public override void ConsumeEvent(IEventInfo eventInfo)
         {
-            ConsumeEvent(new NewDeveloperOnProject(
-                userId, 
-                projectId, 
-                DistributionPolicyFactory.GetProjectRelatedPolicy(projectId)));
+            Require.NotNull(eventInfo, nameof(eventInfo));
+
+            var @event = new Event(eventInfo);
+
+            var distributionPolicy = GetDistributionPolicyForEvent((dynamic) eventInfo);
+
+            EventRepository.DistrubuteEvent(@event, distributionPolicy);
         }
 
-        public void SendNewProjectCreatedEvent(int projectId)
+        private DistributionPolicy GetDistributionPolicyForEvent(DeveloperHasLeftProject @eventInfo)
         {
-            ConsumeEvent(new NewProjectCreated(projectId, DistributionPolicyFactory.GetAllPolicy()));
+            return
+                DistributionPolicyFactory.GetProjectRelatedPolicy(@eventInfo.ProjectId)
+                    .Merge(DistributionPolicyFactory.GetAdminRelatedPolicy());
         }
 
-        public void SendDeveloperHasLeftProjectEvent(int projectId, int userId)
+        private DistributionPolicy GetDistributionPolicyForEvent(NewDeveloperOnProject @eventInfo)
         {
-            ConsumeEvent(new DeveloperHasLeftProject(
-                userId, 
-                projectId, 
-                DistributionPolicyFactory.GetProjectRelatedPolicy(projectId)));
+            return
+                DistributionPolicyFactory.GetProjectRelatedPolicy(@eventInfo.ProjectId)
+                    .Merge(DistributionPolicyFactory.GetAdminRelatedPolicy());
+        }
+
+        private DistributionPolicy GetDistributionPolicyForEvent(NewProjectCreated @eventInfo)
+        {
+            return DistributionPolicyFactory.GetAllPolicy();
         }
     }
 }

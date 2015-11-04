@@ -1,5 +1,4 @@
-﻿using System;
-using ProjectManagement.Application;
+﻿using ProjectManagement.Application;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Infrastructure
@@ -10,6 +9,8 @@ namespace ProjectManagement.Infrastructure
         
         void RemoveUserFromProject(Project project, int userId);
 
-        Uri CreateProject(CreateProjectRequest request);
+        Issue[] GetProjectIssues(int projectManagerProjectId);
+
+        int CreateProject(CreateProjectRequest request);
     }
 }

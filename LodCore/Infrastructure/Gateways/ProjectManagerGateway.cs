@@ -17,7 +17,12 @@ namespace Gateways
             throw new NotImplementedException();
         }
 
-        public Uri CreateProject(CreateProjectRequest request)
+        public Issue[] GetProjectIssues(int projectId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CreateProject(CreateProjectRequest request)
         {
             throw new NotImplementedException();
         }

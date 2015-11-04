@@ -36,12 +36,13 @@ namespace ProjectManagement.Domain
         {
             Require.Positive(projectId, nameof(projectId));
             var project = _repository.GetProject(projectId);
-
             if (project == null)
             {
                 throw new ProjectNotFoundException();
             }
 
+            var issues = _projectManagerGateway.GetProjectIssues(project.ProjectManagementSystemId);
+            project.Issues.AddRange(issues);
             return project;
         }
 
@@ -51,10 +52,6 @@ namespace ProjectManagement.Domain
 
             var vcsLink = _versionControlSystemGateway.CreateRepositoryForProject(request);
             var pmLink = _projectManagerGateway.CreateProject(request);
-            if (vcsLink == null || pmLink == null)
-            {
-                throw new ProjectCreationFailedException("Failed to create repository or project");
-            }
 
             var project = new Project(
                 request.Name, 
@@ -70,7 +67,7 @@ namespace ProjectManagement.Domain
                 null);
             var projectId = _repository.SaveProject(project);
 
-            _eventSink.SendNewProjectCreatedEvent(projectId);
+            _eventSink.ConsumeEvent(new NewProjectCreated(projectId));
         }
 
         public void UpdateProject(Project project)
@@ -94,11 +91,11 @@ namespace ProjectManagement.Domain
             project.ProjectUserIds.Add(userId);
 
             _projectManagerGateway.AddNewUserToProject(project, userId);
-            _versionControlSystemGateway.AddUserToProject(project, userId);
+            _versionControlSystemGateway.AddUserToRepository(project, userId);
 
             UpdateProject(project);
 
-            _eventSink.SendNewDeveloperEvent(projectId, userId);
+            _eventSink.ConsumeEvent(new NewDeveloperOnProject(userId, projectId));
         }
 
         public void RemoveUserFromProject(int projectId, int userId)
@@ -119,7 +116,7 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            _eventSink.SendDeveloperHasLeftProjectEvent(projectId, userId);
+            _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
         }
 
         private readonly IProjectManagerGateway _projectManagerGateway;

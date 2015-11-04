@@ -17,6 +17,7 @@ namespace DataAccess.Mappings
             });
             Property(user => user.Firstname, mapper => mapper.Column("Firstname"));
             Property(user => user.Lastname, mapper => mapper.Column("Lastname"));
+            Property(user => user.Role, mapper => mapper.Column("AccountRole"));
             Property(user => user.ConfirmationStatus, mapper => mapper.Column("ConfirmationStatus"));
             Property(user => user.PasswordHash, mapper => mapper.Column("Password"));
             

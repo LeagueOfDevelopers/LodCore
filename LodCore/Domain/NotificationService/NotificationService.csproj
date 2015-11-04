@@ -34,6 +34,10 @@
     <Reference Include="Journalist.LanguageExtensions">
       <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.4\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,13 +50,19 @@
   <ItemGroup>
     <Compile Include="DistributionPolicy.cs" />
     <Compile Include="Event.cs" />
+    <Compile Include="EventInfoBase.cs" />
+    <Compile Include="EventSinkBase.cs" />
     <Compile Include="IDistributionPolicyFactory.cs" />
+    <Compile Include="IEventInfo.cs" />
     <Compile Include="IEventRepository.cs" />
-    <Compile Include="EventSink.cs" />
+    <Compile Include="IEventSink.cs" />
     <Compile Include="INotificationService.cs" />
     <Compile Include="IProjectRelativesRepository.cs" />
     <Compile Include="IUsersRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

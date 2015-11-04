@@ -1,5 +1,4 @@
-﻿using System;
-using Journalist.Collections;
+﻿using Journalist.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
@@ -24,10 +23,10 @@ namespace ProjectManagementTests
 
             _pmGateway
                 .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<Uri>());
+                .Returns(_fixture.Create<int>());
             _vcsGateway
                 .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<Uri>());
+                .Returns(_fixture.Create<int>());
             _repository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);
@@ -47,15 +46,15 @@ namespace ProjectManagementTests
             _distributionPolicyFactory
                 .Setup(factory => factory.GetAdminRelatedPolicy())
                 .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _eventRepository.Setup(repository => repository.DistrubuteEvent(It.IsAny<Event>()));
+            _eventRepository.Setup(repository => repository.DistrubuteEvent(It.IsAny<Event>(), It.IsAny<DistributionPolicy>()));
 
             _projectProvider = new ProjectProvider(
                 _pmGateway.Object, 
                 _vcsGateway.Object, 
                 _repository.Object, 
                 new ProjectsEventSink(
-                    _eventRepository.Object, 
-                    _distributionPolicyFactory.Object));
+                    _distributionPolicyFactory.Object,
+                    _eventRepository.Object));
 
         }
 
@@ -81,8 +80,10 @@ namespace ProjectManagementTests
             _pmGateway.Verify(pm => pm.CreateProject(It.Is<CreateProjectRequest>(
                 request => request.Equals(createRequest))),
                 Times.Once);
-            _eventRepository.Verify(repo => repo.DistrubuteEvent(It.Is<Event>(
-                @event => @event.EventType == typeof (NewProjectCreated).Name)),
+            _eventRepository.Verify(repo => repo.DistrubuteEvent(
+                It.Is<Event>(
+                    @event => @event.EventType == typeof (NewProjectCreated).Name),
+                It.IsAny<DistributionPolicy>()),
                 Times.Once);
         }
 

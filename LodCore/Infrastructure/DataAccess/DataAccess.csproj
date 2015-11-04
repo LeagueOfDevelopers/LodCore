@@ -57,9 +57,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseSessionProvider.cs" />
+    <Compile Include="Entities\Delivery.cs" />
+    <Compile Include="Mappings\DeliveryMap.cs" />
+    <Compile Include="Mappings\EventMap.cs" />
     <Compile Include="Mappings\ProfileMap.cs" />
+    <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EventRepository.cs" />
+    <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +77,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Domain\NotificationService\NotificationService.csproj">
+      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
+      <Name>NotificationService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\ProjectManagement\ProjectManagement.csproj">
+      <Project>{C3F94FDD-F4C4-45D5-B6B1-A91D3520CD1D}</Project>
+      <Name>ProjectManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Domain\UserManagement\UserManagement.csproj">
       <Project>{56B90624-417A-4998-83C8-68A34DAE0AB0}</Project>
       <Name>UserManagement</Name>

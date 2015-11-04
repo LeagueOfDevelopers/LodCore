@@ -3,9 +3,9 @@ using NotificationService;
 
 namespace UserManagement.Domain.Events
 {
-    public class NewFullConfirmedDeveloper : Event
+    public class NewFullConfirmedDeveloper : EventInfoBase
     {
-        public NewFullConfirmedDeveloper(int userId, DistributionPolicy distributionPolicy) : base(distributionPolicy)
+        public NewFullConfirmedDeveloper(int userId)
         {
             Require.Positive(userId, nameof(userId));
 

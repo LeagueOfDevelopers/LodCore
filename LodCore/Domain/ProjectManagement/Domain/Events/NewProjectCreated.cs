@@ -3,9 +3,9 @@ using NotificationService;
 
 namespace ProjectManagement.Domain.Events
 {
-    public class NewProjectCreated : Event
+    public class NewProjectCreated : EventInfoBase
     {
-        public NewProjectCreated(int projectId, DistributionPolicy distributionPolicy) : base(distributionPolicy)
+        public NewProjectCreated(int projectId)
         {
             Require.Positive(projectId, nameof(projectId));
 
