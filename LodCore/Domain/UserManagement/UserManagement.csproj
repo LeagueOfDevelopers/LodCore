@@ -49,11 +49,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\CreateAccountRequest.cs" />
+    <Compile Include="Application\IAuthorizer.cs" />
     <Compile Include="Application\IConfirmationService.cs" />
     <Compile Include="Application\IUserManager.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\AccountAlreadyExistsException.cs" />
     <Compile Include="Domain\AccountNotFoundException.cs" />
+    <Compile Include="Domain\AccountRole.cs" />
     <Compile Include="Domain\ConfirmationStatus.cs" />
     <Compile Include="Domain\Events\NewFullConfirmedDeveloper.cs" />
     <Compile Include="Domain\Events\NewEmailConfirmedDeveloper.cs" />
