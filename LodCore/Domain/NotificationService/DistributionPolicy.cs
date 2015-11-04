@@ -19,6 +19,6 @@ namespace NotificationService
             return new DistributionPolicy(newIdsArr);
         }
 
-        internal int[] ReceiverIds { get; } 
+        public int[] ReceiverIds { get; } 
     }
 }

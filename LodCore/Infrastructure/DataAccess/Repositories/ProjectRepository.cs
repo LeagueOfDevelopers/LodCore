@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using Journalist;
+using NHibernate.Linq;
 using NotificationService;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
@@ -7,29 +10,55 @@ namespace DataAccess.Repositories
 {
     public class ProjectRepository : IProjectRepository, IProjectRelativesRepository
     {
+        public ProjectRepository(DatabaseSessionProvider databaseSessionProvider)
+        {
+            Require.NotNull(databaseSessionProvider, nameof(databaseSessionProvider));
+
+            _databaseSessionProvider = databaseSessionProvider;
+        }
+
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)
         {
-            throw new NotImplementedException();
+            using (var session = _databaseSessionProvider.OpenSession())
+            {
+                return criteria == null
+                    ? session.Query<Project>().ToArray()
+                    : session.Query<Project>().Where(criteria).ToArray();
+            }
         }
 
         public Project GetProject(int projectId)
         {
-            throw new NotImplementedException();
+            using (var session = _databaseSessionProvider.OpenSession())
+            {
+                return session.Get<Project>(projectId);
+            }
         }
 
         public int SaveProject(Project project)
         {
-            throw new NotImplementedException();
+            Require.NotNull(project, nameof(project));
+            using (var session = _databaseSessionProvider.OpenSession())
+            {
+                return (int)session.Save(project);
+            }
         }
 
         public void UpdateProject(Project project)
         {
-            throw new NotImplementedException();
+            Require.NotNull(project, nameof(project));
+
+            using (var session = _databaseSessionProvider.OpenSession())
+            {
+                session.Update(project);
+            }
         }
 
         public int[] GetAllProjectRelativeIds(int projectId)
         {
             return GetProject(projectId).ProjectUserIds.ToArray();
         }
+
+        private readonly DatabaseSessionProvider _databaseSessionProvider;
     }
 }

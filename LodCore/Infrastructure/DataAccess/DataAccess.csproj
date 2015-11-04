@@ -57,6 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseSessionProvider.cs" />
+    <Compile Include="Entities\Delivery.cs" />
+    <Compile Include="Mappings\DeliveryMap.cs" />
     <Compile Include="Mappings\EventMap.cs" />
     <Compile Include="Mappings\ProfileMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
@@ -88,9 +90,7 @@
       <Name>UserManagement</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -80,6 +80,5 @@ namespace DataAccess.Repositories
         }
 
         private readonly DatabaseSessionProvider _sessionProvider;
-        
     }
 }
