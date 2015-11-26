@@ -8,14 +8,8 @@ namespace DataAccess.Mappings
     {
         public DeliveryMap()
         {
-            Id(model => model.DeliveryId, mapper =>
-            {
-                mapper.Column("DeliveryId");
-                mapper.Generator(Generators.Identity);
-            });
             Property(model => model.UserId, mapper => mapper.Column("UserId"));
             Property(model => model.EventId, mapper => mapper.Column("EventId"));
-            Property(model => model.WasRead, mapper => mapper.Column("WasRead"));
         }
     }
 }

@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Journalist.LanguageExtensions">
-      <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.4\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
+    <Reference Include="Journalist.LanguageExtensions, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
@@ -50,18 +51,22 @@
   <ItemGroup>
     <Compile Include="Application\CreateAccountRequest.cs" />
     <Compile Include="Application\IConfirmationService.cs" />
+    <Compile Include="Application\IMailer.cs" />
     <Compile Include="Application\IUserManager.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\AccountAlreadyExistsException.cs" />
     <Compile Include="Domain\AccountNotFoundException.cs" />
     <Compile Include="Domain\AccountRole.cs" />
+    <Compile Include="Domain\ConfirmationService.cs" />
     <Compile Include="Domain\ConfirmationStatus.cs" />
     <Compile Include="Domain\Events\NewFullConfirmedDeveloper.cs" />
     <Compile Include="Domain\Events\NewEmailConfirmedDeveloper.cs" />
     <Compile Include="Domain\Events\UserManagementEventSink.cs" />
+    <Compile Include="Domain\MailValidationRequest.cs" />
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\UserManager.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
+    <Compile Include="Infrastructure\IValidationRequestsRepository.cs" />
     <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

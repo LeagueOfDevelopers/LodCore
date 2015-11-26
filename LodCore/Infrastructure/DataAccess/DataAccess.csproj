@@ -35,8 +35,9 @@
       <HintPath>..\..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Journalist.LanguageExtensions">
-      <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.4\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
+    <Reference Include="Journalist.LanguageExtensions, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
@@ -60,6 +61,7 @@
     <Compile Include="Entities\Delivery.cs" />
     <Compile Include="Mappings\DeliveryMap.cs" />
     <Compile Include="Mappings\EventMap.cs" />
+    <Compile Include="Mappings\MailValidationRequestMap.cs" />
     <Compile Include="Mappings\ProfileMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />

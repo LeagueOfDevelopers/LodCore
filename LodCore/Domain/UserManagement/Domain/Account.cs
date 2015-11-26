@@ -40,7 +40,7 @@ namespace UserManagement.Domain
 
         public virtual AccountRole Role { get; protected set; }
 
-        public virtual ConfirmationStatus ConfirmationStatus { get; protected set; }
+        public virtual ConfirmationStatus ConfirmationStatus { get; set; }
 
         public virtual Profile Profile { get; protected set; }
     }
