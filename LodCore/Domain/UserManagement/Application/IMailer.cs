@@ -1,6 +1,6 @@
 ﻿namespace UserManagement.Application
 {
-    internal interface IMailer
+    public interface IMailer
     {
         void SendConfirmationMail(string confirmationToken, string email);
     }

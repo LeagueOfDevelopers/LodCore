@@ -2,7 +2,7 @@
 
 namespace UserManagement.Infrastructure
 {
-    internal interface IValidationRequestsRepository
+    public interface IValidationRequestsRepository
     {
         void SaveValidationRequest(MailValidationRequest request);
 

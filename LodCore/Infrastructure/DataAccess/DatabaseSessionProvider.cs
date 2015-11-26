@@ -18,6 +18,7 @@ namespace DataAccess
             modelMapper.AddMapping<ProjectMap>();
             modelMapper.AddMapping<EventMap>();
             modelMapper.AddMapping<DeliveryMap>();
+            modelMapper.AddMapping<MailValidationRequestMap>();
             configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
 
             _factory = configuration.BuildSessionFactory();
