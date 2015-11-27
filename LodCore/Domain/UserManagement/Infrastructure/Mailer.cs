@@ -2,10 +2,10 @@
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
-using UserManagement.Application;
 using Journalist;
+using UserManagement.Application;
 
-namespace UserManagement.Domain
+namespace UserManagement.Infrastructure
 {
     class Mailer : IMailer
     {
@@ -19,18 +19,15 @@ namespace UserManagement.Domain
             string password = ConfigurationManager.AppSettings["password"];
 
             string from = ConfigurationManager.AppSettings["from"];
-            string message1 = ConfigurationManager.AppSettings["message1"];
-            string message2 = ConfigurationManager.AppSettings["message2"];
+            string message = string.Format(ValidationMessageResources.messageTemplate, confirmationToken);
             string caption = ConfigurationManager.AppSettings["caption"];
 
-
-
-            MailMessage mail = new MailMessage();
+            var mail = new MailMessage();
             mail.From = new MailAddress(from);
             mail.To.Add(new MailAddress(email));
             mail.Subject = caption;
-            mail.Body = message1 + confirmationToken + message2;
-            SmtpClient client = new SmtpClient();
+            mail.Body = message;
+            var client = new SmtpClient();
             client.Host = smtpServer;
             client.Port = port;
             client.EnableSsl = true;

@@ -1,10 +1,11 @@
-﻿using Journalist;
+﻿using System;
+using Journalist;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 
 namespace DataAccess.Repositories
 {
-    class ValidationRequestsRepository : IValidationRequestsRepository
+    public class ValidationRequestsRepository : IValidationRequestsRepository
     {
         public ValidationRequestsRepository(DatabaseSessionProvider sessionProvider)
         {
@@ -22,17 +23,17 @@ namespace DataAccess.Repositories
             }
         }
 
-        public int GetIdOfRequest(string token)
+        public MailValidationRequest GetMailValidatoinRequest(string token)
         {
             Require.NotNull(token, nameof(token));
 
             using (var session = _sessionProvider.OpenSession())
             {
                 var request = session.Get<MailValidationRequest>(token);
-                return request.UserId;
+                return request;
             }
         }
-        private readonly DatabaseSessionProvider _sessionProvider;
 
+        private readonly DatabaseSessionProvider _sessionProvider;
     }
 }

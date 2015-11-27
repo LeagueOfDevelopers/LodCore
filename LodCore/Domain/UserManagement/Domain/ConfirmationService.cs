@@ -9,7 +9,7 @@ using UserManagement.Infrastructure;
 
 namespace UserManagement.Domain
 {
-    class ConfirmationService : IConfirmationService
+    public class ConfirmationService : IConfirmationService
     {
         public ConfirmationService( IUserRepository userRepository, IMailer mailer, IValidationRequestsRepository validationRequestsRepository)
         {
@@ -22,18 +22,22 @@ namespace UserManagement.Domain
         {
             Require.Positive(userId, nameof(userId));
 
-            string token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 
             _mailer.SendConfirmationMail(token, _userRepository.GetAccount(userId).Email);
 
-            MailValidationRequest request = new MailValidationRequest(userId, token);
+            var request = new MailValidationRequest(userId, token);
             _validationRequestsRepository.SaveValidationRequest(request);
         }
 
         public void ConfirmEmail(string confirmationToken)
         {
-            int userId = _validationRequestsRepository.GetIdOfRequest(confirmationToken);
-            Account userAccount = _userRepository.GetAccount(userId);
+            var validationRequest = _validationRequestsRepository.GetMailValidatoinRequest(confirmationToken);
+            if (validationRequest == null)
+            {
+                throw new TokenNotFoundException();
+            }
+            var userAccount = _userRepository.GetAccount(validationRequest.UserId);
 
             userAccount.ConfirmationStatus = ConfirmationStatus.EmailConfirmed;
 
@@ -42,15 +46,15 @@ namespace UserManagement.Domain
 
         public void ConfirmProfile(int userId)
         {
-            Account userAccount = _userRepository.GetAccount(userId);
+            var userAccount = _userRepository.GetAccount(userId);
 
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
             _userRepository.UpdateAccount(userAccount);
         }
 
-        private IMailer _mailer;
-        private IUserRepository _userRepository;
-        private IValidationRequestsRepository _validationRequestsRepository;
+        private readonly IMailer _mailer;
+        private readonly IUserRepository _userRepository;
+        private readonly IValidationRequestsRepository _validationRequestsRepository;
     }
 }

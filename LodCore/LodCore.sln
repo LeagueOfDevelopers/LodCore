@@ -2,6 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{1D70EC78-CF24-4E1B-BDDF-619F49119C9F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{A6355D59-C90D-431B-8B1A-3B4E30340280}"
@@ -14,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManagement", "Domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "Infrastructure\DataAccess\DataAccess.csproj", "{6E6BCA8C-2B4D-4867-AE47-64565E64357C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagerTests", "Tests\UserManagerTests\UserManagerTests.csproj", "{267138B4-9EFC-4844-82E4-A8C8CA378FE1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserManagmentTests", "Tests\UserManagerTests\UserManagmentTests.csproj", "{267138B4-9EFC-4844-82E4-A8C8CA378FE1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserPresentaton", "UserPresentaton\UserPresentaton.csproj", "{184FF097-9B8C-4236-8538-444F9DCCB564}"
 EndProject
