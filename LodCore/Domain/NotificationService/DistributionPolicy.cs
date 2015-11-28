@@ -12,13 +12,13 @@ namespace NotificationService
             ReceiverIds = receiverIds;
         }
 
+        public int[] ReceiverIds { get; }
+
         public DistributionPolicy Merge(DistributionPolicy policy)
         {
             var mergingIds = policy.ReceiverIds;
             var newIdsArr = ReceiverIds.Union(mergingIds).ToArray();
             return new DistributionPolicy(newIdsArr);
         }
-
-        public int[] ReceiverIds { get; } 
     }
 }

@@ -13,15 +13,16 @@ namespace DataAccess.Entities
             EventId = eventId;
         }
 
-        protected Delivery() { }
+        protected Delivery()
+        {
+        }
 
         public virtual int DeliveryId { get; protected set; }
 
-        public virtual int UserId { get; protected set; } 
+        public virtual int UserId { get; protected set; }
 
         public virtual int EventId { get; protected set; }
 
         public virtual bool WasRead { get; set; } = false;
-
     }
 }

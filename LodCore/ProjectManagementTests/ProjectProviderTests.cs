@@ -13,6 +13,15 @@ namespace ProjectManagementTests
     [TestClass]
     public class ProjectProviderTests
     {
+        private Mock<IDistributionPolicyFactory> _distributionPolicyFactory;
+        private Mock<IEventRepository> _eventRepository;
+
+        private Fixture _fixture;
+        private Mock<IProjectManagerGateway> _pmGateway;
+        private ProjectProvider _projectProvider;
+        private Mock<IProjectRepository> _repository;
+        private Mock<IVersionControlSystemGateway> _vcsGateway;
+
         [TestInitialize]
         public void Setup()
         {
@@ -46,16 +55,16 @@ namespace ProjectManagementTests
             _distributionPolicyFactory
                 .Setup(factory => factory.GetAdminRelatedPolicy())
                 .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _eventRepository.Setup(repository => repository.DistrubuteEvent(It.IsAny<Event>(), It.IsAny<DistributionPolicy>()));
+            _eventRepository.Setup(
+                repository => repository.DistrubuteEvent(It.IsAny<Event>(), It.IsAny<DistributionPolicy>()));
 
             _projectProvider = new ProjectProvider(
-                _pmGateway.Object, 
-                _vcsGateway.Object, 
-                _repository.Object, 
+                _pmGateway.Object,
+                _vcsGateway.Object,
+                _repository.Object,
                 new ProjectsEventSink(
                     _distributionPolicyFactory.Object,
                     _eventRepository.Object));
-
         }
 
         [TestMethod]
@@ -86,13 +95,5 @@ namespace ProjectManagementTests
                 It.IsAny<DistributionPolicy>()),
                 Times.Once);
         }
-
-        private Fixture _fixture;
-        private Mock<IProjectManagerGateway> _pmGateway;
-        private Mock<IProjectRepository> _repository;
-        private Mock<IVersionControlSystemGateway> _vcsGateway;
-        private ProjectProvider _projectProvider;
-        private Mock<IDistributionPolicyFactory> _distributionPolicyFactory;
-        private Mock<IEventRepository> _eventRepository;
     }
 }

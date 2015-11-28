@@ -15,7 +15,9 @@ namespace NotificationService
             EventInfo = SerializeEventInfo(eventInfo);
         }
 
-        protected Event() { }
+        protected Event()
+        {
+        }
 
         public virtual int Id { get; protected set; }
 

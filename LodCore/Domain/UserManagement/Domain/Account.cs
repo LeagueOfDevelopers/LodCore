@@ -5,19 +5,19 @@ namespace UserManagement.Domain
     public class Account
     {
         public Account(
-            string firstname, 
-            string lastname, 
-            string email, 
-            string passwordHash, 
-            AccountRole role, 
-            ConfirmationStatus confirmationStatus, 
+            string firstname,
+            string lastname,
+            string email,
+            string passwordHash,
+            AccountRole role,
+            ConfirmationStatus confirmationStatus,
             Profile profile)
         {
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotEmpty(email, nameof(email));
             Require.NotEmpty(passwordHash, nameof(passwordHash));
-            
+
             Firstname = firstname;
             Lastname = lastname;
             Email = email;
@@ -26,9 +26,12 @@ namespace UserManagement.Domain
             ConfirmationStatus = confirmationStatus;
             Profile = profile;
         }
-        protected Account() { }
 
-        public virtual int UserId { get; protected set; }  
+        protected Account()
+        {
+        }
+
+        public virtual int UserId { get; protected set; }
 
         public virtual string Firstname { get; protected set; }
 

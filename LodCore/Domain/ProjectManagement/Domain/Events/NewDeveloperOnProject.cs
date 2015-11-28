@@ -13,7 +13,7 @@ namespace ProjectManagement.Domain.Events
             UserId = userId;
             ProjectId = projectId;
         }
-        
+
         public int UserId { get; private set; }
 
         public int ProjectId { get; private set; }

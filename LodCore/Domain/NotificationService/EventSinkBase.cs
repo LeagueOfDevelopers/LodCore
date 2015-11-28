@@ -13,11 +13,10 @@ namespace NotificationService
             EventRepository = eventRepository;
         }
 
-        public abstract void ConsumeEvent(IEventInfo eventInfo);
-
         protected IDistributionPolicyFactory DistributionPolicyFactory { get; private set; }
 
         protected IEventRepository EventRepository { get; private set; }
-        
+
+        public abstract void ConsumeEvent(IEventInfo eventInfo);
     }
 }

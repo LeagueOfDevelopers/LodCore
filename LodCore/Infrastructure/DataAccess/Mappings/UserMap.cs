@@ -20,11 +20,11 @@ namespace DataAccess.Mappings
             Property(user => user.Role, mapper => mapper.Column("AccountRole"));
             Property(user => user.ConfirmationStatus, mapper => mapper.Column("ConfirmationStatus"));
             Property(user => user.PasswordHash, mapper => mapper.Column("Password"));
-            
+
             ManyToOne(user => user.Profile, mapper =>
             {
                 mapper.Cascade(Cascade.All);
-                mapper.Class(typeof(Profile));
+                mapper.Class(typeof (Profile));
             });
         }
     }

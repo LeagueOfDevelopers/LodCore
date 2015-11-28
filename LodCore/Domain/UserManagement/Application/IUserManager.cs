@@ -9,7 +9,7 @@ namespace UserManagement.Application
         List<Account> GetUserList(Func<Account, bool> criteria = null);
 
         Account GetUser(int userId);
-        
+
         void CreateUser(CreateAccountRequest request);
 
         void UpdateUser(Account account);

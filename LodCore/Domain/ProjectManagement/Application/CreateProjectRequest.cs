@@ -7,10 +7,10 @@ namespace ProjectManagement.Application
     public class CreateProjectRequest
     {
         public CreateProjectRequest(
-            string name, 
-            ProjectType projectType, 
-            string info, 
-            AccessLevel accessLevel, 
+            string name,
+            ProjectType projectType,
+            string info,
+            AccessLevel accessLevel,
             Uri landingImageUri)
         {
             Require.NotEmpty(name, nameof(name));

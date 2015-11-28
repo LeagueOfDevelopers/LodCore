@@ -10,11 +10,18 @@ namespace DataAccess.Repositories
 {
     public class ProjectRepository : IProjectRepository, IProjectRelativesRepository
     {
+        private readonly DatabaseSessionProvider _databaseSessionProvider;
+
         public ProjectRepository(DatabaseSessionProvider databaseSessionProvider)
         {
             Require.NotNull(databaseSessionProvider, nameof(databaseSessionProvider));
 
             _databaseSessionProvider = databaseSessionProvider;
+        }
+
+        public int[] GetAllProjectRelativeIds(int projectId)
+        {
+            return GetProject(projectId).ProjectUserIds.ToArray();
         }
 
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)
@@ -40,7 +47,7 @@ namespace DataAccess.Repositories
             Require.NotNull(project, nameof(project));
             using (var session = _databaseSessionProvider.OpenSession())
             {
-                return (int)session.Save(project);
+                return (int) session.Save(project);
             }
         }
 
@@ -53,12 +60,5 @@ namespace DataAccess.Repositories
                 session.Update(project);
             }
         }
-
-        public int[] GetAllProjectRelativeIds(int projectId)
-        {
-            return GetProject(projectId).ProjectUserIds.ToArray();
-        }
-
-        private readonly DatabaseSessionProvider _databaseSessionProvider;
     }
 }

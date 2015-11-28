@@ -8,13 +8,13 @@ namespace UserManagement.Domain
         public Profile(
             int userId,
             Uri bigPhotoUri,
-            Uri smallPhotoUri, 
-            string email, 
-            DateTime registrationTime, 
-            Uri vkProfileUri, 
-            string phoneNumber, 
-            int studentAccessionYear, 
-            string studyingDirection, 
+            Uri smallPhotoUri,
+            string email,
+            DateTime registrationTime,
+            Uri vkProfileUri,
+            string phoneNumber,
+            int studentAccessionYear,
+            string studyingDirection,
             string instituteName,
             string specialization)
         {
@@ -34,15 +34,17 @@ namespace UserManagement.Domain
             InstituteName = instituteName;
             Specialization = specialization;
         }
-        
-        protected Profile() { }
-        
+
+        protected Profile()
+        {
+        }
+
         public virtual int UserId { get; protected set; }
 
         public virtual Uri BigPhotoUri { get; protected set; }
 
         public virtual Uri SmallPictureUri { get; protected set; }
-        
+
         public virtual DateTime RegistrationTime { get; protected set; }
 
         public virtual Uri VkProfileUri { get; protected set; }

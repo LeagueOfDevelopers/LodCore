@@ -1,16 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mailing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using UserManagement.Domain;
 
 namespace UserManagerTests
 {
     [TestClass]
     public class MailerTests
     {
+        private Mailer _mailer;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _mailer = new Mailer(new MailerSettings());
+        }
+
+        [TestMethod]
+        public void SendConfirmationMailSendsMail()
+        {
+            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            _mailer.SendConfirmationMail(token, "boris.valdman@live.ru");
+        }
     }
 }

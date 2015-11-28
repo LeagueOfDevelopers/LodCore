@@ -1,5 +1,4 @@
 ﻿using DataAccess.Entities;
-using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 
 namespace DataAccess.Mappings

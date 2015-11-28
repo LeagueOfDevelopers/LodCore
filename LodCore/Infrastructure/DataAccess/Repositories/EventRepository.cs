@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DataAccess.Entities;
 using Journalist;
-using NHibernate.Criterion;
 using NHibernate.Linq;
 using NotificationService;
 
@@ -9,6 +8,8 @@ namespace DataAccess.Repositories
 {
     public class EventRepository : IEventRepository
     {
+        private readonly DatabaseSessionProvider _sessionProvider;
+
         public EventRepository(DatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
@@ -49,7 +50,8 @@ namespace DataAccess.Repositories
             using (var session = _sessionProvider.OpenSession())
             using (var transaction = session.BeginTransaction())
             {
-                var deliveries = session.Query<Delivery>().Where(delivery => eventIds.Contains(delivery.EventId)).ToArray();
+                var deliveries =
+                    session.Query<Delivery>().Where(delivery => eventIds.Contains(delivery.EventId)).ToArray();
                 foreach (var delivery in deliveries)
                 {
                     delivery.WasRead = true;
@@ -59,7 +61,5 @@ namespace DataAccess.Repositories
                 transaction.Commit();
             }
         }
-
-        private readonly DatabaseSessionProvider _sessionProvider;
     }
 }

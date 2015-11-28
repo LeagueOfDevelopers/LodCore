@@ -5,7 +5,8 @@ namespace UserManagement.Domain.Events
 {
     public class UserManagementEventSink : EventSinkBase
     {
-        public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository) 
+        public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory,
+            IEventRepository eventRepository)
             : base(distributionPolicyFactory, eventRepository)
         {
         }
@@ -16,7 +17,7 @@ namespace UserManagement.Domain.Events
 
             var @event = new Event(eventInfo);
 
-            var distributionPolicy = GetDistributionPolicyForEvent((dynamic)eventInfo);
+            var distributionPolicy = GetDistributionPolicyForEvent((dynamic) eventInfo);
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
         }

@@ -11,7 +11,7 @@ namespace DataAccess.Mappings
             Id(user => user.UserId);
             Property(user => user.PhoneNumber, mapper => mapper.Column("PhoneNumber"));
             Property(user => user.BigPhotoUri, mapper => mapper.Column("BigPhotoUri"));
-            Property(user => user.SmallPictureUri, mapper=> mapper.Column("SmallPictureUri"));
+            Property(user => user.SmallPictureUri, mapper => mapper.Column("SmallPictureUri"));
             Property(user => user.VkProfileUri, mapper => mapper.Column("VkProfileUri"));
             Property(user => user.InstituteName, mapper => mapper.Column("InstituteName"));
             Property(user => user.Specialization, mapper => mapper.Column("Specialization"));

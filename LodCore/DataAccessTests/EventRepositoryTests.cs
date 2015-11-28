@@ -1,11 +1,8 @@
 ﻿using System.Linq;
 using DataAccess;
 using DataAccess.Repositories;
-using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NotificationService;
-using Ploeh.AutoFixture;
 using UserManagement.Domain.Events;
 
 namespace DataAccessTests

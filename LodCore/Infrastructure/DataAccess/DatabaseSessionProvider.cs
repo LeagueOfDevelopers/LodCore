@@ -8,6 +8,8 @@ namespace DataAccess
 {
     public class DatabaseSessionProvider
     {
+        private readonly ISessionFactory _factory;
+
         public DatabaseSessionProvider()
         {
             var configuration = new Configuration();
@@ -30,7 +32,5 @@ namespace DataAccess
         {
             return _factory.OpenSession();
         }
-
-        private readonly ISessionFactory _factory;
     }
 }

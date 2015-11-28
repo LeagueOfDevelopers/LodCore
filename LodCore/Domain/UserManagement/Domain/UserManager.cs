@@ -9,6 +9,10 @@ namespace UserManagement.Domain
 {
     public class UserManager : IUserManager
     {
+        private readonly IConfirmationService _confirmationService;
+
+        private readonly IUserRepository _repository;
+
         public UserManager(IUserRepository repository, IConfirmationService confirmationService)
         {
             Require.NotNull(repository, nameof(repository));
@@ -47,12 +51,12 @@ namespace UserManagement.Domain
             }
 
             var newAccount = new Account(
-                request.Firstname, 
-                request.Lastname, 
-                request.Email, 
-                request.Password, 
-                AccountRole.User, 
-                ConfirmationStatus.Unconfirmed, 
+                request.Firstname,
+                request.Lastname,
+                request.Email,
+                request.Password,
+                AccountRole.User,
+                ConfirmationStatus.Unconfirmed,
                 null);
 
             var userId = _repository.CreateAccount(newAccount);
@@ -72,8 +76,5 @@ namespace UserManagement.Domain
 
             _repository.UpdateAccount(account);
         }
-
-        private readonly IUserRepository _repository;
-        private readonly IConfirmationService _confirmationService;
     }
 }

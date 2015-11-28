@@ -7,15 +7,15 @@ namespace ProjectManagement.Domain
     public class Project
     {
         public Project(
-            string name, 
-            ProjectType projectType, 
-            string info, 
+            string name,
+            ProjectType projectType,
+            string info,
             ProjectStatus projectStatus,
-            Uri landingImageUri, 
-            AccessLevel accessLevel, 
-            int versionControlSystemId, 
-            int projectManagementSystemId, 
-            List<Issue> issues, 
+            Uri landingImageUri,
+            AccessLevel accessLevel,
+            int versionControlSystemId,
+            int projectManagementSystemId,
+            List<Issue> issues,
             List<int> projectUserIds,
             List<Uri> screenshots)
         {
@@ -37,7 +37,9 @@ namespace ProjectManagement.Domain
             Screenshots = screenshots ?? new List<Uri>();
         }
 
-        protected Project() { }
+        protected Project()
+        {
+        }
 
         public virtual int ProjectId { get; protected set; }
 
@@ -61,6 +63,6 @@ namespace ProjectManagement.Domain
 
         public virtual List<int> ProjectUserIds { get; protected set; }
 
-        public virtual List<Uri> Screenshots { get; protected set; } 
+        public virtual List<Uri> Screenshots { get; protected set; }
     }
 }

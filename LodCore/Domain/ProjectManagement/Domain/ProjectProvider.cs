@@ -10,9 +10,15 @@ namespace ProjectManagement.Domain
 {
     public class ProjectProvider : IProjectProvider
     {
+        private readonly ProjectsEventSink _eventSink;
+
+        private readonly IProjectManagerGateway _projectManagerGateway;
+        private readonly IProjectRepository _repository;
+        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
+
         public ProjectProvider(
             IProjectManagerGateway projectManagerGateway,
-            IVersionControlSystemGateway versionControlSystemGateway, 
+            IVersionControlSystemGateway versionControlSystemGateway,
             IProjectRepository repository,
             ProjectsEventSink eventSink)
         {
@@ -54,15 +60,15 @@ namespace ProjectManagement.Domain
             var pmLink = _projectManagerGateway.CreateProject(request);
 
             var project = new Project(
-                request.Name, 
+                request.Name,
                 request.ProjectType,
                 request.Info,
                 ProjectStatus.Planned,
                 request.LandingImageUri,
                 request.AccessLevel,
-                vcsLink, 
-                pmLink, 
-                null, 
+                vcsLink,
+                pmLink,
+                null,
                 null,
                 null);
             var projectId = _repository.SaveProject(project);
@@ -118,10 +124,5 @@ namespace ProjectManagement.Domain
 
             _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
         }
-
-        private readonly IProjectManagerGateway _projectManagerGateway;
-        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
-        private readonly IProjectRepository _repository;
-        private readonly ProjectsEventSink _eventSink;
     }
 }

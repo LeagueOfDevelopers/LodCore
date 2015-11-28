@@ -7,7 +7,7 @@ namespace ProjectManagement.Application
     public interface IProjectProvider
     {
         List<Project> GetProjects(Func<Project, bool> predicate = null);
-        
+
         Project GetProject(int projectId);
 
         void CreateProject(CreateProjectRequest request);

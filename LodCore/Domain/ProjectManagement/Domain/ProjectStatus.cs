@@ -2,9 +2,9 @@
 {
     public enum ProjectStatus
     {
-         Planned,
-         InProgress,
-         Frozen,
-         Done
+        Planned,
+        InProgress,
+        Frozen,
+        Done
     }
 }

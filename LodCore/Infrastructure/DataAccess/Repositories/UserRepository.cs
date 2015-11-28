@@ -12,6 +12,8 @@ namespace DataAccess.Repositories
 {
     public class UserRepository : IUserRepository, IUsersRepository
     {
+        private readonly DatabaseSessionProvider _sessionProvider;
+
         public UserRepository(DatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
@@ -55,8 +57,8 @@ namespace DataAccess.Repositories
         {
             using (var session = _sessionProvider.OpenSession())
             {
-                return predicate == null 
-                    ? session.Query<Account>().ToList() 
+                return predicate == null
+                    ? session.Query<Account>().ToList()
                     : session.Query<Account>().Where(predicate).ToList();
             }
         }
@@ -78,7 +80,5 @@ namespace DataAccess.Repositories
                     .SelectToArray(account => account.UserId);
             }
         }
-
-        private readonly DatabaseSessionProvider _sessionProvider;
     }
 }

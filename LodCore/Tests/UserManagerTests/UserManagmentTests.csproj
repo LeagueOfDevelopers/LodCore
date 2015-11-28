@@ -85,6 +85,10 @@
       <Project>{6E6BCA8C-2B4D-4867-AE47-64565E64357C}</Project>
       <Name>DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Mailing\Mailing.csproj">
+      <Project>{b2881ad8-9b31-4741-a0b0-36cc210fdbdb}</Project>
+      <Name>Mailing</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

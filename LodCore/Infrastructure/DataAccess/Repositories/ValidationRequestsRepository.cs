@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Linq;
 using Journalist;
+using NHibernate.Linq;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 
@@ -7,6 +8,8 @@ namespace DataAccess.Repositories
 {
     public class ValidationRequestsRepository : IValidationRequestsRepository
     {
+        private readonly DatabaseSessionProvider _sessionProvider;
+
         public ValidationRequestsRepository(DatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
@@ -34,6 +37,15 @@ namespace DataAccess.Repositories
             }
         }
 
-        private readonly DatabaseSessionProvider _sessionProvider;
+        public MailValidationRequest GetMailValidatoinRequest(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            using (var session = _sessionProvider.OpenSession())
+            {
+                var request = session.Query<MailValidationRequest>().Single(r => r.UserId == userId);
+                return request;
+            }
+        }
     }
 }

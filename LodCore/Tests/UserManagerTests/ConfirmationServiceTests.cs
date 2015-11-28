@@ -1,43 +1,92 @@
-﻿using System;
-using DataAccess.Repositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using  UserManagement.Domain;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using NotificationService;
+using UserManagement.Application;
+using UserManagement.Domain;
+using UserManagement.Infrastructure;
 
 namespace UserManagerTests
 {
     [TestClass]
     public class ConfirmationServiceTests
     {
+        private ConfirmationService _confirmationService;
+        private Mock<IEventSink> _eventSinkManagerStub;
+        private Mock<IMailer> _mailerStub;
+        private Mock<IUserRepository> _userRepoStub;
+        private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
+
+        [TestInitialize]
+        public void Setup()
+        {
+            _userRepoStub = new Mock<IUserRepository>();
+            _mailerStub = new Mock<IMailer>();
+            _validationRequesRepoStub = new Mock<IValidationRequestsRepository>();
+            _eventSinkManagerStub = new Mock<IEventSink>();
+
+            _confirmationService = new ConfirmationService(
+                _userRepoStub.Object,
+                _mailerStub.Object,
+                _validationRequesRepoStub.Object,
+                _eventSinkManagerStub.Object);
+        }
+
         [TestMethod]
         public void ConfirmationServiceSaveTheToken()
         {
-            var random = new Random();
-            var userId = random.Next(1, 500);
+            //arrange
+            var userId = 42;
+            _userRepoStub.Setup(rep => rep.GetAccount(42)).Returns((new Mock<Account>()).Object);
 
+            //act
             _confirmationService.SetupEmailConfirmation(userId);
-            
+
+            //assert
+            _validationRequesRepoStub.Verify(mock => mock.SaveValidationRequest(It.IsAny<MailValidationRequest>()),
+                Times.Once);
         }
 
         [TestMethod]
         public void ConfirmationServiceConfirmsEmail()
         {
-            var random = new Random();
-            var userId = random.Next(1, 500);
+            //arrange
+            var mailValidationRq = new MailValidationRequest(42, "thisistoken");
 
-            _confirmationService.SetupEmailConfirmation(userId);
+            _validationRequesRepoStub.Setup(rep => rep.GetMailValidatoinRequest(It.IsAny<string>()))
+                .Returns(mailValidationRq);
 
-            //_confirmationService.ConfirmEmail(/*тут нужен токен, но где его сука взять?*/);
+            var testAccMock = new Mock<Account>();
+            testAccMock.Setup(acc => acc.UserId).Returns(42);
+            testAccMock.Setup(acc => acc.ConfirmationStatus).Returns(ConfirmationStatus.Unconfirmed);
 
-            Assert.IsTrue(_userRepository.GetAccount(userId).ConfirmationStatus == ConfirmationStatus.EmailConfirmed);
+            _userRepoStub.Setup(rep => rep.GetAccount(mailValidationRq.UserId)).Returns(testAccMock.Object);
+
+            //act
+            _confirmationService.ConfirmEmail(mailValidationRq.Token);
+
+            //assert
+            testAccMock.VerifySet(mock => mock.ConfirmationStatus = ConfirmationStatus.EmailConfirmed);
         }
 
         [TestMethod]
         public void ConfirmationServiceConfirmsProfile()
         {
-            
-        }
+            var mailValidationRq = new MailValidationRequest(42, "thisistoken");
 
-        private ConfirmationService _confirmationService;
-        private UserRepository _userRepository;
+            _validationRequesRepoStub.Setup(rep => rep.GetMailValidatoinRequest(It.IsAny<string>()))
+                .Returns(mailValidationRq);
+
+            var testAccMock = new Mock<Account>();
+            testAccMock.Setup(acc => acc.UserId).Returns(42);
+            testAccMock.Setup(acc => acc.ConfirmationStatus).Returns(ConfirmationStatus.Unconfirmed);
+
+            _userRepoStub.Setup(rep => rep.GetAccount(mailValidationRq.UserId)).Returns(testAccMock.Object);
+
+            //act
+            _confirmationService.ConfirmProfile(mailValidationRq.UserId);
+
+            //assert
+            testAccMock.VerifySet(mock => mock.ConfirmationStatus = ConfirmationStatus.FullyConfirmed);
+        }
     }
 }
