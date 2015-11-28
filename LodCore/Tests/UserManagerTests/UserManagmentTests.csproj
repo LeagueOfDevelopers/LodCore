@@ -69,7 +69,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConfirmationServiceTests.cs" />
-    <Compile Include="MailerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

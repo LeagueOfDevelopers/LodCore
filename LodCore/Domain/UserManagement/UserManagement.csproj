@@ -50,7 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\AuthorizationToken.cs" />
+    <Compile Include="Domain\Authorizer.cs" />
     <Compile Include="Application\CreateAccountRequest.cs" />
+    <Compile Include="Application\IAuthorizer.cs" />
     <Compile Include="Application\IConfirmationService.cs" />
     <Compile Include="Application\IMailer.cs" />
     <Compile Include="Application\IUserManager.cs" />
