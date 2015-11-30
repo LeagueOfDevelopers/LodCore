@@ -1,4 +1,4 @@
-﻿namespace ProjectManagement.Domain
+﻿namespace Common
 {
     public enum ProjectType
     {
