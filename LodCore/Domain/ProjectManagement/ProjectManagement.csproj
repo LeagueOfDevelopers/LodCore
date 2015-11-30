@@ -59,6 +59,7 @@
     <Compile Include="Domain\ProjectNotFoundException.cs" />
     <Compile Include="Domain\ProjectProvider.cs" />
     <Compile Include="Domain\ProjectStatus.cs" />
+    <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
     <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />

@@ -15,7 +15,7 @@ namespace UserManagement.Domain
             CreationTime = creationTime;
         }
 
-        public int UserId { get; private set; }
+        public int UserId { get; private set; } 
 
         public string Token { get; private set; }
 

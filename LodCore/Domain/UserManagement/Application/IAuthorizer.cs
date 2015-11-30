@@ -5,9 +5,10 @@ namespace UserManagement.Application
 {
     public interface IAuthorizer
     {
-        TimeSpan TokenLifeTime { get; }
         bool CheckAuthorized(string authorizationToken, int userId);
 
         AuthorizationToken Authorize(string email, string password);
+
+        TimeSpan TokenLifeTime { get; }
     }
 }
