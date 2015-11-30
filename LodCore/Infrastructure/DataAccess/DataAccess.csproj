@@ -39,12 +39,24 @@
       <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Moq, Version=4.1.1308.2120, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Moq.4.1.1308.2120\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Npgsql, Version=3.0.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Npgsql.3.0.3\lib\net45\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.37.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.3.37.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture.AutoMoq, Version=3.37.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoFixture.AutoMoq.3.37.0\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -62,11 +74,13 @@
     <Compile Include="Mappings\DeliveryMap.cs" />
     <Compile Include="Mappings\EventMap.cs" />
     <Compile Include="Mappings\MailValidationRequestMap.cs" />
+    <Compile Include="Mappings\OrderMap.cs" />
     <Compile Include="Mappings\ProfileMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
+    <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\ValidationRequestsRepository.cs" />
@@ -80,6 +94,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Domain\NotificationService\NotificationService.csproj">
       <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
       <Name>NotificationService</Name>
@@ -91,6 +109,10 @@
     <ProjectReference Include="..\..\Domain\UserManagement\UserManagement.csproj">
       <Project>{56B90624-417A-4998-83C8-68A34DAE0AB0}</Project>
       <Name>UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OrderManager\OrderManagment.csproj">
+      <Project>{590545c7-8872-4a3c-8e98-c6f0ae96c23e}</Project>
+      <Name>OrderManagment</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

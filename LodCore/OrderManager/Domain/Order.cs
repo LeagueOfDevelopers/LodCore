@@ -18,6 +18,11 @@ namespace OrderManagement.Domain
             ProjectType = projectType1;
         }
 
+        protected Order()
+        {
+            
+        }
+
         public virtual int Id { get; protected set; }
         public virtual string Header { get; protected set; }
         public virtual DateTime CreatedOnDateTime { get; protected set; }

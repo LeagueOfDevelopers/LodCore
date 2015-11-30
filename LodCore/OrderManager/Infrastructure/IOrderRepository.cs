@@ -6,10 +6,10 @@ namespace OrderManagement.Infrastructure
 {
     public interface IOrderRepository
     {
-        List<Order> GetAllProjects(Func<Order, bool> criteria = null);
+        List<Order> GetAllOrders(Func<Order, bool> criteria = null);
 
-        Order GetProject(int projectId);
+        Order GetOrder(int projectId);
 
-        int SaveProject(Order project);
+        int SaveOrder(Order project);
     }
 }

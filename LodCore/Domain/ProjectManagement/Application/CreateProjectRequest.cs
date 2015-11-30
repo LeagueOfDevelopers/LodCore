@@ -1,4 +1,5 @@
 ﻿using System;
+using Common;
 using Journalist;
 using ProjectManagement.Domain;
 
