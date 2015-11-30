@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C3F94FDD-F4C4-45D5-B6B1-A91D3520CD1D}</ProjectGuid>
+    <ProjectGuid>{A7E2E00C-6398-4EF8-B893-1445B51B0B26}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProjectManagement</RootNamespace>
-    <AssemblyName>ProjectManagement</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>OrderManagement</RootNamespace>
+    <AssemblyName>OrderManagement</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Journalist.LanguageExtensions, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Journalist.LanguageExtensions.0.8.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,34 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\CreateProjectRequest.cs" />
-    <Compile Include="Domain\AccessLevel.cs" />
-    <Compile Include="Application\IProjectProvider.cs" />
-    <Compile Include="Domain\Events\DeveloperHasLeftProject.cs" />
-    <Compile Include="Domain\Events\NewProjectCreated.cs" />
-    <Compile Include="Domain\Events\ProjectsEventSink.cs" />
-    <Compile Include="Domain\Events\NewDeveloperOnProject.cs" />
-    <Compile Include="Domain\Issue.cs" />
-    <Compile Include="Domain\IssueCompletionStatus.cs" />
-    <Compile Include="Domain\IssueType.cs" />
-    <Compile Include="Domain\Project.cs" />
-    <Compile Include="Domain\ProjectNotFoundException.cs" />
-    <Compile Include="Domain\ProjectProvider.cs" />
-    <Compile Include="Domain\ProjectStatus.cs" />
-    <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
-    <Compile Include="Infrastructure\IProjectRepository.cs" />
-    <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />
-    <Compile Include="ProjectCreationFailedException.cs" />
+    <Compile Include="Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
-      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
-      <Name>NotificationService</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{8f53a08f-910d-4502-9e83-2fcb82c6535f}</Project>
+      <Name>Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
