@@ -44,7 +44,7 @@ namespace OrderManagement.Domain
             {
                 throw new OrderNotFoundException();
             }
-            return _orderRepository.GetOrder(idOfOrder);
+            return order;
         }
 
         public List<Order> GetAllOrders()
@@ -60,7 +60,7 @@ namespace OrderManagement.Domain
             {
                 throw new InstanceNotFoundException();
             }
-            return _orderRepository.GetAllOrders().Where(criteria).ToList();
+            return orders;
         }
     }
 }

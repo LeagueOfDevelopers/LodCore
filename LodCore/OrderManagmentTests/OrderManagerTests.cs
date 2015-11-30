@@ -61,6 +61,8 @@ namespace OrderManagmentTests
 
             _mailer.Setup(mock => mock.SendNewOrderEmail(orderMock.Object));
 
+            _orderRepository.Setup(mock => mock.GetOrder(orderMock.Object.Id)).Returns(orderMock.Object);
+
             //act
             _orderManagment.AddOrder(orderMock.Object);
             _orderManagment.GetOrder(orderMock.Object.Id);
