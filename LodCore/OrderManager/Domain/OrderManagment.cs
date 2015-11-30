@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
+using Journalist;
 using NotificationService;
 using OrderManagement.Application;
 using OrderManagement.Domain.Events;
@@ -25,6 +27,8 @@ namespace OrderManagement.Domain
 
         public void AddOrder(Order newOrder)
         {
+            Require.NotNull(newOrder, nameof(newOrder));
+
             _orderRepository.SaveOrder(newOrder);
 
             _orderManagmentEventSink.ConsumeEvent(new OrderPlaced(newOrder.Id, newOrder.Header, newOrder.Description));
@@ -34,6 +38,12 @@ namespace OrderManagement.Domain
 
         public Order GetOrder(int idOfOrder)
         {
+            Require.Positive(idOfOrder, nameof(idOfOrder));
+            var order = _orderRepository.GetOrder(idOfOrder);
+            if (order == null)
+            {
+                throw new OrderNotFoundException();
+            }
             return _orderRepository.GetOrder(idOfOrder);
         }
 
@@ -44,6 +54,12 @@ namespace OrderManagement.Domain
 
         public List<Order> FindOrders(Func<Order, bool> criteria)
         {
+            Require.NotNull(criteria, nameof(criteria));
+            var orders = _orderRepository.GetAllOrders().Where(criteria).ToList();
+            if (orders.Count == 0)
+            {
+                throw new InstanceNotFoundException();
+            }
             return _orderRepository.GetAllOrders().Where(criteria).ToList();
         }
     }

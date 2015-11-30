@@ -21,26 +21,29 @@ namespace DataAccess.Repositories
 
         public List<Order> GetAllOrders(Func<Order, bool> criteria = null)
         {
+            Require.NotNull(criteria, nameof(criteria));
             using (var session = _databaseSessionProvider.OpenSession())
             {
                 return session.Query<Order>().ToList();
             }
         }
 
-        public Order GetOrder(int projectId)
+        public Order GetOrder(int orderId)
         {
+            Require.Positive(orderId, nameof(orderId));
             using (var session = _databaseSessionProvider.OpenSession())
             {
-                return session.Get<Order>(projectId);
+                return session.Get<Order>(orderId);
             }
         }
 
-        public int SaveOrder(Order project)
+        public int SaveOrder(Order order)
         {
-            Require.NotNull(project, nameof(project));
+            Require.NotNull(order, nameof(order));
+            Require.NotNull(order, nameof(order));
             using (var session = _databaseSessionProvider.OpenSession())
             {
-                return (int) session.Save(project);
+                return (int) session.Save(order);
             }
         }
     }

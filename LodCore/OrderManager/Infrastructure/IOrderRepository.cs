@@ -8,8 +8,8 @@ namespace OrderManagement.Infrastructure
     {
         List<Order> GetAllOrders(Func<Order, bool> criteria = null);
 
-        Order GetOrder(int projectId);
+        Order GetOrder(int orderId);
 
-        int SaveOrder(Order project);
+        int SaveOrder(Order order);
     }
 }
