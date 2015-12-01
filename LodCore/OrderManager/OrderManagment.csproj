@@ -62,7 +62,6 @@
     <Compile Include="Domain\Order.cs" />
     <Compile Include="Domain\OrderManagment.cs" />
     <Compile Include="Domain\OrderNotFoundException.cs" />
-    <Compile Include="Infrastructure\IMailer.cs" />
     <Compile Include="Infrastructure\IOrderRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

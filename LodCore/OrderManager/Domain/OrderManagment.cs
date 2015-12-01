@@ -16,13 +16,10 @@ namespace OrderManagement.Domain
 
         private readonly IOrderRepository _orderRepository;
 
-        private readonly IMailer _mailer;
-
-        public OrderManagment(IOrderRepository orderRepository, IEventSink orderManagmentEventSink, IMailer mailer)
+        public OrderManagment(IOrderRepository orderRepository, IEventSink orderManagmentEventSink)
         {
             _orderRepository = orderRepository;
             _orderManagmentEventSink = orderManagmentEventSink;
-            _mailer = mailer;
         }
 
         public void AddOrder(Order newOrder)
@@ -32,8 +29,6 @@ namespace OrderManagement.Domain
             _orderRepository.SaveOrder(newOrder);
 
             _orderManagmentEventSink.ConsumeEvent(new OrderPlaced(newOrder.Id, newOrder.Header, newOrder.Description));
-
-            _mailer.SendNewOrderEmail(newOrder);
         }
 
         public Order GetOrder(int idOfOrder)
@@ -56,10 +51,6 @@ namespace OrderManagement.Domain
         {
             Require.NotNull(criteria, nameof(criteria));
             var orders = _orderRepository.GetAllOrders().Where(criteria).ToList();
-            if (orders.Count == 0)
-            {
-                throw new InstanceNotFoundException();
-            }
             return orders;
         }
     }
