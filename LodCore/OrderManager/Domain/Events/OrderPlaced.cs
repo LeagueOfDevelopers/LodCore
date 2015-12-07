@@ -13,12 +13,8 @@ namespace OrderManagement.Domain.Events
 
 
             UserId = orderId;
-            Header = header;
-            Description = description;
         }
 
         public int UserId { get; private set; }
-        public string Header { get; private set; }
-        public string Description { get; private set; }
     }
 }
