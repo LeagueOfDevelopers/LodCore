@@ -15,7 +15,7 @@ namespace OrderManagement.Domain
             Email = email;
             Description = description;
             Attachment = attachment;
-            ProjectType = projectType[];
+            ProjectType = projectType;
         }
 
         protected Order()

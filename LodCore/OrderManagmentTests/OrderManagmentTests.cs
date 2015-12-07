@@ -2,15 +2,20 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
-using OrderManagement.Infrastructure;
 using OrderManagement.Domain;
 using OrderManagement.Domain.Events;
+using OrderManagement.Infrastructure;
 
 namespace OrderManagmentTests
 {
     [TestClass]
     public class OrderManagmentTests
     {
+        private Mock<IEventSink> _eventSink;
+        private OrderManagment _orderManagment;
+
+        private Mock<IOrderRepository> _orderRepository;
+
         [TestInitialize]
         public void Setup()
         {
@@ -32,8 +37,7 @@ namespace OrderManagmentTests
 
             _eventSink.Setup(
                 mock =>
-                    mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id, orderMock.Object.Header,
-                        orderMock.Object.Description)));
+                    mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id)));
 
             //act
             _orderManagment.AddOrder(orderMock.Object);
@@ -54,8 +58,7 @@ namespace OrderManagmentTests
 
             _eventSink.Setup(
                 mock =>
-                    mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id, orderMock.Object.Header,
-                        orderMock.Object.Description)));
+                    mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id)));
 
             _orderRepository.Setup(mock => mock.GetOrder(orderMock.Object.Id)).Returns(orderMock.Object);
 
@@ -78,8 +81,7 @@ namespace OrderManagmentTests
 
             _eventSink.Setup(
                 mock =>
-                    mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id, orderMock.Object.Header,
-                        orderMock.Object.Description)));
+                    mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id)));
 
             //act
             _orderManagment.AddOrder(orderMock.Object);
@@ -89,7 +91,7 @@ namespace OrderManagmentTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof (ArgumentNullException))]
         public void UnsucceessfulyAddingOrderThrowsError()
         {
             //arrange
@@ -106,9 +108,5 @@ namespace OrderManagmentTests
             _eventSink.Verify(mock => mock.ConsumeEvent(It.IsAny<OrderPlaced>()), Times.Never);
             Assert.Fail();
         }
-
-        private Mock<IOrderRepository> _orderRepository;
-        private Mock<IEventSink> _eventSink;
-        private OrderManagment _orderManagment;
     }
 }

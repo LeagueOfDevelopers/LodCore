@@ -7,7 +7,7 @@ namespace DataAccess.Mappings
     {
         public DeliveryMap()
         {
-            Property(model => model.UserId, mapper => mapper.Column("UserId"));
+            Property(model => model.UserId, mapper => mapper.Column("OrderId"));
             Property(model => model.EventId, mapper => mapper.Column("EventId"));
         }
     }

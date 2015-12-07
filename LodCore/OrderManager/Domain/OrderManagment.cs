@@ -30,7 +30,7 @@ namespace OrderManagement.Domain
 
             _orderRepository.SaveOrder(newOrder);
 
-            _orderManagmentEventSink.ConsumeEvent(new OrderPlaced(newOrder.Id, newOrder.Header, newOrder.Description));
+            _orderManagmentEventSink.ConsumeEvent(new OrderPlaced(newOrder.Id));
         }
 
         public Order GetOrder(int idOfOrder)

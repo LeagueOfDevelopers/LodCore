@@ -8,7 +8,7 @@ namespace DataAccess.Mappings
         public MailValidationRequestMap()
         {
             Id(model => model.Token, mapper => mapper.Column("VerificationToken"));
-            Property(model => model.UserId, mapper => mapper.Column("UserId"));
+            Property(model => model.UserId, mapper => mapper.Column("OrderId"));
         }
     }
 }

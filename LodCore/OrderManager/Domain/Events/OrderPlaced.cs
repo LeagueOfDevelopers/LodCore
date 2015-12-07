@@ -9,9 +9,9 @@ namespace OrderManagement.Domain.Events
         {
             Require.Positive(orderId, nameof(orderId));
 
-            UserId = orderId;
+            OrderId = orderId;
         }
 
-        public int UserId { get; private set; }
+        public int OrderId { get; private set; }
     }
 }
