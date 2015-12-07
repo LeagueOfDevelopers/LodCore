@@ -14,11 +14,11 @@ namespace OrderManagement.Domain.Events
 
             UserId = orderId;
             Header = header;
-            ShortDescription = description.Length > 50 ? description.Substring(0, 50) : description;
+            Description = description;
         }
 
         public int UserId { get; private set; }
         public string Header { get; private set; }
-        public string ShortDescription { get; private set; }
+        public string Description { get; private set; }
     }
 }

@@ -19,9 +19,8 @@ namespace DataAccess.Repositories
             _databaseSessionProvider = databaseSessionProvider;
         }
 
-        public List<Order> GetAllOrders(Func<Order, bool> criteria = null)
+        public List<Order> GetAllOrders()
         {
-            Require.NotNull(criteria, nameof(criteria));
             using (var session = _databaseSessionProvider.OpenSession())
             {
                 return session.Query<Order>().ToList();
@@ -44,6 +43,24 @@ namespace DataAccess.Repositories
             using (var session = _databaseSessionProvider.OpenSession())
             {
                 return (int) session.Save(order);
+            }
+        }
+
+        public List<Order> FindOrdersByCriteria(Func<Order, bool> criteria = null)
+        {
+            Require.NotNull(criteria, nameof(criteria));
+            using (var session = _databaseSessionProvider.OpenSession())
+            {
+                return session.Query<Order>().ToList().FindAll(order => criteria(order));
+            }
+        }
+
+        public List<Order> GetAlFlOrders(Func<Order, bool> criteria = null)
+        {
+            Require.NotNull(criteria, nameof(criteria));
+            using (var session = _databaseSessionProvider.OpenSession())
+            {
+                return session.Query<Order>().ToList();
             }
         }
     }

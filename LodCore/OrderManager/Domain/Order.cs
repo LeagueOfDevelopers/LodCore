@@ -7,15 +7,15 @@ namespace OrderManagement.Domain
     public class Order
     {
         public Order(int id, string header, DateTime createdOnDateTime, MailAddress email, string description,
-            string attachment1, ProjectType projectType1)
+            string[] attachment, ProjectType projectType)
         {
             Id = id;
             Header = header;
             CreatedOnDateTime = createdOnDateTime;
             Email = email;
             Description = description;
-            Attachment = attachment1;
-            ProjectType = projectType1;
+            Attachment = attachment;
+            ProjectType = projectType[];
         }
 
         protected Order()
@@ -28,7 +28,7 @@ namespace OrderManagement.Domain
         public virtual DateTime CreatedOnDateTime { get; protected set; }
         public virtual MailAddress Email { get; protected set; }
         public virtual string Description { get; protected set; }
-        public virtual string Attachment { get; protected set; }
+        public virtual string[] Attachment { get; protected set; }
         public virtual ProjectType ProjectType { get; protected set; }
     }
 }

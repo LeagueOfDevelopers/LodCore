@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management.Instrumentation;
 using Journalist;
 using NotificationService;
 using OrderManagement.Application;
@@ -18,6 +17,9 @@ namespace OrderManagement.Domain
 
         public OrderManagment(IOrderRepository orderRepository, IEventSink orderManagmentEventSink)
         {
+            Require.NotNull(orderRepository, nameof(orderRepository));
+            Require.NotNull(orderManagmentEventSink, nameof(orderManagmentEventSink));
+
             _orderRepository = orderRepository;
             _orderManagmentEventSink = orderManagmentEventSink;
         }
@@ -50,7 +52,7 @@ namespace OrderManagement.Domain
         public List<Order> FindOrders(Func<Order, bool> criteria)
         {
             Require.NotNull(criteria, nameof(criteria));
-            var orders = _orderRepository.GetAllOrders().Where(criteria).ToList();
+            var orders = _orderRepository.FindOrdersByCriteria(criteria);
             return orders;
         }
     }

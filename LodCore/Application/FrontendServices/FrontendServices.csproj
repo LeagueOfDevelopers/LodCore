@@ -64,6 +64,10 @@
       <HintPath>..\..\packages\AutoFixture.AutoMoq.3.37.0\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SimpleInjector, Version=3.1.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.3.1.1\lib\net45\SimpleInjector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -101,6 +105,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\Bootstrap.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -120,6 +125,20 @@
     <Folder Include="App_Data\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\NotificationService\NotificationService.csproj">
+      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
+      <Name>NotificationService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\UserManagement\UserManagement.csproj">
+      <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
+      <Name>UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\DataAccess\DataAccess.csproj">
+      <Project>{6e6bca8c-2b4d-4867-ae47-64565e64357c}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
