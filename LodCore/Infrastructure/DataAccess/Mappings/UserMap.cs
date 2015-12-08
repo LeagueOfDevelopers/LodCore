@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.ByCode;
+﻿using DataAccess.Mappings.Application;
+using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 using UserManagement.Domain;
 
@@ -19,7 +20,11 @@ namespace DataAccess.Mappings
             Property(user => user.Lastname, mapper => mapper.Column("Lastname"));
             Property(user => user.Role, mapper => mapper.Column("AccountRole"));
             Property(user => user.ConfirmationStatus, mapper => mapper.Column("ConfirmationStatus"));
-            Property(user => user.Password, mapper => mapper.Column("Password"));
+            Property(user => user.Password, mapper =>
+            {
+                mapper.Column("Password");
+                mapper.Type<PasswordType>();
+            });
 
             ManyToOne(user => user.Profile, mapper =>
             {
