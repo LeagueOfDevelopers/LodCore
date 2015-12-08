@@ -1,4 +1,5 @@
-﻿using Journalist;
+﻿using Common;
+using Journalist;
 
 namespace UserManagement.Domain
 {
@@ -8,7 +9,7 @@ namespace UserManagement.Domain
             string firstname,
             string lastname,
             string email,
-            string passwordHash,
+            Password password,
             AccountRole role,
             ConfirmationStatus confirmationStatus,
             Profile profile)
@@ -16,12 +17,12 @@ namespace UserManagement.Domain
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotEmpty(email, nameof(email));
-            Require.NotEmpty(passwordHash, nameof(passwordHash));
+            Require.NotNull(Password, nameof(Password));
 
             Firstname = firstname;
             Lastname = lastname;
             Email = email;
-            PasswordHash = passwordHash;
+            Password = password;
             Role = role;
             ConfirmationStatus = confirmationStatus;
             Profile = profile;
@@ -39,7 +40,7 @@ namespace UserManagement.Domain
 
         public virtual string Email { get; protected set; }
 
-        public virtual string PasswordHash { get; protected set; }
+        public virtual Password Password { get; protected set; }
 
         public virtual AccountRole Role { get; protected set; }
 

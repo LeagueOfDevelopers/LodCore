@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="DatabaseSessionProvider.cs" />
     <Compile Include="Entities\Delivery.cs" />
+    <Compile Include="Mappings\Application\PasswordType.cs" />
     <Compile Include="Mappings\DeliveryMap.cs" />
     <Compile Include="Mappings\EventMap.cs" />
     <Compile Include="Mappings\MailValidationRequestMap.cs" />

@@ -1,15 +1,16 @@
-﻿using UserManagement.Infrastructure;
+﻿using Common;
+using UserManagement.Infrastructure;
 
 namespace UserManagement.Application
 {
     public class CreateAccountRequest
     {
-        public CreateAccountRequest(string email, string lastname, string firstname, string password)
+        public CreateAccountRequest(string email, string lastname, string firstname, Password password)
         {
             Email = Validator.GetValidEmail(email);
             Lastname = lastname;
             Firstname = firstname;
-            Password = Validator.GetValidPassword(password);
+            Password = password;
         }
 
         public string Email { get; private set; }
@@ -18,6 +19,6 @@ namespace UserManagement.Application
 
         public string Firstname { get; private set; }
 
-        public string Password { get; private set; }
+        public Password Password { get; private set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Common;
 using UserManagement.Domain;
 
 namespace UserManagement.Application
@@ -7,7 +8,7 @@ namespace UserManagement.Application
     {
         bool CheckAuthorized(string authorizationToken, int userId);
 
-        AuthorizationToken Authorize(string email, string password);
+        AuthorizationToken Authorize(string email, Password password);
 
         TimeSpan TokenLifeTime { get; }
     }
