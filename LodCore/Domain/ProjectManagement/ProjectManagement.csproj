@@ -68,6 +68,7 @@
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\ProjectDeveloper.cs" />
     <Compile Include="Domain\ProjectNotFoundException.cs" />
     <Compile Include="Domain\ProjectProvider.cs" />
     <Compile Include="Domain\ProjectStatus.cs" />

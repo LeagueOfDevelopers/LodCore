@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Journalist;
+using Journalist.Extensions;
 using NHibernate.Linq;
 using NotificationService;
 using ProjectManagement.Domain;
@@ -21,7 +22,9 @@ namespace DataAccess.Repositories
 
         public int[] GetAllProjectRelativeIds(int projectId)
         {
-            return GetProject(projectId).ProjectUserIds.ToArray();
+            return GetProject(projectId)
+                .ProjectDevelopers
+                .SelectToArray(developer => developer.DeveloperId);
         }
 
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)

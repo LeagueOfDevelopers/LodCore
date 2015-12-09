@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Journalist;
+using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
@@ -10,17 +11,11 @@ namespace ProjectManagement.Domain
 {
     public class ProjectProvider : IProjectProvider
     {
-        private readonly ProjectsEventSink _eventSink;
-
-        private readonly IProjectManagerGateway _projectManagerGateway;
-        private readonly IProjectRepository _repository;
-        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
-
         public ProjectProvider(
             IProjectManagerGateway projectManagerGateway,
             IVersionControlSystemGateway versionControlSystemGateway,
             IProjectRepository repository,
-            ProjectsEventSink eventSink)
+            IEventSink eventSink)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
@@ -56,8 +51,8 @@ namespace ProjectManagement.Domain
         {
             Require.NotNull(request, nameof(request));
 
-            var vcsLink = _versionControlSystemGateway.CreateRepositoryForProject(request);
-            var pmLink = _projectManagerGateway.CreateProject(request);
+            var versionControlSystemId = _versionControlSystemGateway.CreateRepositoryForProject(request);
+            var projectManagementSystemId = _projectManagerGateway.CreateProject(request);
 
             var project = new Project(
                 request.Name,
@@ -66,8 +61,8 @@ namespace ProjectManagement.Domain
                 ProjectStatus.Planned,
                 request.LandingImageUri,
                 request.AccessLevel,
-                vcsLink,
-                pmLink,
+                versionControlSystemId,
+                projectManagementSystemId,
                 null,
                 null,
                 null);
@@ -83,18 +78,18 @@ namespace ProjectManagement.Domain
             _repository.UpdateProject(project);
         }
 
-        public void AddUserToProject(int projectId, int userId)
+        public void AddUserToProject(int projectId, int userId, string role)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
-            if (project.ProjectUserIds.Contains(userId))
+            if (project.ProjectDevelopers.Any(developer => developer.DeveloperId == userId))
             {
                 throw new InvalidOperationException("Attempt to add developer who is already on project");
             }
 
-            project.ProjectUserIds.Add(userId);
+            project.ProjectDevelopers.Add(new ProjectDeveloper(userId, role));
 
             _projectManagerGateway.AddNewUserToProject(project, userId);
             _versionControlSystemGateway.AddUserToRepository(project, userId);
@@ -110,12 +105,12 @@ namespace ProjectManagement.Domain
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
-            if (!project.ProjectUserIds.Contains(userId))
+            if (project.ProjectDevelopers.All(developer => developer.DeveloperId != userId))
             {
                 throw new InvalidOperationException("Attempt to remove developer who is not on project");
             }
 
-            project.ProjectUserIds.Remove(userId);
+            project.ProjectDevelopers.RemoveAll(developer => developer.DeveloperId == userId);
 
             _projectManagerGateway.RemoveUserFromProject(project, userId);
             _versionControlSystemGateway.RemoveUserFromProject(project, userId);
@@ -124,5 +119,11 @@ namespace ProjectManagement.Domain
 
             _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
         }
+
+        private readonly IEventSink _eventSink;
+
+        private readonly IProjectManagerGateway _projectManagerGateway;
+        private readonly IProjectRepository _repository;
+        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
     }
 }

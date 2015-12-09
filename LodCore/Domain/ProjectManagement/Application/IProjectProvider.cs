@@ -14,7 +14,7 @@ namespace ProjectManagement.Application
 
         void UpdateProject(Project project);
 
-        void AddUserToProject(int projectId, int userId);
+        void AddUserToProject(int projectId, int userId, string role);
 
         void RemoveUserFromProject(int projectId, int userId);
     }

@@ -13,14 +13,12 @@ namespace ProjectManagementTests
     [TestClass]
     public class ProjectProviderTests
     {
-        private Mock<IDistributionPolicyFactory> _distributionPolicyFactory;
-        private Mock<IEventRepository> _eventRepository;
-
         private Fixture _fixture;
         private Mock<IProjectManagerGateway> _pmGateway;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _repository;
         private Mock<IVersionControlSystemGateway> _vcsGateway;
+        private Mock<IEventSink> _eventSinkMock;
 
         [TestInitialize]
         public void Setup()
@@ -29,6 +27,7 @@ namespace ProjectManagementTests
             _pmGateway = new Mock<IProjectManagerGateway>();
             _repository = new Mock<IProjectRepository>();
             _vcsGateway = new Mock<IVersionControlSystemGateway>();
+            _eventSinkMock = new Mock<IEventSink>();
 
             _pmGateway
                 .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
@@ -38,33 +37,11 @@ namespace ProjectManagementTests
                 .Returns(_fixture.Create<int>());
             _repository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
-                .Returns(1);
-
-            _distributionPolicyFactory = new Mock<IDistributionPolicyFactory>();
-            _eventRepository = new Mock<IEventRepository>();
-
-            _distributionPolicyFactory
-                .Setup(factory => factory.GetAllPolicy())
-                .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _distributionPolicyFactory
-                .Setup(factory => factory.GetProjectRelatedPolicy(It.IsAny<int>()))
-                .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _distributionPolicyFactory
-                .Setup(factory => factory.GetUserSpecifiedPolicy(It.IsAny<int[]>()))
-                .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _distributionPolicyFactory
-                .Setup(factory => factory.GetAdminRelatedPolicy())
-                .Returns(new DistributionPolicy(EmptyArray.Get<int>()));
-            _eventRepository.Setup(
-                repository => repository.DistrubuteEvent(It.IsAny<Event>(), It.IsAny<DistributionPolicy>()));
-
-            _projectProvider = new ProjectProvider(
+                .Returns(1);_projectProvider = new ProjectProvider(
                 _pmGateway.Object,
                 _vcsGateway.Object,
                 _repository.Object,
-                new ProjectsEventSink(
-                    _distributionPolicyFactory.Object,
-                    _eventRepository.Object));
+                _eventSinkMock.Object);
         }
 
         [TestMethod]
@@ -89,10 +66,10 @@ namespace ProjectManagementTests
             _pmGateway.Verify(pm => pm.CreateProject(It.Is<CreateProjectRequest>(
                 request => request.Equals(createRequest))),
                 Times.Once);
-            _eventRepository.Verify(repo => repo.DistrubuteEvent(
-                It.Is<Event>(
-                    @event => @event.EventType == typeof (NewProjectCreated).Name),
-                It.IsAny<DistributionPolicy>()),
+            _eventSinkMock.Verify(
+                sink => sink.ConsumeEvent(
+                    It.Is<IEventInfo>(
+                        eventInfo => eventInfo.GetEventType() == typeof(NewProjectCreated).Name)), 
                 Times.Once);
         }
     }

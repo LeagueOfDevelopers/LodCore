@@ -23,7 +23,7 @@ namespace DataAccess.Mappings
                 mapper.Cascade(Cascade.All);
                 mapper.Table("Screenshots");
             });
-            Set(project => project.ProjectUserIds, mapper =>
+            Set(project => project.ProjectDevelopers, mapper =>
             {
                 mapper.Cascade(Cascade.All);
                 mapper.Table("ProjectUsers");
