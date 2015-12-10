@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Common
@@ -10,7 +11,21 @@ namespace Common
         {
 
             if (Regex.IsMatch(pass, "^.{6,18}$"))
-                Pass = MD5.Create(pass).Hash.ToString();
+            {
+                MD5 md5Hasher = MD5.Create();
+
+                byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(pass));
+
+                StringBuilder sBuilder = new StringBuilder();
+
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sBuilder.Append(data[i].ToString("x2"));
+                }
+
+                // Return the hexadecimal string.
+                Pass = sBuilder.ToString();
+            }
             else
             {
                 throw new ArgumentException();
