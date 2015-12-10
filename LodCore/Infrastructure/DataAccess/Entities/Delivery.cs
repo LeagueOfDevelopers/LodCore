@@ -11,6 +11,7 @@ namespace DataAccess.Entities
 
             UserId = userId;
             EventId = eventId;
+            WasRead = false;
         }
 
         protected Delivery()
@@ -23,6 +24,6 @@ namespace DataAccess.Entities
 
         public virtual int EventId { get; protected set; }
 
-        public virtual bool WasRead { get; set; } = false;
+        public virtual bool WasRead { get; set; }
     }
 }

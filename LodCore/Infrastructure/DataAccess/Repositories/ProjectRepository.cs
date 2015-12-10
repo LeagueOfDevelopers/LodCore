@@ -23,7 +23,7 @@ namespace DataAccess.Repositories
         public int[] GetAllProjectRelativeIds(int projectId)
         {
             return GetProject(projectId)
-                .ProjectDevelopers
+                .ProjectMemberships
                 .SelectToArray(developer => developer.DeveloperId);
         }
 

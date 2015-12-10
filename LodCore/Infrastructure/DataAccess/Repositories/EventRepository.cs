@@ -25,7 +25,7 @@ namespace DataAccess.Repositories
                 var eventId = (int) session.Save(@event);
                 foreach (var receiverId in distributionPolicy.ReceiverIds)
                 {
-                    session.Save(new Delivery(receiverId, eventId));
+                    var id = session.Save(new Delivery(receiverId, eventId));
                 }
 
                 transaction.Commit();

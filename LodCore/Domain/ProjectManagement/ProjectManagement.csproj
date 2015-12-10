@@ -68,12 +68,13 @@
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\Project.cs" />
-    <Compile Include="Domain\ProjectDeveloper.cs" />
+    <Compile Include="Domain\ProjectMembership.cs" />
     <Compile Include="Domain\ProjectNotFoundException.cs" />
     <Compile Include="Domain\ProjectProvider.cs" />
     <Compile Include="Domain\ProjectStatus.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
+    <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />
     <Compile Include="ProjectCreationFailedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

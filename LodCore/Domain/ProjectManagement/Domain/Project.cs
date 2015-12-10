@@ -17,7 +17,7 @@ namespace ProjectManagement.Domain
             int versionControlSystemId,
             int projectManagementSystemId,
             List<Issue> issues,
-            List<ProjectDeveloper> projectDevelopers,
+            List<ProjectMembership> projectDevelopers,
             List<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
@@ -34,7 +34,7 @@ namespace ProjectManagement.Domain
             VersionControlSystemId = versionControlSystemId;
             ProjectManagementSystemId = projectManagementSystemId;
             Issues = issues ?? new List<Issue>();
-            ProjectDevelopers = projectDevelopers ?? new List<ProjectDeveloper>();
+            ProjectMemberships = projectDevelopers ?? new List<ProjectMembership>();
             Screenshots = screenshots ?? new List<Uri>();
         }
 
@@ -62,7 +62,7 @@ namespace ProjectManagement.Domain
 
         public virtual List<Issue> Issues { get; protected set; }
 
-        public virtual List<ProjectDeveloper> ProjectDevelopers { get; protected set; }
+        public virtual List<ProjectMembership> ProjectMemberships { get; protected set; }
 
         public virtual List<Uri> Screenshots { get; protected set; }
     }

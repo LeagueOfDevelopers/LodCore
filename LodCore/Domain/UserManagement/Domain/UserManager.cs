@@ -9,17 +9,21 @@ namespace UserManagement.Domain
 {
     public class UserManager : IUserManager
     {
-        private readonly IConfirmationService _confirmationService;
-
-        private readonly IUserRepository _repository;
-
-        public UserManager(IUserRepository repository, IConfirmationService confirmationService)
+        public UserManager(
+            IUserRepository repository, 
+            IConfirmationService confirmationService, 
+            IRedmineUserRegistrar redmineUserRegistrar,
+            IGitlabUserRegistrar gitlabUserRegistrar)
         {
             Require.NotNull(repository, nameof(repository));
             Require.NotNull(confirmationService, nameof(confirmationService));
+            Require.NotNull(redmineUserRegistrar, nameof(redmineUserRegistrar));
+            Require.NotNull(gitlabUserRegistrar, nameof(gitlabUserRegistrar));
 
             _repository = repository;
             _confirmationService = confirmationService;
+            _redmineUserRegistrar = redmineUserRegistrar;
+            _gitlabUserRegistrar = gitlabUserRegistrar;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -50,6 +54,9 @@ namespace UserManagement.Domain
                 throw new AccountAlreadyExistsException();
             }
 
+            var redmineUserId = _redmineUserRegistrar.RegisterUser(request);
+            var gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
+
             var newAccount = new Account(
                 request.Firstname,
                 request.Lastname,
@@ -57,7 +64,9 @@ namespace UserManagement.Domain
                 request.Password,
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
-                null);
+                null, 
+                redmineUserId, 
+                gitlabUserId);
 
             var userId = _repository.CreateAccount(newAccount);
 
@@ -76,5 +85,11 @@ namespace UserManagement.Domain
 
             _repository.UpdateAccount(account);
         }
+
+
+        private readonly IConfirmationService _confirmationService;
+        private readonly IUserRepository _repository;
+        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
+        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
     }
 }

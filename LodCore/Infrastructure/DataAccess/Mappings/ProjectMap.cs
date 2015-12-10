@@ -23,11 +23,14 @@ namespace DataAccess.Mappings
                 mapper.Cascade(Cascade.All);
                 mapper.Table("Screenshots");
             });
-            Set(project => project.ProjectDevelopers, mapper =>
-            {
-                mapper.Cascade(Cascade.All);
-                mapper.Table("ProjectUsers");
-            });
+            Set(
+                membership => membership.ProjectMemberships,
+                mapper =>
+                {
+                    mapper.Cascade(Cascade.All);
+                    mapper.Key(m => m.Column("ProjectId"));
+                },
+                action => action.OneToMany());
         }
     }
 }

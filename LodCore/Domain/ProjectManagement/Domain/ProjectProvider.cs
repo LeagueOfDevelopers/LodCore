@@ -14,29 +14,32 @@ namespace ProjectManagement.Domain
         public ProjectProvider(
             IProjectManagerGateway projectManagerGateway,
             IVersionControlSystemGateway versionControlSystemGateway,
-            IProjectRepository repository,
-            IEventSink eventSink)
+            IProjectRepository projectRepository,
+            IEventSink eventSink,
+            IUserRepository userRepository)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
-            Require.NotNull(repository, nameof(repository));
+            Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventSink, nameof(eventSink));
+            Require.NotNull(userRepository, nameof(userRepository));
 
             _projectManagerGateway = projectManagerGateway;
             _versionControlSystemGateway = versionControlSystemGateway;
-            _repository = repository;
+            _projectRepository = projectRepository;
             _eventSink = eventSink;
+            _userRepository = userRepository;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
         {
-            return _repository.GetAllProjects(predicate).ToList();
+            return _projectRepository.GetAllProjects(predicate).ToList();
         }
 
         public Project GetProject(int projectId)
         {
             Require.Positive(projectId, nameof(projectId));
-            var project = _repository.GetProject(projectId);
+            var project = _projectRepository.GetProject(projectId);
             if (project == null)
             {
                 throw new ProjectNotFoundException();
@@ -66,7 +69,7 @@ namespace ProjectManagement.Domain
                 null,
                 null,
                 null);
-            var projectId = _repository.SaveProject(project);
+            var projectId = _projectRepository.SaveProject(project);
 
             _eventSink.ConsumeEvent(new NewProjectCreated(projectId));
         }
@@ -75,7 +78,7 @@ namespace ProjectManagement.Domain
         {
             Require.NotNull(project, nameof(project));
 
-            _repository.UpdateProject(project);
+            _projectRepository.UpdateProject(project);
         }
 
         public void AddUserToProject(int projectId, int userId, string role)
@@ -84,15 +87,21 @@ namespace ProjectManagement.Domain
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
-            if (project.ProjectDevelopers.Any(developer => developer.DeveloperId == userId))
+            if (project.ProjectMemberships.Any(developer => developer.DeveloperId == userId))
             {
                 throw new InvalidOperationException("Attempt to add developer who is already on project");
             }
 
-            project.ProjectDevelopers.Add(new ProjectDeveloper(userId, role));
+            var redmineUserId = _userRepository.GetUserRedmineId(userId);
+            var gitlabUserId = _userRepository.GetUserGitlabId(userId);
 
-            _projectManagerGateway.AddNewUserToProject(project, userId);
-            _versionControlSystemGateway.AddUserToRepository(project, userId);
+            project.ProjectMemberships.Add(new ProjectMembership(
+                userId, 
+                role,
+                project));
+
+            _projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
+            _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
 
             UpdateProject(project);
 
@@ -105,15 +114,20 @@ namespace ProjectManagement.Domain
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
-            if (project.ProjectDevelopers.All(developer => developer.DeveloperId != userId))
+            if (project.ProjectMemberships.All(developer => developer.DeveloperId != userId))
             {
                 throw new InvalidOperationException("Attempt to remove developer who is not on project");
             }
 
-            project.ProjectDevelopers.RemoveAll(developer => developer.DeveloperId == userId);
+            var developerToDelete = project.ProjectMemberships
+                .SingleOrDefault(developer => developer.DeveloperId == userId);
+            project.ProjectMemberships.Remove(developerToDelete);
 
-            _projectManagerGateway.RemoveUserFromProject(project, userId);
-            _versionControlSystemGateway.RemoveUserFromProject(project, userId);
+            var redmineUserId = _userRepository.GetUserRedmineId(userId);
+            var gitlabUserId = _userRepository.GetUserGitlabId(userId);
+
+            _projectManagerGateway.RemoveUserFromProject(project.ProjectManagementSystemId, redmineUserId);
+            _versionControlSystemGateway.RemoveUserFromProject(project, gitlabUserId);
 
             UpdateProject(project);
 
@@ -121,9 +135,10 @@ namespace ProjectManagement.Domain
         }
 
         private readonly IEventSink _eventSink;
+        private readonly IUserRepository _userRepository;
 
         private readonly IProjectManagerGateway _projectManagerGateway;
-        private readonly IProjectRepository _repository;
+        private readonly IProjectRepository _projectRepository;
         private readonly IVersionControlSystemGateway _versionControlSystemGateway;
     }
 }

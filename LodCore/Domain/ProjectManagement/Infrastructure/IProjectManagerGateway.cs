@@ -5,9 +5,9 @@ namespace ProjectManagement.Infrastructure
 {
     public interface IProjectManagerGateway
     {
-        void AddNewUserToProject(Project project, int userId);
+        void AddNewUserToProject(int redmineProjectId, int redmineUserId);
 
-        void RemoveUserFromProject(Project project, int userId);
+        void RemoveUserFromProject(int redmineProjectId, int redmineUserId);
 
         Issue[] GetProjectIssues(int projectManagerProjectId);
 

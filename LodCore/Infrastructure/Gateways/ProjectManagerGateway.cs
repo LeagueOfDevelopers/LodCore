@@ -19,15 +19,15 @@ namespace Gateways
             _redmineManager = redmineManager;
         }
 
-        public void AddNewUserToProject(Project project, int userId)
+        public void AddNewUserToProject(int redmineProjectId, int redmineUserId)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveUserFromProject(Project project, int userId)
+        public void RemoveUserFromProject(int redmineProjectId, int redmineUserId)
         {
-            Require.NotNull(project, nameof(project));
-            Require.Positive(userId, nameof(userId));
+            Require.NotNull(redmineProjectId, nameof(redmineProjectId));
+            Require.Positive(redmineUserId, nameof(redmineUserId));
 
             throw new NotImplementedException();
         }

@@ -16,18 +16,20 @@ namespace ProjectManagementTests
         private Fixture _fixture;
         private Mock<IProjectManagerGateway> _pmGateway;
         private ProjectProvider _projectProvider;
-        private Mock<IProjectRepository> _repository;
+        private Mock<IProjectRepository> _projectRepository;
         private Mock<IVersionControlSystemGateway> _vcsGateway;
         private Mock<IEventSink> _eventSinkMock;
+        private Mock<IUserRepository> _userRepository;
 
         [TestInitialize]
         public void Setup()
         {
             _fixture = new Fixture();
             _pmGateway = new Mock<IProjectManagerGateway>();
-            _repository = new Mock<IProjectRepository>();
+            _projectRepository = new Mock<IProjectRepository>();
             _vcsGateway = new Mock<IVersionControlSystemGateway>();
             _eventSinkMock = new Mock<IEventSink>();
+            _userRepository = new Mock<IUserRepository>();
 
             _pmGateway
                 .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
@@ -35,13 +37,17 @@ namespace ProjectManagementTests
             _vcsGateway
                 .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<CreateProjectRequest>()))
                 .Returns(_fixture.Create<int>());
-            _repository
+            _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
-                .Returns(1);_projectProvider = new ProjectProvider(
+                .Returns(1);
+            _userRepository.Setup(repo => repo.GetUserRedmineId(It.IsAny<int>())).Returns(1);
+            _userRepository.Setup(repo => repo.GetUserGitlabId(It.IsAny<int>())).Returns(1);
+            _projectProvider = new ProjectProvider(
                 _pmGateway.Object,
                 _vcsGateway.Object,
-                _repository.Object,
-                _eventSinkMock.Object);
+                _projectRepository.Object,
+                _eventSinkMock.Object,
+                _userRepository.Object);
         }
 
         [TestMethod]
@@ -51,7 +57,7 @@ namespace ProjectManagementTests
 
             _projectProvider.CreateProject(createRequest);
 
-            _repository.Verify(
+            _projectRepository.Verify(
                 repo => repo.SaveProject(It.Is<Project>(
                     project => project.Name == createRequest.Name
                                || project.Info == createRequest.Info

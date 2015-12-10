@@ -76,6 +76,7 @@
     <Compile Include="Mappings\MailValidationRequestMap.cs" />
     <Compile Include="Mappings\OrderMap.cs" />
     <Compile Include="Mappings\ProfileMap.cs" />
+    <Compile Include="Mappings\ProjectMembershipMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -74,6 +74,14 @@
       <Project>{C3F94FDD-F4C4-45D5-B6B1-A91D3520CD1D}</Project>
       <Name>ProjectManagement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Domain\UserManagement\UserManagement.csproj">
+      <Project>{56B90624-417A-4998-83C8-68A34DAE0AB0}</Project>
+      <Name>UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj">
+      <Project>{6E6BCA8C-2B4D-4867-AE47-64565E64357C}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

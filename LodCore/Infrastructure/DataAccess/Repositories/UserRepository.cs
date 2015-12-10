@@ -10,7 +10,7 @@ using UserManagement.Infrastructure;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository : IUserRepository, IUsersRepository
+    public class UserRepository : IUserRepository, IUsersRepository, ProjectManagement.Infrastructure.IUserRepository
     {
         private readonly DatabaseSessionProvider _sessionProvider;
 
@@ -79,6 +79,22 @@ namespace DataAccess.Repositories
                     .Where(account => account.Role == AccountRole.Administrator)
                     .SelectToArray(account => account.UserId);
             }
+        }
+
+        public int GetUserRedmineId(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var account = GetAccount(userId);
+            return account.RedmineUserId;
+        }
+
+        public int GetUserGitlabId(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var account = GetAccount(userId);
+            return account.GitlabUserId;
         }
     }
 }

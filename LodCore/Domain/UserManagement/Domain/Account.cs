@@ -11,12 +11,16 @@ namespace UserManagement.Domain
             string passwordHash,
             AccountRole role,
             ConfirmationStatus confirmationStatus,
-            Profile profile)
+            Profile profile, 
+            int redmineUserId, 
+            int gitlabUserId)
         {
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotEmpty(email, nameof(email));
             Require.NotEmpty(passwordHash, nameof(passwordHash));
+            Require.Positive(redmineUserId, nameof(redmineUserId));
+            Require.Positive(gitlabUserId, nameof(gitlabUserId));
 
             Firstname = firstname;
             Lastname = lastname;
@@ -25,6 +29,8 @@ namespace UserManagement.Domain
             Role = role;
             ConfirmationStatus = confirmationStatus;
             Profile = profile;
+            RedmineUserId = redmineUserId;
+            GitlabUserId = gitlabUserId;
         }
 
         protected Account()
@@ -40,6 +46,10 @@ namespace UserManagement.Domain
         public virtual string Email { get; protected set; }
 
         public virtual string PasswordHash { get; protected set; }
+
+        public virtual int RedmineUserId { get; protected set; }
+
+        public virtual int GitlabUserId { get; protected set; }
 
         public virtual AccountRole Role { get; protected set; }
 
