@@ -48,7 +48,7 @@ namespace UserManagement.Domain
             Require.NotNull(password, nameof(password));
 
             var userAccount = _userRepository
-                .GetAllAccounts(account => account.Email == email)
+                .GetAllAccounts(account => account.Email.Address == email)
                 .SingleOrDefault();
             if (userAccount == null)
             {

@@ -14,7 +14,7 @@ namespace Mailing
             _mailerSettings = mailerSettings;
         }
 
-        public void SendConfirmationMail(string confirmationToken, string email)
+        public void SendConfirmationMail(string confirmationToken, MailAddress email)
         {
             Require.NotNull(confirmationToken, nameof(confirmationToken));
             Require.NotNull(email, nameof(email));
@@ -29,7 +29,7 @@ namespace Mailing
 
             var mail = new MailMessage();
             mail.From = new MailAddress(_mailerSettings.From);
-            mail.To.Add(new MailAddress(email));
+            mail.To.Add(email);
             mail.Subject = _mailerSettings.Caption;
             mail.Body = string.Format(_mailerSettings.MessageTemplate, confirmationToken);
 

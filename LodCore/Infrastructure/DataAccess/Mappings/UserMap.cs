@@ -1,4 +1,5 @@
-﻿using DataAccess.Mappings.Application;
+﻿using System.Net.Mail;
+using DataAccess.Mappings.Application;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 using UserManagement.Domain;
@@ -15,6 +16,7 @@ namespace DataAccess.Mappings
             {
                 mapper.Column("Email");
                 mapper.Unique(true);
+                mapper.Type<MailAddressType>();
             });
             Property(user => user.Firstname, mapper => mapper.Column("Firstname"));
             Property(user => user.Lastname, mapper => mapper.Column("Lastname"));

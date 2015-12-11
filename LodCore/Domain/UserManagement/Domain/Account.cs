@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using System.Net.Mail;
+using Common;
 using Journalist;
 
 namespace UserManagement.Domain
@@ -8,7 +9,7 @@ namespace UserManagement.Domain
         public Account(
             string firstname,
             string lastname,
-            string email,
+            MailAddress email,
             Password password,
             AccountRole role,
             ConfirmationStatus confirmationStatus,
@@ -16,7 +17,7 @@ namespace UserManagement.Domain
         {
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
-            Require.NotEmpty(email, nameof(email));
+            Require.NotNull(email, nameof(email));
             Require.NotNull(Password, nameof(Password));
 
             Firstname = firstname;
@@ -38,7 +39,7 @@ namespace UserManagement.Domain
 
         public virtual string Lastname { get; protected set; }
 
-        public virtual string Email { get; protected set; }
+        public virtual MailAddress Email { get; protected set; }
 
         public virtual Password Password { get; protected set; }
 

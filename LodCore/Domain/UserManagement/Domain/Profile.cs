@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 using Journalist;
 
 namespace UserManagement.Domain
@@ -9,7 +10,7 @@ namespace UserManagement.Domain
             int userId,
             Uri bigPhotoUri,
             Uri smallPhotoUri,
-            string email,
+            MailAddress email,
             DateTime registrationTime,
             Uri vkProfileUri,
             string phoneNumber,
@@ -20,7 +21,7 @@ namespace UserManagement.Domain
         {
             Require.ZeroOrGreater(userId, nameof(userId));
             Require.NotNull(registrationTime, nameof(registrationTime));
-            Require.NotEmpty(email, nameof(email));
+            Require.NotNull(email, nameof(email));
             Require.NotEmpty(phoneNumber, nameof(phoneNumber));
 
             UserId = userId;

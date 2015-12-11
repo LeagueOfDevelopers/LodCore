@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CommonTests
 {
     [TestClass]
-    public class CommonTest
+    public class PasswordTests
     {
         [TestMethod]
         public void CorrectPasswordCreateObjectOfPasswordClassWithCorrectHash()
