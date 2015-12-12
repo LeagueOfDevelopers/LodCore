@@ -10,7 +10,7 @@ namespace DataAccess.Mappings.Application
 {
     public class MailAddressType : IUserType
     {
-        public bool Equals(object x, object y)
+        public new bool Equals(object x, object y)
         {
             if (x == null && y == null) return true;
             if (x == null || y == null) return false;
