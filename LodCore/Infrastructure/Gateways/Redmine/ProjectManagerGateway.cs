@@ -81,7 +81,7 @@ namespace Gateways.Redmine
             var project = new global::Redmine.Net.Api.Types.Project
             {
                 Name = request.Name,
-                Identifier = request.Name.Unidecode().ToLower(),
+                Identifier = GetProjectIdentifier(request.Name),
                 Status = ProjectStatus.Active,
                 Description = request.Info,
                 IsPublic = request.AccessLevel == AccessLevel.Public
@@ -89,6 +89,11 @@ namespace Gateways.Redmine
 
             var readyProject = _redmineManager.CreateObject(project);
             return readyProject.Id;
+        }
+
+        private static string GetProjectIdentifier(string projectName)
+        {
+            return projectName.Unidecode().Replace(" ", string.Empty).ToLower();
         }
 
         private readonly RedmineManager _redmineManager;
