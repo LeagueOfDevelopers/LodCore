@@ -9,12 +9,14 @@ using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using UserManagement.Application;
+using UserManagement.Infrastructure;
 using Issue = ProjectManagement.Domain.Issue;
 using ProjectStatus = Redmine.Net.Api.Types.ProjectStatus;
 
 namespace Gateways.Redmine
 {
-    public class ProjectManagerGateway : IProjectManagerGateway
+    public class ProjectManagerGateway : IProjectManagerGateway, IRedmineUserRegistrar
     {
         public ProjectManagerGateway(RedmineSettings redmineSettings)
         {
@@ -91,11 +93,29 @@ namespace Gateways.Redmine
             return readyProject.Id;
         }
 
+        public int RegisterUser(CreateAccountRequest createAccountRequest)
+        {
+            Require.NotNull(createAccountRequest, nameof(createAccountRequest));
+
+            var user = new User
+            {
+                Email = createAccountRequest.Email,
+                FirstName = createAccountRequest.Firstname,
+                LastName = createAccountRequest.Lastname,
+                Password = createAccountRequest.Password,
+                MustChangePassword = false
+            };
+
+            var createdUser = _redmineManager.CreateObject(user);
+            return createdUser.Id;
+        }
+
         private static string GetProjectIdentifier(string projectName)
         {
             return projectName.Unidecode().Replace(" ", string.Empty).ToLower();
         }
 
         private readonly RedmineManager _redmineManager;
+        
     }
 }
