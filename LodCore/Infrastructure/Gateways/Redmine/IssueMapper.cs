@@ -3,11 +3,11 @@ using System.Security.Principal;
 using Journalist.Extensions;
 using ProjectManagement.Domain;
 
-namespace Gateways
+namespace Gateways.Redmine
 {
     public static class IssueMapper
     {
-        public static Issue ToLodIssue(this Redmine.Net.Api.Types.Issue issue)
+        public static Issue ToLodIssue(this global::Redmine.Net.Api.Types.Issue issue)
         {
             IssueType issueType;
             var isKnownType = RedmineTrackerIdToIssueType.TryGetValue(issue.Tracker.Id, out issueType);
@@ -23,9 +23,9 @@ namespace Gateways
                 issueType);
         }
 
-        public static Redmine.Net.Api.Types.Issue ToRedmineIssue(this Issue issue)
+        public static global::Redmine.Net.Api.Types.Issue ToRedmineIssue(this Issue issue)
         {
-            return new Redmine.Net.Api.Types.Issue
+            return new global::Redmine.Net.Api.Types.Issue
             {
                 Subject = issue.Header,
                 Description = issue.Descripton

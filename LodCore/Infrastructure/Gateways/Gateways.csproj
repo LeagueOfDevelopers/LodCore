@@ -60,9 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IssueMapper.cs" />
-    <Compile Include="ProjectManagerGateway.cs" />
+    <Compile Include="Redmine\IssueMapper.cs" />
+    <Compile Include="Redmine\MembershipRoles.cs" />
+    <Compile Include="Redmine\ProjectManagerGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Redmine\RedmineSettings.cs" />
     <Compile Include="VersionControlSystemGateway.cs" />
   </ItemGroup>
   <ItemGroup>
