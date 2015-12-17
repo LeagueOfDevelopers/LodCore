@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mail;
+using Common;
 using Journalist;
 using NHibernate.Util;
 using UserManagement.Application;
@@ -48,7 +50,7 @@ namespace UserManagement.Domain
         {
             Require.NotNull(request, nameof(request));
 
-            var doesExist = GetUserList(account => account.Email == request.Email).Any();
+            var doesExist = GetUserList(account => account.Email.Address == request.Email).Any();
             if (doesExist)
             {
                 throw new AccountAlreadyExistsException();
@@ -60,8 +62,8 @@ namespace UserManagement.Domain
             var newAccount = new Account(
                 request.Firstname,
                 request.Lastname,
-                request.Email,
-                request.Password,
+                new MailAddress(request.Email),
+                new Password(request.Password),
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
                 null, 

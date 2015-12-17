@@ -1,15 +1,15 @@
-﻿using UserManagement.Infrastructure;
+﻿using System.Net.Mail;
 
 namespace UserManagement.Application
 {
     public class CreateAccountRequest
     {
-        public CreateAccountRequest(string email, string lastname, string firstname, string password)
+        public CreateAccountRequest(MailAddress email, string lastname, string firstname, string password)
         {
-            Email = Validator.GetValidEmail(email);
+            Email = email.Address;
             Lastname = lastname;
             Firstname = firstname;
-            Password = Validator.GetValidPassword(password);
+            Password = password;
         }
 
         public string Email { get; private set; }

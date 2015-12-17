@@ -1,4 +1,6 @@
-﻿using Journalist;
+﻿using System.Net.Mail;
+using Common;
+using Journalist;
 
 namespace UserManagement.Domain
 {
@@ -7,8 +9,8 @@ namespace UserManagement.Domain
         public Account(
             string firstname,
             string lastname,
-            string email,
-            string passwordHash,
+            MailAddress email,
+            Password password,
             AccountRole role,
             ConfirmationStatus confirmationStatus,
             Profile profile, 
@@ -17,15 +19,17 @@ namespace UserManagement.Domain
         {
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
-            Require.NotEmpty(email, nameof(email));
-            Require.NotEmpty(passwordHash, nameof(passwordHash));
+            Require.NotNull(email, nameof(email));
+            Require.NotNull(password, nameof(password));
             Require.Positive(redmineUserId, nameof(redmineUserId));
             Require.Positive(gitlabUserId, nameof(gitlabUserId));
+            Require.NotNull(email, nameof(email));
+            Require.NotNull(password, nameof(password));
 
             Firstname = firstname;
             Lastname = lastname;
             Email = email;
-            PasswordHash = passwordHash;
+            Password = password;
             Role = role;
             ConfirmationStatus = confirmationStatus;
             Profile = profile;
@@ -43,9 +47,9 @@ namespace UserManagement.Domain
 
         public virtual string Lastname { get; protected set; }
 
-        public virtual string Email { get; protected set; }
+        public virtual MailAddress Email { get; protected set; }
 
-        public virtual string PasswordHash { get; protected set; }
+        public virtual Password Password { get; protected set; }
 
         public virtual int RedmineUserId { get; protected set; }
 

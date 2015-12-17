@@ -1,15 +1,17 @@
-﻿namespace UserManagement.Infrastructure
+﻿using System;
+
+namespace UserManagement.Infrastructure
 {
     public static class Validator
     {
         public static string GetValidEmail(string email)
         {
-            return email;
+            throw new NotImplementedException();
         }
 
         public static string GetValidPassword(string password)
         {
-            return password;
+            throw new NotImplementedException();
         }
     }
 }

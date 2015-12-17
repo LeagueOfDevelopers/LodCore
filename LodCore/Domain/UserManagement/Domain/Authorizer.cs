@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Common;
 using Journalist;
 using UserManagement.Application;
 using UserManagement.Infrastructure;
@@ -41,20 +42,20 @@ namespace UserManagement.Domain
             return true;
         }
 
-        public AuthorizationToken Authorize(string email, string password)
+        public AuthorizationToken Authorize(string email, Password password)
         {
             Require.NotEmpty(email, nameof(email));
-            Require.NotEmpty(password, nameof(password));
+            Require.NotNull(password, nameof(password));
 
             var userAccount = _userRepository
-                .GetAllAccounts(account => account.Email == email)
+                .GetAllAccounts(account => account.Email.Address == email)
                 .SingleOrDefault();
             if (userAccount == null)
             {
                 throw new AccountNotFoundException("There is no account with such email");
             }
 
-            if (userAccount.PasswordHash != password)
+            if (userAccount.Password.Pass != password.Pass)
             {
                 throw new UnauthorizedAccessException("Wrong password");
             }
