@@ -12,7 +12,7 @@ namespace UserManagerTests
     {
         private ConfirmationService _confirmationService;
         private Mock<IEventSink> _eventSinkManagerStub;
-        private Mock<IMailer> _mailerStub;
+        private Mock<UserManagement.Application.IMailer> _mailerStub;
         private Mock<IUserRepository> _userRepoStub;
         private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
 

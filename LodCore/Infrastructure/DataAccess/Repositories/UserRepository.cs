@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
 using NotificationService;
+using NotificationService.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository : IUserRepository, IUsersRepository, ProjectManagement.Infrastructure.IUserRepository
+    public class UserRepository : IUserRepository, IUsersRepository, ProjectManagement.Infrastructure.IUserRepository,
+        IEmailManager
     {
         private readonly DatabaseSessionProvider _sessionProvider;
 
@@ -95,6 +98,14 @@ namespace DataAccess.Repositories
 
             var account = GetAccount(userId);
             return account.GitlabUserId;
+        }
+
+        public MailAddress GetEmailById(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var account = GetAccount(userId);
+            return account.Email;
         }
     }
 }
