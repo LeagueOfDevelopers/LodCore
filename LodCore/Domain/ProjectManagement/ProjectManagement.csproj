@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\CreateProjectRequest.cs" />
+    <Compile Include="Application\IUserRoleAnalyzer.cs" />
     <Compile Include="Domain\AccessLevel.cs" />
     <Compile Include="Application\IProjectProvider.cs" />
     <Compile Include="Domain\Events\DeveloperHasLeftProject.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="Domain\ProjectNotFoundException.cs" />
     <Compile Include="Domain\ProjectProvider.cs" />
     <Compile Include="Domain\ProjectStatus.cs" />
+    <Compile Include="Domain\UserRoleAnalyzer.cs" />
+    <Compile Include="Domain\UserRoleAnalyzerSettings.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />

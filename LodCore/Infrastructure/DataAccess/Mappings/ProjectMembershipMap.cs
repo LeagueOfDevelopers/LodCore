@@ -11,11 +11,11 @@ namespace DataAccess.Mappings
             Id(project => project.MembershipId, mapper => mapper.Generator(Generators.Identity));
             Property(project => project.DeveloperId);
             Property(project => project.Role);
-            ManyToOne(project => project.Project, mapper =>
-            {
-                mapper.Cascade(Cascade.All);
-                mapper.Column("ProjectId");
-            });
+            ////ManyToOne(project => project.Project, mapper =>
+            ////{
+            ////    mapper.Cascade(Cascade.All);
+            ////    mapper.Column("ProjectId");
+            ////});
         }
     }
 }

@@ -97,8 +97,7 @@ namespace ProjectManagement.Domain
 
             project.ProjectMemberships.Add(new ProjectMembership(
                 userId, 
-                role,
-                project));
+                role));
 
             _projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
             _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
