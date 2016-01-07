@@ -16,7 +16,7 @@
     <RootNamespace>FrontendServices</RootNamespace>
     <AssemblyName>FrontendServices</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -129,16 +129,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Data\AuthorizationPolicies\ProjectsPolicies.cs" />
+    <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />
     <Compile Include="App_Data\SettingsReader.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\DevelopersController.cs" />
+    <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="App_Data\AuthorizationPolicies\DevelopersPolicies.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
+    <Compile Include="Models\IndexPageProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +158,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Domain\NotificationService\NotificationService.csproj">
       <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
       <Name>NotificationService</Name>
@@ -193,7 +202,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50055</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:55747/</IISUrl>
+          <IISUrl>http://localhost/FrontendServices</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

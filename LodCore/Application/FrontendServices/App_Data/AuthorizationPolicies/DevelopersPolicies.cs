@@ -11,10 +11,5 @@ namespace FrontendServices.App_Data.AuthorizationPolicies
         {
             throw new NotImplementedException();
         }
-
-        public static IEnumerable<Account> GetRandom(this IEnumerable<Account> accounts, int number)
-        {
-            return accounts.OrderBy(account => Guid.NewGuid()).Take(number);
-        } 
     }
 }

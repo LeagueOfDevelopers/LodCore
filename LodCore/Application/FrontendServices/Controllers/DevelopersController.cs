@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using FrontendServices.App_Data.AuthorizationPolicies;
+using Common;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
@@ -26,6 +23,8 @@ namespace FrontendServices.Controllers
         [Route("developers/random/{count}")]
         public IEnumerable<IndexPageDeveloper> GetRandomIndexPageDevelopers(int count)
         {
+            Require.ZeroOrGreater(count, nameof(count));
+
             var users = _userManager.GetUserList().GetRandom(count);
             var indexPageDevelopers = users.Select(_mapper.FromDomainEntity);
             return indexPageDevelopers;
