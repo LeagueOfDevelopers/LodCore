@@ -1,9 +1,24 @@
-﻿namespace Mailing
+﻿using Journalist;
+
+namespace Mailing
 {
     public class MailerSettings
     {
-        public MailerSettings(string smtpServer, int port, string password, string @from, string caption, string messageTemplate)
+        public MailerSettings(
+            string smtpServer, 
+            int port, 
+            string password, 
+            string @from, 
+            string caption, 
+            string messageTemplate)
         {
+            Require.NotEmpty(smtpServer, nameof(smtpServer));
+            Require.Positive(port, nameof(port));
+            Require.NotEmpty(password, nameof(password));
+            Require.NotEmpty(@from, nameof(@from));
+            Require.NotEmpty(caption, nameof(caption));
+            Require.NotEmpty(messageTemplate, nameof(messageTemplate));
+
             SmtpServer = smtpServer;
             Port = port;
             Password = password;
