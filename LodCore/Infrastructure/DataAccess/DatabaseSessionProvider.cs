@@ -27,7 +27,7 @@ namespace DataAccess
 
             _factory = configuration.BuildSessionFactory();
 
-            new SchemaExport(configuration).Execute(false, true, false);
+            new SchemaUpdate(configuration).Execute(false, true);
         }
 
         public ISession OpenSession()

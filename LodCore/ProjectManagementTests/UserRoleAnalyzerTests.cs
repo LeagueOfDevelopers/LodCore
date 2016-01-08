@@ -60,7 +60,7 @@ namespace ProjectManagementTests
         private void SetupMockReturnThisRolesList(IEnumerable<string> roles, int userId)
         {
             var projectMemberships =
-                roles.Select(role => new List<ProjectMembership>
+                roles.Select(role => new HashSet<ProjectMembership>
                 {
                     new ProjectMembership(userId, role)
                 });

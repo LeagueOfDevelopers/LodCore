@@ -31,9 +31,10 @@ namespace DataAccess.Repositories
         {
             using (var session = _databaseSessionProvider.OpenSession())
             {
-                return criteria == null
-                    ? session.Query<Project>().ToArray()
-                    : session.Query<Project>().Where(criteria).ToArray();
+                var allProjects = criteria == null
+                    ? session.Query<Project>()
+                    : session.Query<Project>().Where(criteria);
+                return allProjects.ToArray();
             }
         }
 

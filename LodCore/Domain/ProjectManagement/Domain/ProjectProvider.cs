@@ -33,7 +33,8 @@ namespace ProjectManagement.Domain
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
         {
-            return _projectRepository.GetAllProjects(predicate).ToList();
+            var allProjects = _projectRepository.GetAllProjects(predicate);
+            return allProjects.ToList();
         }
 
         public Project GetProject(int projectId)
@@ -46,7 +47,11 @@ namespace ProjectManagement.Domain
             }
 
             var issues = _projectManagerGateway.GetProjectIssues(project.ProjectManagementSystemId);
-            project.Issues.AddRange(issues);
+            foreach (var issue in issues)
+            {
+                project.Issues.Add(issue);
+            }
+
             return project;
         }
 
