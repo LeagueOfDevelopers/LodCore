@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Web.Http;
 using DataAccess;
@@ -69,7 +70,9 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
-
+            container.Register<IAuthorizer>(() => new Authorizer(
+                TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
+                container.GetInstance<IUserRepository>()));
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
 
             container.Verify();

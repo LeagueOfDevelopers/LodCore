@@ -8,18 +8,24 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
 using ProjectManagement.Application;
+using UserManagement.Application;
 
 namespace FrontendServices.Controllers
 {
     public class ProjectController : ApiController
     {
-        public ProjectController(IProjectProvider projectProvider, ProjectsMapper projectsMapper)
+        public ProjectController(
+            IProjectProvider projectProvider, 
+            ProjectsMapper projectsMapper,
+            IAuthorizer authorizer)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
-            
+            Require.NotNull(authorizer, nameof(authorizer));
+
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
+            _authorizer = authorizer;
         }
 
         [Route("projects/random/{count}")]
@@ -33,10 +39,19 @@ namespace FrontendServices.Controllers
 
             var randomProjects = requiredProjects.GetRandom(count);
 
-            return randomProjects.Select(_projectsMapper.FromDomainEntity);
+            return randomProjects.Select(_projectsMapper.ToIndexPageProject);
+        }
+
+        [Route("projects")]
+        public IEnumerable<ProjectPreview> GetAllProjects()
+        {
+            var requiredProjects = _projectProvider.GetProjects();
+
+            return requiredProjects.Select(_projectsMapper.ToProjectPreview);
         }
 
         private readonly IProjectProvider _projectProvider;
         private readonly ProjectsMapper _projectsMapper;
+        private readonly IAuthorizer _authorizer;
     }
 }
