@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Journalist;
 using Journalist.Extensions;
@@ -29,40 +30,50 @@ namespace DataAccess.Repositories
 
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)
         {
-            using (var session = _databaseSessionProvider.OpenSession())
-            {
-                var allProjects = criteria == null
-                    ? session.Query<Project>()
-                    : session.Query<Project>().Where(criteria);
-                return allProjects.ToArray();
-            }
+            var session = _databaseSessionProvider.GetCurrentSession();
+
+            var allProjects = criteria == null
+                ? session.Query<Project>()
+                : session.Query<Project>().Where(criteria);
+            return allProjects.ToArray();
         }
 
         public Project GetProject(int projectId)
         {
-            using (var session = _databaseSessionProvider.OpenSession())
-            {
-                return session.Get<Project>(projectId);
-            }
+            Require.Positive(projectId, nameof(projectId));
+
+            var session = _databaseSessionProvider.GetCurrentSession();
+            return session.Get<Project>(projectId);
         }
 
         public int SaveProject(Project project)
         {
             Require.NotNull(project, nameof(project));
-            using (var session = _databaseSessionProvider.OpenSession())
-            {
-                return (int) session.Save(project);
-            }
+
+            var session = _databaseSessionProvider.GetCurrentSession();
+            return (int) session.Save(project);
         }
 
         public void UpdateProject(Project project)
         {
             Require.NotNull(project, nameof(project));
 
-            using (var session = _databaseSessionProvider.OpenSession())
-            {
-                session.Update(project);
-            }
+            var session = _databaseSessionProvider.GetCurrentSession();
+
+            session.Update(project);
+        }
+
+        public IEnumerable<string> GetUserRoles(int userId )
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var session = _databaseSessionProvider.GetCurrentSession();
+            var allProjects = session.Query<Project>();
+            var allRoles = allProjects
+                .SelectMany(project => project.ProjectMemberships)
+                .Where(membership => membership.DeveloperId == userId)
+                .Select(membership => membership.Role);
+            return allRoles.ToArray();
         }
     }
 }

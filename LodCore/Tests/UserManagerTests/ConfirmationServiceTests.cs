@@ -52,7 +52,7 @@ namespace UserManagerTests
             //arrange
             var mailValidationRq = new MailValidationRequest(42, "thisistoken");
 
-            _validationRequesRepoStub.Setup(rep => rep.GetMailValidatoinRequest(It.IsAny<string>()))
+            _validationRequesRepoStub.Setup(rep => rep.GetMailValidationRequest(It.IsAny<string>()))
                 .Returns(mailValidationRq);
 
             var testAccMock = new Mock<Account>();
@@ -73,7 +73,7 @@ namespace UserManagerTests
         {
             var mailValidationRq = new MailValidationRequest(42, "thisistoken");
 
-            _validationRequesRepoStub.Setup(rep => rep.GetMailValidatoinRequest(It.IsAny<string>()))
+            _validationRequesRepoStub.Setup(rep => rep.GetMailValidationRequest(It.IsAny<string>()))
                 .Returns(mailValidationRq);
 
             var testAccMock = new Mock<Account>();

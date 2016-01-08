@@ -20,32 +20,26 @@ namespace DataAccess.Repositories
         {
             Require.NotNull(request, nameof(request));
 
-            using (var session = _sessionProvider.OpenSession())
-            {
-                session.Save(request);
-            }
+            var session = _sessionProvider.GetCurrentSession();
+            session.Save(request);
         }
 
-        public MailValidationRequest GetMailValidatoinRequest(string token)
+        public MailValidationRequest GetMailValidationRequest(string token)
         {
             Require.NotNull(token, nameof(token));
 
-            using (var session = _sessionProvider.OpenSession())
-            {
-                var request = session.Get<MailValidationRequest>(token);
-                return request;
-            }
+            var session = _sessionProvider.GetCurrentSession();
+            var request = session.Get<MailValidationRequest>(token);
+            return request;
         }
 
-        public MailValidationRequest GetMailValidatoinRequest(int userId)
+        public MailValidationRequest GetMailValidationRequest(int userId)
         {
             Require.Positive(userId, nameof(userId));
 
-            using (var session = _sessionProvider.OpenSession())
-            {
-                var request = session.Query<MailValidationRequest>().Single(r => r.UserId == userId);
-                return request;
-            }
+            var session = _sessionProvider.GetCurrentSession();
+            var request = session.Query<MailValidationRequest>().Single(r => r.UserId == userId);
+            return request;
         }
     }
 }

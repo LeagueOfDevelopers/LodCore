@@ -1,4 +1,6 @@
-﻿using DataAccess.Mappings;
+﻿using System;
+using System.Security.Policy;
+using DataAccess.Mappings;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Mapping.ByCode;
@@ -30,9 +32,33 @@ namespace DataAccess
             new SchemaUpdate(configuration).Execute(false, true);
         }
 
-        public ISession OpenSession()
+        public ISession GetCurrentSession()
         {
-            return _factory.OpenSession();
+            return _session;
         }
+
+        public void OpenSession()
+        {
+            if (_session == null || !_session.IsOpen)
+            {
+                _session = _factory.OpenSession();
+            }
+
+            _transaction = _session.BeginTransaction();
+        }
+
+        public void CloseSession()
+        {
+            if (_transaction != null && _transaction.IsActive)
+            {
+                _transaction.Commit();    
+            }
+
+            _session?.Dispose();
+        }
+
+        [ThreadStatic] private static ISession _session;
+
+        [ThreadStatic] private static ITransaction _transaction;
     }
 }

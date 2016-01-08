@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using DataAccess;
 
 namespace FrontendServices
 {
@@ -20,8 +21,8 @@ namespace FrontendServices
 
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
         {
-            var fronendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
-            var cors = new EnableCorsAttribute(fronendDomain, "*", "*");
+            var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
+            var cors = new EnableCorsAttribute(frontendDomain, "*", "*");
             config.EnableCors(cors);
         }
     }

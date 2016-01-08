@@ -6,6 +6,6 @@ namespace UserManagement.Infrastructure
     {
         void SaveValidationRequest(MailValidationRequest request);
 
-        MailValidationRequest GetMailValidatoinRequest(string token);
+        MailValidationRequest GetMailValidationRequest(string token);
     }
 }

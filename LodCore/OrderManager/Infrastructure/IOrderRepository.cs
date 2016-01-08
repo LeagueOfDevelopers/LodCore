@@ -6,12 +6,10 @@ namespace OrderManagement.Infrastructure
 {
     public interface IOrderRepository
     {
-        List<Order> GetAllOrders();
+        List<Order> GetAllOrders(Func<Order, bool> criteria = null);
 
         Order GetOrder(int orderId);
 
         int SaveOrder(Order order);
-
-        List<Order> FindOrdersByCriteria(Func<Order, bool> criteria = null);
     }
 }

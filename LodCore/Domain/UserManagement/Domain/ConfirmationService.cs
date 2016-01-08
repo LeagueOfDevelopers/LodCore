@@ -39,7 +39,7 @@ namespace UserManagement.Domain
         {
             Require.NotNull(confirmationToken, nameof(confirmationToken));
 
-            var validationRequest = _validationRequestsRepository.GetMailValidatoinRequest(confirmationToken);
+            var validationRequest = _validationRequestsRepository.GetMailValidationRequest(confirmationToken);
             if (validationRequest == null)
             {
                 throw new TokenNotFoundException();

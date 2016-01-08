@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Common;
 using Journalist;
-using Journalist.Extensions;
 using ProjectManagement.Application;
 using ProjectManagement.Infrastructure;
 
@@ -21,12 +19,9 @@ namespace ProjectManagement.Domain
 
         public string GetUserCommonRole(int userId)
         {
-            var allRoles = _repository
-                .GetAllProjects()
-                .SelectMany(project => project.ProjectMemberships)
-                .Where(membership => membership.DeveloperId == userId)
-                .Select(membership => membership.Role);
-            if (allRoles.IsEmpty())
+            Require.Positive(userId, nameof(userId));
+            var allRoles = _repository.GetUserRoles(userId);
+            if (!allRoles.Any())
             {
                 return _settings.DefaultRole;
             }
