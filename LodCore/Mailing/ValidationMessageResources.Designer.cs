@@ -74,9 +74,23 @@ namespace Mailing {
         ///
         ///Благодарим Вас за то, что присоединились к нашему сообществу!.
         /// </summary>
-        internal static string messageTemplate {
+        internal static string ConfirmationMessageTemplate {
             get {
-                return ResourceManager.GetString("messageTemplate", resourceCulture);
+                return ResourceManager.GetString("ConfirmationMessageTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
+        ///
+        ///
+        ///На сайте Лиги Разработчиков только что:
+        ///
+        ///{0}.
+        /// </summary>
+        internal static string NotificationMessageTemplate {
+            get {
+                return ResourceManager.GetString("NotificationMessageTemplate", resourceCulture);
             }
         }
     }

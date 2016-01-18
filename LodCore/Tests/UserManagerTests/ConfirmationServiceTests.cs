@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Net.Mail;
+using Mailing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
 using UserManagement.Application;

@@ -31,6 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ActionMailer.Net, Version=0.7.4.0, Culture=neutral, PublicKeyToken=e62db3114c02a1c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\ActionMailer.0.7.4\lib\Net40\ActionMailer.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ActionMailer.Net.Mvc, Version=0.7.4.0, Culture=neutral, PublicKeyToken=e62db3114c02a1c2, processorArchitecture=MSIL">
+      <HintPath>..\packages\ActionMailer.0.7.4\lib\Net40\ActionMailer.Net.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Journalist.LanguageExtensions, Version=0.8.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Journalist.LanguageExtensions.0.8.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
       <Private>True</Private>
@@ -70,6 +78,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\NotificationService\NotificationService.csproj">
+      <Project>{11a53a10-354f-4951-aa63-9e217aa0fbdd}</Project>
+      <Name>NotificationService</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\UserManagement\UserManagement.csproj">
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>

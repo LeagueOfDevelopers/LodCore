@@ -22,8 +22,8 @@ namespace Mailing
 
             MailMessage mail = InitMail(emailAddress);
 
-            mail.Subject = _mailerSettings.Caption;
-            mail.Body = string.Format(_mailerSettings.MessageTemplate, confirmationToken);
+            mail.Subject = _mailerSettings.CaptionForConfirmation;
+            mail.Body = string.Format(_mailerSettings.ConfirmationMessageTemplate, confirmationToken);
 
             SendMail(mail);
         }
@@ -35,10 +35,8 @@ namespace Mailing
 
             MailMessage mail = InitMail(emailAddress);
 
-            mail.Subject = eventInfo.ToString().Length >= 35
-                ? eventInfo.ToString().Substring(0, 35) + "..."
-                : eventInfo.ToString() +  "...";
-            mail.Body = eventInfo.ToString();
+            mail.Subject = _mailerSettings.CaptionForNotification;
+            mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate, "Офигенное событие!");
 
             SendMail(mail);
         }
