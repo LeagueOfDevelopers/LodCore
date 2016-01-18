@@ -10,6 +10,8 @@ namespace NotificationService
         {
             Require.NotNull(distributionPolicyFactory, nameof(distributionPolicyFactory));
             Require.NotNull(eventRepository, nameof(eventRepository));
+            Require.NotNull(emailManager, nameof(emailManager));
+            Require.NotNull(mailer, nameof(mailer));
 
             DistributionPolicyFactory = distributionPolicyFactory;
             EventRepository = eventRepository;
@@ -27,12 +29,12 @@ namespace NotificationService
 
         public abstract void ConsumeEvent(IEventInfo eventInfo);
 
-        protected void ConfigureEmailByEvent(int[] userIds, IEventInfo eventInfo)
+        protected void SendOutEmailsAboutEvent(int[] userIds, IEventInfo eventInfo)
         {
             foreach (var userId in userIds)
             {
                 var currentMailAdress = EmailManager.GetMailAddressById(userId);
-                Mailer.ConsumeNotificationEmail(currentMailAdress, eventInfo);
+                Mailer.SendNotificationEmail(currentMailAdress, eventInfo);
             }
         }
     }

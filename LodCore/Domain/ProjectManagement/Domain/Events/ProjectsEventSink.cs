@@ -21,7 +21,7 @@ namespace ProjectManagement.Domain.Events
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
 
-            ConfigureEmailByEvent(distributionPolicy.ReceiverIds, eventInfo);
+            SendOutEmailsAboutEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
 
         private DistributionPolicy GetDistributionPolicyForEvent(DeveloperHasLeftProject @eventInfo)

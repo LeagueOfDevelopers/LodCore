@@ -21,7 +21,7 @@ namespace OrderManagement.Domain.Events
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
 
-            ConfigureEmailByEvent(distributionPolicy.ReceiverIds, eventInfo);
+            SendOutEmailsAboutEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
     }
 }

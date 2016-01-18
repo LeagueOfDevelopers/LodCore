@@ -4,6 +4,6 @@ namespace NotificationService
 {
     public interface IMailer
     {
-        void ConsumeNotificationEmail(MailAddress emailAddress, IEventInfo eventInfo);
+        void SendNotificationEmail(MailAddress emailAddress, IEventInfo eventInfo);
     }
 }
