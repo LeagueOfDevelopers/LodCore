@@ -66,9 +66,11 @@
     <Compile Include="EventInfoBase.cs" />
     <Compile Include="EventSinkBase.cs" />
     <Compile Include="IDistributionPolicyFactory.cs" />
+    <Compile Include="IEmailManager.cs" />
     <Compile Include="IEventInfo.cs" />
     <Compile Include="IEventRepository.cs" />
     <Compile Include="IEventSink.cs" />
+    <Compile Include="IMailer.cs" />
     <Compile Include="INotificationService.cs" />
     <Compile Include="IProjectRelativesRepository.cs" />
     <Compile Include="IUsersRepository.cs" />

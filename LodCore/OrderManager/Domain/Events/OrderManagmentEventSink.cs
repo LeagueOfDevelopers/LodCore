@@ -6,7 +6,8 @@ namespace OrderManagement.Domain.Events
     internal class OrderManagmentEventSink : EventSinkBase
     {
         public OrderManagmentEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository) : base(distributionPolicyFactory, eventRepository)
+            IEventRepository eventRepository, IEmailManager emailManager, IMailer mailer)
+            : base(distributionPolicyFactory, eventRepository, emailManager, mailer)
         {
         }
 
@@ -19,6 +20,8 @@ namespace OrderManagement.Domain.Events
             var distributionPolicy = DistributionPolicyFactory.GetAdminRelatedPolicy();
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
+
+            ConfigureEmailByEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
     }
 }

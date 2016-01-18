@@ -6,8 +6,8 @@ namespace UserManagement.Domain.Events
     public class UserManagementEventSink : EventSinkBase
     {
         public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository)
-            : base(distributionPolicyFactory, eventRepository)
+            IEventRepository eventRepository, IEmailManager emailManager, IMailer mailer)
+            : base(distributionPolicyFactory, eventRepository, emailManager, mailer)
         {
         }
 
@@ -20,6 +20,8 @@ namespace UserManagement.Domain.Events
             var distributionPolicy = GetDistributionPolicyForEvent((dynamic) eventInfo);
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
+
+            ConfigureEmailByEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
 
         private DistributionPolicy GetDistributionPolicyForEvent(NewEmailConfirmedDeveloper eventInfo)

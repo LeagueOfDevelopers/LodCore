@@ -4,6 +4,7 @@ using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
+using IMailer = UserManagement.Application.IMailer;
 
 namespace UserManagement.Domain
 {

@@ -5,8 +5,9 @@ namespace ProjectManagement.Domain.Events
 {
     public class ProjectsEventSink : EventSinkBase
     {
-        public ProjectsEventSink(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository)
-            : base(distributionPolicyFactory, eventRepository)
+        public ProjectsEventSink(IDistributionPolicyFactory distributionPolicyFactory,
+            IEventRepository eventRepository, IEmailManager emailManager, IMailer mailer)
+            : base(distributionPolicyFactory, eventRepository, emailManager, mailer)
         {
         }
 
@@ -19,6 +20,8 @@ namespace ProjectManagement.Domain.Events
             var distributionPolicy = GetDistributionPolicyForEvent((dynamic) eventInfo);
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
+
+            ConfigureEmailByEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
 
         private DistributionPolicy GetDistributionPolicyForEvent(DeveloperHasLeftProject @eventInfo)
