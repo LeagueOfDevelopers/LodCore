@@ -10,9 +10,12 @@ namespace Mailing
     {
         private readonly MailerSettings _mailerSettings;
 
-        public Mailer(MailerSettings mailerSettings)
+        private readonly INotificationEmailDescriber _notificationEmailDescriber;
+
+        public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber)
         {
             _mailerSettings = mailerSettings;
+            _notificationEmailDescriber = notificationEmailDescriber;
         }
 
         public void SendConfirmationMail(string confirmationToken, MailAddress emailAddress)
@@ -36,7 +39,7 @@ namespace Mailing
             var mail = InitMail(emailAddress);
 
             mail.Subject = _mailerSettings.CaptionForNotification;
-            mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate, "Офигенное событие!");
+            mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate, _notificationEmailDescriber.Describe((dynamic)eventInfo));
 
             SendMail(mail);
         }

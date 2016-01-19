@@ -65,8 +65,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventDescriptionResources.Designer.cs">
+      <DependentUpon>EventDescriptionResources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="INotificationEmailDescriber.cs" />
     <Compile Include="Mailer.cs" />
     <Compile Include="MailerSettings.cs" />
+    <Compile Include="NotificationEmailDescriber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MailingResources.Designer.cs">
       <DependentUpon>MailingResources.resx</DependentUpon>
@@ -83,15 +90,27 @@
       <Project>{11a53a10-354f-4951-aa63-9e217aa0fbdd}</Project>
       <Name>NotificationService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Domain\ProjectManagement\ProjectManagement.csproj">
+      <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>
+      <Name>ProjectManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\UserManagement\UserManagement.csproj">
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
       <Name>UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OrderManager\OrderManagment.csproj">
+      <Project>{590545c7-8872-4a3c-8e98-c6f0ae96c23e}</Project>
+      <Name>OrderManagment</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="EventDescriptionResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EventDescriptionResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="MailingResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MailingResources.Designer.cs</LastGenOutput>
