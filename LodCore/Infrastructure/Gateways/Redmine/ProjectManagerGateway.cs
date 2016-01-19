@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
+using Journalist.Collections;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
@@ -71,7 +72,21 @@ namespace Gateways.Redmine
             Require.Positive(projectManagerProjectId, nameof(projectManagerProjectId));
 
             var parameters = new NameValueCollection {{"project_id", projectManagerProjectId.ToString()}};
-            var issues = _redmineManager.GetObjectList<global::Redmine.Net.Api.Types.Issue>(parameters);
+            IList<global::Redmine.Net.Api.Types.Issue> issues = null;
+            try
+            {
+                issues = _redmineManager.GetObjectList<global::Redmine.Net.Api.Types.Issue>(parameters);
+            }
+            catch (RedmineException)
+            {
+                // todo: add logging here
+                return EmptyArray.Get<Issue>();
+            }
+            if (issues == null)
+            {
+                return EmptyArray.Get<Issue>();
+            }
+
             var lodIssue = issues.Select(IssueMapper.ToLodIssue);
             return lodIssue.ToArray();
         }

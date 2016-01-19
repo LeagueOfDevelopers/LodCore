@@ -64,6 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gitlab\GitlabSettings.cs" />
     <Compile Include="Redmine\IssueMapper.cs" />
     <Compile Include="Redmine\MembershipRoles.cs" />
     <Compile Include="Redmine\ProjectManagerGateway.cs" />

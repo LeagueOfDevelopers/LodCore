@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using Gateways.Gitlab;
 using Gateways.Redmine;
 using Mailing;
 using ProjectManagement.Domain;
@@ -31,6 +32,13 @@ namespace FrontendServices.App_Data
             return new UserRoleAnalyzerSettings(
                 int.Parse(settings["UserRoleAnalyzer.AppropriateEditDistance"]),
                 settings["UserRoleAnalyzer.DefaultRole"]);
+        }
+
+        public static GitlabSettings ReadGitlabSettings(NameValueCollection settings)
+        {
+            return new GitlabSettings(
+                settings["Gitlab.Host"],
+                settings["Gitlab.ApiKey"]);
         }
     }
 }

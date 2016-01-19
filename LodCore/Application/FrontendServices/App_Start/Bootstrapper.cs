@@ -85,6 +85,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadMailerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadRedmineSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadGitlabSettings(settings), Lifestyle.Singleton);
         }
     }
 }

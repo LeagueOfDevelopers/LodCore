@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using Common;
-using FrontendServices.App_Data.AuthorizationPolicies;
+using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
 using ProjectManagement.Application;
+using ProjectManagement.Domain;
 using UserManagement.Application;
 
 namespace FrontendServices.Controllers
@@ -48,6 +49,22 @@ namespace FrontendServices.Controllers
             var requiredProjects = _projectProvider.GetProjects();
 
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+        }
+
+        [Route("projects/{projectId}")]
+        public AdminProject GetProject(int projectId)
+        {
+            Require.Positive(projectId, nameof(projectId));
+
+            try
+            {
+                var project = _projectProvider.GetProject(projectId);
+                return _projectsMapper.ToAdminProject(project);
+            }
+            catch (ProjectNotFoundException)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
         }
 
         private readonly IProjectProvider _projectProvider;

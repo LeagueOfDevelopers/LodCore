@@ -1,6 +1,6 @@
 ﻿using ProjectManagement.Domain;
 
-namespace FrontendServices.App_Data.AuthorizationPolicies
+namespace FrontendServices.App_Data.Authorization
 {
     public static class ProjectsPolicies
     {

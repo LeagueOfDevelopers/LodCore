@@ -60,7 +60,7 @@ namespace ProjectManagement.Domain
 
         public virtual int ProjectManagementSystemId { get; protected set; }
 
-        public virtual ISet<Issue> Issues { get; protected set; }
+        public virtual ISet<Issue> Issues { get; protected set; } = new HashSet<Issue>();
 
         public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
 
