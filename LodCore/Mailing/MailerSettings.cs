@@ -1,19 +1,19 @@
-﻿namespace Mailing
+﻿using System;
+
+namespace Mailing
 {
     public class MailerSettings
     {
-        public MailerSettings( string smtpServer= "smtp.yandex.ru", int port = 25, string password= "q4l7w1kzjVO9PErK5dkR",
-            string @from= @"mail@lod-misis.ru", string captionForConfirmation= "Подтверждение аккаунта на сайте Лиги Разработчиков",
-            string captionForNotification = "В Лиге Разработчиков произошло кое-что интересное!")
+        public MailerSettings()
         {
-            CaptionForNotification = captionForNotification;
-            SmtpServer = smtpServer;
-            Port = port;
-            Password = password;
-            From = @from;
-            CaptionForConfirmation = captionForConfirmation;
-            ConfirmationMessageTemplate = ValidationMessageResources.ConfirmationMessageTemplate;
-            NotificationMessageTemplate = ValidationMessageResources.NotificationMessageTemplate;
+            CaptionForNotification = MailingResources.NotificationMailCaption;
+            SmtpServer = MailingResources.SmtpServer;
+            Port = Convert.ToInt16(MailingResources.Port);
+            Password = MailingResources.Password;
+            From = MailingResources.Email;
+            CaptionForConfirmation = MailingResources.ConfirmationMailCaption;
+            ConfirmationMessageTemplate = MailingResources.ConfirmationMessageTemplate;
+            NotificationMessageTemplate = MailingResources.NotificationMessageTemplate;
 
         }
 
@@ -24,13 +24,9 @@
         public string From { get; }
 
         public string ConfirmationMessageTemplate { get; }
-        public string CaptionForConfirmation { get; }// = "Подтверждение аккаунта на сайте Лиги Разработчиков";
+        public string CaptionForConfirmation { get; }
 
         public string NotificationMessageTemplate { get; }
-        public string CaptionForNotification { get; }// = "Подтверждение аккаунта на сайте Лиги Разработчиков";
-
-        /*
-
-        */
+        public string CaptionForNotification { get; }
     }
 }

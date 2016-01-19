@@ -1,12 +1,12 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using Journalist;
-using UserManagement.Application;
 using NotificationService;
+using IMailer = UserManagement.Application.IMailer;
 
 namespace Mailing
 {
-    public class Mailer : UserManagement.Application.IMailer, NotificationService.IMailer
+    public class Mailer : IMailer, NotificationService.IMailer
     {
         private readonly MailerSettings _mailerSettings;
 
@@ -20,7 +20,7 @@ namespace Mailing
             Require.NotNull(confirmationToken, nameof(confirmationToken));
             Require.NotNull(emailAddress, nameof(emailAddress));
 
-            MailMessage mail = InitMail(emailAddress);
+            var mail = InitMail(emailAddress);
 
             mail.Subject = _mailerSettings.CaptionForConfirmation;
             mail.Body = string.Format(_mailerSettings.ConfirmationMessageTemplate, confirmationToken);
@@ -33,7 +33,7 @@ namespace Mailing
             Require.NotNull(eventInfo, nameof(eventInfo));
             Require.NotNull(emailAddress, nameof(emailAddress));
 
-            MailMessage mail = InitMail(emailAddress);
+            var mail = InitMail(emailAddress);
 
             mail.Subject = _mailerSettings.CaptionForNotification;
             mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate, "Офигенное событие!");
