@@ -1,27 +1,28 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using Journalist;
 using NotificationService;
-using OrderManagement.Infrastructure;
-using UserManagement.Application;
-using IMailer = UserManagement.Application.IMailer;
+using UserManagement.Infrastructure;
 
 namespace Mailing
 {
-    public class Mailer : IMailer, NotificationService.IMailer
+    public class Mailer : UserManagement.Application.IMailer, NotificationService.IMailer
     {
         private readonly MailerSettings _mailerSettings;
 
         private readonly INotificationEmailDescriber _notificationEmailDescriber;
 
-        private readonly IUserManager _userManager;
+        private readonly IUserRepository _usersRepository;
 
-        public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber, IUserManager userManager)
+        public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber, IUserRepository usersRepository)
         {
+            Require.NotNull(mailerSettings, nameof(mailerSettings));
+            Require.NotNull(notificationEmailDescriber, nameof(notificationEmailDescriber));
+            Require.NotNull(usersRepository, nameof(usersRepository));
+
             _mailerSettings = mailerSettings;
             _notificationEmailDescriber = notificationEmailDescriber;
-            _userManager = userManager;
+            _usersRepository = usersRepository;
         }
 
         public void SendConfirmationMail(string confirmationToken, MailAddress emailAddress)
@@ -44,27 +45,24 @@ namespace Mailing
             Require.NotNull(eventInfo, nameof(eventInfo));
             Require.NotNull(userIds, nameof(userIds));
 
-            var emailsToSend = _userManager.GetUserList(acc => userIds.Contains(acc.UserId)).Select(a => a.Email).ToArray();
-
-            var mail = InitMail(emailsToSend);
+            var mail = new MailMessage();
             var client = InitClient();
 
             mail.Subject = _mailerSettings.CaptionForNotification;
             mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate, _notificationEmailDescriber.Describe((dynamic)eventInfo));
 
-            client.Send(mail);
-            mail.Dispose();
-        }
-
-        private MailMessage InitMail(MailAddress[] emailAddresses)
-        {
-            var mail = new MailMessage();
-            mail.From = new MailAddress(_mailerSettings.From);
-            foreach (var emailAddress in emailAddresses)
+            foreach (var userId in userIds)
             {
-                mail.To.Add(emailAddress);
+                var emailAdress = _usersRepository.GetAccount(userId).Email;
+                mail.To.Add(emailAdress);
+
+                client.Send(mail);
+
+                mail.To.Clear();
             }
-            return mail;
+
+            
+            mail.Dispose();
         }
 
         private MailMessage InitMail(MailAddress emailAddress)

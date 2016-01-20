@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
@@ -64,6 +63,22 @@ namespace DataAccess.Repositories
             }
         }
 
+        public int GetUserRedmineId(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var account = GetAccount(userId);
+            return account.RedmineUserId;
+        }
+
+        public int GetUserGitlabId(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var account = GetAccount(userId);
+            return account.GitlabUserId;
+        }
+
         public int[] GetAllUsersIds()
         {
             using (var session = _sessionProvider.OpenSession())
@@ -80,22 +95,6 @@ namespace DataAccess.Repositories
                     .Where(account => account.Role == AccountRole.Administrator)
                     .SelectToArray(account => account.UserId);
             }
-        }
-
-        public int GetUserRedmineId(int userId)
-        {
-            Require.Positive(userId, nameof(userId));
-
-            var account = GetAccount(userId);
-            return account.RedmineUserId;
-        }
-
-        public int GetUserGitlabId(int userId)
-        {
-            Require.Positive(userId, nameof(userId));
-
-            var account = GetAccount(userId);
-            return account.GitlabUserId;
         }
     }
 }
