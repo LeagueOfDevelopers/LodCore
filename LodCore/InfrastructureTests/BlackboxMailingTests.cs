@@ -4,6 +4,8 @@ using Mailing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
+using OrderManagement.Domain.Events;
+using OrderManagement.Infrastructure;
 using UserManagement.Domain.Events;
 
 namespace InfrastructureTests
@@ -11,17 +13,17 @@ namespace InfrastructureTests
     [TestClass]
     public class BlackboxMailingTests
     {
-        private Mock<IEventInfo> _eventInfoMock;
+        private NotificationEmailDescriber _notificationEmailDescriber;
 
-        private Mock<INotificationEmailDescriber> _notificationEmailDescriberMock;
+        private IOrderRepository
+
+        private OrderPlaced @event;
 
         [TestInitialize]
         public void SetupMoqs()
         {
-            _notificationEmailDescriberMock = new Mock<INotificationEmailDescriber>();
-
-            _notificationEmailDescriberMock.Setup(mock => mock.Describe(It.IsAny<IEventInfo>()))
-                .Returns("Это описание любого события, создание в BlackBox тесте Mailing'а");
+            @event = new OrderPlaced(42);
+            _notificationEmailDescriber = new NotificationEmailDescriber();
         }
 
         [TestMethod]

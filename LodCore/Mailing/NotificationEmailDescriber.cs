@@ -11,8 +11,17 @@ namespace Mailing
 {
     public class NotificationEmailDescriber : INotificationEmailDescriber
     {
+        public NotificationEmailDescriber(IOrderRepository orderRepository, IProjectRepository projectRepository, IUserManager userManager)
+        {
+            _orderRepository = orderRepository;
+            _projectRepository = projectRepository;
+            _userManager = userManager;
+        }
+
         public string Describe(IEventInfo @eventInfo)
         {
+            Require.NotNull(@eventInfo, nameof(@eventInfo));
+
             return Describe((dynamic) @eventInfo);
         }
 
@@ -82,12 +91,5 @@ namespace Mailing
         private readonly IOrderRepository _orderRepository;
 
         private readonly IUserManager _userManager;
-
-        public NotificationEmailDescriber(IOrderRepository orderRepository, IProjectRepository projectRepository, IUserManager userManager)
-        {
-            _orderRepository = orderRepository;
-            _projectRepository = projectRepository;
-            _userManager = userManager;
-        }
     }
 }

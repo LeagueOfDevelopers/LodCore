@@ -6,8 +6,8 @@ namespace UserManagement.Domain.Events
     public class UserManagementEventSink : EventSinkBase
     {
         public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository, IEmailManager emailManager, IMailer mailer)
-            : base(distributionPolicyFactory, eventRepository, emailManager, mailer)
+            IEventRepository eventRepository, IMailer mailer)
+            : base(distributionPolicyFactory, eventRepository, mailer)
         {
         }
 
