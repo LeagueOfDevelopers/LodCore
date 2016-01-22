@@ -1,22 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FrontendServices.Models;
 using Gateways.Gitlab;
 using Gateways.Redmine;
 using Journalist;
 using Journalist.Collections;
 using ProjectManagement.Domain;
+using UserManagement.Application;
+using ProjectMembershipDto = FrontendServices.Models.ProjectMembership;
+using ProjectMembership = ProjectManagement.Domain.ProjectMembership;
 
 namespace FrontendServices.App_Data.Mappers
 {
     public class ProjectsMapper
     {
-        public ProjectsMapper(RedmineSettings redmineSettings, GitlabSettings gitlabSettings)
+        public ProjectsMapper(
+            IUserManager userManager, 
+            RedmineSettings redmineSettings, 
+            GitlabSettings gitlabSettings)
         {
+            Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(redmineSettings, nameof(redmineSettings));
             Require.NotNull(gitlabSettings, nameof(gitlabSettings));
-
+            
+            _userManager = userManager;
             _redmineSettings = redmineSettings;
             _gitlabSettings = gitlabSettings;
         }
@@ -57,10 +66,17 @@ namespace FrontendServices.App_Data.Mappers
                 redmineUri, 
                 gitlabUri,
                 new HashSet<Issue>(project.Issues), 
-                new HashSet<ProjectMembership>(project.ProjectMemberships),
+                new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Uri>(project.Screenshots));
         }
 
+        private ProjectMembershipDto ToProjectMembershipDto(ProjectMembership projectMembership)
+        {
+            var user = _userManager.GetUser(projectMembership.DeveloperId);
+            return new ProjectMembershipDto(user.UserId, user.Firstname, user.Lastname, projectMembership.Role);
+        }
+
+        private readonly IUserManager _userManager;
         private readonly RedmineSettings _redmineSettings;
         private readonly GitlabSettings _gitlabSettings;
     }

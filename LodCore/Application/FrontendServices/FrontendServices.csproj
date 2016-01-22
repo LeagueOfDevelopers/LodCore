@@ -149,6 +149,7 @@
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
     <Compile Include="Models\IndexPageProject.cs" />
+    <Compile Include="Models\ProjectMembership.cs" />
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
