@@ -3,10 +3,11 @@ using System.Net.Mail;
 using Journalist;
 using NotificationService;
 using UserManagement.Infrastructure;
+using IMailer = UserManagement.Application.IMailer;
 
 namespace Mailing
 {
-    public class Mailer : UserManagement.Application.IMailer, NotificationService.IMailer
+    public class Mailer : IMailer, NotificationService.IMailer
     {
         private readonly MailerSettings _mailerSettings;
 
@@ -14,7 +15,8 @@ namespace Mailing
 
         private readonly IUserRepository _usersRepository;
 
-        public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber, IUserRepository usersRepository)
+        public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber,
+            IUserRepository usersRepository)
         {
             Require.NotNull(mailerSettings, nameof(mailerSettings));
             Require.NotNull(notificationEmailDescriber, nameof(notificationEmailDescriber));
@@ -49,7 +51,8 @@ namespace Mailing
             var client = InitClient();
 
             mail.Subject = _mailerSettings.CaptionForNotification;
-            mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate, _notificationEmailDescriber.Describe((dynamic)eventInfo));
+            mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate,
+                _notificationEmailDescriber.Describe((dynamic) eventInfo));
 
             foreach (var userId in userIds)
             {
@@ -61,7 +64,7 @@ namespace Mailing
                 mail.To.Clear();
             }
 
-            
+
             mail.Dispose();
         }
 
