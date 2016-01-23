@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomMultipartStreamProvider.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="FileStorageSettings.cs" />
     <Compile Include="IFileManager.cs" />

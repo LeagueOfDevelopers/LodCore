@@ -22,7 +22,8 @@ namespace FrontendServices
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
-            var cors = new EnableCorsAttribute(frontendDomain, "*", "*");
+            //todo: убрать звёздочку
+            var cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
         }
     }
