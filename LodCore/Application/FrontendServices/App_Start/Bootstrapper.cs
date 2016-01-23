@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Web.Http;
 using DataAccess;
 using DataAccess.Repositories;
+using FilesManagement;
 using FrontendServices.App_Data;
 using Gateways;
 using Gateways.Redmine;
@@ -70,6 +71,7 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
+            container.Register<IFileManager, FileManager>(Lifestyle.Singleton);
             container.Register<IAuthorizer>(() => new Authorizer(
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
                 container.GetInstance<IUserRepository>()));
@@ -86,6 +88,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadRedmineSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadGitlabSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadFileStorageSettings(settings), Lifestyle.Singleton);
         }
     }
 }
