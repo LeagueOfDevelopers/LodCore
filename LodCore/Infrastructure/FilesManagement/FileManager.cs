@@ -18,6 +18,18 @@ namespace FilesManagement
             _fileStorageSettings = fileStorageSettings;
         }
 
+        public Stream GetFile(string fileName)
+        {
+            var fullPath = Path.Combine(_fileStorageSettings.FileStorageFolder, fileName);
+            var exists = File.Exists(fullPath);
+            if (!exists)
+            {
+                throw new FileNotFoundException();
+            }
+
+            return new FileStream(fullPath, FileMode.Open);
+        }
+
         public Task<string> UploadFileAsync(HttpContent content)
         {
             Require.NotNull(content, nameof(content));
