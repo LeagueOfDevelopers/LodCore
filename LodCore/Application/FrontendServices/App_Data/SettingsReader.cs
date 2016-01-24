@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.IO;
+using System.Web;
+using FilesManagement;
 using Gateways.Gitlab;
 using Gateways.Redmine;
 using Mailing;
@@ -39,6 +42,15 @@ namespace FrontendServices.App_Data
             return new GitlabSettings(
                 settings["Gitlab.Host"],
                 settings["Gitlab.ApiKey"]);
+        }
+
+        public static FileStorageSettings ReadFileStorageSettings(NameValueCollection settings)
+        {
+            return new FileStorageSettings(
+                settings["FileStorage.FileFolder"],
+                settings["FileStorage.FileExtensions"].Split(','),
+                settings["FileStorage.ImageFolder"],
+                settings["FileStorage.ImageExtensions"].Split(','));
         }
     }
 }
