@@ -1,6 +1,6 @@
 ﻿namespace UserPresentaton
 {
-    public enum NotificationSettingEnum
+    public enum NotificationSettingValue
     {
         DontSend,
         SendOnlyNotification,

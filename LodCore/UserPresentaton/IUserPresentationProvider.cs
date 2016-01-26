@@ -2,6 +2,6 @@
 {
     public interface IUserPresentationProvider
     {
-        NotificationSettings GetUserEventSettings(int userId);
+        NotificationSetting GetUserEventSettings(int userId, string eventType);
     }
 }

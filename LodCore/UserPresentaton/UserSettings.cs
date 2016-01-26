@@ -2,6 +2,6 @@
 {
     public class UserSettings
     {
-        public NotificationSettings NotificationSettings { get; set; } = new NotificationSettings();
+        public NotificationSetting NotificationSetting { get; set; } = new NotificationSetting();
     }
 }

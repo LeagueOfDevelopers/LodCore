@@ -57,9 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IUserPresentationManager.cs" />
-    <Compile Include="NotificationSettings.cs" />
+    <Compile Include="INotificationSettingsRepository.cs" />
+    <Compile Include="IUserPresentationProvider.cs" />
+    <Compile Include="NotificationSettingValue.cs" />
+    <Compile Include="NotificationSetting.cs" />
+    <Compile Include="NotificationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserPresentationProvider.cs" />
     <Compile Include="UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>
