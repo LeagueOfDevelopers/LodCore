@@ -1,11 +1,9 @@
-﻿using System.Net.Mail;
-using Mailing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
-using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
+using IMailer = UserManagement.Application.IMailer;
 
 namespace UserManagerTests
 {
@@ -14,7 +12,7 @@ namespace UserManagerTests
     {
         private ConfirmationService _confirmationService;
         private Mock<IEventSink> _eventSinkManagerStub;
-        private Mock<UserManagement.Application.IMailer> _mailerStub;
+        private Mock<IMailer> _mailerStub;
         private Mock<IUserRepository> _userRepoStub;
         private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
 
@@ -22,7 +20,7 @@ namespace UserManagerTests
         public void Setup()
         {
             _userRepoStub = new Mock<IUserRepository>();
-            _mailerStub = new Mock<UserManagement.Application.IMailer>();
+            _mailerStub = new Mock<IMailer>();
             _validationRequesRepoStub = new Mock<IValidationRequestsRepository>();
             _eventSinkManagerStub = new Mock<IEventSink>();
 

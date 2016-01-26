@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Common;
 using Journalist;
 using UserManagement.Application;
@@ -11,6 +10,11 @@ namespace UserManagement.Domain
 {
     public class Authorizer : IAuthorizer
     {
+        private readonly Dictionary<string, AuthorizationToken> _tokensWithGenerationTime
+            = new Dictionary<string, AuthorizationToken>();
+
+        private readonly IUserRepository _userRepository;
+
         public Authorizer(TimeSpan tokenLifeTime, IUserRepository userRepository)
         {
             Require.NotNull(userRepository, nameof(userRepository));
@@ -74,9 +78,5 @@ namespace UserManagement.Domain
             token = token.Replace("-", "");
             return new AuthorizationToken(userId, token, DateTime.Now);
         }
-
-        private readonly Dictionary<string, AuthorizationToken> _tokensWithGenerationTime 
-            = new Dictionary<string, AuthorizationToken>();
-        private readonly IUserRepository _userRepository;
     }
 }

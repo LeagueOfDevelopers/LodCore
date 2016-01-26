@@ -11,7 +11,14 @@ namespace Mailing
 {
     public class NotificationEmailDescriber : INotificationEmailDescriber
     {
-        public NotificationEmailDescriber(IOrderRepository orderRepository, IProjectRepository projectRepository, IUserManager userManager)
+        private readonly IOrderRepository _orderRepository;
+
+        private readonly IProjectRepository _projectRepository;
+
+        private readonly IUserManager _userManager;
+
+        public NotificationEmailDescriber(IOrderRepository orderRepository, IProjectRepository projectRepository,
+            IUserManager userManager)
         {
             _orderRepository = orderRepository;
             _projectRepository = projectRepository;
@@ -56,7 +63,8 @@ namespace Mailing
             var developer = _userManager.GetUser(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
 
-            return string.Format(EventDescriptionResources.NewEmailConfirmedDeveloper, developerFullName, developer.Email.Address);
+            return string.Format(EventDescriptionResources.NewEmailConfirmedDeveloper, developerFullName,
+                developer.Email.Address);
         }
 
         private string Describe(NewFullConfirmedDeveloper @event)
@@ -85,11 +93,5 @@ namespace Mailing
             return string.Format(EventDescriptionResources.OrderPlaced, order.CreatedOnDateTime.Date, order.Header,
                 order.Email, order.Description);
         }
-
-        private readonly IProjectRepository _projectRepository;
-
-        private readonly IOrderRepository _orderRepository;
-
-        private readonly IUserManager _userManager;
     }
 }

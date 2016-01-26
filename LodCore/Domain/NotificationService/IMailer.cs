@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace NotificationService
+﻿namespace NotificationService
 {
     public interface IMailer
     {

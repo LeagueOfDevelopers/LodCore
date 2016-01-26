@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Net.Mail;
-using Common;
 using NHibernate;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
@@ -31,7 +30,7 @@ namespace DataAccess.Mappings.Application
                 return null;
             }
 
-            MailAddress mailAddress = new MailAddress(property0.ToString());
+            var mailAddress = new MailAddress(property0.ToString());
 
             return mailAddress;
         }
@@ -40,12 +39,12 @@ namespace DataAccess.Mappings.Application
         {
             if (value == null)
             {
-                ((IDataParameter)cmd.Parameters[index]).Value = DBNull.Value;
+                ((IDataParameter) cmd.Parameters[index]).Value = DBNull.Value;
             }
             else
             {
-                var state = (MailAddress)value;
-                ((IDataParameter)cmd.Parameters[index]).Value = state.GetType().Name;
+                var state = (MailAddress) value;
+                ((IDataParameter) cmd.Parameters[index]).Value = state.GetType().Name;
             }
         }
 
@@ -69,8 +68,19 @@ namespace DataAccess.Mappings.Application
             return value;
         }
 
-        public SqlType[] SqlTypes { get { return new[] { NHibernateUtil.String.SqlType }; } }
-        public Type ReturnedType { get { return typeof(MailAddress); } }
-        public bool IsMutable { get { return false; } }
+        public SqlType[] SqlTypes
+        {
+            get { return new[] {NHibernateUtil.String.SqlType}; }
+        }
+
+        public Type ReturnedType
+        {
+            get { return typeof (MailAddress); }
+        }
+
+        public bool IsMutable
+        {
+            get { return false; }
+        }
     }
 }

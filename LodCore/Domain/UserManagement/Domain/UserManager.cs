@@ -11,9 +11,14 @@ namespace UserManagement.Domain
 {
     public class UserManager : IUserManager
     {
+        private readonly IConfirmationService _confirmationService;
+        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
+        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
+        private readonly IUserRepository _repository;
+
         public UserManager(
-            IUserRepository repository, 
-            IConfirmationService confirmationService, 
+            IUserRepository repository,
+            IConfirmationService confirmationService,
             IRedmineUserRegistrar redmineUserRegistrar,
             IGitlabUserRegistrar gitlabUserRegistrar)
         {
@@ -66,8 +71,8 @@ namespace UserManagement.Domain
                 new Password(request.Password),
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
-                null, 
-                redmineUserId, 
+                null,
+                redmineUserId,
                 gitlabUserId);
 
             var userId = _repository.CreateAccount(newAccount);
@@ -87,11 +92,5 @@ namespace UserManagement.Domain
 
             _repository.UpdateAccount(account);
         }
-
-
-        private readonly IConfirmationService _confirmationService;
-        private readonly IUserRepository _repository;
-        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
-        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
     }
 }

@@ -4,17 +4,8 @@ namespace UserPresentaton
 {
     public class NotificationSetting
     {
-        public virtual int SettingId { get; protected set; }
-
-        public virtual int UserId { get; protected set; }
-
-        public virtual NotificationType NotificationType { get; protected set; }
-
-        public virtual NotificationSettingValue Value { get; protected set; }
-        
         protected NotificationSetting()
         {
-            
         }
 
         public NotificationSetting(int userId, NotificationType notificationType, NotificationSettingValue value)
@@ -27,5 +18,13 @@ namespace UserPresentaton
             NotificationType = notificationType;
             Value = value;
         }
+
+        public virtual int SettingId { get; protected set; }
+
+        public virtual int UserId { get; protected set; }
+
+        public virtual NotificationType NotificationType { get; protected set; }
+
+        public virtual NotificationSettingValue Value { get; protected set; }
     }
 }

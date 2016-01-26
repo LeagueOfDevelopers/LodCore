@@ -13,8 +13,8 @@ namespace UserManagement.Domain
             Password password,
             AccountRole role,
             ConfirmationStatus confirmationStatus,
-            Profile profile, 
-            int redmineUserId, 
+            Profile profile,
+            int redmineUserId,
             int gitlabUserId)
         {
             Require.NotEmpty(firstname, nameof(firstname));

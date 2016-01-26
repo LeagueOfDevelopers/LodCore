@@ -5,7 +5,7 @@ namespace ProjectManagement.Domain
     public class ProjectMembership
     {
         public ProjectMembership(
-            int developerId, 
+            int developerId,
             string role,
             Project project)
         {
@@ -29,6 +29,5 @@ namespace ProjectManagement.Domain
         public virtual int DeveloperId { get; protected set; }
 
         public virtual string Role { get; protected set; }
-
     }
 }

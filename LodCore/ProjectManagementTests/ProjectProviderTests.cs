@@ -1,5 +1,4 @@
-﻿using Journalist.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
 using Ploeh.AutoFixture;
@@ -13,13 +12,13 @@ namespace ProjectManagementTests
     [TestClass]
     public class ProjectProviderTests
     {
+        private Mock<IEventSink> _eventSinkMock;
         private Fixture _fixture;
         private Mock<IProjectManagerGateway> _pmGateway;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _projectRepository;
-        private Mock<IVersionControlSystemGateway> _vcsGateway;
-        private Mock<IEventSink> _eventSinkMock;
         private Mock<IUserRepository> _userRepository;
+        private Mock<IVersionControlSystemGateway> _vcsGateway;
 
         [TestInitialize]
         public void Setup()
@@ -75,7 +74,7 @@ namespace ProjectManagementTests
             _eventSinkMock.Verify(
                 sink => sink.ConsumeEvent(
                     It.Is<IEventInfo>(
-                        eventInfo => eventInfo.GetEventType() == typeof(NewProjectCreated).Name)), 
+                        eventInfo => eventInfo.GetEventType() == typeof (NewProjectCreated).Name)),
                 Times.Once);
         }
     }

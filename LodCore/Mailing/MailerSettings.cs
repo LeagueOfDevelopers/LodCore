@@ -14,7 +14,6 @@ namespace Mailing
             CaptionForConfirmation = MailingResources.ConfirmationMailCaption;
             ConfirmationMessageTemplate = MailingResources.ConfirmationMessageTemplate;
             NotificationMessageTemplate = MailingResources.NotificationMessageTemplate;
-
         }
 
         public string SmtpServer { get; }
