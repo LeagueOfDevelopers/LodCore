@@ -8,7 +8,6 @@ namespace UserPresentaton
 
         void CreateNotificationSetting(NotificationSetting notificationSetting);
 
-        void UpdateNotificationSetting(NotificationSetting notificationSettingToUpdate,
-            NotificationSetting newNotificationSetting);
+        void UpdateNotificationSetting(NotificationSetting notificationSetting);
     }
 }

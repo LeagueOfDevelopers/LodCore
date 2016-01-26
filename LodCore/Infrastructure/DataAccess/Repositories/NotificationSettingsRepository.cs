@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using Journalist;
+using NHibernate.Linq;
 using UserPresentaton;
 
 namespace DataAccess.Repositories
@@ -17,26 +19,24 @@ namespace DataAccess.Repositories
 
         public NotificationSetting ReadNotificationSettingByCriteria(Func<NotificationSetting, bool> func)
         {
-            using ( var session = _sessionProvider.OpenSession())
-            {
-                return session.Query<NotificationSetting>().Single(func);
-            }
+            var session = _sessionProvider.GetCurrentSession();
+            return session.Query<NotificationSetting>().Single(func);
         }
 
         public void CreateNotificationSetting(NotificationSetting notificationSetting)
         {
             Require.NotNull(notificationSetting, nameof(notificationSetting));
 
-            using (var session = _sessionProvider.OpenSession())
-            {
-                var save = (int) session.Save(notificationSetting);
-            }
+            var session = _sessionProvider.GetCurrentSession();
+            session.Save(notificationSetting);
         }
 
-        public void UpdateNotificationSetting(NotificationSetting notificationSettingToUpdate,
-            NotificationSetting newNotificationSetting)
+        public void UpdateNotificationSetting(NotificationSetting notificationSetting)
         {
-            throw new NotImplementedException();
+            Require.NotNull(notificationSetting, nameof(notificationSetting));
+
+            var session = _sessionProvider.GetCurrentSession();
+            session.Update(notificationSetting);
         }
     }
 }
