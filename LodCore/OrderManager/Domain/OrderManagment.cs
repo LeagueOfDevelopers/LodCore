@@ -51,7 +51,7 @@ namespace OrderManagement.Domain
         public List<Order> FindOrders(Func<Order, bool> criteria)
         {
             Require.NotNull(criteria, nameof(criteria));
-            var orders = _orderRepository.FindOrdersByCriteria(criteria);
+            var orders = _orderRepository.GetAllOrders(criteria);
             return orders;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Infrastructure
@@ -12,5 +13,7 @@ namespace ProjectManagement.Infrastructure
         int SaveProject(Project project);
 
         void UpdateProject(Project project);
+
+        IEnumerable<string> GetUserRoles(int userId);
     }
 }

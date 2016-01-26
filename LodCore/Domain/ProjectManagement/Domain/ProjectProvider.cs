@@ -11,13 +11,6 @@ namespace ProjectManagement.Domain
 {
     public class ProjectProvider : IProjectProvider
     {
-        private readonly IEventSink _eventSink;
-
-        private readonly IProjectManagerGateway _projectManagerGateway;
-        private readonly IProjectRepository _projectRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
-
         public ProjectProvider(
             IProjectManagerGateway projectManagerGateway,
             IVersionControlSystemGateway versionControlSystemGateway,
@@ -40,7 +33,8 @@ namespace ProjectManagement.Domain
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
         {
-            return _projectRepository.GetAllProjects(predicate).ToList();
+            var allProjects = _projectRepository.GetAllProjects(predicate);
+            return allProjects.ToList();
         }
 
         public Project GetProject(int projectId)
@@ -53,7 +47,11 @@ namespace ProjectManagement.Domain
             }
 
             var issues = _projectManagerGateway.GetProjectIssues(project.ProjectManagementSystemId);
-            project.Issues.AddRange(issues);
+            foreach (var issue in issues)
+            {
+                project.Issues.Add(issue);
+            }
+
             return project;
         }
 
@@ -103,9 +101,8 @@ namespace ProjectManagement.Domain
             var gitlabUserId = _userRepository.GetUserGitlabId(userId);
 
             project.ProjectMemberships.Add(new ProjectMembership(
-                userId,
-                role,
-                project));
+                userId, 
+                role));
 
             _projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
             _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
@@ -140,5 +137,12 @@ namespace ProjectManagement.Domain
 
             _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
         }
+
+        private readonly IEventSink _eventSink;
+        private readonly IUserRepository _userRepository;
+
+        private readonly IProjectManagerGateway _projectManagerGateway;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
     }
 }

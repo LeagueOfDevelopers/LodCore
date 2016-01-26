@@ -8,6 +8,7 @@ namespace DataAccess.Mappings
     {
         public OrderMap()
         {
+            Table("Orders");
             Id(order => order.Id, mapper => mapper.Column("Id"));
             Property(order => order.Header, mapper => mapper.Column("Header"));
             Property(order => order.CreatedOnDateTime, mapper => mapper.Column("CreatedOnDateTime"));

@@ -7,7 +7,6 @@ namespace UserManagement.Domain
     public class Profile
     {
         public Profile(
-            int userId,
             Uri bigPhotoUri,
             Uri smallPhotoUri,
             MailAddress email,
@@ -19,12 +18,10 @@ namespace UserManagement.Domain
             string instituteName,
             string specialization)
         {
-            Require.ZeroOrGreater(userId, nameof(userId));
             Require.NotNull(registrationTime, nameof(registrationTime));
             Require.NotNull(email, nameof(email));
             Require.NotEmpty(phoneNumber, nameof(phoneNumber));
-
-            UserId = userId;
+            
             BigPhotoUri = bigPhotoUri;
             SmallPictureUri = smallPhotoUri;
             RegistrationTime = registrationTime;

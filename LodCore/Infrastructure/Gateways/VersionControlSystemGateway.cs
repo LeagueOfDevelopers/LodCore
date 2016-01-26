@@ -2,10 +2,12 @@
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
+using UserManagement.Application;
+using UserManagement.Infrastructure;
 
 namespace Gateways
 {
-    public class VersionControlSystemGateway : IVersionControlSystemGateway
+    public class VersionControlSystemGateway : IVersionControlSystemGateway, IGitlabUserRegistrar
     {
         public int CreateRepositoryForProject(CreateProjectRequest request)
         {
@@ -18,6 +20,11 @@ namespace Gateways
         }
 
         public void RemoveUserFromProject(Project project, int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int RegisterUser(CreateAccountRequest request)
         {
             throw new NotImplementedException();
         }

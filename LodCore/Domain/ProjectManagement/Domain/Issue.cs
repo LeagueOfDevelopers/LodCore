@@ -7,7 +7,7 @@ namespace ProjectManagement.Domain
         public Issue(string header, string descripton, IssueType issueType)
         {
             Require.NotEmpty(header, nameof(header));
-            Require.NotEmpty(descripton, nameof(descripton));
+            Require.NotNull(descripton, nameof(descripton));
 
             Header = header;
             Descripton = descripton;

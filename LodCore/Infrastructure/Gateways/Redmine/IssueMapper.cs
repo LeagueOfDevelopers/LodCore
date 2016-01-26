@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Principal;
+using Journalist;
 using Journalist.Extensions;
 using ProjectManagement.Domain;
 
@@ -17,6 +18,8 @@ namespace Gateways.Redmine
 
         public static Issue ToLodIssue(this global::Redmine.Net.Api.Types.Issue issue)
         {
+            Require.NotNull(issue, nameof(issue));
+
             IssueType issueType;
             var isKnownType = RedmineTrackerIdToIssueType.TryGetValue(issue.Tracker.Id, out issueType);
             if (!isKnownType)
@@ -33,6 +36,8 @@ namespace Gateways.Redmine
 
         public static global::Redmine.Net.Api.Types.Issue ToRedmineIssue(this Issue issue)
         {
+            Require.NotNull(issue, nameof(issue));
+
             return new global::Redmine.Net.Api.Types.Issue
             {
                 Subject = issue.Header,

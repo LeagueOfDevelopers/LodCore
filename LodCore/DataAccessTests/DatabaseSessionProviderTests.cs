@@ -10,7 +10,7 @@ namespace DataAccessTests
         public void CreateSchemaTest()
         {
             var provider = new DatabaseSessionProvider();
-            using (var session = provider.OpenSession())
+            using (var session = provider.GetCurrentSession())
             {
             }
         }

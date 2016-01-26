@@ -1,31 +1,38 @@
-﻿using System;
+﻿using Journalist;
 
 namespace Mailing
 {
     public class MailerSettings
     {
-        public MailerSettings()
+        public MailerSettings(
+            string smtpServer, 
+            int port, 
+            string password, 
+            string @from, 
+            string caption, 
+            string messageTemplate)
         {
-            CaptionForNotification = MailingResources.NotificationMailCaption;
-            SmtpServer = MailingResources.SmtpServer;
-            Port = Convert.ToInt16(MailingResources.Port);
-            Password = MailingResources.Password;
-            From = MailingResources.Email;
-            CaptionForConfirmation = MailingResources.ConfirmationMailCaption;
-            ConfirmationMessageTemplate = MailingResources.ConfirmationMessageTemplate;
-            NotificationMessageTemplate = MailingResources.NotificationMessageTemplate;
+            Require.NotEmpty(smtpServer, nameof(smtpServer));
+            Require.Positive(port, nameof(port));
+            Require.NotEmpty(password, nameof(password));
+            Require.NotEmpty(@from, nameof(@from));
+            Require.NotEmpty(caption, nameof(caption));
+            Require.NotEmpty(messageTemplate, nameof(messageTemplate));
+
+            SmtpServer = smtpServer;
+            Port = port;
+            Password = password;
+            From = @from;
+            Caption = caption;
+            MessageTemplate = messageTemplate;
         }
 
-        public string SmtpServer { get; }
-        public int Port { get; }
-        public string Password { get; }
+        public string SmtpServer { get; }// = "217.69.139.160";
+        public int Port { get; }// = 465;
+        public string Password { get; }// = "F0rjustice";
 
-        public string From { get; }
-
-        public string ConfirmationMessageTemplate { get; }
-        public string CaptionForConfirmation { get; }
-
-        public string NotificationMessageTemplate { get; }
-        public string CaptionForNotification { get; }
+        public string From { get; }// = @"leagueofdevelopers@mail.ru";
+        public string MessageTemplate { get; }// = ValidationMessageResources.messageTemplate;
+        public string Caption { get; }// = "Подтверждение аккаунта на сайте Лиги Разработчиков";
     }
 }

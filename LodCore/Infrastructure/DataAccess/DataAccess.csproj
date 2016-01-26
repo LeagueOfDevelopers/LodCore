@@ -90,11 +90,6 @@
     <Compile Include="Repositories\ValidationRequestsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="hibernate.cfg.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

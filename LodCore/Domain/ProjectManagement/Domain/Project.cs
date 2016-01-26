@@ -16,9 +16,9 @@ namespace ProjectManagement.Domain
             AccessLevel accessLevel,
             int versionControlSystemId,
             int projectManagementSystemId,
-            List<Issue> issues,
-            List<ProjectMembership> projectDevelopers,
-            List<Uri> screenshots)
+            ISet<Issue> issues,
+            ISet<ProjectMembership> projectDevelopers,
+            ISet<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
@@ -33,9 +33,9 @@ namespace ProjectManagement.Domain
             LandingImageUri = landingImageUri;
             VersionControlSystemId = versionControlSystemId;
             ProjectManagementSystemId = projectManagementSystemId;
-            Issues = issues ?? new List<Issue>();
-            ProjectMemberships = projectDevelopers ?? new List<ProjectMembership>();
-            Screenshots = screenshots ?? new List<Uri>();
+            Issues = issues ?? new HashSet<Issue>();
+            ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
+            Screenshots = screenshots ?? new HashSet<Uri>();
         }
 
         protected Project()
@@ -60,10 +60,10 @@ namespace ProjectManagement.Domain
 
         public virtual int ProjectManagementSystemId { get; protected set; }
 
-        public virtual List<Issue> Issues { get; protected set; }
+        public virtual ISet<Issue> Issues { get; protected set; } = new HashSet<Issue>();
 
-        public virtual List<ProjectMembership> ProjectMemberships { get; protected set; }
+        public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
 
-        public virtual List<Uri> Screenshots { get; protected set; }
+        public virtual ISet<Uri> Screenshots { get; protected set; }
     }
 }
