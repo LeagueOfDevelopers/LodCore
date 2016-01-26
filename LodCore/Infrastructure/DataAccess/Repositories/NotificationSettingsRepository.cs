@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Journalist;
-using NHibernate.Linq;
 using UserPresentaton;
 
 namespace DataAccess.Repositories
@@ -19,7 +17,7 @@ namespace DataAccess.Repositories
 
         public NotificationSetting ReadNotificationSettingByCriteria(Func<NotificationSetting, bool> func)
         {
-            using (var session = _sessionProvider.OpenSession())
+            using ( var session = _sessionProvider.OpenSession())
             {
                 return session.Query<NotificationSetting>().Single(func);
             }

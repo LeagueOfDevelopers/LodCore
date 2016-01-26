@@ -35,8 +35,8 @@ namespace Mailing
             var mail = InitMail(emailAddress);
             var client = InitClient();
 
-            mail.Subject = _mailerSettings.CaptionForConfirmation;
-            mail.Body = string.Format(_mailerSettings.ConfirmationMessageTemplate, confirmationToken);
+            mail.Subject = MailingResources.ConfirmationMailCaption;
+            mail.Body = string.Format(MailingResources.ConfirmationMessageTemplate, confirmationToken);
 
             client.Send(mail);
             client.Dispose();
@@ -50,8 +50,8 @@ namespace Mailing
             var mail = new MailMessage();
             var client = InitClient();
 
-            mail.Subject = _mailerSettings.CaptionForNotification;
-            mail.Body = string.Format(_mailerSettings.NotificationMessageTemplate,
+            mail.Subject = MailingResources.NotificationMailCaption;
+            mail.Body = string.Format(MailingResources.NotificationMessageTemplate,
                 _notificationEmailDescriber.Describe((dynamic) eventInfo));
 
             foreach (var userId in userIds)
