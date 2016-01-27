@@ -30,7 +30,7 @@ namespace DataAccess.Mappings.Application
                 return null;
             }
 
-            Password password = new Password(property0.ToString());
+            var password = new Password(property0.ToString());
 
             return password;
         }
@@ -39,12 +39,12 @@ namespace DataAccess.Mappings.Application
         {
             if (value == null)
             {
-                ((IDataParameter)cmd.Parameters[index]).Value = DBNull.Value;
+                ((IDataParameter) cmd.Parameters[index]).Value = DBNull.Value;
             }
             else
             {
-                var state = (Password)value;
-                ((IDataParameter)cmd.Parameters[index]).Value = state.GetType().Name;
+                var state = (Password) value;
+                ((IDataParameter) cmd.Parameters[index]).Value = state.GetType().Name;
             }
         }
 
@@ -68,8 +68,19 @@ namespace DataAccess.Mappings.Application
             return value;
         }
 
-        public SqlType[] SqlTypes { get { return new[] { NHibernateUtil.String.SqlType }; } }
-        public Type ReturnedType { get { return typeof(Password); } }
-        public bool IsMutable { get { return false; } }
+        public SqlType[] SqlTypes
+        {
+            get { return new[] {NHibernateUtil.String.SqlType}; }
+        }
+
+        public Type ReturnedType
+        {
+            get { return typeof (Password); }
+        }
+
+        public bool IsMutable
+        {
+            get { return false; }
+        }
     }
 }

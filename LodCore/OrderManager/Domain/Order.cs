@@ -20,7 +20,6 @@ namespace OrderManagement.Domain
 
         protected Order()
         {
-            
         }
 
         public virtual int Id { get; protected set; }

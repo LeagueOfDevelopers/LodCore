@@ -9,16 +9,15 @@ namespace Common
     {
         public Password(string pass)
         {
-
             if (Regex.IsMatch(pass, "^.{6,18}$"))
             {
-                MD5 md5Hasher = MD5.Create();
+                var md5Hasher = MD5.Create();
 
-                byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(pass));
+                var data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(pass));
 
-                StringBuilder sBuilder = new StringBuilder();
+                var sBuilder = new StringBuilder();
 
-                for (int i = 0; i < data.Length; i++)
+                for (var i = 0; i < data.Length; i++)
                 {
                     sBuilder.Append(data[i].ToString("x2"));
                 }
@@ -34,7 +33,6 @@ namespace Common
 
         public Password()
         {
-            
         }
 
         public virtual string Pass { get; protected set; }

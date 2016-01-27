@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
-using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
+using IMailer = UserManagement.Application.IMailer;
 
 namespace UserManagerTests
 {

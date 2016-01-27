@@ -22,7 +22,7 @@ namespace CommonTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof (ArgumentException))]
         public void InvalidPasswordThrowsArgumentException()
         {
             //arrange
@@ -34,7 +34,6 @@ namespace CommonTests
             var errPass2 = new Password(tooLongPass);
 
             //assert
-
         }
     }
 }
