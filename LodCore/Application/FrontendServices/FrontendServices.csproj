@@ -156,6 +156,7 @@
   <ItemGroup>
     <Content Include="settings.config" />
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\LodCore.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -186,6 +187,10 @@
       <Project>{6e6bca8c-2b4d-4867-ae47-64565e64357c}</Project>
       <Name>DataAccess</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\FilesManagement\FilesManagement.csproj">
+      <Project>{40415DF3-C945-4695-81DF-0E1670E1787A}</Project>
+      <Name>FilesManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\Gateways\Gateways.csproj">
       <Project>{5E398EDA-A84B-4C94-AEAB-C91907D2D1AA}</Project>
       <Name>Gateways</Name>
@@ -210,7 +215,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50055</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:50055/</IISUrl>
+          <IISUrl>http://localhost:50054/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
