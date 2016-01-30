@@ -15,7 +15,11 @@ namespace DataAccess.Mappings
             Property(project => project.Info, mapper => mapper.Column("Info"));
             Property(project => project.LandingImageUri, mapper => mapper.Column("LandingImageUri"));
             Property(project => project.ProjectStatus, mapper => mapper.Column("ProjectStatus"));
-            Property(project => project.ProjectType, mapper => mapper.Column("ProjectType"));
+            Set(project => project.ProjectTypes, mapper =>
+            {
+                mapper.Table("ProjectTypes");
+                mapper.Cascade(Cascade.All);
+            });
             Property(project => project.ProjectManagementSystemId, mapper => mapper.Column("ProjectManagementSystemId"));
             Property(project => project.VersionControlSystemId, mapper => mapper.Column("VersionControlSystemId"));
             Set(project => project.Screenshots, mapper =>

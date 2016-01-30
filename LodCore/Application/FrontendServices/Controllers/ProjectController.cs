@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -7,6 +8,7 @@ using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Extensions;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
@@ -46,7 +48,11 @@ namespace FrontendServices.Controllers
         [Route("projects")]
         public IEnumerable<ProjectPreview> GetAllProjects()
         {
-            var requiredProjects = _projectProvider.GetProjects();
+            var categoriesQuery = Request.RequestUri.Query;
+            
+            var requiredProjects = categoriesQuery.IsEmpty() 
+                ? _projectProvider.GetProjects()
+                : GetProjectsByCategory(categoriesQuery);
 
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
         }
@@ -67,8 +73,22 @@ namespace FrontendServices.Controllers
             }
         }
 
+        private IEnumerable<Project> GetProjectsByCategory(string categoriesQuery)
+        {
+            var categories = categoriesQuery
+                .Replace("?" + CategoriesQueryParameterName + "=", string.Empty)
+                .Split(',')
+                .Select(int.Parse);
+            var projectTypes = categories.Select(category => (ProjectType)category);
+            var requiredProjects = _projectProvider.GetProjects(
+                project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)));
+            return requiredProjects;
+        } 
+
         private readonly IProjectProvider _projectProvider;
         private readonly ProjectsMapper _projectsMapper;
         private readonly IAuthorizer _authorizer;
+
+        private const string CategoriesQueryParameterName = "categories";
     }
 }

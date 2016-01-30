@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,6 +15,7 @@ namespace FilesManagement
             Require.NotNull(fileStorageSettings, nameof(fileStorageSettings));
 
             _fileStorageSettings = fileStorageSettings;
+            CreateFoldersIfNeeded();
         }
 
         public Stream GetFile(string fileName)
@@ -73,6 +73,19 @@ namespace FilesManagement
         private string GetFileExtension(string fileName)
         {
             return Path.GetExtension(fileName).TrimStart('.');
+        }
+
+        private void CreateFoldersIfNeeded()
+        {
+            if (!Directory.Exists(_fileStorageSettings.FileStorageFolder))
+            {
+                Directory.CreateDirectory(_fileStorageSettings.FileStorageFolder);
+            }
+
+            if (!Directory.Exists(_fileStorageSettings.ImageStorageFolder))
+            {
+                Directory.CreateDirectory(_fileStorageSettings.ImageStorageFolder);
+            }
         }
 
         private readonly FileStorageSettings _fileStorageSettings;

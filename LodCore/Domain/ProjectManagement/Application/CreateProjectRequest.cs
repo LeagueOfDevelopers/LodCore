@@ -9,16 +9,17 @@ namespace ProjectManagement.Application
     {
         public CreateProjectRequest(
             string name,
-            ProjectType projectType,
+            ProjectType[] projectTypes,
             string info,
             AccessLevel accessLevel,
             Uri landingImageUri)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotEmpty(info, nameof(info));
+            Require.NotEmpty(projectTypes, nameof(projectTypes));
 
             Name = name;
-            ProjectType = projectType;
+            ProjectTypes = projectTypes;
             Info = info;
             AccessLevel = accessLevel;
             LandingImageUri = landingImageUri;
@@ -26,7 +27,7 @@ namespace ProjectManagement.Application
 
         public string Name { get; private set; }
 
-        public ProjectType ProjectType { get; private set; }
+        public ProjectType[] ProjectTypes { get; private set; }
 
         public string Info { get; private set; }
 

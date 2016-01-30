@@ -46,7 +46,7 @@ namespace FrontendServices.App_Data.Mappers
                 project.LandingImageUri, 
                 project.Name, 
                 project.ProjectStatus, 
-                project.ProjectType);
+                project.ProjectTypes.ToArray());
         }
 
         public AdminProject ToAdminProject(Project project)
@@ -58,7 +58,7 @@ namespace FrontendServices.App_Data.Mappers
             return new AdminProject(
                 project.ProjectId,
                 project.Name,
-                project.ProjectType.YieldArray(),
+                project.ProjectTypes.ToArray(),
                 project.Info,
                 project.ProjectStatus,
                 project.LandingImageUri,

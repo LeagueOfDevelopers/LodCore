@@ -8,25 +8,26 @@ namespace ProjectManagement.Domain
     public class Project
     {
         public Project(
-            string name,
-            ProjectType projectType,
-            string info,
+            string name, 
+            ISet<ProjectType> projectTypes, 
+            string info, 
             ProjectStatus projectStatus,
-            Uri landingImageUri,
-            AccessLevel accessLevel,
-            int versionControlSystemId,
-            int projectManagementSystemId,
-            ISet<Issue> issues,
-            ISet<ProjectMembership> projectDevelopers,
+            Uri landingImageUri, 
+            AccessLevel accessLevel, 
+            int versionControlSystemId, 
+            int projectManagementSystemId, 
+            ISet<Issue> issues, 
+            ISet<ProjectMembership> projectDevelopers, 
             ISet<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
             Require.NotNull(versionControlSystemId, nameof(versionControlSystemId));
             Require.NotNull(projectManagementSystemId, nameof(projectManagementSystemId));
+            Require.NotEmpty(projectTypes, nameof(projectTypes));
 
             Name = name;
-            ProjectType = projectType;
+            ProjectTypes = projectTypes;
             AccessLevel = accessLevel;
             Info = info;
             ProjectStatus = projectStatus;
@@ -46,7 +47,7 @@ namespace ProjectManagement.Domain
 
         public virtual string Name { get; protected set; }
 
-        public virtual ProjectType ProjectType { get; protected set; }
+        public virtual ISet<ProjectType> ProjectTypes { get; protected set; }
 
         public virtual AccessLevel AccessLevel { get; protected set; }
 

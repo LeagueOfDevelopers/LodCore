@@ -1,4 +1,5 @@
-﻿using Journalist.Collections;
+﻿using System.Linq;
+using Journalist.Collections;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
@@ -62,7 +63,6 @@ namespace ProjectManagementTests
                     project => project.Name == createRequest.Name
                                || project.Info == createRequest.Info
                                || project.AccessLevel == createRequest.AccessLevel
-                               || project.ProjectType == createRequest.ProjectType
                                || project.LandingImageUri == createRequest.LandingImageUri)),
                 Times.Once);
             _vcsGateway.Verify(

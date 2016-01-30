@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Policy;
-using UserManagement.Domain;
 
 namespace FrontendServices.Models
 {
@@ -20,10 +18,14 @@ namespace FrontendServices.Models
             Role = role;
         }
 
-        public int UserId { get; private set; } 
+        public int UserId { get; private set; }
+         
         public string FirstName { get; private set; }
+
         public string LastName { get; private set; }
+
         public Uri PhotoUri { get; private set; }
+
         public string Role { get; private set; }
     }
 }

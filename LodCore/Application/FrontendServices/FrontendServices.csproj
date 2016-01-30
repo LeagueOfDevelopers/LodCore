@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="App_Data\Authorization\DevelopersPolicies.cs" />
     <Compile Include="Models\AdminProject.cs" />
+    <Compile Include="Models\DeveloperPageDeveloper.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
     <Compile Include="Models\IndexPageProject.cs" />

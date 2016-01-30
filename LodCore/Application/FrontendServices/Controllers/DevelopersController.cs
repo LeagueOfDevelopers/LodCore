@@ -26,9 +26,17 @@ namespace FrontendServices.Controllers
             Require.ZeroOrGreater(count, nameof(count));
 
             var users = _userManager.GetUserList().GetRandom(count);
-            var indexPageDevelopers = users.Select(_mapper.FromDomainEntity);
+            var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
         }
+
+        [Route("developers")]
+        public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
+        {
+            var users = _userManager.GetUserList();
+            var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
+            return developerPageDevelopers;
+        } 
          
         private readonly IUserManager _userManager;
         private readonly DevelopersMapper _mapper;

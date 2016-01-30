@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Journalist;
 using NotificationService;
 using ProjectManagement.Application;
@@ -64,7 +65,7 @@ namespace ProjectManagement.Domain
 
             var project = new Project(
                 request.Name,
-                request.ProjectType,
+                new HashSet<ProjectType>(request.ProjectTypes),
                 request.Info,
                 ProjectStatus.Planned,
                 request.LandingImageUri,

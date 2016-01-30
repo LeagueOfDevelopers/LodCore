@@ -12,16 +12,17 @@ namespace FrontendServices.Models
             Uri photoUri, 
             string name, 
             ProjectStatus projectStatus, 
-            ProjectType projectType)
+            ProjectType[] projectTypes)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
+            Require.NotEmpty(projectTypes, nameof(projectTypes));
 
             ProjectId = projectId;
             PhotoUri = photoUri;
             Name = name;
             ProjectStatus = projectStatus;
-            ProjectType = projectType;
+            ProjectTypes = projectTypes;
         }
 
         public int ProjectId { get; private set; }
@@ -32,6 +33,6 @@ namespace FrontendServices.Models
 
         public ProjectStatus ProjectStatus { get; private set; }
 
-        public ProjectType ProjectType { get; private set; }
+        public ProjectType[] ProjectTypes { get; private set; }
     }
 }
