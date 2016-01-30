@@ -14,7 +14,7 @@ namespace Gateways.Redmine
         }
 
         public string RedmineHost { get; private set; }
-        
-        public string ApiKey { get; private set; } 
+
+        public string ApiKey { get; private set; }
     }
 }

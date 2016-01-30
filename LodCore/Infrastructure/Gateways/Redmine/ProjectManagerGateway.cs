@@ -13,12 +13,16 @@ using Redmine.Net.Api.Types;
 using UserManagement.Application;
 using UserManagement.Infrastructure;
 using Issue = ProjectManagement.Domain.Issue;
+using Project = Redmine.Net.Api.Types.Project;
+using ProjectMembership = Redmine.Net.Api.Types.ProjectMembership;
 using ProjectStatus = Redmine.Net.Api.Types.ProjectStatus;
 
 namespace Gateways.Redmine
 {
     public class ProjectManagerGateway : IProjectManagerGateway, IRedmineUserRegistrar
     {
+        private readonly RedmineManager _redmineManager;
+
         public ProjectManagerGateway(RedmineSettings redmineSettings)
         {
             Require.NotNull(redmineSettings, nameof(redmineSettings));
@@ -31,7 +35,7 @@ namespace Gateways.Redmine
             Require.NotNull(redmineProjectId, nameof(redmineProjectId));
             Require.Positive(redmineUserId, nameof(redmineUserId));
 
-            var membership = new global::Redmine.Net.Api.Types.ProjectMembership
+            var membership = new ProjectMembership
             {
                 User = new IdentifiableName {Id = redmineUserId},
                 Roles = new List<MembershipRole>
@@ -53,7 +57,7 @@ namespace Gateways.Redmine
             Require.Positive(redmineUserId, nameof(redmineUserId));
 
             var projectMemberships =
-                _redmineManager.GetObjectList<global::Redmine.Net.Api.Types.ProjectMembership>(
+                _redmineManager.GetObjectList<ProjectMembership>(
                     new NameValueCollection {{"project_id", redmineProjectId.ToString()}});
             var membershipToDelete = projectMemberships.SingleOrDefault(
                 membership => membership.User.Id == redmineUserId);
@@ -62,7 +66,7 @@ namespace Gateways.Redmine
                 throw new InvalidOperationException("Attempt to delete user that is not on project");
             }
 
-            _redmineManager.DeleteObject<global::Redmine.Net.Api.Types.ProjectMembership>(
+            _redmineManager.DeleteObject<ProjectMembership>(
                 membershipToDelete.Id.ToString(),
                 null);
         }
@@ -95,7 +99,7 @@ namespace Gateways.Redmine
         {
             Require.NotNull(request, nameof(request));
 
-            var project = new global::Redmine.Net.Api.Types.Project
+            var project = new Project
             {
                 Name = request.Name,
                 Identifier = GetProjectIdentifier(request.Name),
@@ -129,8 +133,5 @@ namespace Gateways.Redmine
         {
             return projectName.Unidecode().Replace(" ", string.Empty).ToLower();
         }
-
-        private readonly RedmineManager _redmineManager;
-        
     }
 }

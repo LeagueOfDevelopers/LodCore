@@ -9,6 +9,9 @@ namespace UserManagerTests
     [TestClass]
     public class AccountTests
     {
+        private Mock<Password> _passwordMock;
+        private Mock<Profile> _profileMock;
+
         [TestInitialize]
         public void Setup()
         {
@@ -28,10 +31,7 @@ namespace UserManagerTests
                 new Password("qwertyui"), AccountRole.User, ConfirmationStatus.Unconfirmed, _profileMock.Object, 42, 42);
 
             //assert
-           Assert.IsTrue(account.Email.Address == "itis@validmail.ru"); 
+            Assert.IsTrue(account.Email.Address == "itis@validmail.ru");
         }
-
-        private Mock<Password> _passwordMock;
-        private Mock<Profile> _profileMock;
     }
 }

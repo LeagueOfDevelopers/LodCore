@@ -8,6 +8,14 @@ namespace Gateways.Redmine
 {
     public static class IssueMapper
     {
+        private static readonly Dictionary<int, IssueType> RedmineTrackerIdToIssueType = new Dictionary<int, IssueType>
+        {
+            {1, IssueType.Bug},
+            {2, IssueType.Task},
+            {3, IssueType.ChangeRequest},
+            {5, IssueType.Research}
+        };
+
         public static Issue ToLodIssue(this global::Redmine.Net.Api.Types.Issue issue)
         {
             Require.NotNull(issue, nameof(issue));
@@ -21,8 +29,8 @@ namespace Gateways.Redmine
             }
 
             return new Issue(
-                issue.Subject, 
-                issue.Description, 
+                issue.Subject,
+                issue.Description,
                 issueType);
         }
 
@@ -36,12 +44,5 @@ namespace Gateways.Redmine
                 Description = issue.Descripton
             };
         }
-        private static readonly Dictionary<int, IssueType> RedmineTrackerIdToIssueType = new Dictionary<int, IssueType>
-        {
-            {1, IssueType.Bug },
-            {2, IssueType.Task },
-            {3, IssueType.ChangeRequest },
-            {5, IssueType.Research }
-        };  
     }
 }

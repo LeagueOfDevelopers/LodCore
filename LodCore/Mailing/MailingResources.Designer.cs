@@ -22,14 +22,14 @@ namespace Mailing {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ValidationMessageResources {
+    internal class MailingResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ValidationMessageResources() {
+        internal MailingResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Mailing {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mailing.ValidationMessageResources", typeof(ValidationMessageResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mailing.MailingResources", typeof(MailingResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,6 +61,15 @@ namespace Mailing {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Подтверждение аккаунта на сайте Лиги Разработчиков.
+        /// </summary>
+        internal static string ConfirmationMailCaption {
+            get {
+                return ResourceManager.GetString("ConfirmationMailCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
         ///
         ///Поздравляем! Вы создали учетную запись на сайте Лиги Разработчиков!
@@ -74,9 +83,68 @@ namespace Mailing {
         ///
         ///Благодарим Вас за то, что присоединились к нашему сообществу!.
         /// </summary>
-        internal static string messageTemplate {
+        internal static string ConfirmationMessageTemplate {
             get {
-                return ResourceManager.GetString("messageTemplate", resourceCulture);
+                return ResourceManager.GetString("ConfirmationMessageTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на mail@lod-misis.ru.
+        /// </summary>
+        internal static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на В Лиге Разработчиков произошло кое-что интересное!.
+        /// </summary>
+        internal static string NotificationMailCaption {
+            get {
+                return ResourceManager.GetString("NotificationMailCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
+        ///
+        ///
+        ///На сайте Лиги Разработчиков только что:
+        ///
+        ///{0}.
+        /// </summary>
+        internal static string NotificationMessageTemplate {
+            get {
+                return ResourceManager.GetString("NotificationMessageTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на q4l7w1kzjVO9PErK5dkR.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 25.
+        /// </summary>
+        internal static string Port {
+            get {
+                return ResourceManager.GetString("Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на smtp.yandex.ru.
+        /// </summary>
+        internal static string SmtpServer {
+            get {
+                return ResourceManager.GetString("SmtpServer", resourceCulture);
             }
         }
     }

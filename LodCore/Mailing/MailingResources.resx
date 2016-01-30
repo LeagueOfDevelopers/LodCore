@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="messageTemplate" xml:space="preserve">
+  <data name="ConfirmationMailCaption" xml:space="preserve">
+    <value>Подтверждение аккаунта на сайте Лиги Разработчиков</value>
+  </data>
+  <data name="ConfirmationMessageTemplate" xml:space="preserve">
     <value>Здравствуйте, %username%!
 
 Поздравляем! Вы создали учетную запись на сайте Лиги Разработчиков!
@@ -130,5 +133,28 @@
 
 
 Благодарим Вас за то, что присоединились к нашему сообществу!</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>mail@lod-misis.ru</value>
+  </data>
+  <data name="NotificationMailCaption" xml:space="preserve">
+    <value>В Лиге Разработчиков произошло кое-что интересное!</value>
+  </data>
+  <data name="NotificationMessageTemplate" xml:space="preserve">
+    <value>Здравствуйте, %username%!
+
+
+На сайте Лиги Разработчиков только что:
+
+{0}</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>q4l7w1kzjVO9PErK5dkR</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="SmtpServer" xml:space="preserve">
+    <value>smtp.yandex.ru</value>
   </data>
 </root>

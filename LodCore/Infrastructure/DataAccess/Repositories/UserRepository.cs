@@ -56,20 +56,6 @@ namespace DataAccess.Repositories
                 : session.Query<Account>().Where(predicate).ToList();
         }
 
-        public int[] GetAllUsersIds()
-        {
-            var session = _sessionProvider.GetCurrentSession();
-            return session.Query<Account>().SelectToArray(account => account.UserId);
-        }
-
-        public int[] GetAllAdminIds()
-        {
-            var session = _sessionProvider.GetCurrentSession();
-            return session.Query<Account>()
-                .Where(account => account.Role == AccountRole.Administrator)
-                .SelectToArray(account => account.UserId);
-        }
-
         public int GetUserRedmineId(int userId)
         {
             Require.Positive(userId, nameof(userId));
@@ -84,6 +70,20 @@ namespace DataAccess.Repositories
 
             var account = GetAccount(userId);
             return account.GitlabUserId;
+        }
+
+        public int[] GetAllUsersIds()
+        {
+            var session = _sessionProvider.GetCurrentSession();
+            return session.Query<Account>().SelectToArray(account => account.UserId);
+        }
+
+        public int[] GetAllAdminIds()
+        {
+            var session = _sessionProvider.GetCurrentSession();
+            return session.Query<Account>()
+                .Where(account => account.Role == AccountRole.Administrator)
+                .SelectToArray(account => account.UserId);
         }
     }
 }
