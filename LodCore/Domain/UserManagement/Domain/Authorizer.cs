@@ -52,7 +52,9 @@ namespace UserManagement.Domain
             Require.NotNull(password, nameof(password));
 
             var userAccount = _userRepository
-                .GetAllAccounts(account => account.Email.Address == email)
+                .GetAllAccounts(
+                    account => account.Email.Address == email
+                               && account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
                 .SingleOrDefault();
             if (userAccount == null)
             {

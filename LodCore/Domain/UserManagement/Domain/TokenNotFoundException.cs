@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace UserManagement.Domain
 {
     [Serializable]
-    internal class TokenNotFoundException : Exception
+    public class TokenNotFoundException : Exception
     {
         public TokenNotFoundException()
         {

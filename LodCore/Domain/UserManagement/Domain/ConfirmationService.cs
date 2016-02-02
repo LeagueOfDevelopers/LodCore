@@ -28,7 +28,7 @@ namespace UserManagement.Domain
         {
             Require.Positive(userId, nameof(userId));
 
-            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var token = GenerateToken();
 
             _mailer.SendConfirmationMail(token, _userRepository.GetAccount(userId).Email);
 
@@ -70,6 +70,14 @@ namespace UserManagement.Domain
             _userRepository.UpdateAccount(userAccount);
 
             _userManagementEventSink.ConsumeEvent(new NewFullConfirmedDeveloper(userId));
+        }
+
+        private string GenerateToken()
+        {
+            return Convert
+                .ToBase64String(Guid.NewGuid().ToByteArray())
+                .Replace('+', '-')
+                .Replace('/', '_');
         }
     }
 }

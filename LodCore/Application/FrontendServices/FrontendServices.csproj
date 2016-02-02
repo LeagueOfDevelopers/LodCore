@@ -138,6 +138,7 @@
     <Compile Include="App_Data\SettingsReader.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AuthorizationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DevelopersController.cs" />
     <Compile Include="Controllers\FileController.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="App_Data\Authorization\DevelopersPolicies.cs" />
     <Compile Include="Models\AdminProject.cs" />
     <Compile Include="Models\ContactMessage.cs" />
+    <Compile Include="Models\Credentials.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />

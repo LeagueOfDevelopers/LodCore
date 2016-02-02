@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Journalist;
 
 namespace Common
 {
@@ -36,5 +37,11 @@ namespace Common
         }
 
         public virtual string Pass { get; protected set; }
+
+        public static Password FromHash(string passwordHash)
+        {
+            Require.NotEmpty(passwordHash, nameof(passwordHash));
+            return new Password { Pass = passwordHash };
+        }
     }
 }

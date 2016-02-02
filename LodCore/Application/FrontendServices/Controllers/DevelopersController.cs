@@ -16,13 +16,18 @@ namespace FrontendServices.Controllers
 {
     public class DevelopersController : ApiController
     {
-        public DevelopersController(IUserManager userManager, DevelopersMapper mapper)
+        public DevelopersController(
+            IUserManager userManager, 
+            DevelopersMapper mapper, 
+            IConfirmationService confirmationService)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
+            Require.NotNull(confirmationService, nameof(confirmationService));
 
             _userManager = userManager;
             _mapper = mapper;
+            _confirmationService = confirmationService;
         }
 
         [Route("developers/random/{count}")]
@@ -39,7 +44,7 @@ namespace FrontendServices.Controllers
         [Route("developers")]
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
         {
-            var users = _userManager.GetUserList();
+            var users = _userManager.GetUserList(account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
@@ -76,7 +81,26 @@ namespace FrontendServices.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("developers/confirmation/{confirmationToken}")]
+        public IHttpActionResult ConfirmEmail(string confirmationToken)
+        {
+            Require.NotEmpty(confirmationToken, nameof(confirmationToken));
+
+            try
+            {
+                _confirmationService.ConfirmEmail(confirmationToken);
+            }
+            catch (TokenNotFoundException)
+            {
+                return BadRequest("Token not found");
+            }
+
+            return Ok();
+        }
+
         private readonly IUserManager _userManager;
+        private readonly IConfirmationService _confirmationService;
         private readonly DevelopersMapper _mapper;
     }
 }
