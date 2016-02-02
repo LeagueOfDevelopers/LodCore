@@ -17,25 +17,37 @@ namespace ProjectManagement.Domain
             IVersionControlSystemGateway versionControlSystemGateway,
             IProjectRepository projectRepository,
             IEventSink eventSink,
-            IUserRepository userRepository)
+            IUserRepository userRepository,
+            PaginationSettings paginationSettings)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
             Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventSink, nameof(eventSink));
             Require.NotNull(userRepository, nameof(userRepository));
+            Require.NotNull(paginationSettings, nameof(paginationSettings));
 
             _projectManagerGateway = projectManagerGateway;
             _versionControlSystemGateway = versionControlSystemGateway;
             _projectRepository = projectRepository;
             _eventSink = eventSink;
             _userRepository = userRepository;
+            _paginationSettings = paginationSettings;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
         {
             var allProjects = _projectRepository.GetAllProjects(predicate);
             return allProjects.ToList();
+        }
+
+        public List<Project> GetProjects(int pageNumber)
+        {
+            var projectsToSkip = pageNumber*_paginationSettings.PageSize;
+            var requiredProjects = _projectRepository.GetSomeProjects(
+                projectsToSkip,
+                _paginationSettings.PageSize);
+            return requiredProjects.ToList();
         }
 
         public Project GetProject(int projectId)
@@ -141,6 +153,7 @@ namespace ProjectManagement.Domain
 
         private readonly IEventSink _eventSink;
         private readonly IUserRepository _userRepository;
+        private readonly PaginationSettings _paginationSettings;
 
         private readonly IProjectManagerGateway _projectManagerGateway;
         private readonly IProjectRepository _projectRepository;

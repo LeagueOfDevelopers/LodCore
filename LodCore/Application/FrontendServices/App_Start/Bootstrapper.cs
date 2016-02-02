@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Configuration;
 using System.Web.Http;
 using ContactContext;
@@ -70,7 +69,8 @@ namespace FrontendServices
                     container.GetInstance<IVersionControlSystemGateway>(),
                     container.GetInstance<IProjectRepository>(),
                     container.GetInstance<ProjectsEventSink>(),
-                    container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>()),
+                    container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>(),
+                    container.GetInstance<PaginationSettings>()),
                 Lifestyle.Singleton);
             container.Register<ProjectManagement.Infrastructure.IUserRepository>(
                 () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
@@ -102,6 +102,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadGitlabSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadFileStorageSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadPaginationSettings(settings), Lifestyle.Singleton);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace ProjectManagement.Application
     {
         List<Project> GetProjects(Func<Project, bool> predicate = null);
 
+        List<Project> GetProjects(int pageNumber);
+
         Project GetProject(int projectId);
 
         void CreateProject(CreateProjectRequest request);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -53,6 +54,14 @@ namespace FrontendServices.Controllers
             var requiredProjects = categoriesQuery.IsEmpty() 
                 ? _projectProvider.GetProjects()
                 : GetProjectsByCategory(categoriesQuery);
+
+            return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+        }
+
+        [Route("projects/page/{pageNumber}")]
+        public IEnumerable<ProjectPreview> GetProjectByPage(int pageNumber)
+        {
+            var requiredProjects = _projectProvider.GetProjects(pageNumber);
 
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
         }

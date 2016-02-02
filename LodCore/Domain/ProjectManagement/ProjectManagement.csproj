@@ -68,6 +68,7 @@
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssueType.cs" />
+    <Compile Include="Domain\PaginationSettings.cs" />
     <Compile Include="Domain\Project.cs" />
     <Compile Include="Domain\ProjectMembership.cs" />
     <Compile Include="Domain\ProjectNotFoundException.cs" />

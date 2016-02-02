@@ -38,6 +38,13 @@ namespace DataAccess.Repositories
             return allProjects.ToArray();
         }
 
+        public Project[] GetSomeProjects(int skipCount, int takeCount)
+        {
+            var session = _databaseSessionProvider.GetCurrentSession();
+            var requiredProjects = session.QueryOver<Project>().Skip(skipCount).Take(takeCount).List();
+            return requiredProjects.ToArray();
+        }
+
         public Project GetProject(int projectId)
         {
             Require.Positive(projectId, nameof(projectId));
