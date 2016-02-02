@@ -4,8 +4,8 @@ using OrderManagement.Domain.Events;
 using OrderManagement.Infrastructure;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
-using UserManagement.Application;
 using UserManagement.Domain.Events;
+using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace Mailing
 {
@@ -15,14 +15,16 @@ namespace Mailing
 
         private readonly IProjectRepository _projectRepository;
 
-        private readonly IUserManager _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public NotificationEmailDescriber(IOrderRepository orderRepository, IProjectRepository projectRepository,
-            IUserManager userManager)
+        public NotificationEmailDescriber(
+            IOrderRepository orderRepository, 
+            IProjectRepository projectRepository,
+            IUserRepository userRepository)
         {
             _orderRepository = orderRepository;
             _projectRepository = projectRepository;
-            _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public string Describe(IEventInfo @eventInfo)
@@ -36,7 +38,7 @@ namespace Mailing
         {
             Require.NotNull(@event, nameof(@event));
 
-            var developer = _userManager.GetUser(@event.UserId);
+            var developer = _userRepository.GetAccount(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
 
             var project = _projectRepository.GetProject(@event.ProjectId);
@@ -48,7 +50,7 @@ namespace Mailing
         {
             Require.NotNull(@event, nameof(@event));
 
-            var developer = _userManager.GetUser(@event.UserId);
+            var developer = _userRepository.GetAccount(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
 
             var project = _projectRepository.GetProject(@event.ProjectId);
@@ -60,7 +62,7 @@ namespace Mailing
         {
             Require.NotNull(@event, nameof(@event));
 
-            var developer = _userManager.GetUser(@event.UserId);
+            var developer = _userRepository.GetAccount(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
 
             return string.Format(EventDescriptionResources.NewEmailConfirmedDeveloper, developerFullName,
@@ -71,7 +73,7 @@ namespace Mailing
         {
             Require.NotNull(@event, nameof(@event));
 
-            var developer = _userManager.GetUser(@event.NewDeveloperId);
+            var developer = _userRepository.GetAccount(@event.NewDeveloperId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
 
             return string.Format(EventDescriptionResources.NewFullConfirmedDeveloper, developerFullName);

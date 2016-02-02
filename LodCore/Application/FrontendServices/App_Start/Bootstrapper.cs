@@ -10,6 +10,7 @@ using Gateways;
 using Gateways.Redmine;
 using Mailing;
 using NotificationService;
+using OrderManagement.Infrastructure;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Domain.Events;
@@ -20,6 +21,7 @@ using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
+using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace FrontendServices
@@ -54,8 +56,12 @@ namespace FrontendServices
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
             container.Register<IUsersRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<IProjectRelativesRepository>(() => container.GetInstance<ProjectRepository>(), Lifestyle.Singleton);
-            container.Register<IMailer, Mailer>(Lifestyle.Singleton);
+            container.Register<Mailer>(Lifestyle.Singleton);
+            container.Register<NotificationService.IMailer>(() => container.GetInstance<Mailer>(), Lifestyle.Singleton);
+            container.Register<IMailer>(() => container.GetInstance<Mailer>(), Lifestyle.Singleton);
             container.Register<IUserRoleAnalyzer, UserRoleAnalyzer>(Lifestyle.Singleton);
+            container.Register<INotificationEmailDescriber, NotificationEmailDescriber>(Lifestyle.Singleton);
+            container.Register<IOrderRepository, OrderRepository>(Lifestyle.Singleton);
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectManagerGateway>(),

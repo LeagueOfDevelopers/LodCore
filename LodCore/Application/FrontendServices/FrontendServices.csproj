@@ -201,6 +201,10 @@
       <Project>{B2881AD8-9B31-4741-A0B0-36CC210FDBDB}</Project>
       <Name>Mailing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\OrderManager\OrderManagment.csproj">
+      <Project>{590545C7-8872-4A3C-8E98-C6F0AE96C23E}</Project>
+      <Name>OrderManagment</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
