@@ -2,6 +2,8 @@
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Web.Http;
+using ContactContext;
+using ContactContext.Events;
 using DataAccess;
 using DataAccess.Repositories;
 using FilesManagement;
@@ -74,6 +76,11 @@ namespace FrontendServices
                 () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<IProjectRepository>(
                 () => container.GetInstance<ProjectRepository>(), 
+                Lifestyle.Singleton);
+            container.Register<ContactsEventSink>(Lifestyle.Singleton);
+            container.Register<IContactsService>(
+                () => new ContactsService(
+                    container.GetInstance<ContactsEventSink>()), 
                 Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);

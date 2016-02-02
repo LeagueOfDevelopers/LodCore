@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesManagement", "Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserPresentationTests", "UserPresentationTests\UserPresentationTests.csproj", "{A9096359-2D86-4C93-B34D-B6F4A21D0F9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactContext", "Domain\ContactContext\ContactContext.csproj", "{3C995E20-5C8D-4091-8B11-C752AA06300F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{A9096359-2D86-4C93-B34D-B6F4A21D0F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9096359-2D86-4C93-B34D-B6F4A21D0F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9096359-2D86-4C93-B34D-B6F4A21D0F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C995E20-5C8D-4091-8B11-C752AA06300F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C995E20-5C8D-4091-8B11-C752AA06300F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C995E20-5C8D-4091-8B11-C752AA06300F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C995E20-5C8D-4091-8B11-C752AA06300F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,5 +155,6 @@ Global
 		{A31FA659-8F2F-454B-ADFB-2725F07DE638} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
 		{40415DF3-C945-4695-81DF-0E1670E1787A} = {271267D5-1AE5-4747-8EBC-BB2D343BDEA6}
 		{A9096359-2D86-4C93-B34D-B6F4A21D0F9E} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
+		{3C995E20-5C8D-4091-8B11-C752AA06300F} = {A6355D59-C90D-431B-8B1A-3B4E30340280}
 	EndGlobalSection
 EndGlobal

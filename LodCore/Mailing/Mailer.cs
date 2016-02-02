@@ -64,10 +64,9 @@ namespace Mailing
                 mail.To.Clear();
             }
 
-
             mail.Dispose();
         }
-
+        
         private MailMessage InitMail(MailAddress emailAddress)
         {
             var mail = new MailMessage();
