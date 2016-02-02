@@ -6,7 +6,6 @@
         MobileApp,
         Desktop,
         Game,
-        Plugin,
         Other
     }
 }
