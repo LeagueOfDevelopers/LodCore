@@ -26,7 +26,8 @@ namespace Gateways
 
         public int RegisterUser(CreateAccountRequest request)
         {
-            throw new NotImplementedException();
+            //todo: implement
+            return 1;
         }
     }
 }

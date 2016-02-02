@@ -44,7 +44,7 @@ namespace DataAccess.Mappings.Application
             else
             {
                 var state = (MailAddress) value;
-                ((IDataParameter) cmd.Parameters[index]).Value = state.GetType().Name;
+                ((IDataParameter) cmd.Parameters[index]).Value = state.Address;
             }
         }
 

@@ -61,7 +61,8 @@ namespace UserManagement.Domain
                 throw new AccountAlreadyExistsException();
             }
 
-            var redmineUserId = _redmineUserRegistrar.RegisterUser(request);
+            //todo: fix 39 task
+            var redmineUserId = 1; /*_redmineUserRegistrar.RegisterUser(request);*/
             var gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
 
             var newAccount = new Account(
@@ -71,7 +72,7 @@ namespace UserManagement.Domain
                 new Password(request.Password),
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
-                null,
+                request.Profile,
                 redmineUserId,
                 gitlabUserId);
 

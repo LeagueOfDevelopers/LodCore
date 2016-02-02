@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -90,7 +88,8 @@ namespace FrontendServices.Controllers
                 .Select(int.Parse);
             var projectTypes = categories.Select(category => (ProjectType)category);
             var requiredProjects = _projectProvider.GetProjects(
-                project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)));
+                project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
+                .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
             return requiredProjects;
         } 
 

@@ -1,11 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Mail;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
 using UserManagement.Application;
+using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -29,15 +34,48 @@ namespace FrontendServices.Controllers
             var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
         }
-
+        
+        [HttpGet]
         [Route("developers")]
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
         {
             var users = _userManager.GetUserList();
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
-        } 
-         
+        }
+
+        [HttpPost]
+        [Route("developers")]
+        public IHttpActionResult RegisterNewDeveloper([FromBody] RegisterDeveloperRequest request)
+        {
+            var createAccountRequest = new CreateAccountRequest(
+                new MailAddress(request.Email), 
+                request.LastName,
+                request.FirstName,
+                request.Password,
+                new Profile(
+                    null, 
+                    null, 
+                    new MailAddress(request.Email), 
+                    DateTime.Now, 
+                    new Uri(request.VkProfileUri),
+                    request.PhoneNumber, 
+                    request.AccessionYear,
+                    request.Department,
+                    request.InstituteName, 
+                    request.StudyingProfile));
+            try
+            {
+                _userManager.CreateUser(createAccountRequest);
+            }
+            catch (AccountAlreadyExistsException)
+            {
+                return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
+            }
+
+            return Ok();
+        }
+
         private readonly IUserManager _userManager;
         private readonly DevelopersMapper _mapper;
     }
