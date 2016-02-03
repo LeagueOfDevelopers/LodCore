@@ -32,7 +32,8 @@ namespace DataAccess.Repositories
             Require.NotNull(order, nameof(order));
 
             var session = _databaseSessionProvider.GetCurrentSession();
-            return (int) session.Save(order);
+            var newOrderId = (int)session.Save(order);
+            return newOrderId;
         }
 
         public List<Order> GetAllOrders(Func<Order, bool> criteria = null)

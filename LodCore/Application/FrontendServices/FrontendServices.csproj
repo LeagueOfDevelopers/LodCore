@@ -134,14 +134,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Data\Authorization\ProjectsPolicies.cs" />
+    <Compile Include="App_Data\Mappers\OrderMapper.cs" />
     <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />
     <Compile Include="App_Data\SettingsReader.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthorizationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DevelopersController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\TestAssignmentController.cs" />
     <Compile Include="Global.asax.cs">
@@ -158,6 +161,7 @@
     <Compile Include="Models\ProjectMembership.cs" />
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Models\RegisterDeveloperRequest.cs" />
+    <Compile Include="Models\RegisterNewOrderRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

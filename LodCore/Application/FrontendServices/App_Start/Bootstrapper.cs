@@ -7,10 +7,14 @@ using DataAccess;
 using DataAccess.Repositories;
 using FilesManagement;
 using FrontendServices.App_Data;
+using FrontendServices.App_Data.Mappers;
 using Gateways;
 using Gateways.Redmine;
 using Mailing;
 using NotificationService;
+using OrderManagement.Application;
+using OrderManagement.Domain;
+using OrderManagement.Domain.Events;
 using OrderManagement.Infrastructure;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
@@ -82,12 +86,18 @@ namespace FrontendServices
                 () => new ContactsService(
                     container.GetInstance<ContactsEventSink>()), 
                 Lifestyle.Singleton);
+            container.Register<OrderMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IFileManager, FileManager>(Lifestyle.Singleton);
             container.Register<IAuthorizer>(() => new Authorizer(
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
                 container.GetInstance<IUserRepository>()));
+            container.Register<IOrderManager>(() => new OrderManagment(
+                container.GetInstance<IOrderRepository>(),
+                container.GetInstance<OrderManagmentEventSink>()
+                ), Lifestyle.Singleton);
+            container.Register<OrderManagmentEventSink>(Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
 
             container.Verify();

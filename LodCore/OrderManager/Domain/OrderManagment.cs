@@ -27,9 +27,9 @@ namespace OrderManagement.Domain
         {
             Require.NotNull(newOrder, nameof(newOrder));
 
-            _orderRepository.SaveOrder(newOrder);
+            var orderId = _orderRepository.SaveOrder(newOrder);
 
-            _orderManagmentEventSink.ConsumeEvent(new OrderPlaced(newOrder.Id));
+            _orderManagmentEventSink.ConsumeEvent(new OrderPlaced(orderId));
         }
 
         public Order GetOrder(int idOfOrder)

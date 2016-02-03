@@ -4,7 +4,7 @@ using OrderManagement.Domain;
 
 namespace OrderManagement.Application
 {
-    internal interface IOrderManager
+    public interface IOrderManager
     {
         void AddOrder(Order newOrder);
 

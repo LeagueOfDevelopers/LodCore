@@ -47,7 +47,10 @@ namespace Mailing
             Require.NotNull(eventInfo, nameof(eventInfo));
             Require.NotNull(userIds, nameof(userIds));
 
-            var mail = new MailMessage();
+            var mail = new MailMessage
+            {
+                From = new MailAddress(_mailerSettings.From)
+            };
             var client = InitClient();
 
             mail.Subject = MailingResources.NotificationMailCaption;

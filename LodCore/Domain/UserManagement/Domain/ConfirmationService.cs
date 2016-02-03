@@ -65,6 +65,11 @@ namespace UserManagement.Domain
                 throw new AccountNotFoundException();
             }
 
+            if (userAccount.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
+            {
+                throw new InvalidOperationException("User is already confirmed");
+            }
+
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
             _userRepository.UpdateAccount(userAccount);

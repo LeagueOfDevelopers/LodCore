@@ -3,7 +3,7 @@ using NotificationService;
 
 namespace OrderManagement.Domain.Events
 {
-    internal class OrderManagmentEventSink : EventSinkBase
+    public class OrderManagmentEventSink : EventSinkBase
     {
         public OrderManagmentEventSink(IDistributionPolicyFactory distributionPolicyFactory,
             IEventRepository eventRepository, IMailer mailer)
