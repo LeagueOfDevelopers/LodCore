@@ -38,6 +38,9 @@
       <HintPath>..\..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NGitLab">
+      <HintPath>..\..\ExternalLibs\NGitLab.dll</HintPath>
+    </Reference>
     <Reference Include="Ploeh.AutoFixture, Version=3.40.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
       <HintPath>..\..\packages\AutoFixture.3.40.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
@@ -70,7 +73,7 @@
     <Compile Include="Redmine\ProjectManagerGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Redmine\RedmineSettings.cs" />
-    <Compile Include="VersionControlSystemGateway.cs" />
+    <Compile Include="Gitlab\VersionControlSystemGateway.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj">
