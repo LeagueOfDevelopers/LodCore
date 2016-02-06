@@ -167,6 +167,7 @@
   <ItemGroup>
     <Content Include="settings.config" />
     <Content Include="packages.config" />
+    <Content Include="ConnectionStrings.config" />
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\LodCore.pubxml" />
     <None Include="Web.Debug.config">
