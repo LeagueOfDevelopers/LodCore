@@ -8,6 +8,8 @@ namespace FilesManagement
     {
         Stream GetFile(string fileName);
 
+        Stream GetImage(string imageName);
+
         Task<string> UploadFileAsync(HttpContent content);
 
         Task<string> UploadImageAsync(HttpContent content);

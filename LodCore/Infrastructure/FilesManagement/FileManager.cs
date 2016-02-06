@@ -20,7 +20,45 @@ namespace FilesManagement
 
         public Stream GetFile(string fileName)
         {
-            var fullPath = Path.Combine(_fileStorageSettings.FileStorageFolder, fileName);
+            return GetAnyFile(_fileStorageSettings.FileStorageFolder, fileName);
+        }
+
+        public Stream GetImage(string imageName)
+        {
+            return GetAnyFile(_fileStorageSettings.ImageStorageFolder, imageName);
+        }
+
+        public async Task<string> UploadFileAsync(HttpContent content)
+        {
+            Require.NotNull(content, nameof(content));
+            var filePath = await UploadAnyFileAsync(
+                content, 
+                _fileStorageSettings.AllowedFileExtensions, 
+                _fileStorageSettings.FileStorageFolder);
+            var fileName = Path.GetFileName(filePath);
+            var newFileName = SaltFileNameWithCurrentDate(fileName);
+            var newFilePath = Path.Combine(_fileStorageSettings.FileStorageFolder, newFileName);
+            RenameFile(filePath, newFilePath);
+            return newFileName;
+        }
+
+        public async Task<string> UploadImageAsync(HttpContent content)
+        {
+            Require.NotNull(content, nameof(content));
+            var filePath = await UploadAnyFileAsync(
+                content,
+                _fileStorageSettings.AllowedImageExtensions,
+                _fileStorageSettings.ImageStorageFolder);
+            var fileName = Path.GetFileName(filePath);
+            var newFileName = GenerateRandomFileName(fileName);
+            var newFilePath = Path.Combine(_fileStorageSettings.ImageStorageFolder, newFileName);
+            RenameFile(filePath, newFilePath);
+            return newFileName;
+        }
+
+        private Stream GetAnyFile(string folderPath, string fileName)
+        {
+            var fullPath = Path.Combine(folderPath, fileName);
             var exists = File.Exists(fullPath);
             if (!exists)
             {
@@ -28,24 +66,6 @@ namespace FilesManagement
             }
 
             return new FileStream(fullPath, FileMode.Open);
-        }
-
-        public Task<string> UploadFileAsync(HttpContent content)
-        {
-            Require.NotNull(content, nameof(content));
-            return UploadAnyFileAsync(
-                content, 
-                _fileStorageSettings.AllowedFileExtensions, 
-                _fileStorageSettings.FileStorageFolder);
-        }
-
-        public Task<string> UploadImageAsync(HttpContent content)
-        {
-            Require.NotNull(content, nameof(content));
-            return UploadAnyFileAsync(
-                content,
-                _fileStorageSettings.AllowedImageExtensions,
-                _fileStorageSettings.ImageStorageFolder);
         }
 
         private async Task<string> UploadAnyFileAsync(
@@ -60,14 +80,15 @@ namespace FilesManagement
 
             var provider = new CustomMultipartStreamProvider(folderPath);
             await httpContent.ReadAsMultipartAsync(provider);
-            var fileName = provider.FileData.First().LocalFileName;
-            var extension = GetFileExtension(fileName);
+            var fullFileName = provider.FileData.First().LocalFileName;
+            var extension = GetFileExtension(fullFileName);
             if (!allowedExtensions.Contains(extension))
             {
+                await Task.Factory.StartNew(() => File.Delete(fullFileName));
                 throw new InvalidDataException("Extension {0} is not allowed".FormatString(extension)); 
             }
 
-            return fileName;
+            return fullFileName;
         }
 
         private string GetFileExtension(string fileName)
@@ -86,6 +107,26 @@ namespace FilesManagement
             {
                 Directory.CreateDirectory(_fileStorageSettings.ImageStorageFolder);
             }
+        }
+
+        private string GenerateRandomFileName(string fileName)
+        {
+            var randomFileName = Path.GetRandomFileName();
+            return Path.ChangeExtension(randomFileName, GetFileExtension(fileName));
+        }
+
+        private string SaltFileNameWithCurrentDate(string fileName)
+        {
+            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            var newFileName = fileNameWithoutExtension 
+                + DateTime.Now.ToString("s").Replace(":", string.Empty) 
+                + Path.GetExtension(fileName);
+            return newFileName;
+        }
+
+        private void RenameFile(string originalFullName, string newFileFullName)
+        {
+            File.Move(originalFullName, newFileFullName);
         }
 
         private readonly FileStorageSettings _fileStorageSettings;

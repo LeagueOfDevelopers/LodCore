@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using NGitLab;
 using NGitLab.Models;
@@ -39,16 +40,25 @@ namespace Gateways.Gitlab
 
         public void AddUserToRepository(Project project, int gitlabUserId)
         {
-            var members = _gitLabClient.Projects.GetMembers(project.ProjectId);
-            var user = new ProjectMember
+            Require.NotNull(project, nameof(project));
+            Require.Positive(gitlabUserId, nameof(gitlabUserId));
+            _gitLabClient.ProjectMembers.AddProjectMember(new ProjectMembershipCreateRequest
             {
-                
-            };
+                UserId = gitlabUserId,
+                ProjectId = project.VersionControlSystemId,
+                AccessLevel = DeveloperAccessLevel
+            });
         }
 
-        public void RemoveUserFromProject(Project project, int userId)
+        public void RemoveUserFromProject(Project project, int gitlabUserId)
         {
-            throw new NotImplementedException();
+            Require.NotNull(project, nameof(project));
+            Require.Positive(gitlabUserId, nameof(gitlabUserId));
+            _gitLabClient.ProjectMembers.DeleteProjectMember(new RemoveProjectMembershipRequest
+            {
+                ProjectId = project.VersionControlSystemId,
+                UserId = gitlabUserId
+            });
         }
 
         public int RegisterUser(CreateAccountRequest request)
@@ -61,7 +71,7 @@ namespace Gateways.Gitlab
                 ProjectsLimit = 0,
                 Name = request.Firstname + request.Lastname,
                 CanCreateGroup = false,
-                Username = request.Email
+                Username = request.Lastname.Unidecode()
             };
 
             var addedUser = _gitLabClient.Users.Create(user);
@@ -70,5 +80,8 @@ namespace Gateways.Gitlab
 
         private readonly GitlabSettings _settings;
         private readonly GitLabClient _gitLabClient;
+
+        //todo: extract it to enumeration
+        private const int DeveloperAccessLevel = 30;
     }
 }
