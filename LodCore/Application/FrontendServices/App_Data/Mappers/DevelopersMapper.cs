@@ -53,6 +53,28 @@ namespace FrontendServices.App_Data.Mappers
                 account.Profile.VkProfileUri);
         }
 
+        public Developer ToDeveloper(Account account)
+        {
+            Require.NotNull(account, nameof(account));
+
+            return new Developer(
+                account.UserId,
+                account.Firstname,
+                account.Lastname,
+                account.Email.Address,
+                account.RedmineUserId,
+                account.GitlabUserId,
+                account.ConfirmationStatus,
+                account.Profile.BigPhotoUri,
+                account.Profile.RegistrationTime,
+                account.Profile.VkProfileUri,
+                account.Profile.PhoneNumber,
+                account.Profile.StudentAccessionYear,
+                account.Profile.StudyingDirection,
+                account.Profile.InstituteName,
+                account.Profile.Specialization);
+        }
+
         private readonly IUserRoleAnalyzer _userRoleAnalyzer;
         private readonly IProjectProvider _projectProvider;
     }

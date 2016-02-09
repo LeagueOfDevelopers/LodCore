@@ -154,6 +154,7 @@
     <Compile Include="Models\AdminProject.cs" />
     <Compile Include="Models\ContactMessage.cs" />
     <Compile Include="Models\Credentials.cs" />
+    <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />

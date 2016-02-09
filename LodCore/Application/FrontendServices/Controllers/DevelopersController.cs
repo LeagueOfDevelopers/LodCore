@@ -49,6 +49,22 @@ namespace FrontendServices.Controllers
             return developerPageDevelopers;
         }
 
+        [HttpGet]
+        [Route("developers/{id}")]
+        public Developer GetDeveloper(int id)
+        {
+            Require.Positive(id, nameof(id));
+            try
+            {
+                var user = _userManager.GetUser(id);
+                return _mapper.ToDeveloper(user);
+            }
+            catch (AccountNotFoundException)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+        }
+
         [HttpPost]
         [Route("developers")]
         public IHttpActionResult RegisterNewDeveloper([FromBody] RegisterDeveloperRequest request)

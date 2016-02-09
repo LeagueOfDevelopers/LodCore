@@ -32,6 +32,8 @@ namespace DataAccess.Mappings
                 mapper.Cascade(Cascade.All);
                 mapper.Class(typeof (Profile));
             });
+            Property(user => user.RedmineUserId, mapper => mapper.Column("RedmineUserId"));
+            Property(user => user.GitlabUserId, mapper => mapper.Column("GitlabUserId"));
         }
     }
 }
