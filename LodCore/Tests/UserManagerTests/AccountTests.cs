@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -27,8 +28,17 @@ namespace UserManagerTests
             _profileMock = new Mock<Profile>();
 
             //act
-            var account = new Account("Name", "Lastname", new MailAddress("itis@validmail.ru"),
-                new Password("qwertyui"), AccountRole.User, ConfirmationStatus.Unconfirmed, _profileMock.Object, 42, 42);
+            var account = new Account(
+                "Name", 
+                "Lastname", 
+                new MailAddress("itis@validmail.ru"),
+                new Password("qwertyui"), 
+                AccountRole.User, 
+                ConfirmationStatus.Unconfirmed,
+                DateTime.Now, 
+                _profileMock.Object, 
+                42, 
+                42);
 
             //assert
             Assert.IsTrue(account.Email.Address == "itis@validmail.ru");

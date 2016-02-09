@@ -1,55 +1,20 @@
 ﻿using System;
-using System.Net.Mail;
-using Journalist;
 
 namespace UserManagement.Domain
 {
     public class Profile
     {
-        public Profile(
-            Uri bigPhotoUri,
-            Uri smallPhotoUri,
-            MailAddress email,
-            DateTime registrationTime,
-            Uri vkProfileUri,
-            string phoneNumber,
-            int studentAccessionYear,
-            string studyingDirection,
-            string instituteName,
-            string specialization)
-        {
-            Require.NotNull(registrationTime, nameof(registrationTime));
-            Require.NotNull(email, nameof(email));
-            Require.NotEmpty(phoneNumber, nameof(phoneNumber));
-            
-            BigPhotoUri = bigPhotoUri;
-            SmallPictureUri = smallPhotoUri;
-            RegistrationTime = registrationTime;
-            VkProfileUri = vkProfileUri;
-            PhoneNumber = phoneNumber;
-            StudentAccessionYear = studentAccessionYear;
-            StudyingDirection = studyingDirection;
-            InstituteName = instituteName;
-            Specialization = specialization;
-        }
-
-        protected Profile()
-        {
-        }
-
         public virtual int UserId { get; protected set; }
 
-        public virtual Uri BigPhotoUri { get; protected set; }
+        public virtual Uri BigPhotoUri { get; set; }
 
-        public virtual Uri SmallPictureUri { get; protected set; }
+        public virtual Uri SmallPhotoUri { get; set; }
 
-        public virtual DateTime RegistrationTime { get; protected set; }
+        public virtual Uri VkProfileUri { get; set; }
 
-        public virtual Uri VkProfileUri { get; protected set; }
+        public virtual string PhoneNumber { get; set; }
 
-        public virtual string PhoneNumber { get; protected set; }
-
-        public virtual int StudentAccessionYear { get; set; }
+        public virtual int? StudentAccessionYear { get; set; }
 
         public virtual string StudyingDirection { get; set; }
 

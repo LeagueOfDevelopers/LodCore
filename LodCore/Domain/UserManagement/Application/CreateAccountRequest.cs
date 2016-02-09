@@ -17,7 +17,6 @@ namespace UserManagement.Application
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(password, nameof(password));
-            Require.NotNull(profile, nameof(Profile));
 
             Email = email.Address;
             Lastname = lastname;

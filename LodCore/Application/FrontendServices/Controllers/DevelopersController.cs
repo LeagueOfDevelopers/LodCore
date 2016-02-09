@@ -70,21 +70,19 @@ namespace FrontendServices.Controllers
         public IHttpActionResult RegisterNewDeveloper([FromBody] RegisterDeveloperRequest request)
         {
             var createAccountRequest = new CreateAccountRequest(
-                new MailAddress(request.Email), 
+                new MailAddress(request.Email),
                 request.LastName,
                 request.FirstName,
                 request.Password,
-                new Profile(
-                    null, 
-                    null, 
-                    new MailAddress(request.Email), 
-                    DateTime.Now, 
-                    new Uri(request.VkProfileUri),
-                    request.PhoneNumber, 
-                    request.AccessionYear,
-                    request.Department,
-                    request.InstituteName, 
-                    request.StudyingProfile));
+                new Profile
+                {
+                    InstituteName = request.InstituteName,
+                    PhoneNumber = request.PhoneNumber,
+                    Specialization = request.StudyingProfile,
+                    StudentAccessionYear = request.AccessionYear,
+                    StudyingDirection = request.Department,
+                    VkProfileUri = request.VkProfileUri == null ? null : new Uri(request.VkProfileUri)
+                });
             try
             {
                 _userManager.CreateUser(createAccountRequest);
@@ -93,6 +91,38 @@ namespace FrontendServices.Controllers
             {
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("developers/{id}")]
+        public IHttpActionResult UpdateProfile(int id, [FromBody] UpdateProfileRequest updateProfileRequest)
+        {
+            Require.Positive(id, nameof(id));
+            Require.NotNull(updateProfileRequest, nameof(updateProfileRequest));
+
+            Account userToChange;
+            try
+            {
+                userToChange = _userManager.GetUser(id);
+            }
+            catch (AccountNotFoundException)
+            {
+                return NotFound();
+            }
+
+            if (updateProfileRequest.NewPassword != null)
+            {
+                userToChange.Password = new Password(updateProfileRequest.NewPassword);
+            }
+
+            if (updateProfileRequest.Profile != null)
+            {
+                userToChange.Profile = updateProfileRequest.Profile;
+            }
+
+            _userManager.UpdateUser(userToChange);
 
             return Ok();
         }

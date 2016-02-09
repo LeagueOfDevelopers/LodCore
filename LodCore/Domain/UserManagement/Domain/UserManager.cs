@@ -72,6 +72,7 @@ namespace UserManagement.Domain
                 new Password(request.Password),
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
+                DateTime.Now,
                 request.Profile,
                 redmineUserId,
                 gitlabUserId);

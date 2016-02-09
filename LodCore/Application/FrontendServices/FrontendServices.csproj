@@ -156,6 +156,7 @@
     <Compile Include="Models\Credentials.cs" />
     <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />
+    <Compile Include="Models\DeveloperPageProjectPreview.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
     <Compile Include="Models\IndexPageProject.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Models\RegisterDeveloperRequest.cs" />
     <Compile Include="Models\RegisterNewOrderRequest.cs" />
+    <Compile Include="Models\UpdateProfileRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

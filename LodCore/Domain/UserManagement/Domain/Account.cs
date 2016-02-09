@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
 using Common;
 using Journalist;
 
@@ -13,6 +14,7 @@ namespace UserManagement.Domain
             Password password,
             AccountRole role,
             ConfirmationStatus confirmationStatus,
+            DateTime registrationTime,
             Profile profile,
             int redmineUserId,
             int gitlabUserId)
@@ -32,6 +34,7 @@ namespace UserManagement.Domain
             Password = password;
             Role = role;
             ConfirmationStatus = confirmationStatus;
+            RegistrationTime = registrationTime;
             Profile = profile;
             RedmineUserId = redmineUserId;
             GitlabUserId = gitlabUserId;
@@ -49,7 +52,7 @@ namespace UserManagement.Domain
 
         public virtual MailAddress Email { get; protected set; }
 
-        public virtual Password Password { get; protected set; }
+        public virtual Password Password { get; set; }
 
         public virtual int RedmineUserId { get; protected set; }
 
@@ -59,6 +62,8 @@ namespace UserManagement.Domain
 
         public virtual ConfirmationStatus ConfirmationStatus { get; set; }
 
-        public virtual Profile Profile { get; protected set; }
+        public virtual DateTime RegistrationTime { get; protected set; }
+
+        public virtual Profile Profile { get; set; }
     }
 }

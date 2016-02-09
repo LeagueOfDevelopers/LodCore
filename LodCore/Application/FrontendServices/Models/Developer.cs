@@ -1,5 +1,6 @@
 ﻿using System;
 using Journalist;
+using Journalist.Collections;
 using UserManagement.Domain;
 
 namespace FrontendServices.Models
@@ -18,10 +19,11 @@ namespace FrontendServices.Models
             DateTime registrationDate, 
             Uri vkProfileUri, 
             string phoneNumber, 
-            int studentAccessionYear, 
+            int? studentAccessionYear, 
             string studyingDirection, 
             string instituteName, 
-            string specialization)
+            string specialization, 
+            DeveloperPageProjectPreview[] projects)
         {
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(firstName, nameof(firstName));
@@ -45,6 +47,7 @@ namespace FrontendServices.Models
             StudyingDirection = studyingDirection;
             InstituteName = instituteName;
             Specialization = specialization;
+            Projects = projects ?? EmptyArray.Get<DeveloperPageProjectPreview>();
         }
 
         public int UserId { get; private set; }
@@ -69,12 +72,14 @@ namespace FrontendServices.Models
 
         public string PhoneNumber { get; private set; }
 
-        public int StudentAccessionYear { get; private set; }
+        public int? StudentAccessionYear { get; private set; }
 
         public string StudyingDirection { get; private set; }
 
         public string InstituteName { get; private set; }
 
         public string Specialization { get; private set; }
+
+        public DeveloperPageProjectPreview[] Projects { get; private set; }
     }
 }

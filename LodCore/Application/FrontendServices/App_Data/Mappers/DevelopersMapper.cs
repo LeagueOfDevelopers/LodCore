@@ -2,13 +2,16 @@
 using FrontendServices.Models;
 using Journalist;
 using ProjectManagement.Application;
+using ProjectManagement.Domain;
 using UserManagement.Domain;
 
 namespace FrontendServices.App_Data.Mappers
 {
     public class DevelopersMapper
     {
-        public DevelopersMapper(IUserRoleAnalyzer userRoleAnalyzer, IProjectProvider projectProvider)
+        public DevelopersMapper(
+            IUserRoleAnalyzer userRoleAnalyzer, 
+            IProjectProvider projectProvider)
         {
             Require.NotNull(userRoleAnalyzer, nameof(userRoleAnalyzer));
             Require.NotNull(projectProvider, nameof(projectProvider));
@@ -26,7 +29,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId,
                 account.Firstname,
                 account.Lastname,
-                account.Profile.SmallPictureUri,
+                account.Profile.SmallPhotoUri,
                 role);
         }
 
@@ -46,9 +49,9 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId, 
                 account.Firstname,
                 account.Lastname, 
-                account.Profile.SmallPictureUri,
+                account.Profile.SmallPhotoUri,
                 role,
-                account.Profile.RegistrationTime,
+                account.RegistrationTime,
                 projectCount,
                 account.Profile.VkProfileUri);
         }
@@ -56,6 +59,14 @@ namespace FrontendServices.App_Data.Mappers
         public Developer ToDeveloper(Account account)
         {
             Require.NotNull(account, nameof(account));
+
+            var userProjects =
+                _projectProvider.GetProjects(
+                    project => project.ProjectMemberships.Any(
+                        membership => membership.DeveloperId == account.UserId));
+
+            var projectPreviews = userProjects.Select(
+                project => ToDeveloperPageProjectPreview(account.UserId, project));
 
             return new Developer(
                 account.UserId,
@@ -66,13 +77,25 @@ namespace FrontendServices.App_Data.Mappers
                 account.GitlabUserId,
                 account.ConfirmationStatus,
                 account.Profile.BigPhotoUri,
-                account.Profile.RegistrationTime,
+                account.RegistrationTime,
                 account.Profile.VkProfileUri,
                 account.Profile.PhoneNumber,
                 account.Profile.StudentAccessionYear,
                 account.Profile.StudyingDirection,
                 account.Profile.InstituteName,
-                account.Profile.Specialization);
+                account.Profile.Specialization,
+                projectPreviews.ToArray());
+        }
+
+        private DeveloperPageProjectPreview ToDeveloperPageProjectPreview(int userId, Project project)
+        {
+            var userMembership = project.ProjectMemberships.Single(membership => membership.DeveloperId == userId);
+            return new DeveloperPageProjectPreview(
+                project.ProjectId,
+                project.LandingImageUri,
+                project.Name,
+                project.ProjectStatus,
+                userMembership.Role);
         }
 
         private readonly IUserRoleAnalyzer _userRoleAnalyzer;
