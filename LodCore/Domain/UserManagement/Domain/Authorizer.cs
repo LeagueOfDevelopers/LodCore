@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Common;
@@ -10,8 +11,8 @@ namespace UserManagement.Domain
 {
     public class Authorizer : IAuthorizer
     {
-        private readonly Dictionary<string, AuthorizationToken> _tokensWithGenerationTime
-            = new Dictionary<string, AuthorizationToken>();
+        private readonly ConcurrentDictionary<string, AuthorizationTokenInfo> _tokensWithGenerationTime
+            = new ConcurrentDictionary<string, AuthorizationTokenInfo>();
 
         private readonly IUserRepository _userRepository;
 
@@ -23,30 +24,26 @@ namespace UserManagement.Domain
             _userRepository = userRepository;
         }
 
-        public bool CheckAuthorized(string authorizationToken, int userId)
+        public AuthorizationTokenInfo GetTokenInfo(string authorizationToken)
         {
             Require.NotEmpty(authorizationToken, nameof(authorizationToken));
-            Require.Positive(userId, nameof(userId));
 
             if (!_tokensWithGenerationTime.ContainsKey(authorizationToken))
             {
-                return false;
+                return null;
             }
             var token = _tokensWithGenerationTime[authorizationToken];
-            if (token.UserId != userId)
-            {
-                return false;
-            }
+
             if (token.CreationTime + TokenLifeTime < DateTime.Now)
             {
-                return false;
+                return null;
             }
 
             token.CreationTime = DateTime.Now;
-            return true;
+            return token;
         }
 
-        public AuthorizationToken Authorize(string email, Password password)
+        public AuthorizationTokenInfo Authorize(string email, Password password)
         {
             Require.NotEmpty(email, nameof(email));
             Require.NotNull(password, nameof(password));
@@ -66,19 +63,46 @@ namespace UserManagement.Domain
                 throw new UnauthorizedAccessException("Wrong password");
             }
 
-            var token = GenerateNewToken(userAccount.UserId);
-            _tokensWithGenerationTime.Add(token.Token, token);
+            var existedToken = TakeTokenByUserId(userAccount.UserId);
+            if (existedToken != null)
+            {
+                _tokensWithGenerationTime.TryRemove(existedToken.Token, out existedToken);
+            }
+
+            var token = GenerateNewToken(userAccount);
+            _tokensWithGenerationTime.AddOrUpdate(token.Token, token, (oldToken, info) => token);
             return token;
+        }
+
+        public void ResetToken(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+            var tokenToRemove = TakeTokenByUserId(userId);
+            if (tokenToRemove != null)
+            {
+                _tokensWithGenerationTime.TryRemove(tokenToRemove.Token, out tokenToRemove);
+            }
         }
 
         public TimeSpan TokenLifeTime { get; }
 
-        private static AuthorizationToken GenerateNewToken(int userId)
+        private AuthorizationTokenInfo TakeTokenByUserId(int userId)
+        {
+            var pair = _tokensWithGenerationTime.SingleOrDefault(token => token.Value.UserId == userId);
+            if (pair.Equals(default(KeyValuePair<string, AuthorizationTokenInfo>)))
+            {
+                return pair.Value;
+            }
+
+            return null;
+        }
+
+        private static AuthorizationTokenInfo GenerateNewToken(Account account)
         {
             var guid = Guid.NewGuid();
             var token = BitConverter.ToString(guid.ToByteArray());
             token = token.Replace("-", "");
-            return new AuthorizationToken(userId, token, DateTime.Now);
+            return new AuthorizationTokenInfo(account.UserId, token, DateTime.Now, account.Role);
         }
     }
 }

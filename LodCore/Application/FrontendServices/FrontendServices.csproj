@@ -139,6 +139,10 @@
     <Compile Include="App_Data\SettingsReader.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Authorization\AuthenticateAttribute.cs" />
+    <Compile Include="Authorization\AuthorizationExtensions.cs" />
+    <Compile Include="Authorization\LodIdentity.cs" />
+    <Compile Include="Authorization\LodPrincipal.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AuthorizationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />

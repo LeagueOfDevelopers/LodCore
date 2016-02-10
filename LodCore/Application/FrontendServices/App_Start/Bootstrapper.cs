@@ -95,7 +95,8 @@ namespace FrontendServices
             container.Register<INotificationSettingsRepository, NotificationSettingsRepository>(Lifestyle.Singleton);
             container.Register<IAuthorizer>(() => new Authorizer(
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
-                container.GetInstance<IUserRepository>()));
+                container.GetInstance<IUserRepository>()), 
+                Lifestyle.Singleton);
             container.Register<IOrderManager>(() => new OrderManagment(
                 container.GetInstance<IOrderRepository>(),
                 container.GetInstance<OrderManagmentEventSink>()

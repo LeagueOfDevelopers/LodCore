@@ -3,9 +3,9 @@ using Journalist;
 
 namespace UserManagement.Domain
 {
-    public class AuthorizationToken
+    public class AuthorizationTokenInfo
     {
-        public AuthorizationToken(int userId, string token, DateTime creationTime)
+        public AuthorizationTokenInfo(int userId, string token, DateTime creationTime, AccountRole role)
         {
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(token, nameof(token));
@@ -13,9 +13,12 @@ namespace UserManagement.Domain
             UserId = userId;
             Token = token;
             CreationTime = creationTime;
+            Role = role;
         }
 
         public int UserId { get; private set; }
+
+        public AccountRole Role { get; private set; }
 
         public string Token { get; private set; }
 

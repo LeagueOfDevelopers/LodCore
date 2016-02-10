@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Web;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
+using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using Journalist.Extensions;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
+using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -34,7 +38,7 @@ namespace FrontendServices.Controllers
         public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-
+            
             var requiredProjects = _projectProvider.GetProjects(
                 project => ProjectsPolicies.OnlyDoneOrInProgress(project)
                            && ProjectsPolicies.OnlyPublic(project));

@@ -18,8 +18,8 @@ namespace FrontendServices.Controllers
         }
 
         [HttpPost]
-        [Route("developers/authorize")]
-        public AuthorizationToken Authorize([FromBody]Credentials credentials)
+        [Route("login")]
+        public AuthorizationTokenInfo Authorize([FromBody]Credentials credentials)
         {
             try
             {

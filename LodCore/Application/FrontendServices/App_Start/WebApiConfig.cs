@@ -2,6 +2,8 @@
 using System.Web.Http;
 using System.Web.Http.Cors;
 using DataAccess;
+using FrontendServices.Authorization;
+using UserManagement.Application;
 
 namespace FrontendServices
 {
@@ -17,6 +19,9 @@ namespace FrontendServices
             config.Routes.MapHttpRoute(
                 "DefaultApi", "{controller}/{id}", new {id = RouteParameter.Optional}
                 );
+
+            var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
+            config.Filters.Add(new AuthenticateAttribute(authorizer));
         }
 
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
