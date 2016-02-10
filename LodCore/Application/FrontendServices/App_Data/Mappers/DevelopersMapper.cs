@@ -84,6 +84,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.Profile.StudyingDirection,
                 account.Profile.InstituteName,
                 account.Profile.Specialization,
+                _userRoleAnalyzer.GetUserCommonRole(account.UserId),
                 projectPreviews.ToArray());
         }
 

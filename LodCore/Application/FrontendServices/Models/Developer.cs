@@ -22,7 +22,8 @@ namespace FrontendServices.Models
             int? studentAccessionYear, 
             string studyingDirection, 
             string instituteName, 
-            string specialization, 
+            string specialization,
+            string role,
             DeveloperPageProjectPreview[] projects)
         {
             Require.Positive(userId, nameof(userId));
@@ -47,6 +48,7 @@ namespace FrontendServices.Models
             StudyingDirection = studyingDirection;
             InstituteName = instituteName;
             Specialization = specialization;
+            Role = role;
             Projects = projects ?? EmptyArray.Get<DeveloperPageProjectPreview>();
         }
 
@@ -79,6 +81,8 @@ namespace FrontendServices.Models
         public string InstituteName { get; private set; }
 
         public string Specialization { get; private set; }
+
+        public string Role { get; private set; }
 
         public DeveloperPageProjectPreview[] Projects { get; private set; }
     }
