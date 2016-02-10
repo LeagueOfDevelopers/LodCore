@@ -40,7 +40,9 @@ namespace FrontendServices.Controllers
         {
             Require.ZeroOrGreater(count, nameof(count));
 
-            var users = _userManager.GetUserList().GetRandom(count);
+            var users = _userManager.GetUserList(
+                account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed)
+                .GetRandom(count);
             var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
         }
@@ -75,6 +77,11 @@ namespace FrontendServices.Controllers
         [Route("developers")]
         public IHttpActionResult RegisterNewDeveloper([FromBody] RegisterDeveloperRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var createAccountRequest = new CreateAccountRequest(
                 new MailAddress(request.Email),
                 request.LastName,
@@ -107,6 +114,11 @@ namespace FrontendServices.Controllers
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(updateProfileRequest, nameof(updateProfileRequest));
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
             if (updateProfileRequest.NotificationSettings?.Any(
                     setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)

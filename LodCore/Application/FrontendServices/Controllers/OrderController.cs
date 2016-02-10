@@ -22,6 +22,10 @@ namespace FrontendServices.Controllers
         public IHttpActionResult RegisterNewOrder([FromBody]RegisterNewOrderRequest request)
         {
             Require.NotNull(request, nameof(request));
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var order = _orderMapper.ToDomainEntity(request);
             _orderManager.AddOrder(order);
             return Ok();
