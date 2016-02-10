@@ -11,6 +11,8 @@ using FrontendServices.Models;
 using Journalist;
 using UserManagement.Application;
 using UserManagement.Domain;
+using UserPresentaton;
+using NotificationSetting = UserPresentaton.NotificationSetting;
 
 namespace FrontendServices.Controllers
 {
@@ -19,15 +21,18 @@ namespace FrontendServices.Controllers
         public DevelopersController(
             IUserManager userManager, 
             DevelopersMapper mapper, 
-            IConfirmationService confirmationService)
+            IConfirmationService confirmationService,
+            IUserPresentationProvider userPresentationProvider)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
             Require.NotNull(confirmationService, nameof(confirmationService));
+            Require.NotNull(userPresentationProvider, nameof(userPresentationProvider));
 
             _userManager = userManager;
             _mapper = mapper;
             _confirmationService = confirmationService;
+            _userPresentationProvider = userPresentationProvider;
         }
 
         [Route("developers/random/{count}")]
@@ -44,7 +49,8 @@ namespace FrontendServices.Controllers
         [Route("developers")]
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
         {
-            var users = _userManager.GetUserList(account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
+            var users = _userManager.GetUserList(
+                account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
@@ -102,6 +108,12 @@ namespace FrontendServices.Controllers
             Require.Positive(id, nameof(id));
             Require.NotNull(updateProfileRequest, nameof(updateProfileRequest));
 
+            if (updateProfileRequest.NotificationSettings?.Any(
+                    setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
+            {
+                return BadRequest("You can't turn off notification sending");
+            }
+
             Account userToChange;
             try
             {
@@ -120,6 +132,18 @@ namespace FrontendServices.Controllers
             if (updateProfileRequest.Profile != null)
             {
                 userToChange.Profile = updateProfileRequest.Profile;
+            }
+
+            if (updateProfileRequest.NotificationSettings != null)
+            {
+                foreach (var notificationSetting in updateProfileRequest.NotificationSettings)
+                {
+                    _userPresentationProvider.UpdateNotificationSetting(
+                        new NotificationSetting(
+                            id,
+                            notificationSetting.NotificationType,
+                            notificationSetting.NotificationSettingValue));
+                }
             }
 
             _userManager.UpdateUser(userToChange);
@@ -147,6 +171,7 @@ namespace FrontendServices.Controllers
 
         private readonly IUserManager _userManager;
         private readonly IConfirmationService _confirmationService;
+        private readonly IUserPresentationProvider _userPresentationProvider;
         private readonly DevelopersMapper _mapper;
     }
 }

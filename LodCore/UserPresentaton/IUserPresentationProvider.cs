@@ -2,6 +2,8 @@
 {
     public interface IUserPresentationProvider
     {
-        NotificationSetting GetUserEventSettings(int userId, string eventType);
+        NotificationSettingValue GetUserEventSettings(int userId, string eventType);
+
+        void UpdateNotificationSetting(NotificationSetting notificationSetting);
     }
 }

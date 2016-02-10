@@ -25,6 +25,6 @@ namespace UserPresentaton
 
         public virtual NotificationType NotificationType { get; protected set; }
 
-        public virtual NotificationSettingValue Value { get; protected set; }
+        public virtual NotificationSettingValue Value { get; set; }
     }
 }

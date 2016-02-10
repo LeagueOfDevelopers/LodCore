@@ -13,6 +13,7 @@ namespace FrontendServices.Models
         [MaxLength(50)]
         public string MessageTopic { get; set; }
 
+        [MaxLength(300)]
         public string MessageBody { get; set; }
     }
 }

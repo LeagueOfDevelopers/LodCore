@@ -26,6 +26,7 @@ using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
+using UserPresentaton;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
@@ -90,6 +91,8 @@ namespace FrontendServices
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IFileManager, FileManager>(Lifestyle.Singleton);
+            container.Register<IUserPresentationProvider, UserPresentationProvider>(Lifestyle.Singleton);
+            container.Register<INotificationSettingsRepository, NotificationSettingsRepository>(Lifestyle.Singleton);
             container.Register<IAuthorizer>(() => new Authorizer(
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
                 container.GetInstance<IUserRepository>()));

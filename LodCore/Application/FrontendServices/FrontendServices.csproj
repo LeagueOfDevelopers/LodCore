@@ -160,6 +160,7 @@
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
     <Compile Include="Models\IndexPageProject.cs" />
+    <Compile Include="Models\NotificationSetting.cs" />
     <Compile Include="Models\ProjectMembership.cs" />
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Models\RegisterDeveloperRequest.cs" />
@@ -221,6 +222,10 @@
     <ProjectReference Include="..\..\OrderManager\OrderManagment.csproj">
       <Project>{590545C7-8872-4A3C-8E98-C6F0AE96C23E}</Project>
       <Name>OrderManagment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
+      <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>
+      <Name>UserPresentaton</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

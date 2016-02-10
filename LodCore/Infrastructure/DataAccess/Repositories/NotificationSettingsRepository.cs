@@ -20,7 +20,7 @@ namespace DataAccess.Repositories
         public NotificationSetting ReadNotificationSettingByCriteria(Func<NotificationSetting, bool> func)
         {
             var session = _sessionProvider.GetCurrentSession();
-            return session.Query<NotificationSetting>().Single(func);
+            return session.Query<NotificationSetting>().SingleOrDefault(func);
         }
 
         public void CreateNotificationSetting(NotificationSetting notificationSetting)
