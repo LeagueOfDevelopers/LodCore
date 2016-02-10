@@ -1,13 +1,14 @@
 ﻿using Journalist;
 using NotificationService;
+using UserPresentaton;
 
 namespace UserManagement.Domain.Events
 {
     public class UserManagementEventSink : EventSinkBase
     {
         public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository, IMailer mailer)
-            : base(distributionPolicyFactory, eventRepository, mailer)
+            IEventRepository eventRepository, IMailer mailer, IUserPresentationProvider userPresentationProvider)
+            : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }
 

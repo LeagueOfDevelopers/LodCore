@@ -75,6 +75,10 @@
       <Project>{11a53a10-354f-4951-aa63-9e217aa0fbdd}</Project>
       <Name>NotificationService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UserPresentaton\UserPresentaton.csproj">
+      <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>
+      <Name>UserPresentaton</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
