@@ -140,6 +140,7 @@
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Authorization\AuthenticateAttribute.cs" />
+    <Compile Include="Authorization\AuthorizationAttribute.cs" />
     <Compile Include="Authorization\AuthorizationExtensions.cs" />
     <Compile Include="Authorization\LodIdentity.cs" />
     <Compile Include="Authorization\LodPrincipal.cs" />

@@ -3,7 +3,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using FilesManagement;
@@ -24,6 +23,7 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("file/{filename}")]
+        [Authorization(AccountRole.Administrator)]
         public HttpResponseMessage GetFile(string filename)
         {
             Require.NotEmpty(filename, nameof(filename));
