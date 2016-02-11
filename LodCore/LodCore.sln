@@ -56,6 +56,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserPresentationTests", "Us
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactContext", "Domain\ContactContext\ContactContext.csproj", "{3C995E20-5C8D-4091-8B11-C752AA06300F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalLibs", "ExternalLibs", "{813278D0-26F8-40F7-A2CC-A89F2125A12D}"
+	ProjectSection(SolutionItems) = preProject
+		ExternalLibs\NGitLab.dll = ExternalLibs\NGitLab.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

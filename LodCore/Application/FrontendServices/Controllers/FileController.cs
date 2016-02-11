@@ -6,9 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using FilesManagement;
-using FrontendServices.Authorization;
 using Journalist;
-using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -22,28 +20,17 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
-        [Route("file/{filename}")]
-        [Authorization(AccountRole.Administrator)]
-        public HttpResponseMessage GetFile(string filename)
+        [Route("file/{fileName}")]
+        public HttpResponseMessage GetFile(string fileName)
         {
-            Require.NotEmpty(filename, nameof(filename));
+            return GetAnyFile(() => _fileManager.GetFile(fileName));
+        }
 
-            Stream stream;
-            try
-            {
-                stream = _fileManager.GetFile(filename);
-            }
-            catch (FileNotFoundException)
-            {
-                return new HttpResponseMessage(HttpStatusCode.NotFound);
-            }
-
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StreamContent(stream)
-            };
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            return response;
+        [HttpGet]
+        [Route("image/{imageName}")]
+        public HttpResponseMessage GetImage(string imageName)
+        {
+            return GetAnyFile(() => _fileManager.GetImage(imageName));
         }
 
         [HttpPost]
@@ -80,6 +67,26 @@ namespace FrontendServices.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
+        }
+
+        private HttpResponseMessage GetAnyFile(Func<Stream> getStream)
+        {
+            Stream stream;
+            try
+            {
+                stream = getStream();
+            }
+            catch (FileNotFoundException)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(stream)
+            };
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            return response;
         }
 
         private readonly IFileManager _fileManager;
