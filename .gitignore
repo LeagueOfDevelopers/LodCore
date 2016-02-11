@@ -213,5 +213,5 @@ ModelManifest.xml
 
 settings.config
 ConnectionStrings.config
-File/
-Image/
+Files/
+Images/

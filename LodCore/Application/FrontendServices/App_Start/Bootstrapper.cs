@@ -9,6 +9,7 @@ using FilesManagement;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
 using Gateways;
+using Gateways.Gitlab;
 using Gateways.Redmine;
 using Mailing;
 using NotificationService;
