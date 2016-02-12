@@ -9,6 +9,14 @@ namespace NotificationServiceTests
     [TestClass]
     public class EventSinkBaseTests
     {
+        private Mock<IDistributionPolicyFactory> _distributionPolicyFactoryMock;
+        private Mock<IEventRepository> _eventRepositoryMock;
+        private Mock<IMailer> _mailerMock;
+
+        private ProjectsEventSink _projectsEventSink;
+
+        private Mock<IUserPresentationProvider> _userPresentationProviderMock;
+
         [TestInitialize]
         public void Setup()
         {
@@ -34,8 +42,11 @@ namespace NotificationServiceTests
             _userPresentationProviderMock.Setup(provider => provider.GetUserEventSettings(77, It.IsAny<string>()))
                 .Returns(NotificationSettingValue.SendOnlyNotification);
 
-            _distributionPolicyFactoryMock.Setup(factory => factory.GetAllPolicy())
-                .Returns(new DistributionPolicy(new[] {42, 52, 77}));
+            _distributionPolicyFactoryMock.Setup(factory => factory.GetAdminRelatedPolicy())
+                .Returns(new DistributionPolicy(new[] {42}));
+
+            _distributionPolicyFactoryMock.Setup(factory => factory.GetProjectRelatedPolicy(It.IsAny<int>()))
+                .Returns(new DistributionPolicy(new[] {52, 77}));
 
             _projectsEventSink = new ProjectsEventSink(
                 _distributionPolicyFactoryMock.Object,
@@ -43,22 +54,14 @@ namespace NotificationServiceTests
                 _mailerMock.Object,
                 _userPresentationProviderMock.Object);
 
+            var developerOnProjectEvent = new NewDeveloperOnProject(11, 10);
+
             //act
-            _projectsEventSink.ConsumeEvent(new NewDeveloperOnProject(11, 10));
-            _projectsEventSink.ConsumeEvent(new NewDeveloperOnProject(12, 10));
-            _projectsEventSink.ConsumeEvent(new NewDeveloperOnProject(13, 10));
+            _projectsEventSink.ConsumeEvent(developerOnProjectEvent);
 
             //assert
-            _mailerMock.Verify(mailer => mailer.SendNotificationEmail(new [] {42, 55}, It.IsAny<NewDeveloperOnProject>()));
+            _mailerMock.Verify(mailer => mailer.SendNotificationEmail(new[] {52, 42}, developerOnProjectEvent),
+                Times.Once);
         }
-
-        private Mock<IUserPresentationProvider> _userPresentationProviderMock;
-        private Mock<IDistributionPolicyFactory> _distributionPolicyFactoryMock;
-        private Mock<IEventRepository> _eventRepositoryMock;
-        private Mock<IMailer> _mailerMock;
-
-
-
-        private ProjectsEventSink _projectsEventSink;
     }
 }
