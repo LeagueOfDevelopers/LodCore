@@ -69,7 +69,7 @@ namespace Gateways.Gitlab
                 IsAdmin = false,
                 Password = request.Password,
                 ProjectsLimit = 0,
-                Name = request.Firstname + request.Lastname,
+                Name = request.Firstname + " " + request.Lastname,
                 CanCreateGroup = false,
                 Username = request.Lastname.Unidecode()
             };

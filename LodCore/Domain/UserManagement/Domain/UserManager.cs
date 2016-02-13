@@ -63,7 +63,15 @@ namespace UserManagement.Domain
 
             //todo: fix 39 task
             var redmineUserId = 1; /*_redmineUserRegistrar.RegisterUser(request);*/
-            var gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
+            int gitlabUserId;
+            try
+            {
+               gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
+            }
+            catch (Exception)
+            {
+                throw new AccountAlreadyExistsException();
+            }
 
             var newAccount = new Account(
                 request.Firstname,
