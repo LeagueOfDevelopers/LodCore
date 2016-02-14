@@ -44,8 +44,6 @@ namespace FrontendServices.Authorization
 
             Thread.CurrentPrincipal = principal;
             context.Principal = principal;
-
-            return;
         }
 
         public Task ChallengeAsync(HttpAuthenticationChallengeContext context, CancellationToken cancellationToken)

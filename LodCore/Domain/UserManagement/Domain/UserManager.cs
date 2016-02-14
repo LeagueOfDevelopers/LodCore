@@ -68,9 +68,9 @@ namespace UserManagement.Domain
             {
                gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                throw new AccountAlreadyExistsException();
+                throw new AccountAlreadyExistsException(exception.Message);
             }
 
             var newAccount = new Account(

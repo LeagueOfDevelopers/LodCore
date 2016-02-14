@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using NGitLab;
@@ -71,9 +72,9 @@ namespace Gateways.Gitlab
                 ProjectsLimit = 0,
                 Name = request.Firstname + " " + request.Lastname,
                 CanCreateGroup = false,
+                Confirm = "no",
                 Username = request.Lastname.Unidecode()
             };
-
             var addedUser = _gitLabClient.Users.Create(user);
             return addedUser.Id;
         }
