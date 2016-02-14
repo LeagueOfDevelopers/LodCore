@@ -27,6 +27,10 @@ namespace FrontendServices.Controllers
             {
                 return NotFound();
             }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
             return Ok();
         }

@@ -178,6 +178,10 @@ namespace FrontendServices.Controllers
             {
                 return BadRequest("Token not found");
             }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
             return Ok();
         }

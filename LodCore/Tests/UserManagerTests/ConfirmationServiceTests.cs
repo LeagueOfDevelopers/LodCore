@@ -1,6 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
+using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using IMailer = UserManagement.Application.IMailer;
@@ -28,7 +30,8 @@ namespace UserManagerTests
                 _userRepoStub.Object,
                 _mailerStub.Object,
                 _validationRequesRepoStub.Object,
-                _eventSinkManagerStub.Object);
+                _eventSinkManagerStub.Object,
+                new ConfirmationSettings(new Uri("http://lod-misis.ru/frontend")));
         }
 
         [TestMethod]

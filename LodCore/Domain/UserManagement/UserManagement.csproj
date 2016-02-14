@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\ConfirmationSettings.cs" />
     <Compile Include="Domain\AuthorizationTokenInfo.cs" />
     <Compile Include="Domain\Authorizer.cs" />
     <Compile Include="Application\CreateAccountRequest.cs" />
@@ -90,7 +91,6 @@
     <Compile Include="Infrastructure\IRedmineUserRegistrar.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\IValidationRequestsRepository.cs" />
-    <Compile Include="Infrastructure\Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

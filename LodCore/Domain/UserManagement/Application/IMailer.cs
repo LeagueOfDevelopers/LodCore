@@ -4,6 +4,6 @@ namespace UserManagement.Application
 {
     public interface IMailer
     {
-        void SendConfirmationMail(string confirmationToken, MailAddress emailAddress);
+        void SendConfirmationMail(string confirmationLink, MailAddress emailAddress);
     }
 }

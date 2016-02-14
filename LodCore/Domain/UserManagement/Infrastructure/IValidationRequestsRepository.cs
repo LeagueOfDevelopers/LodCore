@@ -7,5 +7,7 @@ namespace UserManagement.Infrastructure
         void SaveValidationRequest(MailValidationRequest request);
 
         MailValidationRequest GetMailValidationRequest(string token);
+
+        void DeleteValidationToken(MailValidationRequest request);
     }
 }

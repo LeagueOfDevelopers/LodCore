@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Journalist;
 using NotificationService;
 using UserManagement.Application;
@@ -10,18 +11,24 @@ namespace UserManagement.Domain
 {
     public class ConfirmationService : IConfirmationService
     {
-        private readonly IMailer _mailer;
-        private readonly IEventSink _userManagementEventSink;
-        private readonly IUserRepository _userRepository;
-        private readonly IValidationRequestsRepository _validationRequestsRepository;
-
-        public ConfirmationService(IUserRepository userRepository, IMailer mailer,
-            IValidationRequestsRepository validationRequestsRepository, IEventSink userManagementEventSink)
+        public ConfirmationService(
+            IUserRepository userRepository,
+            IMailer mailer,
+            IValidationRequestsRepository validationRequestsRepository, 
+            IEventSink userManagementEventSink, 
+            ConfirmationSettings confirmationSettings)
         {
+            Require.NotNull(userRepository, nameof(userRepository));
+            Require.NotNull(mailer, nameof(mailer));
+            Require.NotNull(validationRequestsRepository, nameof(validationRequestsRepository));
+            Require.NotNull(userManagementEventSink, nameof(userManagementEventSink));
+            Require.NotNull(confirmationSettings, nameof(confirmationSettings));
+
             _userRepository = userRepository;
             _mailer = mailer;
             _validationRequestsRepository = validationRequestsRepository;
             _userManagementEventSink = userManagementEventSink;
+            _confirmationSettings = confirmationSettings;
         }
 
         public void SetupEmailConfirmation(int userId)
@@ -29,11 +36,13 @@ namespace UserManagement.Domain
             Require.Positive(userId, nameof(userId));
 
             var token = GenerateToken();
-
-            _mailer.SendConfirmationMail(token, _userRepository.GetAccount(userId).Email);
-
             var request = new MailValidationRequest(userId, token);
             _validationRequestsRepository.SaveValidationRequest(request);
+
+            var confirmationLink = new Uri(
+                _confirmationSettings.FrontendMailConfirmationUri,
+                token);
+            _mailer.SendConfirmationMail(confirmationLink.AbsoluteUri, _userRepository.GetAccount(userId).Email);
         }
 
         public void ConfirmEmail(string confirmationToken)
@@ -47,9 +56,17 @@ namespace UserManagement.Domain
             }
             var userAccount = _userRepository.GetAccount(validationRequest.UserId);
 
+            if (userAccount.ConfirmationStatus != ConfirmationStatus.Unconfirmed)
+            {
+                _validationRequestsRepository.DeleteValidationToken(validationRequest);
+                throw new InvalidOperationException("Trying to confirm already confirmed profile ");    
+            }
+
             userAccount.ConfirmationStatus = ConfirmationStatus.EmailConfirmed;
 
             _userRepository.UpdateAccount(userAccount);
+
+            _validationRequestsRepository.DeleteValidationToken(validationRequest);
 
             _userManagementEventSink.ConsumeEvent(new NewEmailConfirmedDeveloper(userAccount.UserId));
         }
@@ -84,5 +101,11 @@ namespace UserManagement.Domain
                 .Replace('+', '-')
                 .Replace('/', '_');
         }
+
+        private readonly IMailer _mailer;
+        private readonly IEventSink _userManagementEventSink;
+        private readonly IUserRepository _userRepository;
+        private readonly IValidationRequestsRepository _validationRequestsRepository;
+        private readonly ConfirmationSettings _confirmationSettings;
     }
 }

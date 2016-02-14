@@ -51,13 +51,12 @@ namespace FrontendServices
             container.Register<VersionControlSystemGateway>(Lifestyle.Singleton);
             container.Register<IGitlabUserRegistrar>(() => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
             container.Register<IVersionControlSystemGateway>(() => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
-            container.Register<IConfirmationService>(
-                ()=> new ConfirmationService(
-                    container.GetInstance<IUserRepository>(), 
-                    container.GetInstance<IMailer>(), 
-                    container.GetInstance<IValidationRequestsRepository>(), 
-                    container.GetInstance<UserManagementEventSink>()), 
-                Lifestyle.Singleton);
+            container.Register<IConfirmationService>(() => new ConfirmationService(
+                container.GetInstance<IUserRepository>(), 
+                container.GetInstance<IMailer>(),
+                container.GetInstance<IValidationRequestsRepository>(), 
+                container.GetInstance<UserManagementEventSink>(), 
+                container.GetInstance<ConfirmationSettings>()),Lifestyle.Singleton);
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
@@ -118,6 +117,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadGitlabSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadFileStorageSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadPaginationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);
         }
     }
 }

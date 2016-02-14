@@ -9,12 +9,6 @@ namespace Mailing
 {
     public class Mailer : IMailer, NotificationService.IMailer
     {
-        private readonly MailerSettings _mailerSettings;
-
-        private readonly INotificationEmailDescriber _notificationEmailDescriber;
-
-        private readonly IUserRepository _usersRepository;
-
         public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber,
             IUserRepository usersRepository)
         {
@@ -27,16 +21,16 @@ namespace Mailing
             _usersRepository = usersRepository;
         }
 
-        public void SendConfirmationMail(string confirmationToken, MailAddress emailAddress)
+        public void SendConfirmationMail(string confirmationLink, MailAddress emailAddress)
         {
-            Require.NotNull(confirmationToken, nameof(confirmationToken));
+            Require.NotNull(confirmationLink, nameof(confirmationLink));
             Require.NotNull(emailAddress, nameof(emailAddress));
 
             var mail = InitMail(emailAddress);
             var client = InitClient();
 
             mail.Subject = MailingResources.ConfirmationMailCaption;
-            mail.Body = string.Format(MailingResources.ConfirmationMessageTemplate, confirmationToken);
+            mail.Body = string.Format(MailingResources.ConfirmationMessageTemplate, confirmationLink);
 
             client.Send(mail);
             client.Dispose();
@@ -88,5 +82,9 @@ namespace Mailing
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             return client;
         }
+
+        private readonly MailerSettings _mailerSettings;
+        private readonly INotificationEmailDescriber _notificationEmailDescriber;
+        private readonly IUserRepository _usersRepository;
     }
 }

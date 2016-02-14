@@ -7,6 +7,7 @@ using Gateways.Gitlab;
 using Gateways.Redmine;
 using Mailing;
 using ProjectManagement.Domain;
+using UserManagement.Application;
 
 namespace FrontendServices.App_Data
 {
@@ -16,7 +17,7 @@ namespace FrontendServices.App_Data
         {
             return new MailerSettings(
                 settings["MailerSettings.SmtpServer"],
-                Int32.Parse(settings["MailerSettings.Port"]), 
+                int.Parse(settings["MailerSettings.Port"]), 
                 settings["MailerSettings.Password"],
                 settings["MailerSettings.From"],
                 settings["MailerSettings.MessageTemplate"],
@@ -56,6 +57,11 @@ namespace FrontendServices.App_Data
         public static PaginationSettings ReadPaginationSettings(NameValueCollection settings)
         {
             return new PaginationSettings(int.Parse(settings["Pagination.PageSize"]));
+        }
+
+        public static ConfirmationSettings ReadConfirmationSettings(NameValueCollection settings)
+        {
+            return new ConfirmationSettings(new Uri(settings["Confirmation.FrontendConfirmationUri"]));
         }
     }
 }

@@ -33,6 +33,14 @@ namespace DataAccess.Repositories
             return request;
         }
 
+        public void DeleteValidationToken(MailValidationRequest request)
+        {
+            Require.NotNull(request, nameof(request));
+
+            var session = _sessionProvider.GetCurrentSession();
+            session.Delete(request);
+        }
+
         public MailValidationRequest GetMailValidationRequest(int userId)
         {
             Require.Positive(userId, nameof(userId));
