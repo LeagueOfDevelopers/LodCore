@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Filters;
+using System.Web.Http.Results;
 using Journalist;
 using UserManagement.Application;
 
@@ -15,22 +17,26 @@ namespace FrontendServices.Authorization
             _authorizer = authorizer;
         }
 
-        public bool AllowMultiple => false;
+        public bool AllowMultiple => true;
 
-        public Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
+        public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
         {
             var tokenString = context?.Request?.Headers?.Authorization?.Parameter;
             if (string.IsNullOrEmpty(tokenString))
             {
                 SetupUnauthenticated();
-                return Task.CompletedTask;
+                return;
             }
 
             var tokenInfo = _authorizer.GetTokenInfo(tokenString);
             if (tokenInfo == null)
             {
+                context.ErrorResult = new UnauthorizedResult(
+                    new AuthenticationHeaderValue[] {}, 
+                    context.Request);
+                await context.ErrorResult.ExecuteAsync(cancellationToken);
                 SetupUnauthenticated();
-                return Task.CompletedTask;
+                return;
             }
             
             var identity = new LodIdentity(tokenInfo.UserId, true);
@@ -39,7 +45,7 @@ namespace FrontendServices.Authorization
             Thread.CurrentPrincipal = principal;
             context.Principal = principal;
 
-            return Task.CompletedTask;
+            return;
         }
 
         public Task ChallengeAsync(HttpAuthenticationChallengeContext context, CancellationToken cancellationToken)
