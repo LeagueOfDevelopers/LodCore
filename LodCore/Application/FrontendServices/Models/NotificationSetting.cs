@@ -8,7 +8,7 @@ namespace FrontendServices.Models
         [EnumDataType(typeof(NotificationType), ErrorMessage = "Unknown notification type")]
         public NotificationType NotificationType { get; set; }
 
-        [EnumDataType(typeof(NotificationType), ErrorMessage = "Unknown notification setting value")]
+        [EnumDataType(typeof(NotificationSettingValue), ErrorMessage = "Unknown notification setting value")]
         public NotificationSettingValue NotificationSettingValue { get; set; }
     }
 }
