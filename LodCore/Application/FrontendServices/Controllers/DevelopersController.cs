@@ -147,7 +147,7 @@ namespace FrontendServices.Controllers
         }
 
         [HttpPut]
-        [Route("developers/updatepassword/{id}")]
+        [Route("/developers/password/{id}")]
         public IHttpActionResult ChangePassword(int id, [FromBody] ChangePasswordRequest changePasswordRequest)
         {
             Require.Positive(id, nameof(id));
