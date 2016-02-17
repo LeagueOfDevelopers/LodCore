@@ -1,13 +1,14 @@
 ﻿using Journalist;
 using NotificationService;
+using UserPresentaton;
 
 namespace OrderManagement.Domain.Events
 {
     public class OrderManagmentEventSink : EventSinkBase
     {
         public OrderManagmentEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository, IMailer mailer)
-            : base(distributionPolicyFactory, eventRepository, mailer)
+            IEventRepository eventRepository, IMailer mailer, IUserPresentationProvider userPresentationProvider)
+            : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }
 

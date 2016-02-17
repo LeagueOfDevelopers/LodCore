@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ContactContext</RootNamespace>
     <AssemblyName>ContactContext</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +52,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
+      <Project>{184ff097-9b8c-4236-8538-444f9dccb564}</Project>
+      <Name>UserPresentaton</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NotificationService\NotificationService.csproj">
       <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
       <Name>NotificationService</Name>

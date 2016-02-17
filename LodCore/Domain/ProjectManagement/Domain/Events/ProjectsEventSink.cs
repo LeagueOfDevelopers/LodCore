@@ -1,13 +1,14 @@
 ﻿using Journalist;
 using NotificationService;
+using UserPresentaton;
 
 namespace ProjectManagement.Domain.Events
 {
     public class ProjectsEventSink : EventSinkBase
     {
         public ProjectsEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository, IMailer mailer)
-            : base(distributionPolicyFactory, eventRepository, mailer)
+            IEventRepository eventRepository, IMailer mailer, IUserPresentationProvider userPresentationProvider)
+            : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }
 

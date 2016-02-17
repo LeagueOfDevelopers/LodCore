@@ -1,11 +1,13 @@
-﻿using Journalist;
+﻿using System.Linq;
+using Journalist;
+using UserPresentaton;
 
 namespace NotificationService
 {
     public abstract class EventSinkBase : IEventSink
     {
         protected EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository,
-            IMailer mailer)
+            IMailer mailer, IUserPresentationProvider userPresentationProvider)
         {
             Require.NotNull(distributionPolicyFactory, nameof(distributionPolicyFactory));
             Require.NotNull(eventRepository, nameof(eventRepository));
@@ -14,6 +16,7 @@ namespace NotificationService
             DistributionPolicyFactory = distributionPolicyFactory;
             EventRepository = eventRepository;
             Mailer = mailer;
+            _userPresentationProvider = userPresentationProvider;
         }
 
         protected IMailer Mailer { get; }
@@ -22,11 +25,19 @@ namespace NotificationService
 
         protected IEventRepository EventRepository { get; private set; }
 
+        private readonly IUserPresentationProvider _userPresentationProvider;
+
         public abstract void ConsumeEvent(IEventInfo eventInfo);
 
         protected void SendOutEmailsAboutEvent(int[] userIds, IEventInfo eventInfo)
         {
-            Mailer.SendNotificationEmail(userIds, eventInfo);
+            var ids =
+                userIds.Where(
+                    id =>
+                        _userPresentationProvider.GetUserEventSettings(id, eventInfo.GetEventType()) ==
+                        NotificationSettingValue.SendNotificationAndMail).ToArray();
+
+            Mailer.SendNotificationEmail(ids, eventInfo);
         }
     }
 }
