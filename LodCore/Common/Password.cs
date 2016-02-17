@@ -28,7 +28,7 @@ namespace Common
             }
             else
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Password does not satisfy security requirements");
             }
         }
 
