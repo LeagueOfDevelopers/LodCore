@@ -43,5 +43,23 @@ namespace Common
             Require.NotEmpty(passwordHash, nameof(passwordHash));
             return new Password { Pass = passwordHash };
         }
+
+        protected bool Equals(Password other)
+        {
+            return string.Equals(Pass, other.Pass);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Password) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Pass != null ? Pass.GetHashCode() : 0);
+        }
     }
 }
