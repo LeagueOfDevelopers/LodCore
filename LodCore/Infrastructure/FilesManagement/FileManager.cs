@@ -65,7 +65,7 @@ namespace FilesManagement
                 throw new FileNotFoundException();
             }
 
-            return new FileStream(fullPath, FileMode.Open);
+            return new FileStream(fullPath, FileMode.Open, FileAccess.Read);
         }
 
         private async Task<string> UploadAnyFileAsync(
