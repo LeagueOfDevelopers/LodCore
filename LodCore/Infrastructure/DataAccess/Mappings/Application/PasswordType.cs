@@ -13,7 +13,7 @@ namespace DataAccess.Mappings.Application
         {
             if (x == null && y == null) return true;
             if (x == null || y == null) return false;
-            return x.GetType() == y.GetType();
+            return x.Equals(y);
         }
 
         public int GetHashCode(object x)

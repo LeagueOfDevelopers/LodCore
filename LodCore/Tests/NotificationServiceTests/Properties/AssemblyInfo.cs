@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 
-[assembly: AssemblyTitle("UserPresentationTests")]
+[assembly: AssemblyTitle("NotificationServiceTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("UserPresentationTests")]
+[assembly: AssemblyProduct("NotificationServiceTests")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 // Если данный проект доступен для модели COM, следующий GUID используется в качестве идентификатора библиотеки типов
 
-[assembly: Guid("a9096359-2d86-4c93-b34d-b6f4a21d0f9e")]
+[assembly: Guid("24b23a7b-5fbc-4472-9a1a-428b52de8006")]
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //

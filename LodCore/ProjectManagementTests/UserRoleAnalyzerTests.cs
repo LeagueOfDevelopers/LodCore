@@ -11,6 +11,9 @@ namespace ProjectManagementTests
     [TestClass]
     public class UserRoleAnalyzerTests
     {
+        private Mock<IProjectRepository> _projectRepositoryStub;
+        private UserRoleAnalyzerSettings _userRoleAnalyzerSettings;
+
         [TestInitialize]
         public void Initialize()
         {
@@ -35,7 +38,7 @@ namespace ProjectManagementTests
         public void NoRoles_ReturnDefaultRole()
         {
             var userId = 1;
-            var roles = new string[] { };
+            var roles = new string[] {};
             SetupMockReturnThisRolesList(roles, userId);
             var analyzer = new UserRoleAnalyzer(_projectRepositoryStub.Object, _userRoleAnalyzerSettings);
 
@@ -48,7 +51,7 @@ namespace ProjectManagementTests
         public void ApproximatelyEqualRoles_ReturnedAsUserRole()
         {
             var userId = 1;
-            var roles = new[] { "Frontend-developer", "Backend-developer", "Backend developer", "Web-designer" };
+            var roles = new[] {"Frontend-developer", "Backend-developer", "Backend developer", "Web-designer"};
             SetupMockReturnThisRolesList(roles, userId);
             var analyzer = new UserRoleAnalyzer(_projectRepositoryStub.Object, _userRoleAnalyzerSettings);
 
@@ -76,8 +79,5 @@ namespace ProjectManagementTests
                 .Setup(repo => repo.GetAllProjects(It.IsAny<Func<Project, bool>>()))
                 .Returns(projects.Select(project => project.Object).ToArray());
         }
-
-        private Mock<IProjectRepository> _projectRepositoryStub;
-        private UserRoleAnalyzerSettings _userRoleAnalyzerSettings;
     }
 }

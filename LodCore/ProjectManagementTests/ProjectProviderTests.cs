@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Journalist.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
 using Ploeh.AutoFixture;

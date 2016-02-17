@@ -29,15 +29,15 @@ namespace UserManagerTests
 
             //act
             var account = new Account(
-                "Name", 
-                "Lastname", 
+                "Name",
+                "Lastname",
                 new MailAddress("itis@validmail.ru"),
-                new Password("qwertyui"), 
-                AccountRole.User, 
+                new Password("qwertyui"),
+                AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
-                DateTime.Now, 
-                _profileMock.Object, 
-                42, 
+                DateTime.Now,
+                _profileMock.Object,
+                42,
                 42);
 
             //assert

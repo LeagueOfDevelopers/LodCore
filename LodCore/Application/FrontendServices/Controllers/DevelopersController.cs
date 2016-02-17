@@ -10,6 +10,7 @@ using Common;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
+using Ploeh.AutoFixture.Kernel;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
@@ -19,9 +20,15 @@ namespace FrontendServices.Controllers
 {
     public class DevelopersController : ApiController
     {
+        private readonly IConfirmationService _confirmationService;
+        private readonly DevelopersMapper _mapper;
+
+        private readonly IUserManager _userManager;
+        private readonly IUserPresentationProvider _userPresentationProvider;
+
         public DevelopersController(
-            IUserManager userManager, 
-            DevelopersMapper mapper, 
+            IUserManager userManager,
+            DevelopersMapper mapper,
             IConfirmationService confirmationService,
             IUserPresentationProvider userPresentationProvider)
         {
@@ -47,7 +54,7 @@ namespace FrontendServices.Controllers
             var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
         }
-        
+
         [HttpGet]
         [Route("developers")]
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
@@ -121,12 +128,6 @@ namespace FrontendServices.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (updateProfileRequest.NotificationSettings?.Any(
-                    setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
-            {
-                return BadRequest("You can't turn off notification sending");
-            }
-
             Account userToChange;
             try
             {
@@ -137,19 +138,80 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (updateProfileRequest.NewPassword != null)
-            {
-                userToChange.Password = new Password(updateProfileRequest.NewPassword);
-            }
-
             if (updateProfileRequest.Profile != null)
             {
                 userToChange.Profile = updateProfileRequest.Profile;
             }
 
-            if (updateProfileRequest.NotificationSettings != null)
+            _userManager.UpdateUser(userToChange);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("developers/password/{id}")]
+        public IHttpActionResult ChangePassword(int id, [FromBody] ChangePasswordRequest changePasswordRequest)
+        {
+            Require.Positive(id, nameof(id));
+            Require.NotNull(changePasswordRequest, nameof(changePasswordRequest));
+
+            if (!ModelState.IsValid)
             {
-                foreach (var notificationSetting in updateProfileRequest.NotificationSettings)
+                return BadRequest(ModelState);
+            }
+
+            Account userToChange;
+
+            try
+            {
+                userToChange = _userManager.GetUser(id);
+            }
+            catch (AccountNotFoundException)
+            {
+                return NotFound();
+            }
+
+            if (changePasswordRequest.NewPassword != null)
+            {
+                userToChange.Password = new Password(changePasswordRequest.NewPassword);
+            }
+
+            _userManager.UpdateUser(userToChange);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("developers/notificationsettings/{id}")]
+        public IHttpActionResult UpdateNotificationSetiings(int id,
+            [FromBody] UpdateNotificationSetiingsRequest updateNotificationSetiingsRequest)
+        {
+            Require.Positive(id, nameof(id));
+            Require.NotNull(updateNotificationSetiingsRequest, nameof(updateNotificationSetiingsRequest));
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (updateNotificationSetiingsRequest.NotificationSettings?.Any(
+                setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
+            {
+                return BadRequest("You can't turn off notification sending");
+            }
+
+            try
+            {
+                _userManager.GetUser(id);
+            }
+            catch (AccountNotFoundException)
+            {
+                return NotFound();
+            }
+
+            if (updateNotificationSetiingsRequest.NotificationSettings != null)
+            {
+                foreach (var notificationSetting in updateNotificationSetiingsRequest.NotificationSettings)
                 {
                     _userPresentationProvider.UpdateNotificationSetting(
                         new NotificationSetting(
@@ -159,12 +221,30 @@ namespace FrontendServices.Controllers
                 }
             }
 
-            _userManager.UpdateUser(userToChange);
-
             return Ok();
         }
 
-        [HttpPost]
+        [HttpGet]
+        [Route("developers/notificationsettings/{id}")]
+        public Models.NotificationSetting[] GetNotificationSettings(int id)
+        {
+            Require.Positive(id, nameof(id));
+            try
+            {
+                var user = _userManager.GetUser(id);
+            }
+            catch (AccountNotFoundException)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return Enum.GetValues(typeof (NotificationType)).Cast<NotificationType>().Select(name => new Models.NotificationSetting
+            {
+                NotificationType = name, NotificationSettingValue = _userPresentationProvider.GetUserEventSettings(id, name.ToString())
+            }).ToArray();
+        }
+
+    [HttpPost]
         [Route("developers/confirmation/{confirmationToken}")]
         public IHttpActionResult ConfirmEmail(string confirmationToken)
         {
@@ -181,10 +261,5 @@ namespace FrontendServices.Controllers
 
             return Ok();
         }
-
-        private readonly IUserManager _userManager;
-        private readonly IConfirmationService _confirmationService;
-        private readonly IUserPresentationProvider _userPresentationProvider;
-        private readonly DevelopersMapper _mapper;
     }
 }

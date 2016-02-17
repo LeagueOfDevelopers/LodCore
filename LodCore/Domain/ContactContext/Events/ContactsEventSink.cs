@@ -1,5 +1,6 @@
 ﻿using Journalist;
 using NotificationService;
+using UserPresentaton;
 
 namespace ContactContext.Events
 {
@@ -8,7 +9,7 @@ namespace ContactContext.Events
         public ContactsEventSink(
             IDistributionPolicyFactory distributionPolicyFactory, 
             IEventRepository eventRepository, 
-            IMailer mailer) : base(distributionPolicyFactory, eventRepository, mailer)
+            IMailer mailer, IUserPresentationProvider userPresentationProvider) : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }
 
