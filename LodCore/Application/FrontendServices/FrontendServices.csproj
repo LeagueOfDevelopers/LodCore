@@ -157,7 +157,6 @@
     </Compile>
     <Compile Include="App_Data\Authorization\DevelopersPolicies.cs" />
     <Compile Include="Models\AdminProject.cs" />
-    <Compile Include="Models\ChangePasswordRequest.cs" />
     <Compile Include="Models\ContactMessage.cs" />
     <Compile Include="Models\Credentials.cs" />
     <Compile Include="Models\Developer.cs" />

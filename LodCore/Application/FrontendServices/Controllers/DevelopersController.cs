@@ -150,16 +150,11 @@ namespace FrontendServices.Controllers
 
         [HttpPut]
         [Route("developers/password/{id}")]
-        public IHttpActionResult ChangePassword(int id, [FromBody] ChangePasswordRequest changePasswordRequest)
+        public IHttpActionResult ChangePassword(int id, [FromBody] string newPassword)
         {
             Require.Positive(id, nameof(id));
-            Require.NotNull(changePasswordRequest, nameof(changePasswordRequest));
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            Require.NotNull(newPassword, nameof(newPassword));
+            
             Account userToChange;
 
             try
@@ -171,9 +166,9 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (changePasswordRequest.NewPassword != null)
+            if (newPassword != null)
             {
-                userToChange.Password = new Password(changePasswordRequest.NewPassword);
+                userToChange.Password = new Password(newPassword);
             }
 
             _userManager.UpdateUser(userToChange);
