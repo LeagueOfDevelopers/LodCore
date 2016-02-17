@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using BinaryAnalysis.UnidecodeSharp;
+﻿using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using NGitLab;
 using NGitLab.Models;
