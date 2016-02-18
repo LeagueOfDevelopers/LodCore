@@ -102,5 +102,12 @@ namespace UserManagement.Domain
 
             _repository.UpdateAccount(account);
         }
+
+        public List<Account> GetUserList(string searchString)
+        {
+            Require.NotEmpty(searchString, nameof(searchString));
+
+            return _repository.SearchAccounts(searchString);
+        }
     }
 }

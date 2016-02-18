@@ -9,6 +9,7 @@ using Common;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Extensions;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
@@ -59,6 +60,18 @@ namespace FrontendServices.Controllers
         {
             var users = _userManager.GetUserList(
                 account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
+            var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
+            return developerPageDevelopers;
+        }
+
+        [HttpGet]
+        [Route("developers/search/{searchString}")]
+        public IEnumerable<DeveloperPageDeveloper> SearchDevelopers(string searchString)
+        {
+            Require.NotEmpty(searchString, nameof(searchString));
+
+            var users = _userManager.GetUserList(searchString);
+
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
