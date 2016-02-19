@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -11,6 +12,7 @@ using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using Journalist.Extensions;
+using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
@@ -23,7 +25,7 @@ namespace FrontendServices.Controllers
         public ProjectController(
             IProjectProvider projectProvider, 
             ProjectsMapper projectsMapper,
-            IAuthorizer authorizer)
+            IAuthorizer authorizer, IUserManager userManager)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
@@ -32,6 +34,7 @@ namespace FrontendServices.Controllers
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
             _authorizer = authorizer;
+            _userManager = userManager;
         }
 
         [Route("projects/random/{count}")]
@@ -58,6 +61,93 @@ namespace FrontendServices.Controllers
                 : GetProjectsByCategory(categoriesQuery);
 
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+        }
+
+        [HttpPost]
+        [Route("projects")]
+        public IHttpActionResult CreateProject([FromBody]Models.CreateProjectRequest createProjectRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var request = new ProjectManagement.Application.CreateProjectRequest(
+                createProjectRequest.Name,
+                createProjectRequest.ProjectTypes,
+                createProjectRequest.Info,
+                createProjectRequest.AccessLevel,
+                createProjectRequest.LandingImageUri
+                );
+
+            _projectProvider.CreateProject(request);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("projects/{projectId}/developer/{developerId}")]
+        public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody]string role)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                _projectProvider.GetProject(projectId);
+                _userManager.GetUser(developerId);
+            }
+            catch (ProjectNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (AccountNotFoundException)
+            {
+                return NotFound();
+            }
+
+            _projectProvider.AddUserToProject(projectId, developerId, role);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("projects/{projectId}/developer/{developerId}")]
+        public IHttpActionResult DeleteDeveloperFromProject(int projectId, int developerId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Project projectToDeleteUser;
+
+            try
+            {
+                projectToDeleteUser = _projectProvider.GetProject(projectId);
+                _userManager.GetUser(developerId);
+            }
+            catch (ProjectNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (AccountNotFoundException)
+            {
+                return NotFound();
+            }
+
+            if (projectToDeleteUser.ProjectMemberships.Where(
+                    membership => membership.DeveloperId == developerId)
+                    .ToList().IsEmpty())
+            {
+                return NotFound();
+            }
+                
+            _projectProvider.RemoveUserFromProject(projectId, developerId);
+
+            return Ok();
         }
 
         [Route("projects/page/{pageNumber}")]
@@ -100,6 +190,7 @@ namespace FrontendServices.Controllers
         private readonly IProjectProvider _projectProvider;
         private readonly ProjectsMapper _projectsMapper;
         private readonly IAuthorizer _authorizer;
+        private readonly IUserManager _userManager;
 
         private const string CategoriesQueryParameterName = "categories";
     }
