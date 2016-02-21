@@ -108,7 +108,14 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            _projectProvider.AddUserToProject(projectId, developerId, role);
+            try
+            {
+                _projectProvider.AddUserToProject(projectId, developerId, role);
+            }
+            catch (InvalidOperationException)
+            {
+                return Conflict();
+            }
 
             return Ok();
         }

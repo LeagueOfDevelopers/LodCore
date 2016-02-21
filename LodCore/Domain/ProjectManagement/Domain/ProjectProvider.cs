@@ -72,8 +72,8 @@ namespace ProjectManagement.Domain
         {
             Require.NotNull(request, nameof(request));
 
-            var versionControlSystemId = 1;//_versionControlSystemGateway.CreateRepositoryForProject(request);
-            var projectManagementSystemId = 1;//_projectManagerGateway.CreateProject(request);
+            var versionControlSystemId = _versionControlSystemGateway.CreateRepositoryForProject(request);
+            var projectManagementSystemId = _projectManagerGateway.CreateProject(request);
 
             var project = new Project(
                 request.Name,
@@ -110,15 +110,15 @@ namespace ProjectManagement.Domain
                 throw new InvalidOperationException("Attempt to add developer who is already on project");
             }
 
-            var redmineUserId = 1;//_userRepository.GetUserRedmineId(userId);
-            var gitlabUserId = 1;//_userRepository.GetUserGitlabId(userId);
+            var redmineUserId = _userRepository.GetUserRedmineId(userId);
+            var gitlabUserId = _userRepository.GetUserGitlabId(userId);
 
             project.ProjectMemberships.Add(new ProjectMembership(
                 userId, 
                 role));
 
-            //_projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
-            //_versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
+            _projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
+            _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
 
             UpdateProject(project);
 
@@ -140,11 +140,11 @@ namespace ProjectManagement.Domain
                 .SingleOrDefault(developer => developer.DeveloperId == userId);
             project.ProjectMemberships.Remove(developerToDelete);
 
-            //var redmineUserId = _userRepository.GetUserRedmineId(userId);
-            //var gitlabUserId = _userRepository.GetUserGitlabId(userId);
+            var redmineUserId = _userRepository.GetUserRedmineId(userId);
+            var gitlabUserId = _userRepository.GetUserGitlabId(userId);
 
-            //_projectManagerGateway.RemoveUserFromProject(project.ProjectManagementSystemId, redmineUserId);
-            //_versionControlSystemGateway.RemoveUserFromProject(project, gitlabUserId);
+            _projectManagerGateway.RemoveUserFromProject(project.ProjectManagementSystemId, redmineUserId);
+            _versionControlSystemGateway.RemoveUserFromProject(project, gitlabUserId);
 
             UpdateProject(project);
 
