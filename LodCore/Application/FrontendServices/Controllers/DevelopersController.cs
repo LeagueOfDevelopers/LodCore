@@ -237,7 +237,7 @@ namespace FrontendServices.Controllers
             }).ToArray();
         }
 
-    [HttpPost]
+        [HttpPost]
         [Route("developers/confirmation/{confirmationToken}")]
         public IHttpActionResult ConfirmEmail(string confirmationToken)
         {

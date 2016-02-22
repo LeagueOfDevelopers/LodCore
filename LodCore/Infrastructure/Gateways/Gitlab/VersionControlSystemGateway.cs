@@ -6,6 +6,7 @@ using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
+using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using Project = ProjectManagement.Domain.Project;
 
@@ -60,18 +61,18 @@ namespace Gateways.Gitlab
             });
         }
 
-        public int RegisterUser(CreateAccountRequest request)
+        public int RegisterUser(Account account)
         {
             var user = new UserUpsert
             {
-                Email = request.Email,
+                Email = account.Email.Address,
                 IsAdmin = false,
-                Password = request.Password,
+                Password = account.Password.Value, //todo
                 ProjectsLimit = 0,
-                Name = request.Firstname + " " + request.Lastname,
+                Name = account.Firstname + " " + account.Lastname,
                 CanCreateGroup = false,
                 Confirm = "no",
-                Username = request.Lastname.Unidecode()
+                Username = account.Lastname.Unidecode()
             };
             var addedUser = _gitLabClient.Users.Create(user);
             return addedUser.Id;

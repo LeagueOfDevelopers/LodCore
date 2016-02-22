@@ -58,7 +58,7 @@ namespace UserManagement.Domain
                 throw new AccountNotFoundException("There is no account with such email");
             }
 
-            if (userAccount.Password.Pass != password.Pass)
+            if (userAccount.Password.Value != password.Value)
             {
                 throw new UnauthorizedAccessException("Wrong password");
             }

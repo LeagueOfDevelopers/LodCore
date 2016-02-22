@@ -12,25 +12,17 @@ namespace UserManagement.Domain
     public class UserManager : IUserManager
     {
         private readonly IConfirmationService _confirmationService;
-        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
-        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
         private readonly IUserRepository _repository;
 
         public UserManager(
             IUserRepository repository,
-            IConfirmationService confirmationService,
-            IRedmineUserRegistrar redmineUserRegistrar,
-            IGitlabUserRegistrar gitlabUserRegistrar)
+            IConfirmationService confirmationService)
         {
             Require.NotNull(repository, nameof(repository));
             Require.NotNull(confirmationService, nameof(confirmationService));
-            Require.NotNull(redmineUserRegistrar, nameof(redmineUserRegistrar));
-            Require.NotNull(gitlabUserRegistrar, nameof(gitlabUserRegistrar));
 
             _repository = repository;
             _confirmationService = confirmationService;
-            _redmineUserRegistrar = redmineUserRegistrar;
-            _gitlabUserRegistrar = gitlabUserRegistrar;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -60,30 +52,18 @@ namespace UserManagement.Domain
             {
                 throw new AccountAlreadyExistsException();
             }
-
-            //todo: fix 39 task
-            var redmineUserId = 1; /*_redmineUserRegistrar.RegisterUser(request);*/
-            int gitlabUserId;
-            try
-            {
-               gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
-            }
-            catch (Exception exception)
-            {
-                throw new AccountAlreadyExistsException(exception.Message);
-            }
-
-            var newAccount = new Account(
+            
+           var newAccount = new Account(
                 request.Firstname,
                 request.Lastname,
                 new MailAddress(request.Email),
-                new Password(request.Password),
+                Password.FromPlainString(request.Password), 
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
                 DateTime.Now,
                 request.Profile,
-                redmineUserId,
-                gitlabUserId);
+                0,
+                0);
 
             var userId = _repository.CreateAccount(newAccount);
 

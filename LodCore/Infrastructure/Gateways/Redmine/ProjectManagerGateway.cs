@@ -11,6 +11,7 @@ using ProjectManagement.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using UserManagement.Application;
+using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using Issue = ProjectManagement.Domain.Issue;
 using Project = Redmine.Net.Api.Types.Project;
@@ -112,16 +113,16 @@ namespace Gateways.Redmine
             return readyProject.Id;
         }
 
-        public int RegisterUser(CreateAccountRequest createAccountRequest)
+        public int RegisterUser(Account account)
         {
-            Require.NotNull(createAccountRequest, nameof(createAccountRequest));
+            Require.NotNull(account, nameof(account));
 
             var user = new User
             {
-                Email = createAccountRequest.Email,
-                FirstName = createAccountRequest.Firstname,
-                LastName = createAccountRequest.Lastname,
-                Password = createAccountRequest.Password,
+                Email = account.Email.Address,
+                FirstName = account.Firstname,
+                LastName = account.Lastname,
+                Password = account.Password.Value,
                 MustChangePassword = false
             };
 

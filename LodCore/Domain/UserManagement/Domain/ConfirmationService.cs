@@ -16,19 +16,25 @@ namespace UserManagement.Domain
             IMailer mailer,
             IValidationRequestsRepository validationRequestsRepository, 
             IEventSink userManagementEventSink, 
-            ConfirmationSettings confirmationSettings)
+            ConfirmationSettings confirmationSettings, 
+            IGitlabUserRegistrar gitlabUserRegistrar, 
+            IRedmineUserRegistrar redmineUserRegistrar)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(mailer, nameof(mailer));
             Require.NotNull(validationRequestsRepository, nameof(validationRequestsRepository));
             Require.NotNull(userManagementEventSink, nameof(userManagementEventSink));
             Require.NotNull(confirmationSettings, nameof(confirmationSettings));
+            Require.NotNull(gitlabUserRegistrar, nameof(gitlabUserRegistrar));
+            Require.NotNull(redmineUserRegistrar, nameof(redmineUserRegistrar));
 
             _userRepository = userRepository;
             _mailer = mailer;
             _validationRequestsRepository = validationRequestsRepository;
             _userManagementEventSink = userManagementEventSink;
             _confirmationSettings = confirmationSettings;
+            _gitlabUserRegistrar = gitlabUserRegistrar;
+            _redmineUserRegistrar = redmineUserRegistrar;
         }
 
         public void SetupEmailConfirmation(int userId)
@@ -89,6 +95,24 @@ namespace UserManagement.Domain
 
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
+            try
+            {
+                if (_confirmationSettings.GitlabAccountCreationEnabled)
+                {
+                    CreateGitlabAccount(userAccount);    
+                }
+
+                if (_confirmationSettings.RedmineAccountCreationEnabled)
+                {
+                    CreateRedmineAccount(userAccount);
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new ConfirmationFailedException(exception.Message);
+            }
+
+            userAccount.Password = userAccount.Password.GetHashed();
             _userRepository.UpdateAccount(userAccount);
 
             _userManagementEventSink.ConsumeEvent(new NewFullConfirmedDeveloper(userId));
@@ -102,10 +126,24 @@ namespace UserManagement.Domain
                 .Replace('/', '_');
         }
 
+        private void CreateGitlabAccount(Account account)
+        {
+            var gitlabUserId = _gitlabUserRegistrar.RegisterUser(account);
+            account.GitlabUserId = gitlabUserId;
+        }
+
+        private void CreateRedmineAccount(Account account)
+        {
+            var redmineUserId = _redmineUserRegistrar.RegisterUser(account);
+            account.RedmineUserId = redmineUserId;
+        }
+
         private readonly IMailer _mailer;
         private readonly IEventSink _userManagementEventSink;
         private readonly IUserRepository _userRepository;
         private readonly IValidationRequestsRepository _validationRequestsRepository;
         private readonly ConfirmationSettings _confirmationSettings;
+        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
+        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
     }
 }

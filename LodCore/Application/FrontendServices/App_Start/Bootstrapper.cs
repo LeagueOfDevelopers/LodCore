@@ -56,7 +56,9 @@ namespace FrontendServices
                 container.GetInstance<IMailer>(),
                 container.GetInstance<IValidationRequestsRepository>(), 
                 container.GetInstance<UserManagementEventSink>(), 
-                container.GetInstance<ConfirmationSettings>()),Lifestyle.Singleton);
+                container.GetInstance<ConfirmationSettings>(),
+                container.GetInstance<IGitlabUserRegistrar>(),
+                container.GetInstance<IRedmineUserRegistrar>()),Lifestyle.Singleton);
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);

@@ -61,7 +61,10 @@ namespace FrontendServices.App_Data
 
         public static ConfirmationSettings ReadConfirmationSettings(NameValueCollection settings)
         {
-            return new ConfirmationSettings(new Uri(settings["Confirmation.FrontendConfirmationUri"]));
+            return new ConfirmationSettings(
+                new Uri(settings["Confirmation.FrontendConfirmationUri"]),
+                bool.Parse(settings["Confirmation.GitlabAccountCreationEnabled"]),
+                bool.Parse(settings["Confirmation.RedmineAccountCreationEnabled"]));
         }
     }
 }

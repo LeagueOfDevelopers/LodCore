@@ -23,8 +23,8 @@ namespace UserManagement.Domain
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotNull(email, nameof(email));
             Require.NotNull(password, nameof(password));
-            Require.Positive(redmineUserId, nameof(redmineUserId));
-            Require.Positive(gitlabUserId, nameof(gitlabUserId));
+            Require.ZeroOrGreater(redmineUserId, nameof(redmineUserId));
+            Require.ZeroOrGreater(gitlabUserId, nameof(gitlabUserId));
             Require.NotNull(email, nameof(email));
             Require.NotNull(password, nameof(password));
 
@@ -54,9 +54,9 @@ namespace UserManagement.Domain
 
         public virtual Password Password { get; set; }
 
-        public virtual int RedmineUserId { get; protected set; }
+        public virtual int RedmineUserId { get; set; }
 
-        public virtual int GitlabUserId { get; protected set; }
+        public virtual int GitlabUserId { get; set; }
 
         public virtual AccountRole Role { get; protected set; }
 

@@ -1,9 +1,9 @@
-﻿using UserManagement.Application;
+﻿using UserManagement.Domain;
 
 namespace UserManagement.Infrastructure
 {
     public interface IGitlabUserRegistrar
     {
-        int RegisterUser(CreateAccountRequest request);
+        int RegisterUser(Account account);
     }
 }

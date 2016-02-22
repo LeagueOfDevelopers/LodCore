@@ -24,7 +24,7 @@ namespace Common
                 }
 
                 // Return the hexadecimal string.
-                Pass = sBuilder.ToString();
+                Value = sBuilder.ToString();
             }
             else
             {
@@ -36,17 +36,22 @@ namespace Common
         {
         }
 
-        public virtual string Pass { get; protected set; }
+        public virtual string Value { get; protected set; }
 
-        public static Password FromHash(string passwordHash)
+        public static Password FromPlainString(string value)
         {
-            Require.NotEmpty(passwordHash, nameof(passwordHash));
-            return new Password { Pass = passwordHash };
+            Require.NotEmpty(value, nameof(value));
+            return new Password { Value = value };
+        }
+
+        public Password GetHashed()
+        {
+            return new Password(Value);
         }
 
         protected bool Equals(Password other)
         {
-            return string.Equals(Pass, other.Pass);
+            return string.Equals(Value, other.Value);
         }
 
         public override bool Equals(object obj)
@@ -59,7 +64,7 @@ namespace Common
 
         public override int GetHashCode()
         {
-            return (Pass != null ? Pass.GetHashCode() : 0);
+            return (Value != null ? Value.GetHashCode() : 0);
         }
     }
 }

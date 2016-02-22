@@ -30,7 +30,7 @@ namespace DataAccess.Mappings.Application
                 return null;
             }
 
-            var password = Password.FromHash(property0.ToString());
+            var password = Password.FromPlainString(property0.ToString());
 
             return password;
         }
@@ -44,7 +44,7 @@ namespace DataAccess.Mappings.Application
             else
             {
                 var state = (Password) value;
-                ((IDataParameter) cmd.Parameters[index]).Value = state.Pass;
+                ((IDataParameter) cmd.Parameters[index]).Value = state.Value;
             }
         }
 

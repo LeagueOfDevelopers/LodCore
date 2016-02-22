@@ -78,6 +78,7 @@
     <Compile Include="Domain\AccountAlreadyExistsException.cs" />
     <Compile Include="Domain\AccountNotFoundException.cs" />
     <Compile Include="Domain\AccountRole.cs" />
+    <Compile Include="Domain\ConfirmationFailedException.cs" />
     <Compile Include="Domain\ConfirmationService.cs" />
     <Compile Include="Domain\ConfirmationStatus.cs" />
     <Compile Include="Domain\Events\NewFullConfirmedDeveloper.cs" />

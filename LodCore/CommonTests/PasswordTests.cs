@@ -18,7 +18,7 @@ namespace CommonTests
 
             //assert
             Assert.IsNotNull(pass);
-            Assert.IsTrue(pass.Pass == @"22d7fe8c185003c98f97e5d6ced420c7");
+            Assert.IsTrue(pass.Value == @"22d7fe8c185003c98f97e5d6ced420c7");
         }
 
         [TestMethod]
