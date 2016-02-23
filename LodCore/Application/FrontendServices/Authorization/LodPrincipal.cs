@@ -21,7 +21,7 @@ namespace FrontendServices.Authorization
 
         public bool IsInRole(AccountRole role)
         {
-            return _accountRole == role && !IsEmpty;
+            return (_accountRole == AccountRole.Administrator || _accountRole == role) && !IsEmpty;
         }
 
         public bool IsEmpty { get; private set; }

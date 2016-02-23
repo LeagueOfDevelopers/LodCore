@@ -1,20 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading;
-using System.Web;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
-using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using Journalist.Extensions;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
-using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -48,6 +44,7 @@ namespace FrontendServices.Controllers
             return randomProjects.Select(_projectsMapper.ToIndexPageProject);
         }
 
+        [HttpGet]
         [Route("projects")]
         public IEnumerable<ProjectPreview> GetAllProjects()
         {
@@ -60,6 +57,7 @@ namespace FrontendServices.Controllers
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
         }
 
+        [HttpGet]
         [Route("projects/page/{pageNumber}")]
         public IEnumerable<ProjectPreview> GetProjectByPage(int pageNumber)
         {
@@ -68,6 +66,7 @@ namespace FrontendServices.Controllers
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
         }
 
+        [HttpGet]
         [Route("projects/{projectId}")]
         public AdminProject GetProject(int projectId)
         {

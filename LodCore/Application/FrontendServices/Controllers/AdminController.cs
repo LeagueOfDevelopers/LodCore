@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Http;
+using FrontendServices.Authorization;
 using Journalist;
 using UserManagement.Application;
 using UserManagement.Domain;
@@ -16,6 +17,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("admin/developers/confirm/{userId}")]
+        [Authorization(AccountRole.Administrator)]
         public IHttpActionResult ConfirmDeveloper(int userId)
         {
             Require.Positive(userId, nameof(userId));

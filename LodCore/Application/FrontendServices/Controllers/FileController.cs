@@ -6,7 +6,9 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using FilesManagement;
+using FrontendServices.Authorization;
 using Journalist;
+using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -21,6 +23,7 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("file/{fileName}")]
+        [Authorization(AccountRole.User)]
         public HttpResponseMessage GetFile(string fileName)
         {
             return GetAnyFile(() => _fileManager.GetFile(fileName));
@@ -53,6 +56,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("image")]
+        [Authorization(AccountRole.User)]
         public async Task<string> UploadImage()
         {
             try

@@ -1,4 +1,5 @@
-﻿using System.Security.Principal;
+﻿using System;
+using System.Security.Principal;
 using UserManagement.Domain;
 
 namespace FrontendServices.Authorization
@@ -9,6 +10,35 @@ namespace FrontendServices.Authorization
         {
             var lodPrincipal = principal as LodPrincipal;
             return lodPrincipal?.IsInRole(role) ?? false;
+        }
+
+        public static int GetId(this IIdentity identity)
+        {
+            var lodIdentity = identity as LodIdentity;
+            if (lodIdentity != null)
+            {
+                return lodIdentity.UserId;
+            }
+
+            throw new ArgumentException("Identity is not lod identity");
+        }
+
+        public static void AssertResourceOwnerOrAdmin(this IPrincipal principal, int identityId)
+        {
+            var lodPrincipal = principal as LodPrincipal;
+            if (lodPrincipal?.Identity.GetId() != identityId && !principal.IsInRole(AccountRole.Administrator))
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        public static void AssertResourceOwner(this IPrincipal principal, int identityId)
+        {
+            var lodPrincipal = principal as LodPrincipal;
+            if (lodPrincipal?.Identity.GetId() != identityId)
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
     }
 }

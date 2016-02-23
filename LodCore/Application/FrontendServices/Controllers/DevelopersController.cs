@@ -4,9 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Web;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Mappers;
+using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using UserManagement.Application;
@@ -65,17 +67,22 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("developers/{id}")]
-        public Developer GetDeveloper(int id)
+        public IHttpActionResult GetDeveloper(int id)
         {
             Require.Positive(id, nameof(id));
             try
             {
                 var user = _userManager.GetUser(id);
-                return _mapper.ToDeveloper(user);
+                if (HttpContext.Current.User.IsInRole(AccountRole.User))
+                {
+                    return Ok(_mapper.ToDeveloper(user));
+                }
+
+                return Ok(_mapper.ToGuestDeveloper(user));
             }
             catch (AccountNotFoundException)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
         }
 
@@ -116,10 +123,13 @@ namespace FrontendServices.Controllers
 
         [HttpPut]
         [Route("developers/{id}")]
+        [Authorization(AccountRole.User)]
         public IHttpActionResult UpdateProfile(int id, [FromBody] UpdateProfileRequest updateProfileRequest)
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(updateProfileRequest, nameof(updateProfileRequest));
+
+            User.AssertResourceOwnerOrAdmin(id);
 
             if (!ModelState.IsValid)
             {
@@ -153,6 +163,8 @@ namespace FrontendServices.Controllers
             Require.Positive(id, nameof(id));
             Require.NotNull(newPassword, nameof(newPassword));
             
+            User.AssertResourceOwner(id);
+
             Account userToChange;
 
             try
@@ -176,21 +188,27 @@ namespace FrontendServices.Controllers
 
         [HttpPut]
         [Route("developers/notificationsettings/{id}")]
+        [Authorization(AccountRole.User)]
         public IHttpActionResult UpdateNotificationSetiings(int id,
             [FromBody] UpdateNotificationSetiingsRequest updateNotificationSetiingsRequest)
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(updateNotificationSetiingsRequest, nameof(updateNotificationSetiingsRequest));
 
+            User.AssertResourceOwnerOrAdmin(id);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (updateNotificationSetiingsRequest.NotificationSettings?.Any(
-                setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
+            if (!User.IsInRole(AccountRole.Administrator))
             {
-                return BadRequest("You can't turn off notification sending");
+                if (updateNotificationSetiingsRequest.NotificationSettings?.Any(
+                    setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
+                {
+                    return BadRequest("You can't turn off notification sending");
+                }
             }
 
             try
@@ -219,6 +237,7 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("developers/notificationsettings/{id}")]
+        [Authorization(AccountRole.User)]
         public Models.NotificationSetting[] GetNotificationSettings(int id)
         {
             Require.Positive(id, nameof(id));

@@ -162,6 +162,7 @@
     <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />
     <Compile Include="Models\DeveloperPageProjectPreview.cs" />
+    <Compile Include="Models\GuestDeveloper.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
     <Compile Include="Models\IndexPageProject.cs" />
