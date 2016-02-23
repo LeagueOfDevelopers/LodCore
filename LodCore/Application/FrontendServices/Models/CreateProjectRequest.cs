@@ -16,8 +16,7 @@ namespace FrontendServices.Models
         public string Info { get; set; }
 
         public AccessLevel AccessLevel { get; set; }
-        
-        public Uri LandingImageUri { get; set; }
 
+        public Uri LandingImageUri { get; set; }
     }
 }

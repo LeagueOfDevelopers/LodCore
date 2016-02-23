@@ -5,8 +5,12 @@ namespace NotificationService
 {
     public class DistributionPolicyFactory : IDistributionPolicyFactory
     {
+        private readonly IProjectRelativesRepository _projectRelativesRepository;
+
+        private readonly IUsersRepository _usersRepository;
+
         public DistributionPolicyFactory(
-            IUsersRepository usersRepository, 
+            IUsersRepository usersRepository,
             IProjectRelativesRepository projectRelativesRepository)
         {
             Require.NotNull(usersRepository, nameof(usersRepository));
@@ -38,8 +42,5 @@ namespace NotificationService
         {
             return new DistributionPolicy(userIds ?? EmptyArray.Get<int>());
         }
-
-        private readonly IUsersRepository _usersRepository;
-        private readonly IProjectRelativesRepository _projectRelativesRepository;
     }
 }

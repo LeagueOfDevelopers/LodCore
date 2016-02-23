@@ -11,6 +11,8 @@ namespace FrontendServices.Controllers
 {
     public class AuthorizationController : ApiController
     {
+        private readonly IAuthorizer _authorizer;
+
         public AuthorizationController(IAuthorizer authorizer)
         {
             Require.NotNull(authorizer, nameof(authorizer));
@@ -19,7 +21,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("login")]
-        public AuthorizationTokenInfo Authorize([FromBody]Credentials credentials)
+        public AuthorizationTokenInfo Authorize([FromBody] Credentials credentials)
         {
             try
             {
@@ -35,7 +37,5 @@ namespace FrontendServices.Controllers
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }
-
-        private readonly IAuthorizer _authorizer;
     }
 }

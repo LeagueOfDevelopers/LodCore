@@ -7,10 +7,10 @@ namespace FrontendServices.Models
     public class DeveloperPageProjectPreview
     {
         public DeveloperPageProjectPreview(
-            int projectId, 
-            Uri photoUri, 
-            string name, 
-            ProjectStatus projectStatus, 
+            int projectId,
+            Uri photoUri,
+            string name,
+            ProjectStatus projectStatus,
             string developerRole)
         {
             Require.Positive(projectId, nameof(projectId));

@@ -14,7 +14,7 @@ namespace Gateways.Gitlab
         }
 
         public string Host { get; private set; }
-        
-        public string ApiKey { get; private set; } 
+
+        public string ApiKey { get; private set; }
     }
 }

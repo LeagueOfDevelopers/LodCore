@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.IO;
-using System.Web;
 using FilesManagement;
 using Gateways.Gitlab;
 using Gateways.Redmine;
@@ -17,7 +15,7 @@ namespace FrontendServices.App_Data
         {
             return new MailerSettings(
                 settings["MailerSettings.SmtpServer"],
-                int.Parse(settings["MailerSettings.Port"]), 
+                int.Parse(settings["MailerSettings.Port"]),
                 settings["MailerSettings.Password"],
                 settings["MailerSettings.From"],
                 settings["MailerSettings.MessageTemplate"],

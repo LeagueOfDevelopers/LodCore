@@ -10,6 +10,8 @@ namespace FilesManagement
 {
     public class FileManager : IFileManager
     {
+        private readonly FileStorageSettings _fileStorageSettings;
+
         public FileManager(FileStorageSettings fileStorageSettings)
         {
             Require.NotNull(fileStorageSettings, nameof(fileStorageSettings));
@@ -32,8 +34,8 @@ namespace FilesManagement
         {
             Require.NotNull(content, nameof(content));
             var filePath = await UploadAnyFileAsync(
-                content, 
-                _fileStorageSettings.AllowedFileExtensions, 
+                content,
+                _fileStorageSettings.AllowedFileExtensions,
                 _fileStorageSettings.FileStorageFolder);
             var fileName = Path.GetFileName(filePath);
             var newFileName = SaltFileNameWithCurrentDate(fileName);
@@ -69,8 +71,8 @@ namespace FilesManagement
         }
 
         private async Task<string> UploadAnyFileAsync(
-            HttpContent httpContent, 
-            string[] allowedExtensions, 
+            HttpContent httpContent,
+            string[] allowedExtensions,
             string folderPath)
         {
             if (!httpContent.IsMimeMultipartContent("form-data"))
@@ -85,7 +87,7 @@ namespace FilesManagement
             if (!allowedExtensions.Contains(extension))
             {
                 await Task.Factory.StartNew(() => File.Delete(fullFileName));
-                throw new InvalidDataException("Extension {0} is not allowed".FormatString(extension)); 
+                throw new InvalidDataException("Extension {0} is not allowed".FormatString(extension));
             }
 
             return fullFileName;
@@ -118,9 +120,9 @@ namespace FilesManagement
         private string SaltFileNameWithCurrentDate(string fileName)
         {
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            var newFileName = fileNameWithoutExtension 
-                + DateTime.Now.ToString("s").Replace(":", string.Empty) 
-                + Path.GetExtension(fileName);
+            var newFileName = fileNameWithoutExtension
+                              + DateTime.Now.ToString("s").Replace(":", string.Empty)
+                              + Path.GetExtension(fileName);
             return newFileName;
         }
 
@@ -128,7 +130,5 @@ namespace FilesManagement
         {
             File.Move(originalFullName, newFileFullName);
         }
-
-        private readonly FileStorageSettings _fileStorageSettings;
     }
 }

@@ -26,7 +26,6 @@ namespace DataAccess.Repositories
             {
                 var id = session.Save(new Delivery(receiverId, eventId));
             }
-            
         }
 
         public Event[] GetEventsByUser(int userId, bool newOnly)

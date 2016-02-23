@@ -1,5 +1,4 @@
-﻿using NHibernate.Mapping.ByCode;
-using NHibernate.Mapping.ByCode.Conformist;
+﻿using NHibernate.Mapping.ByCode.Conformist;
 using UserManagement.Domain;
 
 namespace DataAccess.Mappings

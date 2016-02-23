@@ -8,16 +8,16 @@ namespace ProjectManagement.Domain
     public class Project
     {
         public Project(
-            string name, 
-            ISet<ProjectType> projectTypes, 
-            string info, 
+            string name,
+            ISet<ProjectType> projectTypes,
+            string info,
             ProjectStatus projectStatus,
-            Uri landingImageUri, 
-            AccessLevel accessLevel, 
-            int versionControlSystemId, 
-            int projectManagementSystemId, 
-            ISet<Issue> issues, 
-            ISet<ProjectMembership> projectDevelopers, 
+            Uri landingImageUri,
+            AccessLevel accessLevel,
+            int versionControlSystemId,
+            int projectManagementSystemId,
+            ISet<Issue> issues,
+            ISet<ProjectMembership> projectDevelopers,
             ISet<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));

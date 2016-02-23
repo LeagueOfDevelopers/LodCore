@@ -5,11 +5,11 @@ namespace Mailing
     public class MailerSettings
     {
         public MailerSettings(
-            string smtpServer, 
-            int port, 
-            string password, 
-            string @from, 
-            string caption, 
+            string smtpServer,
+            int port,
+            string password,
+            string @from,
+            string caption,
             string messageTemplate)
         {
             Require.NotEmpty(smtpServer, nameof(smtpServer));

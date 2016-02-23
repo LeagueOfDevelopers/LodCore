@@ -7,6 +7,14 @@ namespace UserPresentaton
 {
     public class UserPresentationProvider : IUserPresentationProvider
     {
+        private const NotificationSettingValue DefaultNotificationSettingValue =
+            NotificationSettingValue.SendNotificationAndMail;
+
+        private static readonly Dictionary<string, NotificationType> NotificationSettings =
+            Enum.GetValues(typeof (NotificationType)).Cast<NotificationType>().ToDictionary(type => type.ToString());
+
+        private readonly INotificationSettingsRepository _notificationSettingsRepository;
+
         public UserPresentationProvider(INotificationSettingsRepository notificationSettingsRepository)
         {
             Require.NotNull(notificationSettingsRepository, nameof(notificationSettingsRepository));
@@ -44,12 +52,5 @@ namespace UserPresentaton
                 _notificationSettingsRepository.CreateNotificationSetting(notificationSetting);
             }
         }
-
-        private static readonly Dictionary<string, NotificationType> NotificationSettings =
-            Enum.GetValues(typeof(NotificationType)).Cast<NotificationType>().ToDictionary(type => type.ToString());
-
-        private readonly INotificationSettingsRepository _notificationSettingsRepository;
-
-        private const NotificationSettingValue DefaultNotificationSettingValue = NotificationSettingValue.SendNotificationAndMail;
     }
 }

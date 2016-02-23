@@ -6,6 +6,8 @@ namespace NotificationService
 {
     public abstract class EventSinkBase : IEventSink
     {
+        private readonly IUserPresentationProvider _userPresentationProvider;
+
         protected EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository,
             IMailer mailer, IUserPresentationProvider userPresentationProvider)
         {
@@ -24,8 +26,6 @@ namespace NotificationService
         protected IDistributionPolicyFactory DistributionPolicyFactory { get; private set; }
 
         protected IEventRepository EventRepository { get; private set; }
-
-        private readonly IUserPresentationProvider _userPresentationProvider;
 
         public abstract void ConsumeEvent(IEventInfo eventInfo);
 

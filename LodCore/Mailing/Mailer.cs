@@ -9,6 +9,10 @@ namespace Mailing
 {
     public class Mailer : IMailer, NotificationService.IMailer
     {
+        private readonly MailerSettings _mailerSettings;
+        private readonly INotificationEmailDescriber _notificationEmailDescriber;
+        private readonly IUserRepository _usersRepository;
+
         public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber,
             IUserRepository usersRepository)
         {
@@ -63,7 +67,7 @@ namespace Mailing
 
             mail.Dispose();
         }
-        
+
         private MailMessage InitMail(MailAddress emailAddress)
         {
             var mail = new MailMessage();
@@ -82,9 +86,5 @@ namespace Mailing
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             return client;
         }
-
-        private readonly MailerSettings _mailerSettings;
-        private readonly INotificationEmailDescriber _notificationEmailDescriber;
-        private readonly IUserRepository _usersRepository;
     }
 }

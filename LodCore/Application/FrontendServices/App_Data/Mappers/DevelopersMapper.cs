@@ -9,8 +9,12 @@ namespace FrontendServices.App_Data.Mappers
 {
     public class DevelopersMapper
     {
+        private readonly IProjectProvider _projectProvider;
+
+        private readonly IUserRoleAnalyzer _userRoleAnalyzer;
+
         public DevelopersMapper(
-            IUserRoleAnalyzer userRoleAnalyzer, 
+            IUserRoleAnalyzer userRoleAnalyzer,
             IProjectProvider projectProvider)
         {
             Require.NotNull(userRoleAnalyzer, nameof(userRoleAnalyzer));
@@ -43,12 +47,12 @@ namespace FrontendServices.App_Data.Mappers
                 _projectProvider.GetProjects(
                     project => project.ProjectMemberships.Any(
                         membership => membership.DeveloperId == account.UserId))
-                            .Count;
+                    .Count;
 
             return new DeveloperPageDeveloper(
-                account.UserId, 
+                account.UserId,
                 account.Firstname,
-                account.Lastname, 
+                account.Lastname,
                 account.Profile.SmallPhotoUri,
                 role,
                 account.RegistrationTime,
@@ -98,8 +102,5 @@ namespace FrontendServices.App_Data.Mappers
                 project.ProjectStatus,
                 userMembership.Role);
         }
-
-        private readonly IUserRoleAnalyzer _userRoleAnalyzer;
-        private readonly IProjectProvider _projectProvider;
     }
 }

@@ -13,11 +13,34 @@ namespace Gateways.Gitlab
 {
     public class VersionControlSystemGateway : IVersionControlSystemGateway, IGitlabUserRegistrar
     {
+        //todo: extract it to enumeration
+        private const int DeveloperAccessLevel = 30;
+        private readonly GitLabClient _gitLabClient;
+
+        private readonly GitlabSettings _settings;
+
         public VersionControlSystemGateway(GitlabSettings settings)
         {
             Require.NotNull(settings, nameof(settings));
             _settings = settings;
             _gitLabClient = GitLabClient.Connect(_settings.Host, _settings.ApiKey);
+        }
+
+        public int RegisterUser(CreateAccountRequest request)
+        {
+            var user = new UserUpsert
+            {
+                Email = request.Email,
+                IsAdmin = false,
+                Password = request.Password,
+                ProjectsLimit = 0,
+                Name = request.Firstname + " " + request.Lastname,
+                CanCreateGroup = false,
+                Confirm = "no",
+                Username = request.Lastname.Unidecode()
+            };
+            var addedUser = _gitLabClient.Users.Create(user);
+            return addedUser.Id;
         }
 
         public int CreateRepositoryForProject(CreateProjectRequest request)
@@ -59,28 +82,5 @@ namespace Gateways.Gitlab
                 UserId = gitlabUserId
             });
         }
-
-        public int RegisterUser(CreateAccountRequest request)
-        {
-            var user = new UserUpsert
-            {
-                Email = request.Email,
-                IsAdmin = false,
-                Password = request.Password,
-                ProjectsLimit = 0,
-                Name = request.Firstname + " " + request.Lastname,
-                CanCreateGroup = false,
-                Confirm = "no",
-                Username = request.Lastname.Unidecode()
-            };
-            var addedUser = _gitLabClient.Users.Create(user);
-            return addedUser.Id;
-        }
-
-        private readonly GitlabSettings _settings;
-        private readonly GitLabClient _gitLabClient;
-
-        //todo: extract it to enumeration
-        private const int DeveloperAccessLevel = 30;
     }
 }

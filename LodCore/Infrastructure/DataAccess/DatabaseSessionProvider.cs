@@ -9,6 +9,9 @@ namespace DataAccess
 {
     public class DatabaseSessionProvider
     {
+        [ThreadStatic] private static ISession _session;
+
+        [ThreadStatic] private static ITransaction _transaction;
         private readonly ISessionFactory _factory;
 
         public DatabaseSessionProvider()
@@ -50,14 +53,10 @@ namespace DataAccess
         {
             if (_transaction != null && _transaction.IsActive)
             {
-                _transaction.Commit();    
+                _transaction.Commit();
             }
 
             _session?.Dispose();
         }
-
-        [ThreadStatic] private static ISession _session;
-
-        [ThreadStatic] private static ITransaction _transaction;
     }
 }

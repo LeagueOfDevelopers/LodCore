@@ -12,6 +12,8 @@ namespace FrontendServices.Controllers
 {
     public class FileController : ApiController
     {
+        private readonly IFileManager _fileManager;
+
         public FileController(IFileManager fileManager)
         {
             Require.NotNull(fileManager, nameof(fileManager));
@@ -88,7 +90,5 @@ namespace FrontendServices.Controllers
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             return response;
         }
-
-        private readonly IFileManager _fileManager;
     }
 }
