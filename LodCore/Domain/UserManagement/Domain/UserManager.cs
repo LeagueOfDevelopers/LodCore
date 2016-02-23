@@ -62,11 +62,11 @@ namespace UserManagement.Domain
             }
 
             //todo: fix 39 task
-            var redmineUserId = _redmineUserRegistrar.RegisterUser(request);
+            var redmineUserId = 1;// _redmineUserRegistrar.RegisterUser(request);
             int gitlabUserId;
             try
             {
-               gitlabUserId = _gitlabUserRegistrar.RegisterUser(request);
+                gitlabUserId =_gitlabUserRegistrar.RegisterUser(request);
             }
             catch (Exception exception)
             {

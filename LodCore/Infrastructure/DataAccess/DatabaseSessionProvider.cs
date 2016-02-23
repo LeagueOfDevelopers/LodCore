@@ -16,7 +16,6 @@ namespace DataAccess
             var configuration = new Configuration();
             configuration.Configure();
             var modelMapper = new ModelMapper();
-            modelMapper.AddMapping<ProfileMap>();
             modelMapper.AddMapping<UserMap>();
             modelMapper.AddMapping<ProjectMap>();
             modelMapper.AddMapping<EventMap>();

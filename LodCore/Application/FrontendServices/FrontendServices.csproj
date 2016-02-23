@@ -171,8 +171,6 @@
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Models\RegisterDeveloperRequest.cs" />
     <Compile Include="Models\RegisterNewOrderRequest.cs" />
-    <Compile Include="Models\UpdateNotificationSetiingsRequest.cs" />
-    <Compile Include="Models\UpdateProfileRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

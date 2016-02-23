@@ -129,10 +129,10 @@ namespace FrontendServices.Controllers
 
         [HttpPut]
         [Route("developers/{id}")]
-        public IHttpActionResult UpdateProfile(int id, [FromBody] UpdateProfileRequest updateProfileRequest)
+        public IHttpActionResult UpdateProfile(int id, [FromBody] Profile profile)
         {
             Require.Positive(id, nameof(id));
-            Require.NotNull(updateProfileRequest, nameof(updateProfileRequest));
+            Require.NotNull(profile, nameof(profile));
 
             if (!ModelState.IsValid)
             {
@@ -149,9 +149,9 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (updateProfileRequest.Profile != null)
+            if (profile != null)
             {
-                userToChange.Profile = updateProfileRequest.Profile;
+                userToChange.Profile = profile;
             }
 
             _userManager.UpdateUser(userToChange);
@@ -190,17 +190,17 @@ namespace FrontendServices.Controllers
         [HttpPut]
         [Route("developers/notificationsettings/{id}")]
         public IHttpActionResult UpdateNotificationSetiings(int id,
-            [FromBody] UpdateNotificationSetiingsRequest updateNotificationSetiingsRequest)
+            [FromBody] Models.NotificationSetting[] notificationSettings)
         {
             Require.Positive(id, nameof(id));
-            Require.NotNull(updateNotificationSetiingsRequest, nameof(updateNotificationSetiingsRequest));
+            Require.NotNull(notificationSettings, nameof(notificationSettings));
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (updateNotificationSetiingsRequest.NotificationSettings?.Any(
+            if (notificationSettings?.Any(
                 setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
             {
                 return BadRequest("You can't turn off notification sending");
@@ -215,9 +215,9 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (updateNotificationSetiingsRequest.NotificationSettings != null)
+            if (notificationSettings != null)
             {
-                foreach (var notificationSetting in updateNotificationSetiingsRequest.NotificationSettings)
+                foreach (var notificationSetting in notificationSettings)
                 {
                     _userPresentationProvider.UpdateNotificationSetting(
                         new NotificationSetting(
