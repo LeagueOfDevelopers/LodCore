@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalLibs", "ExternalLib
 		ExternalLibs\NGitLab.dll = ExternalLibs\NGitLab.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationControllerTests", "Tests\IntegrationControllerTests\IntegrationControllerTests.csproj", "{2DA0A234-D982-464F-8FB5-D0A520E36E26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +147,10 @@ Global
 		{24B23A7B-5FBC-4472-9A1A-428B52DE8006}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24B23A7B-5FBC-4472-9A1A-428B52DE8006}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24B23A7B-5FBC-4472-9A1A-428B52DE8006}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DA0A234-D982-464F-8FB5-D0A520E36E26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DA0A234-D982-464F-8FB5-D0A520E36E26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DA0A234-D982-464F-8FB5-D0A520E36E26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DA0A234-D982-464F-8FB5-D0A520E36E26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,5 +174,6 @@ Global
 		{A9096359-2D86-4C93-B34D-B6F4A21D0F9E} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
 		{3C995E20-5C8D-4091-8B11-C752AA06300F} = {A6355D59-C90D-431B-8B1A-3B4E30340280}
 		{24B23A7B-5FBC-4472-9A1A-428B52DE8006} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
+		{2DA0A234-D982-464F-8FB5-D0A520E36E26} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
 	EndGlobalSection
 EndGlobal

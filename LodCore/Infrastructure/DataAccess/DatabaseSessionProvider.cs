@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Web;
 using DataAccess.Mappings;
 using NHibernate;
 using NHibernate.Cfg;
@@ -34,31 +34,56 @@ namespace DataAccess
 
         public ISession GetCurrentSession()
         {
-            return _session;
+            return Session;
         }
 
         public void OpenSession()
         {
-            if (_session == null || !_session.IsOpen)
+            if (Session == null || !Session.IsOpen)
             {
-                _session = _factory.OpenSession();
+                Session = _factory.OpenSession();
             }
-
-            _transaction = _session.BeginTransaction();
+            
+            if (!Transaction?.IsActive ?? true)
+            {
+                Transaction = Session.BeginTransaction();
+            }
         }
 
         public void CloseSession()
         {
-            if (_transaction != null && _transaction.IsActive)
+            if (Transaction != null && Transaction.IsActive)
             {
-                _transaction.Commit();    
+                Transaction.Commit();    
             }
 
-            _session?.Dispose();
+            Session?.Dispose();
         }
 
-        [ThreadStatic] private static ISession _session;
+        public void DropSession()
+        {
+            if (Transaction != null && Transaction.IsActive)
+            {
+                Transaction.Rollback();
+                Transaction.Dispose();
+            }
 
-        [ThreadStatic] private static ITransaction _transaction;
+            Session?.Dispose();
+        }
+
+        private const string SessionKey = "NHibernateSession";
+        private const string TransactionKey = "NHibernateTransaction";
+
+        private ISession Session
+        {
+            get { return HttpContext.Current.Items[SessionKey] as ISession; }
+            set { HttpContext.Current.Items[SessionKey] = value; }
+        }
+
+        private ITransaction Transaction
+        {
+            get { return HttpContext.Current.Items[TransactionKey] as ITransaction; }
+            set { HttpContext.Current.Items[TransactionKey] = value; }
+        }
     }
 }

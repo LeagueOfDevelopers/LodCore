@@ -5,12 +5,15 @@ using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
+using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using Journalist.Extensions;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
+using UserManagement.Domain;
+using Project = ProjectManagement.Domain.Project;
 
 namespace FrontendServices.Controllers
 {
@@ -27,7 +30,6 @@ namespace FrontendServices.Controllers
 
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
-            _authorizer = authorizer;
         }
 
         [Route("projects/random/{count}")]
@@ -54,6 +56,13 @@ namespace FrontendServices.Controllers
                 ? _projectProvider.GetProjects()
                 : GetProjectsByCategory(categoriesQuery);
 
+            if (!User.IsInRole(AccountRole.Administrator))
+            {
+                requiredProjects = requiredProjects
+                    .Where(ProjectsPolicies.OnlyPublic)
+                    .Where(ProjectsPolicies.OnlyDoneOrInProgress);
+            }
+
             return requiredProjects.Select(_projectsMapper.ToProjectPreview);
         }
 
@@ -68,18 +77,24 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("projects/{projectId}")]
-        public AdminProject GetProject(int projectId)
+        public IHttpActionResult GetProject(int projectId)
         {
             Require.Positive(projectId, nameof(projectId));
 
             try
             {
                 var project = _projectProvider.GetProject(projectId);
-                return _projectsMapper.ToAdminProject(project);
+
+                if (User.IsInRole(AccountRole.User))
+                {
+                    return Ok(_projectsMapper.ToAdminProject(project));
+                }
+
+                return Ok(_projectsMapper.ToProject(project));
             }
             catch (ProjectNotFoundException)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
         }
 
@@ -93,12 +108,12 @@ namespace FrontendServices.Controllers
             var requiredProjects = _projectProvider.GetProjects(
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
+            
             return requiredProjects;
         } 
 
         private readonly IProjectProvider _projectProvider;
         private readonly ProjectsMapper _projectsMapper;
-        private readonly IAuthorizer _authorizer;
 
         private const string CategoriesQueryParameterName = "categories";
     }

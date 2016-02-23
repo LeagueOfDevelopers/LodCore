@@ -66,6 +66,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="JsonEmailConverter.cs" />
+    <Compile Include="JsonPasswordConverter.cs" />
     <Compile Include="Password.cs" />
     <Compile Include="ProjectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

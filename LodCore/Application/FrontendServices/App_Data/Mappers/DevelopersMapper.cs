@@ -6,6 +6,7 @@ using Journalist;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Domain;
+using Project = ProjectManagement.Domain.Project;
 
 namespace FrontendServices.App_Data.Mappers
 {

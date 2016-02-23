@@ -1,0 +1,22 @@
+﻿{
+  "UserId": 44,
+  "FirstName": "furstunamu",
+  "LastName": "lastunamu",
+  "Email": { "address": "vasmafrge@fdff.ccoo" },
+  "RegistrationTime": "2016-02-09T22:48:11",
+  "Password": { "Value": "q1w2e3r4t5" },
+  "Role": 1,
+  "RedmineUserId": 1,
+  "GitlabUserId": 1,
+  "ConfirmationStatus": 2,
+  "Profile": {
+    "BigPhotoUri": null,
+    "SmallPhotoUri": null,
+    "VkProfileUri": null,
+    "PhoneNumber": "8434343123141",
+    "StudentAccessionYear": null,
+    "StudyingDirection": null,
+    "InstituteName": null,
+    "Specialization": null
+  }
+}

@@ -9,6 +9,7 @@ using Journalist;
 using Journalist.Collections;
 using ProjectManagement.Domain;
 using UserManagement.Application;
+using Project = ProjectManagement.Domain.Project;
 using ProjectMembershipDto = FrontendServices.Models.ProjectMembership;
 using ProjectMembership = ProjectManagement.Domain.ProjectMembership;
 
@@ -79,5 +80,25 @@ namespace FrontendServices.App_Data.Mappers
         private readonly IUserManager _userManager;
         private readonly RedmineSettings _redmineSettings;
         private readonly GitlabSettings _gitlabSettings;
+
+        public Models.Project ToProject(Project project)
+        {
+            var redmineUri = new Uri(new Uri(_redmineSettings.RedmineHost),
+                project.ProjectManagementSystemId.ToString());
+            var gitlabUri = new Uri(new Uri(_gitlabSettings.Host),
+                project.VersionControlSystemId.ToString());
+            return new Models.Project(
+                project.ProjectId,
+                project.Name,
+                project.ProjectTypes.ToArray(),
+                project.Info,
+                project.ProjectStatus,
+                project.LandingImageUri,
+                redmineUri,
+                gitlabUri,
+                new HashSet<Issue>(project.Issues),
+                new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
+                new HashSet<Uri>(project.Screenshots));
+        }
     }
 }
