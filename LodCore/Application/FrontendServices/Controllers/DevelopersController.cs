@@ -11,6 +11,7 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Extensions;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
@@ -66,6 +67,18 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
+        [Route("developers/search/{searchString}")]
+        public IEnumerable<DeveloperPageDeveloper> SearchDevelopers(string searchString)
+        {
+            Require.NotEmpty(searchString, nameof(searchString));
+
+            var users = _userManager.GetUserList(searchString);
+
+            var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
+            return developerPageDevelopers;
+        }
+
+        [HttpGet]
         [Route("developers/{id}")]
         public IHttpActionResult GetDeveloper(int id)
         {
@@ -76,7 +89,7 @@ namespace FrontendServices.Controllers
                 if (HttpContext.Current.User.IsInRole(AccountRole.User))
                 {
                     return Ok(_mapper.ToDeveloper(user));
-                }
+            }
 
                 return Ok(_mapper.ToGuestDeveloper(user));
             }
@@ -124,10 +137,10 @@ namespace FrontendServices.Controllers
         [HttpPut]
         [Route("developers/{id}")]
         [Authorization(AccountRole.User)]
-        public IHttpActionResult UpdateProfile(int id, [FromBody] UpdateProfileRequest updateProfileRequest)
+        public IHttpActionResult UpdateProfile(int id, [FromBody] Profile profile)
         {
             Require.Positive(id, nameof(id));
-            Require.NotNull(updateProfileRequest, nameof(updateProfileRequest));
+            Require.NotNull(profile, nameof(profile));
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -146,9 +159,9 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (updateProfileRequest.Profile != null)
+            if (profile != null)
             {
-                userToChange.Profile = updateProfileRequest.Profile;
+                userToChange.Profile = profile;
             }
 
             _userManager.UpdateUser(userToChange);
@@ -190,10 +203,10 @@ namespace FrontendServices.Controllers
         [Route("developers/notificationsettings/{id}")]
         [Authorization(AccountRole.User)]
         public IHttpActionResult UpdateNotificationSetiings(int id,
-            [FromBody] UpdateNotificationSetiingsRequest updateNotificationSetiingsRequest)
+            [FromBody] Models.NotificationSetting[] notificationSettings)
         {
             Require.Positive(id, nameof(id));
-            Require.NotNull(updateNotificationSetiingsRequest, nameof(updateNotificationSetiingsRequest));
+            Require.NotNull(notificationSettings, nameof(notificationSettings));
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -204,11 +217,11 @@ namespace FrontendServices.Controllers
 
             if (!User.IsInRole(AccountRole.Administrator))
             {
-                if (updateNotificationSetiingsRequest.NotificationSettings?.Any(
-                    setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
-                {
-                    return BadRequest("You can't turn off notification sending");
-                }
+                if (notificationSettings?.Any(
+                setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
+            {
+                return BadRequest("You can't turn off notification sending");
+            }
             }
 
             try
@@ -220,9 +233,9 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (updateNotificationSetiingsRequest.NotificationSettings != null)
+            if (notificationSettings != null)
             {
-                foreach (var notificationSetting in updateNotificationSetiingsRequest.NotificationSettings)
+                foreach (var notificationSetting in notificationSettings)
                 {
                     _userPresentationProvider.UpdateNotificationSetting(
                         new NotificationSetting(
@@ -256,7 +269,7 @@ namespace FrontendServices.Controllers
             }).ToArray();
         }
 
-        [HttpPost]
+    [HttpPost]
         [Route("developers/confirmation/{confirmationToken}")]
         public IHttpActionResult ConfirmEmail(string confirmationToken)
         {

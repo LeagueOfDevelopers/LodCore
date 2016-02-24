@@ -28,10 +28,16 @@ namespace DataAccess.Mappings
                 mapper.Type<PasswordType>();
             });
 
-            ManyToOne(user => user.Profile, mapper =>
+            Component(x => x.Profile, m =>
             {
-                mapper.Cascade(Cascade.All);
-                mapper.Class(typeof (Profile));
+                m.Property(profile => profile.BigPhotoUri, mapper => mapper.Column("BigPhotoUri"));
+                m.Property(profile => profile.InstituteName, mapper => mapper.Column("InstituteName"));
+                m.Property(profile => profile.PhoneNumber, mapper => mapper.Column("PhoneNumber"));
+                m.Property(profile => profile.SmallPhotoUri, mapper => mapper.Column("SmallPhotoUri"));
+                m.Property(profile => profile.Specialization, mapper => mapper.Column("Specialization"));
+                m.Property(profile => profile.StudentAccessionYear, mapper => mapper.Column("StudentAccessionYear"));
+                m.Property(profile => profile.StudyingDirection, mapper => mapper.Column("StudyingDirection"));
+                m.Property(profile => profile.VkProfileUri, mapper => mapper.Column("VkProfileUri"));
             });
             Property(user => user.RedmineUserId, mapper => mapper.Column("RedmineUserId"));
             Property(user => user.GitlabUserId, mapper => mapper.Column("GitlabUserId"));

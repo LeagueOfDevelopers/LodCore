@@ -56,6 +56,18 @@ namespace DataAccess.Repositories
                 : session.Query<Account>().Where(predicate).ToList();
         }
 
+        public List<Account> SearchAccounts(string searchString)
+        {
+            var session = _sessionProvider.GetCurrentSession();
+            return searchString.IsNullOrEmpty()
+                ? null
+                : session.Query<Account>().Where(
+                    account =>
+                        (account.Firstname + " " + account.Lastname).ToLower().Contains(searchString.ToLower()) ||
+                        (account.Role == AccountRole.User ? "разработчик" : "администратор").Contains(
+                            searchString.ToLower())).ToList();
+        }
+
         public int GetUserRedmineId(int userId)
         {
             Require.Positive(userId, nameof(userId));

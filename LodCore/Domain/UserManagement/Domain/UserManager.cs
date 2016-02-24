@@ -52,8 +52,8 @@ namespace UserManagement.Domain
             {
                 throw new AccountAlreadyExistsException();
             }
-            
-           var newAccount = new Account(
+
+            var newAccount = new Account(
                 request.Firstname,
                 request.Lastname,
                 new MailAddress(request.Email),
@@ -81,6 +81,13 @@ namespace UserManagement.Domain
             }
 
             _repository.UpdateAccount(account);
+        }
+
+        public List<Account> GetUserList(string searchString)
+        {
+            Require.NotEmpty(searchString, nameof(searchString));
+
+            return _repository.SearchAccounts(searchString);
         }
     }
 }

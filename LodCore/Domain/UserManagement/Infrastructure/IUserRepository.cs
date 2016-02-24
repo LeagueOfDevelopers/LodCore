@@ -13,5 +13,7 @@ namespace UserManagement.Infrastructure
         Account GetAccount(int accountId);
 
         List<Account> GetAllAccounts(Func<Account, bool> predicate = null);
+
+        List<Account> SearchAccounts(string searchString);
     }
 }

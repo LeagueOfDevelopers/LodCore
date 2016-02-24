@@ -9,7 +9,6 @@ namespace DataAccess.Mappings
         public ProfileMap()
         {
             Table("Profiles");
-            Id(user => user.UserId, mapper => mapper.Generator(Generators.Identity));
             Property(user => user.PhoneNumber, mapper => mapper.Column("PhoneNumber"));
             Property(user => user.BigPhotoUri, mapper => mapper.Column("BigPhotoUri"));
             Property(user => user.SmallPhotoUri, mapper => mapper.Column("SmallPictureUri"));

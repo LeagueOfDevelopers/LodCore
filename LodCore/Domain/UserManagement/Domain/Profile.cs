@@ -4,8 +4,6 @@ namespace UserManagement.Domain
 {
     public class Profile
     {
-        public virtual int UserId { get; protected set; }
-
         public virtual Uri BigPhotoUri { get; set; }
 
         public virtual Uri SmallPhotoUri { get; set; }
