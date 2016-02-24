@@ -117,8 +117,17 @@ namespace ProjectManagement.Domain
                 userId, 
                 role));
 
-            _projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
-            _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
+            if (redmineUserId != 0)
+            {
+                _projectManagerGateway.AddNewUserToProject(
+                    project.ProjectManagementSystemId, 
+                    redmineUserId);
+            }
+
+            if (gitlabUserId != 0)
+            {
+                _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
+            }
 
             UpdateProject(project);
 
@@ -143,8 +152,15 @@ namespace ProjectManagement.Domain
             var redmineUserId = _userRepository.GetUserRedmineId(userId);
             var gitlabUserId = _userRepository.GetUserGitlabId(userId);
 
-            _projectManagerGateway.RemoveUserFromProject(project.ProjectManagementSystemId, redmineUserId);
-            _versionControlSystemGateway.RemoveUserFromProject(project, gitlabUserId);
+            if (redmineUserId != 0)
+            {
+                _projectManagerGateway.RemoveUserFromProject(project.ProjectManagementSystemId, redmineUserId);
+            }
+
+            if (gitlabUserId != 0)
+            {
+                _versionControlSystemGateway.RemoveUserFromProject(project, gitlabUserId);
+            }
 
             UpdateProject(project);
 
