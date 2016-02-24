@@ -215,3 +215,4 @@ settings.config
 ConnectionStrings.config
 Files/
 Images/
+ExternalLibs/
