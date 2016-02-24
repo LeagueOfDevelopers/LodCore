@@ -19,7 +19,6 @@ namespace FrontendServices
 
         protected void Application_BeginRequest()
         {
-            Debug.WriteLine("Begin request");
             var sessionProvider = GlobalConfiguration.Configuration.DependencyResolver.GetService(
                 typeof(DatabaseSessionProvider)) as DatabaseSessionProvider;
             sessionProvider.OpenSession();
@@ -27,7 +26,6 @@ namespace FrontendServices
 
         protected void Application_EndRequest()
         {
-            Debug.WriteLine("End request");
             var sessionProvider = GlobalConfiguration.Configuration.DependencyResolver.GetService(
                 typeof(DatabaseSessionProvider)) as DatabaseSessionProvider;
             sessionProvider.CloseSession();

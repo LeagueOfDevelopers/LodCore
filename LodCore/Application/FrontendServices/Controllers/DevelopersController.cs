@@ -11,7 +11,6 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
-using Journalist.Extensions;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;

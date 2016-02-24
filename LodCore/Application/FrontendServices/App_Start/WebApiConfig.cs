@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using DataAccess;
+using FrontendServices.App_Data;
 using FrontendServices.Authorization;
 using UserManagement.Application;
 
@@ -22,6 +22,7 @@ namespace FrontendServices
 
             var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
             config.Filters.Add(new AuthenticateAttribute(authorizer));
+            config.Filters.Add(new ExceptionLogger());
         }
 
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
