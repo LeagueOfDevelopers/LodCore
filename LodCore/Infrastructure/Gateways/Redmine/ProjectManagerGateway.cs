@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
+using System.Text;
 using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using Journalist.Collections;
+using Newtonsoft.Json.Linq;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using Issue = ProjectManagement.Domain.Issue;
@@ -22,12 +26,11 @@ namespace Gateways.Redmine
 {
     public class ProjectManagerGateway : IProjectManagerGateway, IRedmineUserRegistrar
     {
-        private readonly RedmineManager _redmineManager;
-
         public ProjectManagerGateway(RedmineSettings redmineSettings)
         {
             Require.NotNull(redmineSettings, nameof(redmineSettings));
 
+            _redmineSettings = redmineSettings;
             _redmineManager = new RedmineManager(redmineSettings.RedmineHost, redmineSettings.ApiKey);
         }
 
@@ -116,23 +119,39 @@ namespace Gateways.Redmine
         public int RegisterUser(Account account)
         {
             Require.NotNull(account, nameof(account));
-
-            var user = new User
+            
+            var user = new RedmineUser
             {
                 Email = account.Email.Address,
+                Login = GetLoginForLastname(account.Lastname),
                 FirstName = account.Firstname,
                 LastName = account.Lastname,
                 Password = account.Password.Value,
                 MustChangePassword = false
             };
 
-            var createdUser = _redmineManager.CreateObject(user);
-            return createdUser.Id;
+            var client = new HttpClient();
+            var address = _redmineSettings.RedmineHost + "/users.json";
+            var authHeaderByteArray = Encoding.ASCII.GetBytes($"{_redmineSettings.ApiKey}:pass");
+            client.DefaultRequestHeaders.Authorization 
+                = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authHeaderByteArray));
+            var response = client.PostAsync(address, user, new XmlMediaTypeFormatter {UseXmlSerializer = true}).Result;
+            var createdUserString = response.Content.ReadAsStringAsync().Result;
+            var createdUser = JObject.Parse(createdUserString);
+            return (int)createdUser["user"]["id"];
         }
 
         private static string GetProjectIdentifier(string projectName)
         {
             return projectName.Unidecode().Replace(" ", string.Empty).ToLower();
         }
+
+        private static string GetLoginForLastname(string lastName)
+        {
+            return lastName.Unidecode().Replace(@"'", string.Empty);
+        }
+
+        private readonly RedmineManager _redmineManager;
+        private readonly RedmineSettings _redmineSettings;
     }
 }
