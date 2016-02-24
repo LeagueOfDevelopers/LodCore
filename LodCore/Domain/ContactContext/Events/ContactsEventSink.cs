@@ -7,10 +7,9 @@ namespace ContactContext.Events
     public class ContactsEventSink : EventSinkBase
     {
         public ContactsEventSink(
-            IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository,
-            IMailer mailer, IUserPresentationProvider userPresentationProvider)
-            : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
+            IDistributionPolicyFactory distributionPolicyFactory, 
+            IEventRepository eventRepository, 
+            IMailer mailer, IUserPresentationProvider userPresentationProvider) : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }
 

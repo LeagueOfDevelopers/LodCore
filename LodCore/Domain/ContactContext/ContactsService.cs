@@ -6,8 +6,6 @@ namespace ContactContext
 {
     public class ContactsService : IContactsService
     {
-        private readonly IEventSink _contactsEventSink;
-
         public ContactsService(IEventSink contactsEventSink)
         {
             Require.NotNull(contactsEventSink, nameof(contactsEventSink));
@@ -19,5 +17,7 @@ namespace ContactContext
             Require.NotNull(contactMessage, nameof(contactMessage));
             _contactsEventSink.ConsumeEvent(contactMessage);
         }
+
+        private readonly IEventSink _contactsEventSink;
     }
 }

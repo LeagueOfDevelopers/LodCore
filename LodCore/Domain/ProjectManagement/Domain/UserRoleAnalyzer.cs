@@ -8,9 +8,6 @@ namespace ProjectManagement.Domain
 {
     public class UserRoleAnalyzer : IUserRoleAnalyzer
     {
-        private readonly IProjectRepository _repository;
-        private readonly UserRoleAnalyzerSettings _settings;
-
         public UserRoleAnalyzer(IProjectRepository repository, UserRoleAnalyzerSettings settings)
         {
             Require.NotNull(repository, nameof(repository));
@@ -40,5 +37,8 @@ namespace ProjectManagement.Domain
 
             return allRoles.First();
         }
+        
+        private readonly IProjectRepository _repository;
+        private readonly UserRoleAnalyzerSettings _settings;
     }
 }

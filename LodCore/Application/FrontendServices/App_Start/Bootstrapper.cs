@@ -8,6 +8,7 @@ using DataAccess.Repositories;
 using FilesManagement;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
+using Gateways;
 using Gateways.Gitlab;
 using Gateways.Redmine;
 using Mailing;
@@ -45,27 +46,22 @@ namespace FrontendServices
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<ProjectManagerGateway>(Lifestyle.Singleton);
-            container.Register<IRedmineUserRegistrar>(() => container.GetInstance<ProjectManagerGateway>(),
-                Lifestyle.Singleton);
-            container.Register<IProjectManagerGateway>(() => container.GetInstance<ProjectManagerGateway>(),
-                Lifestyle.Singleton);
+            container.Register<IRedmineUserRegistrar>(() => container.GetInstance<ProjectManagerGateway>(), Lifestyle.Singleton);
+            container.Register<IProjectManagerGateway>(() => container.GetInstance<ProjectManagerGateway>(), Lifestyle.Singleton);
             container.Register<VersionControlSystemGateway>(Lifestyle.Singleton);
-            container.Register<IGitlabUserRegistrar>(() => container.GetInstance<VersionControlSystemGateway>(),
-                Lifestyle.Singleton);
-            container.Register<IVersionControlSystemGateway>(
-                () => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
+            container.Register<IGitlabUserRegistrar>(() => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
+            container.Register<IVersionControlSystemGateway>(() => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
             container.Register<IConfirmationService>(() => new ConfirmationService(
-                container.GetInstance<IUserRepository>(),
+                container.GetInstance<IUserRepository>(), 
                 container.GetInstance<IMailer>(),
-                container.GetInstance<IValidationRequestsRepository>(),
-                container.GetInstance<UserManagementEventSink>(),
-                container.GetInstance<ConfirmationSettings>()), Lifestyle.Singleton);
+                container.GetInstance<IValidationRequestsRepository>(), 
+                container.GetInstance<UserManagementEventSink>(), 
+                container.GetInstance<ConfirmationSettings>()),Lifestyle.Singleton);
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
             container.Register<IUsersRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
-            container.Register<IProjectRelativesRepository>(() => container.GetInstance<ProjectRepository>(),
-                Lifestyle.Singleton);
+            container.Register<IProjectRelativesRepository>(() => container.GetInstance<ProjectRepository>(), Lifestyle.Singleton);
             container.Register<Mailer>(Lifestyle.Singleton);
             container.Register<NotificationService.IMailer>(() => container.GetInstance<Mailer>(), Lifestyle.Singleton);
             container.Register<IMailer>(() => container.GetInstance<Mailer>(), Lifestyle.Singleton);
@@ -84,12 +80,12 @@ namespace FrontendServices
             container.Register<ProjectManagement.Infrastructure.IUserRepository>(
                 () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<IProjectRepository>(
-                () => container.GetInstance<ProjectRepository>(),
+                () => container.GetInstance<ProjectRepository>(), 
                 Lifestyle.Singleton);
             container.Register<ContactsEventSink>(Lifestyle.Singleton);
             container.Register<IContactsService>(
                 () => new ContactsService(
-                    container.GetInstance<ContactsEventSink>()),
+                    container.GetInstance<ContactsEventSink>()), 
                 Lifestyle.Singleton);
             container.Register<OrderMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
@@ -99,7 +95,7 @@ namespace FrontendServices
             container.Register<INotificationSettingsRepository, NotificationSettingsRepository>(Lifestyle.Singleton);
             container.Register<IAuthorizer>(() => new Authorizer(
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
-                container.GetInstance<IUserRepository>()),
+                container.GetInstance<IUserRepository>()), 
                 Lifestyle.Singleton);
             container.Register<IOrderManager>(() => new OrderManagment(
                 container.GetInstance<IOrderRepository>(),

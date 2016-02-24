@@ -18,7 +18,7 @@ namespace Mailing
         private readonly IUserRepository _userRepository;
 
         public NotificationEmailDescriber(
-            IOrderRepository orderRepository,
+            IOrderRepository orderRepository, 
             IProjectRepository projectRepository,
             IUserRepository userRepository)
         {

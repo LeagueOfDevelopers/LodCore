@@ -70,7 +70,7 @@ namespace DataAccess.Repositories
             session.Update(project);
         }
 
-        public IEnumerable<string> GetUserRoles(int userId)
+        public IEnumerable<string> GetUserRoles(int userId )
         {
             Require.Positive(userId, nameof(userId));
 

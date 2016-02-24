@@ -8,9 +8,6 @@ namespace FrontendServices.Controllers
 {
     public class OrderController : ApiController
     {
-        private readonly IOrderManager _orderManager;
-        private readonly OrderMapper _orderMapper;
-
         public OrderController(IOrderManager orderManager, OrderMapper orderMapper)
         {
             Require.NotNull(orderManager, nameof(orderManager));
@@ -22,7 +19,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("orders")]
-        public IHttpActionResult RegisterNewOrder([FromBody] RegisterNewOrderRequest request)
+        public IHttpActionResult RegisterNewOrder([FromBody]RegisterNewOrderRequest request)
         {
             Require.NotNull(request, nameof(request));
             if (!ModelState.IsValid)
@@ -33,5 +30,8 @@ namespace FrontendServices.Controllers
             _orderManager.AddOrder(order);
             return Ok();
         }
+
+        private readonly IOrderManager _orderManager;
+        private readonly OrderMapper _orderMapper;
     }
 }

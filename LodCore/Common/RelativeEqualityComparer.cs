@@ -7,8 +7,6 @@ namespace Common
 {
     public class RelativeEqualityComparer : IEqualityComparer<string>
     {
-        private readonly int _appropriateEditDistance;
-
         public RelativeEqualityComparer(int editDistanceConsideredEqual)
         {
             Require.Positive(editDistanceConsideredEqual, nameof(editDistanceConsideredEqual));
@@ -61,5 +59,7 @@ namespace Common
             }
             return matrix[lenOrig, lenDiff];
         }
+
+        private readonly int _appropriateEditDistance;
     }
 }

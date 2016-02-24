@@ -41,7 +41,7 @@ namespace Common
         public static Password FromHash(string passwordHash)
         {
             Require.NotEmpty(passwordHash, nameof(passwordHash));
-            return new Password {Pass = passwordHash};
+            return new Password { Pass = passwordHash };
         }
 
         protected bool Equals(Password other)
@@ -53,7 +53,7 @@ namespace Common
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (obj.GetType() != this.GetType()) return false;
             return Equals((Password) obj);
         }
 

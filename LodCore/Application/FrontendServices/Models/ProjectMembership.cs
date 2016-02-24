@@ -17,7 +17,7 @@ namespace FrontendServices.Models
             Role = role;
         }
 
-        public int DeveloperId { get; private set; }
+        public int DeveloperId { get; private set; }  
 
         public string FirstName { get; private set; }
 

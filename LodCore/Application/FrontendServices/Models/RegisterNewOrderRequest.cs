@@ -23,7 +23,7 @@ namespace FrontendServices.Models
         [MaxLength(3)]
         public string[] Attachments { get; set; }
 
-        [EnumDataType(typeof (ProjectType))]
+        [EnumDataType(typeof(ProjectType))]
         public ProjectType ProjectType { get; set; }
     }
 }

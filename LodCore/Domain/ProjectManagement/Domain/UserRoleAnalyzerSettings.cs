@@ -13,8 +13,8 @@ namespace ProjectManagement.Domain
             DefaultRole = defaultRole;
         }
 
-        public int AppropriateEditDistance { get; private set; }
-
+        public int AppropriateEditDistance { get; private set; } 
+        
         public string DefaultRole { get; private set; }
     }
 }

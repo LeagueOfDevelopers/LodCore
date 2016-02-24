@@ -8,8 +8,6 @@ namespace FrontendServices.Controllers
 {
     public class AdminController : ApiController
     {
-        private readonly IConfirmationService _confirmationService;
-
         public AdminController(IConfirmationService confirmationService)
         {
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -36,5 +34,7 @@ namespace FrontendServices.Controllers
 
             return Ok();
         }
+
+        private readonly IConfirmationService _confirmationService;
     }
 }

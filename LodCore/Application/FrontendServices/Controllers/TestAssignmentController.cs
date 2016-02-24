@@ -25,7 +25,7 @@ namespace FrontendServices.Controllers
                 "Vince Carter"
             };
 
-            var teams = new[] {"CLE", "LAL", "CLE", "CLE", "LAL", "CLE", "CLE", "LAL", "LAL", "LAL"};
+            var teams = new[] {"CLE", "LAL", "CLE", "CLE", "LAL", "CLE", "CLE", "LAL", "LAL", "LAL" };
 
             var rand = new Random();
             var scores = Enumerable.Range(0, 10).Select(num => rand.Next(0, 30)).ToArray();
@@ -37,7 +37,7 @@ namespace FrontendServices.Controllers
                     PlayerName = name,
                     Team = teams[index],
                     Score = scores[index]
-                }),
+                }), 
                 new JsonMediaTypeFormatter());
         }
     }

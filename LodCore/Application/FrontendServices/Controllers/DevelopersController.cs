@@ -9,10 +9,11 @@ using Common;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Extensions;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
-using NotificationSetting = FrontendServices.Models.NotificationSetting;
+using NotificationSetting = UserPresentaton.NotificationSetting;
 
 namespace FrontendServices.Controllers
 {
@@ -164,7 +165,7 @@ namespace FrontendServices.Controllers
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(newPassword, nameof(newPassword));
-
+            
             Account userToChange;
 
             try
@@ -189,7 +190,7 @@ namespace FrontendServices.Controllers
         [HttpPut]
         [Route("developers/notificationsettings/{id}")]
         public IHttpActionResult UpdateNotificationSetiings(int id,
-            [FromBody] NotificationSetting[] notificationSettings)
+            [FromBody] Models.NotificationSetting[] notificationSettings)
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(notificationSettings, nameof(notificationSettings));
@@ -219,7 +220,7 @@ namespace FrontendServices.Controllers
                 foreach (var notificationSetting in notificationSettings)
                 {
                     _userPresentationProvider.UpdateNotificationSetting(
-                        new UserPresentaton.NotificationSetting(
+                        new NotificationSetting(
                             id,
                             notificationSetting.NotificationType,
                             notificationSetting.NotificationSettingValue));
@@ -231,7 +232,7 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("developers/notificationsettings/{id}")]
-        public NotificationSetting[] GetNotificationSettings(int id)
+        public Models.NotificationSetting[] GetNotificationSettings(int id)
         {
             Require.Positive(id, nameof(id));
             try
@@ -243,17 +244,13 @@ namespace FrontendServices.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return
-                Enum.GetValues(typeof (NotificationType))
-                    .Cast<NotificationType>()
-                    .Select(name => new NotificationSetting
-                    {
-                        NotificationType = name,
-                        NotificationSettingValue = _userPresentationProvider.GetUserEventSettings(id, name.ToString())
-                    }).ToArray();
+            return Enum.GetValues(typeof (NotificationType)).Cast<NotificationType>().Select(name => new Models.NotificationSetting
+            {
+                NotificationType = name, NotificationSettingValue = _userPresentationProvider.GetUserEventSettings(id, name.ToString())
+            }).ToArray();
         }
 
-        [HttpPost]
+    [HttpPost]
         [Route("developers/confirmation/{confirmationToken}")]
         public IHttpActionResult ConfirmEmail(string confirmationToken)
         {

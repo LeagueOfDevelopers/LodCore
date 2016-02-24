@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Journalist;
 using NotificationService;
 using UserManagement.Application;
@@ -10,18 +11,11 @@ namespace UserManagement.Domain
 {
     public class ConfirmationService : IConfirmationService
     {
-        private readonly ConfirmationSettings _confirmationSettings;
-
-        private readonly IMailer _mailer;
-        private readonly IEventSink _userManagementEventSink;
-        private readonly IUserRepository _userRepository;
-        private readonly IValidationRequestsRepository _validationRequestsRepository;
-
         public ConfirmationService(
             IUserRepository userRepository,
             IMailer mailer,
-            IValidationRequestsRepository validationRequestsRepository,
-            IEventSink userManagementEventSink,
+            IValidationRequestsRepository validationRequestsRepository, 
+            IEventSink userManagementEventSink, 
             ConfirmationSettings confirmationSettings)
         {
             Require.NotNull(userRepository, nameof(userRepository));
@@ -65,7 +59,7 @@ namespace UserManagement.Domain
             if (userAccount.ConfirmationStatus != ConfirmationStatus.Unconfirmed)
             {
                 _validationRequestsRepository.DeleteValidationToken(validationRequest);
-                throw new InvalidOperationException("Trying to confirm already confirmed profile ");
+                throw new InvalidOperationException("Trying to confirm already confirmed profile ");    
             }
 
             userAccount.ConfirmationStatus = ConfirmationStatus.EmailConfirmed;
@@ -107,5 +101,11 @@ namespace UserManagement.Domain
                 .Replace('+', '-')
                 .Replace('/', '_');
         }
+
+        private readonly IMailer _mailer;
+        private readonly IEventSink _userManagementEventSink;
+        private readonly IUserRepository _userRepository;
+        private readonly IValidationRequestsRepository _validationRequestsRepository;
+        private readonly ConfirmationSettings _confirmationSettings;
     }
 }

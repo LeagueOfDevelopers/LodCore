@@ -7,8 +7,8 @@ namespace ContactContext.Events
     public class NewContactMessage : EventInfoBase
     {
         public NewContactMessage(
-            string clientName,
-            MailAddress clientEmalAddress,
+            string clientName, 
+            MailAddress clientEmalAddress, 
             string messageTopic,
             string messageBody)
         {

@@ -10,12 +10,12 @@ namespace OrderManagement.Domain
     {
         public Order(
             string header,
-            string customerName,
+            string customerName, 
             DateTime createdOnDateTime,
-            DateTime deadLine,
-            MailAddress email,
+            DateTime deadLine, 
+            MailAddress email, 
             string description,
-            ISet<Uri> attachments,
+            ISet<Uri> attachments, 
             ProjectType projectType)
         {
             Require.NotEmpty(header, nameof(header));

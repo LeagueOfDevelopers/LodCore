@@ -5,10 +5,10 @@ namespace FrontendServices.Models
     public class IndexPageDeveloper
     {
         public IndexPageDeveloper(
-            int userId,
-            string firstName,
-            string lastName,
-            Uri photoUri,
+            int userId, 
+            string firstName, 
+            string lastName, 
+            Uri photoUri, 
             string role)
         {
             UserId = userId;
@@ -19,7 +19,7 @@ namespace FrontendServices.Models
         }
 
         public int UserId { get; private set; }
-
+         
         public string FirstName { get; private set; }
 
         public string LastName { get; private set; }

@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using DataAccess;
 using FrontendServices.Authorization;
 using UserManagement.Application;
 

@@ -7,10 +7,10 @@ namespace UserManagement.Application
     public class CreateAccountRequest
     {
         public CreateAccountRequest(
-            MailAddress email,
-            string lastname,
-            string firstname,
-            string password,
+            MailAddress email, 
+            string lastname, 
+            string firstname, 
+            string password, 
             Profile profile)
         {
             Require.NotNull(email, nameof(email));

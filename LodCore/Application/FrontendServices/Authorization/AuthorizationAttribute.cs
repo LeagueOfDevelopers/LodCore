@@ -7,8 +7,6 @@ namespace FrontendServices.Authorization
 {
     public class AuthorizationAttribute : AuthorizeAttribute
     {
-        private readonly AccountRole _accountRole;
-
         public AuthorizationAttribute(AccountRole accountRole)
         {
             _accountRole = accountRole;
@@ -18,5 +16,7 @@ namespace FrontendServices.Authorization
         {
             return Thread.CurrentPrincipal.IsInRole(_accountRole);
         }
+
+        private readonly AccountRole _accountRole;
     }
 }

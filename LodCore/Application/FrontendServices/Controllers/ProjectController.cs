@@ -2,32 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Web;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
+using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using Journalist.Extensions;
+using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using UserManagement.Domain;
-using CreateProjectRequest = FrontendServices.Models.CreateProjectRequest;
 
 namespace FrontendServices.Controllers
 {
     public class ProjectController : ApiController
     {
-        private const string CategoriesQueryParameterName = "categories";
-        private readonly IAuthorizer _authorizer;
-
-        private readonly IProjectProvider _projectProvider;
-        private readonly ProjectsMapper _projectsMapper;
-        private readonly IUserManager _userManager;
-
         public ProjectController(
-            IProjectProvider projectProvider,
+            IProjectProvider projectProvider, 
             ProjectsMapper projectsMapper,
             IAuthorizer authorizer, IUserManager userManager)
         {
@@ -45,7 +41,7 @@ namespace FrontendServices.Controllers
         public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-
+            
             var requiredProjects = _projectProvider.GetProjects(
                 project => ProjectsPolicies.OnlyDoneOrInProgress(project)
                            && ProjectsPolicies.OnlyPublic(project));
@@ -59,8 +55,8 @@ namespace FrontendServices.Controllers
         public IEnumerable<ProjectPreview> GetAllProjects()
         {
             var categoriesQuery = Request.RequestUri.Query;
-
-            var requiredProjects = categoriesQuery.IsEmpty()
+            
+            var requiredProjects = categoriesQuery.IsEmpty() 
                 ? _projectProvider.GetProjects()
                 : GetProjectsByCategory(categoriesQuery);
 
@@ -69,7 +65,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("projects")]
-        public IHttpActionResult CreateProject([FromBody] CreateProjectRequest createProjectRequest)
+        public IHttpActionResult CreateProject([FromBody]Models.CreateProjectRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +87,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("projects/{projectId}/developer/{developerId}")]
-        public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody] string role)
+        public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody]string role)
         {
             if (!ModelState.IsValid)
             {
@@ -150,12 +146,12 @@ namespace FrontendServices.Controllers
             }
 
             if (projectToDeleteUser.ProjectMemberships.Where(
-                membership => membership.DeveloperId == developerId)
-                .ToList().IsEmpty())
+                    membership => membership.DeveloperId == developerId)
+                    .ToList().IsEmpty())
             {
                 return NotFound();
             }
-
+                
             _projectProvider.RemoveUserFromProject(projectId, developerId);
 
             return Ok();
@@ -191,11 +187,18 @@ namespace FrontendServices.Controllers
                 .Replace("?" + CategoriesQueryParameterName + "=", string.Empty)
                 .Split(',')
                 .Select(int.Parse);
-            var projectTypes = categories.Select(category => (ProjectType) category);
+            var projectTypes = categories.Select(category => (ProjectType)category);
             var requiredProjects = _projectProvider.GetProjects(
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
             return requiredProjects;
-        }
+        } 
+
+        private readonly IProjectProvider _projectProvider;
+        private readonly ProjectsMapper _projectsMapper;
+        private readonly IAuthorizer _authorizer;
+        private readonly IUserManager _userManager;
+
+        private const string CategoriesQueryParameterName = "categories";
     }
 }

@@ -12,14 +12,6 @@ namespace ProjectManagement.Domain
 {
     public class ProjectProvider : IProjectProvider
     {
-        private readonly IEventSink _eventSink;
-        private readonly PaginationSettings _paginationSettings;
-
-        private readonly IProjectManagerGateway _projectManagerGateway;
-        private readonly IProjectRepository _projectRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
-
         public ProjectProvider(
             IProjectManagerGateway projectManagerGateway,
             IVersionControlSystemGateway versionControlSystemGateway,
@@ -122,7 +114,7 @@ namespace ProjectManagement.Domain
             var gitlabUserId = _userRepository.GetUserGitlabId(userId);
 
             project.ProjectMemberships.Add(new ProjectMembership(
-                userId,
+                userId, 
                 role));
 
             _projectManagerGateway.AddNewUserToProject(project.ProjectManagementSystemId, redmineUserId);
@@ -158,5 +150,13 @@ namespace ProjectManagement.Domain
 
             _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
         }
+
+        private readonly IEventSink _eventSink;
+        private readonly IUserRepository _userRepository;
+        private readonly PaginationSettings _paginationSettings;
+
+        private readonly IProjectManagerGateway _projectManagerGateway;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
     }
 }
