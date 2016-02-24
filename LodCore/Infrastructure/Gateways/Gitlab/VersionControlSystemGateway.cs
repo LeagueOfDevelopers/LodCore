@@ -1,4 +1,5 @@
-﻿using BinaryAnalysis.UnidecodeSharp;
+﻿using System.Diagnostics;
+using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using NGitLab;
 using NGitLab.Models;
@@ -72,12 +73,17 @@ namespace Gateways.Gitlab
                 Name = account.Firstname + " " + account.Lastname,
                 CanCreateGroup = false,
                 Confirm = "no",
-                Username = account.Lastname.Unidecode()
+                Username = GetUserNameByLastName(account.Lastname)
             };
+
             var addedUser = _gitLabClient.Users.Create(user);
             return addedUser.Id;
         }
 
+        private string GetUserNameByLastName(string lastName)
+        {
+            return lastName.Unidecode().Replace(@"'", string.Empty);
+        }
         private readonly GitlabSettings _settings;
         private readonly GitLabClient _gitLabClient;
 
