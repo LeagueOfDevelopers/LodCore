@@ -63,11 +63,7 @@ namespace UserManagement.Domain
                 throw new UnauthorizedAccessException("Wrong password");
             }
 
-            var existedToken = TakeTokenByUserId(userAccount.UserId);
-            if (existedToken != null)
-            {
-                _tokensWithGenerationTime.TryRemove(existedToken.Token, out existedToken);
-            }
+            ResetToken(userAccount.UserId);
 
             var token = GenerateNewToken(userAccount);
             _tokensWithGenerationTime.AddOrUpdate(token.Token, token, (oldToken, info) => token);
@@ -89,7 +85,7 @@ namespace UserManagement.Domain
         private AuthorizationTokenInfo TakeTokenByUserId(int userId)
         {
             var pair = _tokensWithGenerationTime.SingleOrDefault(token => token.Value.UserId == userId);
-            if (pair.Equals(default(KeyValuePair<string, AuthorizationTokenInfo>)))
+            if (!pair.Equals(default(KeyValuePair<string, AuthorizationTokenInfo>)))
             {
                 return pair.Value;
             }
