@@ -30,8 +30,6 @@ namespace FrontendServices.Models
             Require.NotEmpty(firstName, nameof(firstName));
             Require.NotEmpty(lastName, nameof(lastName));
             Require.NotEmpty(email, nameof(email));
-            Require.Positive(redmineUserId, nameof(redmineUserId));
-            Require.Positive(gitlabUserId, nameof(gitlabUserId));
 
             UserId = userId;
             FirstName = firstName;
