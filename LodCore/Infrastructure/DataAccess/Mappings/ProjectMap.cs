@@ -20,8 +20,30 @@ namespace DataAccess.Mappings
                 mapper.Table("ProjectTypes");
                 mapper.Cascade(Cascade.All);
             });
-            Property(project => project.ProjectManagementSystemId, mapper => mapper.Column("ProjectManagementSystemId"));
-            Property(project => project.VersionControlSystemId, mapper => mapper.Column("VersionControlSystemId"));
+            Component(project => project.RedmineProjectInfo,
+                mapper =>
+                {
+                    mapper.Lazy(false);
+                    mapper.Property(
+                        info => info.ProjectId, 
+                        propertyMapper => propertyMapper.Column("RedmineProjectId"));
+                    mapper.Property(
+                        info => info.ProjectIdentifier, 
+                        propertyMapper => propertyMapper.Column("RedmineProjectIdentifier"));
+                    mapper.Property(
+                        info => info.ProjectUrl, 
+                        propertyMapper => propertyMapper.Column("RedmineProjectUrl"));
+                });
+            Component(project => project.VersionControlSystemInfo, mapper =>
+            {
+                mapper.Lazy(false);
+                mapper.Property(
+                    info => info.ProjectId, 
+                    propertyMapper => propertyMapper.Column("VersionControlProjectId"));
+                mapper.Property(
+                    info => info.ProjectUrl,
+                    propertyMapper => propertyMapper.Column("VersionControlProjectUrl"));
+            });
             Set(project => project.Screenshots, mapper =>
             {
                 mapper.Cascade(Cascade.All);

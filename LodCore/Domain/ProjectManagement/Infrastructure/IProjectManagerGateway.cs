@@ -11,6 +11,6 @@ namespace ProjectManagement.Infrastructure
 
         Issue[] GetProjectIssues(int projectManagerProjectId);
 
-        int CreateProject(CreateProjectRequest request);
+        RedmineProjectInfo CreateProject(CreateProjectRequest request);
     }
 }

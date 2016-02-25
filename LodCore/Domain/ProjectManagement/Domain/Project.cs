@@ -11,19 +11,19 @@ namespace ProjectManagement.Domain
             string name, 
             ISet<ProjectType> projectTypes, 
             string info, 
-            ProjectStatus projectStatus,
+            ProjectStatus projectStatus, 
             Uri landingImageUri, 
-            AccessLevel accessLevel, 
-            int versionControlSystemId, 
-            int projectManagementSystemId, 
+            AccessLevel accessLevel,
+            VersionControlSystemInfo versionControlSystemInfo,
+            RedmineProjectInfo redmineProjectInfo, 
             ISet<Issue> issues, 
-            ISet<ProjectMembership> projectDevelopers, 
+            ISet<ProjectMembership> projectDevelopers,
             ISet<Uri> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            Require.NotNull(versionControlSystemId, nameof(versionControlSystemId));
-            Require.NotNull(projectManagementSystemId, nameof(projectManagementSystemId));
+            Require.NotNull(versionControlSystemInfo, nameof(versionControlSystemInfo));
+            Require.NotNull(redmineProjectInfo, nameof(redmineProjectInfo));
             Require.NotEmpty(projectTypes, nameof(projectTypes));
 
             Name = name;
@@ -32,8 +32,8 @@ namespace ProjectManagement.Domain
             Info = info;
             ProjectStatus = projectStatus;
             LandingImageUri = landingImageUri;
-            VersionControlSystemId = versionControlSystemId;
-            ProjectManagementSystemId = projectManagementSystemId;
+            VersionControlSystemInfo = versionControlSystemInfo;
+            RedmineProjectInfo = redmineProjectInfo;
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<Uri>();
@@ -57,9 +57,9 @@ namespace ProjectManagement.Domain
 
         public virtual Uri LandingImageUri { get; protected set; }
 
-        public virtual int VersionControlSystemId { get; protected set; }
+        public virtual VersionControlSystemInfo VersionControlSystemInfo { get; protected set; }
 
-        public virtual int ProjectManagementSystemId { get; protected set; }
+        public virtual RedmineProjectInfo RedmineProjectInfo { get; protected set; }
 
         public virtual ISet<Issue> Issues { get; protected set; } = new HashSet<Issue>();
 

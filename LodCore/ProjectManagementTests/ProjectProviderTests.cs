@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
 using Ploeh.AutoFixture;
+using ProjectManagement;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Domain.Events;
@@ -33,10 +35,10 @@ namespace ProjectManagementTests
 
             _pmGateway
                 .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<int>());
+                .Returns(_fixture.Create<RedmineProjectInfo>());
             _vcsGateway
                 .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<int>());
+                .Returns(_fixture.Create<VersionControlSystemInfo>());
             _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);

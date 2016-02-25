@@ -46,6 +46,10 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -63,6 +67,7 @@
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="LoginTests.cs" />
+    <Compile Include="ProjectsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +78,10 @@
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Domain\ProjectManagement\ProjectManagement.csproj">
+      <Project>{C3F94FDD-F4C4-45D5-B6B1-A91D3520CD1D}</Project>
+      <Name>ProjectManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Domain\UserManagement\UserManagement.csproj">
       <Project>{56B90624-417A-4998-83C8-68A34DAE0AB0}</Project>

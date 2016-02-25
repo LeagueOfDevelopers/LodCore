@@ -5,7 +5,7 @@ namespace ProjectManagement.Infrastructure
 {
     public interface IVersionControlSystemGateway
     {
-        int CreateRepositoryForProject(CreateProjectRequest request);
+        VersionControlSystemInfo CreateRepositoryForProject(CreateProjectRequest request);
 
         void AddUserToRepository(Project project, int gitlabUserId);
 

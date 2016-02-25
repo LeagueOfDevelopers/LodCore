@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using NGitLab;
@@ -22,7 +23,7 @@ namespace Gateways.Gitlab
             _gitLabClient = GitLabClient.Connect(_settings.Host, _settings.ApiKey);
         }
 
-        public int CreateRepositoryForProject(CreateProjectRequest request)
+        public VersionControlSystemInfo CreateRepositoryForProject(CreateProjectRequest request)
         {
             var project = new ProjectCreate
             {
@@ -36,7 +37,7 @@ namespace Gateways.Gitlab
             };
 
             var createdProject = _gitLabClient.Projects.Create(project);
-            return createdProject.Id;
+            return new VersionControlSystemInfo(createdProject.Id, new Uri(createdProject.WebUrl));
         }
 
         public void AddUserToRepository(Project project, int gitlabUserId)
@@ -46,7 +47,7 @@ namespace Gateways.Gitlab
             _gitLabClient.ProjectMembers.AddProjectMember(new ProjectMembershipCreateRequest
             {
                 UserId = gitlabUserId,
-                ProjectId = project.VersionControlSystemId,
+                ProjectId = project.VersionControlSystemInfo.ProjectId,
                 AccessLevel = DeveloperAccessLevel
             });
         }
@@ -57,7 +58,7 @@ namespace Gateways.Gitlab
             Require.Positive(gitlabUserId, nameof(gitlabUserId));
             _gitLabClient.ProjectMembers.DeleteProjectMember(new RemoveProjectMembershipRequest
             {
-                ProjectId = project.VersionControlSystemId,
+                ProjectId = project.VersionControlSystemInfo.ProjectId,
                 UserId = gitlabUserId
             });
         }

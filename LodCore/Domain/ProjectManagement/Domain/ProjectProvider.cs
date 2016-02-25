@@ -59,7 +59,7 @@ namespace ProjectManagement.Domain
                 throw new ProjectNotFoundException();
             }
 
-            var issues = _projectManagerGateway.GetProjectIssues(project.ProjectManagementSystemId);
+            var issues = _projectManagerGateway.GetProjectIssues(project.RedmineProjectInfo.ProjectId);
             foreach (var issue in issues)
             {
                 project.Issues.Add(issue);
@@ -72,7 +72,7 @@ namespace ProjectManagement.Domain
         {
             Require.NotNull(request, nameof(request));
 
-            var versionControlSystemId = _versionControlSystemGateway.CreateRepositoryForProject(request);
+            var versionControlSystemInfo = _versionControlSystemGateway.CreateRepositoryForProject(request);
             var projectManagementSystemId = _projectManagerGateway.CreateProject(request);
 
             var project = new Project(
@@ -82,7 +82,7 @@ namespace ProjectManagement.Domain
                 ProjectStatus.Planned,
                 request.LandingImageUri,
                 request.AccessLevel,
-                versionControlSystemId,
+                versionControlSystemInfo,
                 projectManagementSystemId,
                 null,
                 null,
@@ -120,7 +120,7 @@ namespace ProjectManagement.Domain
             if (redmineUserId != 0)
             {
                 _projectManagerGateway.AddNewUserToProject(
-                    project.ProjectManagementSystemId, 
+                    project.RedmineProjectInfo.ProjectId, 
                     redmineUserId);
             }
 
@@ -154,12 +154,16 @@ namespace ProjectManagement.Domain
 
             if (redmineUserId != 0)
             {
-                _projectManagerGateway.RemoveUserFromProject(project.ProjectManagementSystemId, redmineUserId);
+                _projectManagerGateway.RemoveUserFromProject(
+                    project.RedmineProjectInfo.ProjectId, 
+                    redmineUserId);
             }
 
             if (gitlabUserId != 0)
             {
-                _versionControlSystemGateway.RemoveUserFromProject(project, gitlabUserId);
+                _versionControlSystemGateway.RemoveUserFromProject(
+                    project, 
+                    gitlabUserId);
             }
 
             UpdateProject(project);

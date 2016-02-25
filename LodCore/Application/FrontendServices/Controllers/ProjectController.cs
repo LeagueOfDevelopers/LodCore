@@ -60,7 +60,7 @@ namespace FrontendServices.Controllers
                 ? _projectProvider.GetProjects()
                 : GetProjectsByCategory(categoriesQuery);
 
-            if (!User.IsInRole(AccountRole.Administrator))
+            if (!User.IsInRole(AccountRole.User))
             {
                 requiredProjects = requiredProjects
                     .Where(ProjectsPolicies.OnlyPublic)

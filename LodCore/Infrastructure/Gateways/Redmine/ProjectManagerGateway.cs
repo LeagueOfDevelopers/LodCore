@@ -10,6 +10,7 @@ using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using Journalist.Collections;
 using Newtonsoft.Json.Linq;
+using ProjectManagement;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
@@ -99,7 +100,7 @@ namespace Gateways.Redmine
             return lodIssue.ToArray();
         }
 
-        public int CreateProject(CreateProjectRequest request)
+        public RedmineProjectInfo CreateProject(CreateProjectRequest request)
         {
             Require.NotNull(request, nameof(request));
 
@@ -113,7 +114,10 @@ namespace Gateways.Redmine
             };
 
             var readyProject = _redmineManager.CreateObject(project);
-            return readyProject.Id;
+            return new RedmineProjectInfo(
+                readyProject.Id, 
+                new Uri($"{_redmineSettings.RedmineHost}/projects/{readyProject.Identifier}"),
+                readyProject.Identifier);
         }
 
         public int RegisterUser(Account account)
@@ -135,7 +139,10 @@ namespace Gateways.Redmine
             var authHeaderByteArray = Encoding.ASCII.GetBytes($"{_redmineSettings.ApiKey}:pass");
             client.DefaultRequestHeaders.Authorization 
                 = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authHeaderByteArray));
-            var response = client.PostAsync(address, user, new XmlMediaTypeFormatter {UseXmlSerializer = true}).Result;
+            var response = client.PostAsync(
+                address, 
+                user, 
+                new XmlMediaTypeFormatter {UseXmlSerializer = true}).Result;
             var createdUserString = response.Content.ReadAsStringAsync().Result;
             var createdUser = JObject.Parse(createdUserString);
             return (int)createdUser["user"]["id"];

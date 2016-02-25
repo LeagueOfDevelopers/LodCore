@@ -52,10 +52,6 @@ namespace FrontendServices.App_Data.Mappers
 
         public AdminProject ToAdminProject(Project project)
         {
-            var redmineUri = new Uri(new Uri(_redmineSettings.RedmineHost), 
-                project.ProjectManagementSystemId.ToString());
-            var gitlabUri = new Uri(new Uri(_gitlabSettings.Host), 
-                project.VersionControlSystemId.ToString());
             return new AdminProject(
                 project.ProjectId,
                 project.Name,
@@ -64,9 +60,25 @@ namespace FrontendServices.App_Data.Mappers
                 project.ProjectStatus,
                 project.LandingImageUri,
                 project.AccessLevel,
-                redmineUri, 
-                gitlabUri,
+                project.RedmineProjectInfo.ProjectUrl, 
+                project.VersionControlSystemInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues), 
+                new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
+                new HashSet<Uri>(project.Screenshots));
+        }
+
+        public Models.Project ToProject(Project project)
+        {
+            return new Models.Project(
+                project.ProjectId,
+                project.Name,
+                project.ProjectTypes.ToArray(),
+                project.Info,
+                project.ProjectStatus,
+                project.LandingImageUri,
+                project.RedmineProjectInfo.ProjectUrl,
+                project.VersionControlSystemInfo.ProjectUrl,
+                new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Uri>(project.Screenshots));
         }
@@ -80,25 +92,5 @@ namespace FrontendServices.App_Data.Mappers
         private readonly IUserManager _userManager;
         private readonly RedmineSettings _redmineSettings;
         private readonly GitlabSettings _gitlabSettings;
-
-        public Models.Project ToProject(Project project)
-        {
-            var redmineUri = new Uri(new Uri(_redmineSettings.RedmineHost),
-                project.ProjectManagementSystemId.ToString());
-            var gitlabUri = new Uri(new Uri(_gitlabSettings.Host),
-                project.VersionControlSystemId.ToString());
-            return new Models.Project(
-                project.ProjectId,
-                project.Name,
-                project.ProjectTypes.ToArray(),
-                project.Info,
-                project.ProjectStatus,
-                project.LandingImageUri,
-                redmineUri,
-                gitlabUri,
-                new HashSet<Issue>(project.Issues),
-                new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<Uri>(project.Screenshots));
-        }
     }
 }
