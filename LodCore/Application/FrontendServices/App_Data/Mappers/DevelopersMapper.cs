@@ -52,11 +52,11 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId, 
                 account.Firstname,
                 account.Lastname, 
-                account.Profile.SmallPhotoUri,
+                account.Profile?.SmallPhotoUri,
                 role,
                 account.RegistrationTime,
                 projectCount,
-                account.Profile.VkProfileUri);
+                account.Profile?.VkProfileUri);
         }
 
         public Developer ToDeveloper(Account account)

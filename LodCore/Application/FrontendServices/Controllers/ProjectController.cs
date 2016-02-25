@@ -84,8 +84,7 @@ namespace FrontendServices.Controllers
                 createProjectRequest.ProjectTypes,
                 createProjectRequest.Info,
                 createProjectRequest.AccessLevel,
-                createProjectRequest.LandingImageUri
-                );
+                createProjectRequest.LandingImageUri);
 
             _projectProvider.CreateProject(request);
 
@@ -187,7 +186,7 @@ namespace FrontendServices.Controllers
                     return Ok(_projectsMapper.ToAdminProject(project));
                 }
 
-                if (!ProjectsPolicies.OnlyPublic(project) || ProjectsPolicies.OnlyDoneOrInProgress(project))
+                if (!ProjectsPolicies.OnlyPublic(project) || !ProjectsPolicies.OnlyDoneOrInProgress(project))
                 {
                     return Unauthorized();
                 }

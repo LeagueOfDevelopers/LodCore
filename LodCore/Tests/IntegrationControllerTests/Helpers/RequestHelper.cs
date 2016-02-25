@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Common;
 using FrontendServices.Models;
 using Newtonsoft.Json;
+using ProjectManagement.Domain;
 
 namespace IntegrationControllerTests.Helpers
 {
@@ -25,6 +28,25 @@ namespace IntegrationControllerTests.Helpers
                 );
 
             return responseMessage;
+        }
+
+        public static async Task<HttpResponseMessage> CreateProjectAsync()
+        {
+            var client = new HttpClient();
+            var project = new CreateProjectRequest()
+            {
+                Name = "TypicalNamsdfse",
+                AccessLevel = AccessLevel.Public,
+                Info = "TypicalInfo",
+                LandingImageUri = new Uri("https://pp.vk.me/c543107/v543107881/af01/zxFX1YLyVOE.jpg"),
+                ProjectTypes = new[] { ProjectType.Game, ProjectType.MobileApp, }
+            };
+            var response =
+                await client.PostAsync(
+                    new Uri(Settings.EndpointUri, "projects"),
+                    project,
+                    new JsonMediaTypeFormatter());
+            return response;
         }
 
         public static HttpClient Client => new HttpClient();
