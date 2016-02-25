@@ -187,6 +187,11 @@ namespace FrontendServices.Controllers
                     return Ok(_projectsMapper.ToAdminProject(project));
                 }
 
+                if (!ProjectsPolicies.OnlyPublic(project) || ProjectsPolicies.OnlyDoneOrInProgress(project))
+                {
+                    return Unauthorized();
+                }
+
                 return Ok(_projectsMapper.ToProject(project));
             }
             catch (ProjectNotFoundException)

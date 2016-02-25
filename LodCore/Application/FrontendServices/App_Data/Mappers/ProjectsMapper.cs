@@ -27,8 +27,6 @@ namespace FrontendServices.App_Data.Mappers
             Require.NotNull(gitlabSettings, nameof(gitlabSettings));
             
             _userManager = userManager;
-            _redmineSettings = redmineSettings;
-            _gitlabSettings = gitlabSettings;
         }
 
         public IndexPageProject ToIndexPageProject(Project project)
@@ -90,7 +88,5 @@ namespace FrontendServices.App_Data.Mappers
         }
 
         private readonly IUserManager _userManager;
-        private readonly RedmineSettings _redmineSettings;
-        private readonly GitlabSettings _gitlabSettings;
     }
 }
