@@ -38,10 +38,12 @@ namespace DataAccess.Repositories
             return allProjects.ToArray();
         }
 
-        public Project[] GetSomeProjects(int skipCount, int takeCount)
+        public Project[] GetSomeProjects(int skipCount, int takeCount, Func<Project, bool> predicate = null)
         {
             var session = _databaseSessionProvider.GetCurrentSession();
-            var requiredProjects = session.QueryOver<Project>().Skip(skipCount).Take(takeCount).List();
+            var requiredProjects = predicate == null 
+                ? session.QueryOver<Project>().Skip(skipCount).Take(takeCount).List()
+                : session.QueryOver<Project>().Where(project => predicate(project)).Skip(skipCount).Take(takeCount).List();
             return requiredProjects.ToArray();
         }
 

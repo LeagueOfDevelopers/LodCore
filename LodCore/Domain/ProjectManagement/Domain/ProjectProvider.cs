@@ -41,12 +41,13 @@ namespace ProjectManagement.Domain
             return allProjects.ToList();
         }
 
-        public List<Project> GetProjects(int pageNumber)
+        public List<Project> GetProjects(int pageNumber, Func<Project, bool> predicate = null)
         {
             var projectsToSkip = pageNumber*_paginationSettings.PageSize;
             var requiredProjects = _projectRepository.GetSomeProjects(
                 projectsToSkip,
-                _paginationSettings.PageSize);
+                _paginationSettings.PageSize,
+                predicate);
             return requiredProjects.ToList();
         }
 

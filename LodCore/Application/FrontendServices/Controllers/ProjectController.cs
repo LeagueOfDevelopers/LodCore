@@ -9,6 +9,7 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Collections;
 using Journalist.Extensions;
 using NotificationService;
 using ProjectManagement.Application;
@@ -54,11 +55,17 @@ namespace FrontendServices.Controllers
         [Route("projects")]
         public IEnumerable<ProjectPreview> GetAllProjects()
         {
-            var categoriesQuery = Request.RequestUri.Query;
+            var paramsQuery = Request.RequestUri.Query;
+
+            var paramsDictionary =
+                paramsQuery.Split(new[] {'?'}, StringSplitOptions.RemoveEmptyEntries)
+                    .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
+
+            string categoriesQuery = paramsDictionary.ContainsKey(CategoriesQueryParameterName) ? paramsDictionary[CategoriesQueryParameterName] : String.Empty;
+            var page = paramsDictionary.ContainsKey(PageParameterName) ? paramsDictionary[PageParameterName] : "0";
             
-            var requiredProjects = categoriesQuery.IsEmpty() 
-                ? _projectProvider.GetProjects()
-                : GetProjectsByCategory(categoriesQuery);
+            
+            var requiredProjects = GetProjectsByCategory(categoriesQuery, page);
 
             if (!User.IsInRole(AccountRole.Administrator))
             {
@@ -195,14 +202,20 @@ namespace FrontendServices.Controllers
             }
         }
 
-        private IEnumerable<Project> GetProjectsByCategory(string categoriesQuery)
+        private IEnumerable<Project> GetProjectsByCategory(string categoriesQuery, string page)
         {
-            var categories = categoriesQuery
-                .Replace("?" + CategoriesQueryParameterName + "=", string.Empty)
-                .Split(',')
-                .Select(int.Parse);
-            var projectTypes = categories.Select(category => (ProjectType)category);
-            var requiredProjects = _projectProvider.GetProjects(
+          
+            var projectTypes = categoriesQuery.IsNullOrEmpty()
+                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
+                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category);
+
+            int pageNumber;
+            if (!int.TryParse(page, out pageNumber))
+            {
+                throw new ArgumentException("This page doesn't exist");
+            }
+
+            var requiredProjects = _projectProvider.GetProjects(pageNumber,
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
             
@@ -215,5 +228,6 @@ namespace FrontendServices.Controllers
         private readonly IUserManager _userManager;
 
         private const string CategoriesQueryParameterName = "categories";
+        private const string PageParameterName = "page";
     }
 }

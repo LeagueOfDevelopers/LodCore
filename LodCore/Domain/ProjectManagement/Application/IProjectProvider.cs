@@ -8,7 +8,7 @@ namespace ProjectManagement.Application
     {
         List<Project> GetProjects(Func<Project, bool> predicate = null);
 
-        List<Project> GetProjects(int pageNumber);
+        List<Project> GetProjects(int pageNumber, Func<Project, bool> predicate = null);
 
         Project GetProject(int projectId);
 
