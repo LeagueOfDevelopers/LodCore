@@ -60,12 +60,8 @@ namespace FrontendServices.Controllers
             var paramsDictionary =
                 paramsQuery.Split(new[] {'?'}, StringSplitOptions.RemoveEmptyEntries)
                     .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
-
-            string categoriesQuery = paramsDictionary.ContainsKey(CategoriesQueryParameterName) ? paramsDictionary[CategoriesQueryParameterName] : String.Empty;
-            var page = paramsDictionary.ContainsKey(PageParameterName) ? paramsDictionary[PageParameterName] : "0";
             
-            
-            var requiredProjects = GetProjectsByCategory(categoriesQuery, page);
+            var requiredProjects = GetSomeProjects(paramsDictionary);
 
             if (!User.IsInRole(AccountRole.Administrator))
             {
@@ -202,18 +198,29 @@ namespace FrontendServices.Controllers
             }
         }
 
-        private IEnumerable<Project> GetProjectsByCategory(string categoriesQuery, string page)
+        private IEnumerable<Project> GetSomeProjects(Dictionary<string, string> paramsDictionary)
         {
-          
+            string page, categoriesQuery;
+            int pageNumber;
+
+            if (paramsDictionary.TryGetValue(PageParameterName, out page))
+            {
+                if (!int.TryParse(page, out pageNumber))
+                {
+                    throw new ArgumentException("This page doesn't exist");
+                }
+            }
+            else
+            {
+                pageNumber = 0;
+            }
+
+            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
+
             var projectTypes = categoriesQuery.IsNullOrEmpty()
                 ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
-                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category);
+                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
 
-            int pageNumber;
-            if (!int.TryParse(page, out pageNumber))
-            {
-                throw new ArgumentException("This page doesn't exist");
-            }
 
             var requiredProjects = _projectProvider.GetProjects(pageNumber,
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
