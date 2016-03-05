@@ -1,44 +1,45 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Security.Policy;
 using System.Web.Http;
 
 namespace FrontendServices.Controllers
 {
     public class TestAssignmentController : ApiController
     {
-        public HttpResponseMessage Get()
+        public string Get()
         {
-            var playerNames = new[]
+            var eventsCount = new Random().Next(0, 4);
+            var statisticEvents = Enumerable
+                .Range(0, eventsCount)
+                .Select(_ => new StatisticEvent());
+            var statisticsEventString = statisticEvents.Select(@event => $"{@event.Gender}:{@event.Condition}");
+            return
+                statisticsEventString.Any()
+                    ? statisticsEventString
+                        .Aggregate((@event1, @event2) => $"{@event1};{@event2}")
+                    : string.Empty;
+        }
+
+        private class StatisticEvent
+        {
+            public StatisticEvent()
             {
-                "LeBron James",
-                "Kobe Bryant",
-                "Chris Paul",
-                "Pau Gasol",
-                "Dirk Nowitzki",
-                "Dwyane Wade",
-                "Dwight Howard",
-                "Tony Parker",
-                "Andrey Kirillenko",
-                "Vince Carter"
-            };
+                Gender = genders.OrderBy(gender => Guid.NewGuid()).FirstOrDefault();
+                Condition = conditions.OrderBy(condition => Guid.NewGuid()).FirstOrDefault();
+            }
 
-            var teams = new[] {"CLE", "LAL", "CLE", "CLE", "LAL", "CLE", "CLE", "LAL", "LAL", "LAL" };
+            public string Gender { get; private set; }
 
-            var rand = new Random();
-            var scores = Enumerable.Range(0, 10).Select(num => rand.Next(0, 30)).ToArray();
+            public string Condition { get; private set; }
 
-            return Request.CreateResponse(
-                HttpStatusCode.OK,
-                playerNames.Select((name, index) => new
-                {
-                    PlayerName = name,
-                    Team = teams[index],
-                    Score = scores[index]
-                }), 
-                new JsonMediaTypeFormatter());
+            private static string[] genders = { "Male", "Female" };
+
+            private static string[] conditions = { "Born", "Died" };
         }
     }
 }

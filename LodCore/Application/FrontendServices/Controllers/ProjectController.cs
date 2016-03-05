@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Authorization;
@@ -10,7 +9,6 @@ using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using Journalist.Extensions;
-using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
@@ -72,6 +70,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("projects")]
+        [Authorization(AccountRole.Administrator)]
         public IHttpActionResult CreateProject([FromBody]Models.CreateProjectRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
@@ -93,6 +92,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("projects/{projectId}/developer/{developerId}")]
+        [Authorization(AccountRole.User)]
         public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody]string role)
         {
             if (!ModelState.IsValid)
@@ -100,6 +100,7 @@ namespace FrontendServices.Controllers
                 return BadRequest(ModelState);
             }
 
+            User.AssertResourceOwnerOrAdmin(developerId);
             try
             {
                 _projectProvider.GetProject(projectId);
@@ -128,6 +129,7 @@ namespace FrontendServices.Controllers
 
         [HttpDelete]
         [Route("projects/{projectId}/developer/{developerId}")]
+        [Authorization(AccountRole.User)]
         public IHttpActionResult DeleteDeveloperFromProject(int projectId, int developerId)
         {
             if (!ModelState.IsValid)
@@ -135,6 +137,7 @@ namespace FrontendServices.Controllers
                 return BadRequest(ModelState);
             }
 
+            User.AssertResourceOwnerOrAdmin(developerId);
             Project projectToDeleteUser;
 
             try

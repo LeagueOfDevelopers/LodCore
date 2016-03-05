@@ -12,7 +12,7 @@ namespace FrontendServices.Models
 
         public ProjectType[] ProjectTypes { get; set; }
 
-        [MaxLength(140)]
+        [MaxLength(500)]
         public string Info { get; set; }
 
         public AccessLevel AccessLevel { get; set; }
