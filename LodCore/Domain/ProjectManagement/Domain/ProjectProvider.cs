@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Common;
 using Journalist;
 using NotificationService;
@@ -41,12 +42,13 @@ namespace ProjectManagement.Domain
             return allProjects.ToList();
         }
 
-        public List<Project> GetProjects(int pageNumber)
+        public List<Project> GetProjects(int pageNumber, Expression<Func<Project, bool>> predicate = null)
         {
             var projectsToSkip = pageNumber*_paginationSettings.PageSize;
             var requiredProjects = _projectRepository.GetSomeProjects(
                 projectsToSkip,
-                _paginationSettings.PageSize);
+                _paginationSettings.PageSize,
+                predicate);
             return requiredProjects.ToList();
         }
 

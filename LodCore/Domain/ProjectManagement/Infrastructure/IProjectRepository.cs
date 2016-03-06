@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Infrastructure
@@ -8,7 +9,7 @@ namespace ProjectManagement.Infrastructure
     {
         Project[] GetAllProjects(Func<Project, bool> criteria = null);
 
-        Project[] GetSomeProjects(int skipCount, int takeCount);
+        Project[] GetSomeProjects(int skipCount, int takeCount, Expression<Func<Project, bool>> predicate = null);
         
         Project GetProject(int projectId);
 

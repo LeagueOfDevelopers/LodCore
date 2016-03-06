@@ -8,6 +8,7 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Collections;
 using Journalist.Extensions;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
@@ -60,11 +61,13 @@ namespace FrontendServices.Controllers
         [Route("projects")]
         public IEnumerable<ProjectPreview> GetAllProjects()
         {
-            var categoriesQuery = Request.RequestUri.Query;
+            var paramsQuery = Request.RequestUri.Query;
+
+            var paramsDictionary =
+                paramsQuery.Split(new[] {'?'}, StringSplitOptions.RemoveEmptyEntries)
+                    .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
             
-            var requiredProjects = categoriesQuery.IsEmpty() 
-                ? _projectProvider.GetProjects()
-                : GetProjectsByCategory(categoriesQuery);
+            var requiredProjects = GetSomeProjects(paramsDictionary);
 
             if (!User.IsInRole(AccountRole.User))
             {
@@ -212,14 +215,31 @@ namespace FrontendServices.Controllers
             }
         }
 
-        private IEnumerable<Project> GetProjectsByCategory(string categoriesQuery)
+        private IEnumerable<Project> GetSomeProjects(Dictionary<string, string> paramsDictionary)
         {
-            var categories = categoriesQuery
-                .Replace("?" + CategoriesQueryParameterName + "=", string.Empty)
-                .Split(',')
-                .Select(int.Parse);
-            var projectTypes = categories.Select(category => (ProjectType)category);
-            var requiredProjects = _projectProvider.GetProjects(
+            string page, categoriesQuery;
+            int pageNumber;
+
+            if (paramsDictionary.TryGetValue(PageParameterName, out page))
+            {
+                if (!int.TryParse(page, out pageNumber))
+                {
+                    throw new ArgumentException("This page doesn't exist");
+                }
+            }
+            else
+            {
+                pageNumber = 0;
+            }
+
+            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
+
+            var projectTypes = categoriesQuery.IsNullOrEmpty()
+                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
+                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
+
+
+            var requiredProjects = _projectProvider.GetProjects(pageNumber,
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
             
@@ -231,5 +251,6 @@ namespace FrontendServices.Controllers
         private readonly IUserManager _userManager;
 
         private const string CategoriesQueryParameterName = "categories";
+        private const string PageParameterName = "page";
     }
 }

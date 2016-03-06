@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
@@ -32,16 +33,20 @@ namespace DataAccess.Repositories
         {
             var session = _databaseSessionProvider.GetCurrentSession();
 
-            var allProjects = criteria == null
-                ? session.Query<Project>()
-                : session.Query<Project>().Where(criteria);
+            IEnumerable<Project> allProjects;
+            if (criteria == null) allProjects = session.Query<Project>();
+            else allProjects = session.Query<Project>().Where(criteria);
             return allProjects.ToArray();
         }
 
-        public Project[] GetSomeProjects(int skipCount, int takeCount)
+        public Project[] GetSomeProjects(int skipCount, int takeCount, Expression<Func<Project, bool>> predicate = null)
         {
             var session = _databaseSessionProvider.GetCurrentSession();
-            var requiredProjects = session.QueryOver<Project>().Skip(skipCount).Take(takeCount).List();
+            IQueryable<Project> requiredProjects;
+            if (predicate == null) requiredProjects = session.Query<Project>().Skip(skipCount).Take(takeCount);
+            else
+                requiredProjects =
+                    session.Query<Project>().Where(predicate).Skip(skipCount).Take(takeCount);
             return requiredProjects.ToArray();
         }
 

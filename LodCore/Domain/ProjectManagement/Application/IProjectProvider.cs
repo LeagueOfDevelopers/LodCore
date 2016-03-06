@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Application
@@ -8,7 +9,7 @@ namespace ProjectManagement.Application
     {
         List<Project> GetProjects(Func<Project, bool> predicate = null);
 
-        List<Project> GetProjects(int pageNumber);
+        List<Project> GetProjects(int pageNumber, Expression<Func<Project, bool>> predicate = null);
 
         Project GetProject(int projectId);
 
