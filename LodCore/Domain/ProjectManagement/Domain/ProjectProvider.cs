@@ -79,14 +79,16 @@ namespace ProjectManagement.Domain
                 request.Name,
                 new HashSet<ProjectType>(request.ProjectTypes),
                 request.Info,
-                ProjectStatus.Planned,
+                request.ProjectStatus,
                 request.LandingImageUri,
                 request.AccessLevel,
                 versionControlSystemInfo,
                 projectManagementSystemId,
                 null,
                 null,
-                null);
+                request.Screenshots != null 
+                ? new SortedSet<Uri>(request.Screenshots) 
+                : null );
             var projectId = _projectRepository.SaveProject(project);
 
             _eventSink.ConsumeEvent(new NewProjectCreated(projectId));

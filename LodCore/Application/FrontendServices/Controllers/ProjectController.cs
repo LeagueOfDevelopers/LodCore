@@ -30,7 +30,6 @@ namespace FrontendServices.Controllers
 
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
-            _authorizer = authorizer;
             _userManager = userManager;
         }
 
@@ -38,10 +37,19 @@ namespace FrontendServices.Controllers
         public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-            
-            var requiredProjects = _projectProvider.GetProjects(
-                project => ProjectsPolicies.OnlyDoneOrInProgress(project)
-                           && ProjectsPolicies.OnlyPublic(project));
+
+            List<Project> requiredProjects;
+            if (User.IsInRole(AccountRole.User))
+            {
+                requiredProjects = _projectProvider.GetProjects();
+                
+            }
+            else
+            {
+                requiredProjects = _projectProvider.GetProjects(
+                       project => ProjectsPolicies.OnlyDoneOrInProgress(project)
+                                  && ProjectsPolicies.OnlyPublic(project));
+            }
 
             var randomProjects = requiredProjects.GetRandom(count);
 
@@ -82,8 +90,10 @@ namespace FrontendServices.Controllers
                 createProjectRequest.Name,
                 createProjectRequest.ProjectTypes,
                 createProjectRequest.Info,
+                createProjectRequest.ProjectStatus,
                 createProjectRequest.AccessLevel,
-                createProjectRequest.LandingImageUri);
+                createProjectRequest.LandingImageUri,
+                createProjectRequest.Screenshots);
 
             _projectProvider.CreateProject(request);
 
@@ -218,7 +228,6 @@ namespace FrontendServices.Controllers
 
         private readonly IProjectProvider _projectProvider;
         private readonly ProjectsMapper _projectsMapper;
-        private readonly IAuthorizer _authorizer;
         private readonly IUserManager _userManager;
 
         private const string CategoriesQueryParameterName = "categories";
