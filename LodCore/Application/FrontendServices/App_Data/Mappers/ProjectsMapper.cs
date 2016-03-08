@@ -58,8 +58,8 @@ namespace FrontendServices.App_Data.Mappers
                 project.ProjectStatus,
                 project.LandingImageUri,
                 project.AccessLevel,
-                project.RedmineProjectInfo.ProjectUrl, 
                 project.VersionControlSystemInfo.ProjectUrl,
+                project.RedmineProjectInfo.ProjectUrl, 
                 new HashSet<Issue>(project.Issues), 
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Uri>(project.Screenshots));
@@ -74,8 +74,8 @@ namespace FrontendServices.App_Data.Mappers
                 project.Info,
                 project.ProjectStatus,
                 project.LandingImageUri,
-                project.RedmineProjectInfo.ProjectUrl,
                 project.VersionControlSystemInfo.ProjectUrl,
+                project.RedmineProjectInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Uri>(project.Screenshots));

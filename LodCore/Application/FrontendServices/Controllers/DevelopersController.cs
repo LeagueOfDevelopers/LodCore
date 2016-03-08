@@ -50,7 +50,7 @@ namespace FrontendServices.Controllers
             Require.ZeroOrGreater(count, nameof(count));
 
             var users = _userManager.GetUserList(
-                account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed)
+                account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
                 .GetRandom(count);
             var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
@@ -61,7 +61,7 @@ namespace FrontendServices.Controllers
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
         {
             var users = _userManager.GetUserList(
-                account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
+                account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed);
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
@@ -74,7 +74,9 @@ namespace FrontendServices.Controllers
 
             var users = _userManager.GetUserList(searchString);
 
-            var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
+            var developerPageDevelopers = users
+                .Where(user => user.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
+                .Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
 
