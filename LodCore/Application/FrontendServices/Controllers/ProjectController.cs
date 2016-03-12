@@ -64,7 +64,7 @@ namespace FrontendServices.Controllers
             var paramsQuery = Request.RequestUri.Query;
 
             var paramsDictionary =
-                paramsQuery.Split(new[] {'?'}, StringSplitOptions.RemoveEmptyEntries)
+                paramsQuery.Split(new[] {'?', '&'}, StringSplitOptions.RemoveEmptyEntries)
                     .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
             
             var requiredProjects = GetSomeProjects(paramsDictionary);

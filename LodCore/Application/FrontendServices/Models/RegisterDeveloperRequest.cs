@@ -16,11 +16,11 @@ namespace FrontendServices.Models
         public string VkProfileUri { get; set; }
         [MaxLength(12)]
         public string PhoneNumber { get; set; }
-        [MaxLength(50)]
+        [MaxLength(255)]
         public string StudyingProfile { get; set; }
         [MaxLength(10)]
         public string InstituteName { get; set; }
-        [MaxLength(30)]
+        [MaxLength(255)]
         public string Department { get; set; }
         
         public int AccessionYear { get; set; }
