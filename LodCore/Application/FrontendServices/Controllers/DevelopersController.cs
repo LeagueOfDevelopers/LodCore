@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -12,6 +13,7 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
+using Journalist.Extensions;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
@@ -26,6 +28,8 @@ namespace FrontendServices.Controllers
 
         private readonly IUserManager _userManager;
         private readonly IUserPresentationProvider _userPresentationProvider;
+
+        private const string PageParamName = "page";
 
         public DevelopersController(
             IUserManager userManager,
@@ -57,10 +61,40 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
-        [Route("developers")]
+        [Route("developers/all")]
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
         {
             var users = _userManager.GetUserList(
+                account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
+            var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
+            return developerPageDevelopers;
+        }
+
+        [HttpGet]
+        [Route("developers")]
+        public IEnumerable<DeveloperPageDeveloper> GetDevelopersByPage()
+        {
+            var paramsQuery = Request.RequestUri.Query;
+
+            var paramsNameValueConnection = HttpUtility.ParseQueryString(paramsQuery);
+
+            int pageId;
+
+            if (!paramsNameValueConnection.AllKeys.Contains(PageParamName))
+            {
+                pageId = 0;
+            }
+            else
+            {
+                var pageParamValue = paramsNameValueConnection[PageParamName];
+
+                if (!int.TryParse(pageParamValue, out pageId))
+                {
+                    throw new HttpResponseException(HttpStatusCode.BadRequest);
+                }
+            }
+
+            var users = _userManager.GetUserList(pageId,
                 account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;

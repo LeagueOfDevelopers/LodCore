@@ -56,6 +56,14 @@ namespace DataAccess.Repositories
                 : session.Query<Account>().Where(predicate).ToList();
         }
 
+        public List<Account> GetSomeAccounts(int skipCount, int takeCount, Func<Account, bool> predicate = null)
+        {
+            var session = _sessionProvider.GetCurrentSession();
+            return predicate == null
+                ? session.Query<Account>().Skip(skipCount).Take(takeCount).ToList()
+                : session.Query<Account>().Where(predicate).Skip(skipCount).Take(takeCount).ToList();
+        }
+
         public List<Account> SearchAccounts(string searchString)
         {
             var session = _sessionProvider.GetCurrentSession();

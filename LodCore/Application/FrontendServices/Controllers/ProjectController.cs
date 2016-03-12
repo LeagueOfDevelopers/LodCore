@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using Common;
 using FrontendServices.App_Data.Authorization;
@@ -224,7 +225,7 @@ namespace FrontendServices.Controllers
             {
                 if (!int.TryParse(page, out pageNumber))
                 {
-                    throw new ArgumentException("This page doesn't exist");
+                    throw new HttpResponseException(HttpStatusCode.BadRequest);
                 }
             }
             else

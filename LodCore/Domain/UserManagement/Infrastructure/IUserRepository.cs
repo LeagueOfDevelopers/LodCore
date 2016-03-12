@@ -14,6 +14,8 @@ namespace UserManagement.Infrastructure
 
         List<Account> GetAllAccounts(Func<Account, bool> predicate = null);
 
+        List<Account> GetSomeAccounts(int skipCount, int takeCount, Func<Account, bool> criteria = null);
+
         List<Account> SearchAccounts(string searchString);
     }
 }

@@ -8,6 +8,8 @@ namespace UserManagement.Application
     {
         List<Account> GetUserList(Func<Account, bool> criteria = null);
 
+        List<Account> GetUserList(int pageNumber, Func<Account, bool> criteria = null);
+
         List<Account> GetUserList(string searchString);
 
         Account GetUser(int userId);
