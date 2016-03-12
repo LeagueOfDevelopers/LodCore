@@ -4,6 +4,7 @@ using System.Net.Mail;
 using Common;
 using Journalist;
 using NHibernate.Util;
+using NotificationService;
 using UserManagement.Application;
 using UserManagement.Infrastructure;
 
@@ -13,21 +14,32 @@ namespace UserManagement.Domain
     {
         private readonly IConfirmationService _confirmationService;
         private readonly IUserRepository _repository;
+        private readonly PaginationSettings _paginationSettings;
 
         public UserManager(
             IUserRepository repository,
-            IConfirmationService confirmationService)
+            IConfirmationService confirmationService, PaginationSettings paginationSettings)
         {
             Require.NotNull(repository, nameof(repository));
             Require.NotNull(confirmationService, nameof(confirmationService));
 
             _repository = repository;
             _confirmationService = confirmationService;
+            _paginationSettings = paginationSettings;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
         {
             return _repository.GetAllAccounts(criteria);
+        }
+
+        public List<Account> GetUserList(int pageNumber, Func<Account, bool> criteria = null)
+        {
+            var projectToSkip = _paginationSettings.PageSize*pageNumber;
+            var projectsToTake = _paginationSettings.PageSize;
+
+            return _repository.GetSomeAccounts(projectToSkip, projectsToTake, criteria);
+
         }
 
         public Account GetUser(int userId)
