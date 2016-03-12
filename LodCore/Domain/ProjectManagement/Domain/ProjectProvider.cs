@@ -89,7 +89,7 @@ namespace ProjectManagement.Domain
                 null,
                 null,
                 request.Screenshots != null 
-                ? new SortedSet<Uri>(request.Screenshots) 
+                ? new HashSet<Uri>(request.Screenshots) 
                 : null );
             var projectId = _projectRepository.SaveProject(project);
 

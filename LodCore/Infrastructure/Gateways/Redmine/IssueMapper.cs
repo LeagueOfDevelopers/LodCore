@@ -13,7 +13,7 @@ namespace Gateways.Redmine
             {1, IssueType.Bug},
             {2, IssueType.Task},
             {3, IssueType.ChangeRequest},
-            {5, IssueType.Research}
+            {4, IssueType.Research}
         };
 
         public static Issue ToLodIssue(this global::Redmine.Net.Api.Types.Issue issue)
