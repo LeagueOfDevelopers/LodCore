@@ -11,11 +11,6 @@ namespace UserManagement.Domain
 {
     public class Authorizer : IAuthorizer
     {
-        private readonly ConcurrentDictionary<string, AuthorizationTokenInfo> _tokensWithGenerationTime
-            = new ConcurrentDictionary<string, AuthorizationTokenInfo>();
-
-        private readonly IUserRepository _userRepository;
-
         public Authorizer(TimeSpan tokenLifeTime, IUserRepository userRepository)
         {
             Require.NotNull(userRepository, nameof(userRepository));
@@ -63,21 +58,15 @@ namespace UserManagement.Domain
                 throw new UnauthorizedAccessException("Wrong password");
             }
 
-            ResetToken(userAccount.UserId);
+            var existantToken = TakeTokenByUserId(userAccount.UserId);
+            if (existantToken != null)
+            {
+                return existantToken;
+            }
 
             var token = GenerateNewToken(userAccount);
             _tokensWithGenerationTime.AddOrUpdate(token.Token, token, (oldToken, info) => token);
             return token;
-        }
-
-        public void ResetToken(int userId)
-        {
-            Require.Positive(userId, nameof(userId));
-            var tokenToRemove = TakeTokenByUserId(userId);
-            if (tokenToRemove != null)
-            {
-                _tokensWithGenerationTime.TryRemove(tokenToRemove.Token, out tokenToRemove);
-            }
         }
 
         public TimeSpan TokenLifeTime { get; }
@@ -100,5 +89,10 @@ namespace UserManagement.Domain
             token = token.Replace("-", "");
             return new AuthorizationTokenInfo(account.UserId, token, DateTime.Now, account.Role);
         }
+
+        private readonly ConcurrentDictionary<string, AuthorizationTokenInfo> _tokensWithGenerationTime
+            = new ConcurrentDictionary<string, AuthorizationTokenInfo>();
+
+        private readonly IUserRepository _userRepository;
     }
 }
