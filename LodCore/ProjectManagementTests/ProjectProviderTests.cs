@@ -31,7 +31,7 @@ namespace ProjectManagementTests
             _vcsGateway = new Mock<IVersionControlSystemGateway>();
             _eventSinkMock = new Mock<IEventSink>();
             _userRepository = new Mock<IUserRepository>();
-            var paginationSettings = new PaginationSettings(10);
+            var paginationSettings = new ProjectManagement.Domain.PaginationSettings(10);
 
             _pmGateway
                 .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))

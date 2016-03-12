@@ -86,6 +86,8 @@
     <Compile Include="INotificationService.cs" />
     <Compile Include="IProjectRelativesRepository.cs" />
     <Compile Include="IUsersRepository.cs" />
+    <Compile Include="NotificationService.cs" />
+    <Compile Include="PaginationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

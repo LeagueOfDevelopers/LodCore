@@ -29,7 +29,6 @@ using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using UserPresentaton;
 using IMailer = UserManagement.Application.IMailer;
-using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace FrontendServices
 {
@@ -44,7 +43,7 @@ namespace FrontendServices
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
             container.Register<UserRepository>(Lifestyle.Singleton);
             container.Register<ProjectRepository>(Lifestyle.Singleton);
-            container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
+            container.Register<UserManagement.Infrastructure.IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<ProjectManagerGateway>(Lifestyle.Singleton);
             container.Register<IRedmineUserRegistrar>(() => container.GetInstance<ProjectManagerGateway>(), Lifestyle.Singleton);
             container.Register<IProjectManagerGateway>(() => container.GetInstance<ProjectManagerGateway>(), Lifestyle.Singleton);
@@ -52,7 +51,7 @@ namespace FrontendServices
             container.Register<IGitlabUserRegistrar>(() => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
             container.Register<IVersionControlSystemGateway>(() => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
             container.Register<IConfirmationService>(() => new ConfirmationService(
-                container.GetInstance<IUserRepository>(), 
+                container.GetInstance<UserManagement.Infrastructure.IUserRepository>(), 
                 container.GetInstance<IMailer>(),
                 container.GetInstance<IValidationRequestsRepository>(), 
                 container.GetInstance<UserManagementEventSink>(), 
@@ -70,6 +69,10 @@ namespace FrontendServices
             container.Register<IUserRoleAnalyzer, UserRoleAnalyzer>(Lifestyle.Singleton);
             container.Register<INotificationEmailDescriber, NotificationEmailDescriber>(Lifestyle.Singleton);
             container.Register<IOrderRepository, OrderRepository>(Lifestyle.Singleton);
+            container.Register<INotificationService>(() => 
+                new NotificationService.NotificationService(
+                    container.GetInstance<IEventRepository>(),
+                    container.GetInstance<NotificationService.PaginationSettings>()));
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectManagerGateway>(),
@@ -77,7 +80,7 @@ namespace FrontendServices
                     container.GetInstance<IProjectRepository>(),
                     container.GetInstance<ProjectsEventSink>(),
                     container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>(),
-                    container.GetInstance<PaginationSettings>()),
+                    container.GetInstance<ProjectManagement.Domain.PaginationSettings>()),
                 Lifestyle.Singleton);
             container.Register<ProjectManagement.Infrastructure.IUserRepository>(
                 () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
@@ -97,7 +100,7 @@ namespace FrontendServices
             container.Register<INotificationSettingsRepository, NotificationSettingsRepository>(Lifestyle.Singleton);
             container.Register<IAuthorizer>(() => new Authorizer(
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
-                container.GetInstance<IUserRepository>()), 
+                container.GetInstance<UserManagement.Infrastructure.IUserRepository>()), 
                 Lifestyle.Singleton);
             container.Register<IOrderManager>(() => new OrderManagment(
                 container.GetInstance<IOrderRepository>(),
@@ -118,8 +121,9 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadGitlabSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadFileStorageSettings(settings), Lifestyle.Singleton);
-            container.Register(() => SettingsReader.ReadPaginationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadProjectsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
         }
     }
 }

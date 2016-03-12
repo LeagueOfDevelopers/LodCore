@@ -40,6 +40,16 @@ namespace DataAccess.Repositories
             return events;
         }
 
+        public Event[] GetSomeEvents(int userId, int projectsToSkip, int takeCount)
+        {
+            var session = _sessionProvider.GetCurrentSession();
+            var userDeliveries = session.Query<Delivery>().Where(delivery => delivery.UserId == userId);
+            var eventIds = userDeliveries.Select(delivery => delivery.EventId);
+            var events = session.Query<Event>().Where(@event => eventIds.Contains(@event.Id)).Skip(projectsToSkip).Take(takeCount).ToArray();
+
+            return events;
+        }
+
         public void MarkEventsAsRead(int[] eventIds)
         {
             var session = _sessionProvider.GetCurrentSession();

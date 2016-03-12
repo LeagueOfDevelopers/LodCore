@@ -6,6 +6,8 @@
 
         Event[] GetEventsByUser(int userId, bool notReadOnly);
 
+        Event[] GetSomeEvents(int userId, int projectsToSkip, int takeCount);
+
         void MarkEventsAsRead(int[] eventIds);
     }
 }

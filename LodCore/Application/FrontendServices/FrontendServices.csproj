@@ -149,6 +149,7 @@
     <Compile Include="Controllers\AuthorizationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DevelopersController.cs" />
+    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />

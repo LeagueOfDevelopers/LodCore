@@ -54,9 +54,14 @@ namespace FrontendServices.App_Data
                 settings["FileStorage.ImageExtensions"].Split(','));
         }
 
-        public static PaginationSettings ReadPaginationSettings(NameValueCollection settings)
+        public static ProjectManagement.Domain.PaginationSettings ReadProjectsPaginationSettings(NameValueCollection settings)
         {
-            return new PaginationSettings(int.Parse(settings["Pagination.PageSize"]));
+            return new ProjectManagement.Domain.PaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
+        }
+
+        public static NotificationService.PaginationSettings ReadNotificationsPaginationSettings(NameValueCollection settings)
+        {
+            return new NotificationService.PaginationSettings(int.Parse(settings["Notifications.Pagination.PageSize"]));
         }
 
         public static ConfirmationSettings ReadConfirmationSettings(NameValueCollection settings)
