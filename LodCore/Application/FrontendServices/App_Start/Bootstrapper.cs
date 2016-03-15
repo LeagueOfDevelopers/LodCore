@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Http;
+using Common;
 using ContactContext;
 using ContactContext.Events;
 using DataAccess;
@@ -108,6 +109,10 @@ namespace FrontendServices
                 ), Lifestyle.Singleton);
             container.Register<OrderManagmentEventSink>(Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
+            container.Register(
+                () =>
+                    new RelativeEqualityComparer(
+                        int.Parse(ConfigurationManager.AppSettings["RelativeEqualtyComparer.EditDistanceConsidered"])));
 
             container.Verify();
             return container;
