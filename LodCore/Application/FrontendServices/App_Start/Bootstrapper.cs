@@ -108,11 +108,11 @@ namespace FrontendServices
                 container.GetInstance<OrderManagmentEventSink>()
                 ), Lifestyle.Singleton);
             container.Register<OrderManagmentEventSink>(Lifestyle.Singleton);
-            container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register(
                 () =>
                     new RelativeEqualityComparer(
-                        int.Parse(ConfigurationManager.AppSettings["RelativeEqualtyComparer.EditDistanceConsidered"])));
+                        int.Parse(ConfigurationManager.AppSettings["RelativeEqualtyComparer.EditDistanceConsidered"])), Lifestyle.Singleton);
+            container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
 
             container.Verify();
             return container;

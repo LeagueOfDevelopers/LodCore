@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using Common;
 using Journalist;
+using Journalist.Extensions;
 using NHibernate.Util;
 using NotificationService;
 using ProjectManagement.Application;
@@ -104,7 +105,10 @@ namespace UserManagement.Domain
             Require.NotEmpty(searchString, nameof(searchString));
 
             var userRolesDictionary =
-                _userRepository.GetAllAccounts()
+                _userRepository.GetAllAccounts(account => !_projectProvider.GetProjects(
+                    project =>
+                        project.ProjectMemberships.Any(membership => membership.DeveloperId == account.UserId))
+                    .IsEmpty())
                     .ToDictionary(user => user,
                         user =>
                             _projectProvider.GetProjects(

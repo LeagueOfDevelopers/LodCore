@@ -71,12 +71,14 @@ namespace DataAccess.Repositories
         public List<Account> SearchAccounts(string searchString, Dictionary<Account, IEnumerable<string>> userRolesDictionary)
         {
             var session = _sessionProvider.GetCurrentSession();
-            return searchString.IsNullOrEmpty()
-                ? null
-                : session.Query<Account>().Where(
+
+            var allAccounts = GetAllAccounts();
+
+            return allAccounts.Where(
                     account =>
-                        userRolesDictionary[account].Any(role => _relativeEqualityComparer.Equals(role, searchString)) ||
-                        _relativeEqualityComparer.Equals($"{account.Firstname} {account.Lastname}", searchString))
+                    (userRolesDictionary.Keys.Contains(account) && 
+                        userRolesDictionary[account].Any(role => _relativeEqualityComparer.EqualsByLCS(role, searchString))) ||
+                        _relativeEqualityComparer.EqualsByLCS($"{account.Firstname} {account.Lastname}", searchString))
                     .ToList();
         }
 
