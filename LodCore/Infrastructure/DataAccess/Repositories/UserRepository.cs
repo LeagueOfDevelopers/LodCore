@@ -77,7 +77,7 @@ namespace DataAccess.Repositories
             return allAccounts.Where(
                     account =>
                     (userRolesDictionary.Keys.Contains(account) && 
-                        userRolesDictionary[account].Any(role => _relativeEqualityComparer.EqualsByLCS(role, searchString))) ||
+                        userRolesDictionary[account].Any(role => _relativeEqualityComparer.Equals(role, searchString))) ||
                         _relativeEqualityComparer.EqualsByLCS($"{account.Firstname} {account.Lastname}", searchString))
                     .ToList();
         }
