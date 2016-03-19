@@ -31,6 +31,7 @@ namespace UserManagement.Domain
 
             if (token.CreationTime + TokenLifeTime < DateTime.Now)
             {
+                _tokensWithGenerationTime.TryRemove(token.Token, out token);
                 return null;
             }
 
