@@ -78,6 +78,7 @@
     <Compile Include="Domain\UserRoleAnalyzerSettings.cs" />
     <Compile Include="Domain\VersionControlSystemInfo.cs" />
     <Compile Include="Infrastructure\IProjectManagerGateway.cs" />
+    <Compile Include="Infrastructure\IProjectMembershipRepostiory.cs" />
     <Compile Include="Infrastructure\IProjectRepository.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />

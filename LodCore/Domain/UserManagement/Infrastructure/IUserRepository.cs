@@ -16,6 +16,6 @@ namespace UserManagement.Infrastructure
 
         List<Account> GetSomeAccounts(int skipCount, int takeCount, Func<Account, bool> criteria = null);
 
-        List<Account> SearchAccounts(string searchString);
+        List<Account> SearchAccounts(string searchString, Dictionary<Account, IEnumerable<string>> userRolesDictionary);
     }
 }

@@ -86,6 +86,7 @@
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\NotificationSettingsRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
+    <Compile Include="Repositories\ProjectMembershipRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="Repositories\ValidationRequestsRepository.cs" />

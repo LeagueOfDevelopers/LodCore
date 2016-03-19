@@ -111,6 +111,10 @@
       <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
       <Name>NotificationService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ProjectManagement\ProjectManagement.csproj">
+      <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>
+      <Name>ProjectManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

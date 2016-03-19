@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Http;
+using Common;
 using ContactContext;
 using ContactContext.Events;
 using DataAccess;
@@ -108,6 +109,7 @@ namespace FrontendServices
                 ), Lifestyle.Singleton);
             container.Register<OrderManagmentEventSink>(Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
+            container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
 
             container.Verify();
             return container;
@@ -124,6 +126,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadProjectsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadRelativeEqualityComparerSettings(settings), Lifestyle.Singleton);
         }
     }
 }

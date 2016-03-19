@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
@@ -14,11 +15,14 @@ namespace DataAccess.Repositories
     {
         private readonly DatabaseSessionProvider _sessionProvider;
 
-        public UserRepository(DatabaseSessionProvider sessionProvider)
+        private readonly Common.RelativeEqualityComparer _relativeEqualityComparer;
+
+        public UserRepository(DatabaseSessionProvider sessionProvider, RelativeEqualityComparer relativeEqualityComparer)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 
             _sessionProvider = sessionProvider;
+            _relativeEqualityComparer = relativeEqualityComparer;
         }
 
         public int CreateAccount(Account account)
@@ -64,16 +68,16 @@ namespace DataAccess.Repositories
                 : session.Query<Account>().Where(predicate).Skip(skipCount).Take(takeCount).ToList();
         }
 
-        public List<Account> SearchAccounts(string searchString)
+        public List<Account> SearchAccounts(string searchString, Dictionary<Account, IEnumerable<string>> userRolesDictionary)
         {
             var session = _sessionProvider.GetCurrentSession();
-            return searchString.IsNullOrEmpty()
-                ? null
-                : session.Query<Account>().Where(
-                    account =>
-                        (account.Firstname + " " + account.Lastname).ToLower().Contains(searchString.ToLower()) ||
-                        (account.Role == AccountRole.User ? "разработчик" : "администратор").Contains(
-                            searchString.ToLower())).ToList();
+
+            return
+                userRolesDictionary.Where(
+                    pair =>
+                        pair.Value.Any(role => _relativeEqualityComparer.Equals(role, searchString)) ||
+                        _relativeEqualityComparer.EqualsByLCS($"{pair.Key.Firstname} {pair.Key.Lastname}", searchString))
+                    .Select(pair => pair.Key).ToList();
         }
 
         public int GetUserRedmineId(int userId)
