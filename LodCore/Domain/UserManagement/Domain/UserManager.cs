@@ -5,6 +5,7 @@ using System.Net.Mail;
 using Common;
 using Journalist;
 using Journalist.Extensions;
+using NHibernate.Linq;
 using NHibernate.Util;
 using NotificationService;
 using ProjectManagement.Application;
@@ -21,10 +22,12 @@ namespace UserManagement.Domain
         private readonly IProjectProvider _projectProvider;
         private readonly PaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
+        private readonly Common.RelativeEqualityComparer _relativeEqualityComparer;
+
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory)
+            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory, RelativeEqualityComparer relativeEqualityComparer)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -34,6 +37,7 @@ namespace UserManagement.Domain
             _paginationSettings = paginationSettings;
             _projectProvider = projectProvider;
             _projectMembershipRepostiory = projectMembershipRepostiory;
+            _relativeEqualityComparer = relativeEqualityComparer;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -118,7 +122,11 @@ namespace UserManagement.Domain
                     allProjectMemberships.Where(membership => membership.DeveloperId == user.UserId)
                         .Select(that => that.Role));
 
-            return _userRepository.SearchAccounts(searchString, userRolesDictionary);
+            return userRolesDictionary.Where(
+                pair =>
+                    pair.Value.Any(role => Extensions.Contains(role, searchString)) ||
+                    _relativeEqualityComparer.EqualsByLCS($"{pair.Key.Firstname} {pair.Key.Lastname}", searchString))
+                .Select(pair => pair.Key).ToList();
         }
     }
 }
