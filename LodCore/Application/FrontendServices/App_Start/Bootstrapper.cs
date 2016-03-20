@@ -110,6 +110,7 @@ namespace FrontendServices
             container.Register<OrderManagmentEventSink>(Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
+            container.Register<NotificationEventSink>(Lifestyle.Singleton);
 
             container.Verify();
             return container;

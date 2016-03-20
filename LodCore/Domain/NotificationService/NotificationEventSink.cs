@@ -18,6 +18,8 @@ namespace NotificationService
             var distributionPolicy = DistributionPolicyFactory.GetAllPolicy();
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
+
+            SendOutEmailsAboutEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
     }
 }

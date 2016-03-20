@@ -7,6 +7,7 @@
         NewEmailConfirmedDeveloper,
         NewFullConfirmedDeveloper,
         NewProjectCreated,
-        OrderPlaced
+        OrderPlaced,
+        AdminNotificationInfo
     }
 }

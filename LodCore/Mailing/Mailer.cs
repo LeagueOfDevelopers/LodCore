@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using Journalist;
 using NotificationService;
@@ -51,9 +52,8 @@ namespace Mailing
             mail.Body = string.Format(MailingResources.NotificationMessageTemplate,
                 _notificationEmailDescriber.Describe((dynamic) eventInfo));
 
-            foreach (var userId in userIds)
+            foreach (var emailAdress in userIds.Select(userId => _usersRepository.GetAccount(userId).Email))
             {
-                var emailAdress = _usersRepository.GetAccount(userId).Email;
                 mail.To.Add(emailAdress);
 
                 client.Send(mail);
