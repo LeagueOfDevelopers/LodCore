@@ -15,14 +15,11 @@ namespace DataAccess.Repositories
     {
         private readonly DatabaseSessionProvider _sessionProvider;
 
-        private readonly Common.RelativeEqualityComparer _relativeEqualityComparer;
-
-        public UserRepository(DatabaseSessionProvider sessionProvider, RelativeEqualityComparer relativeEqualityComparer)
+        public UserRepository(DatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 
             _sessionProvider = sessionProvider;
-            _relativeEqualityComparer = relativeEqualityComparer;
         }
 
         public int CreateAccount(Account account)
@@ -66,18 +63,6 @@ namespace DataAccess.Repositories
             return predicate == null
                 ? session.Query<Account>().Skip(skipCount).Take(takeCount).ToList()
                 : session.Query<Account>().Where(predicate).Skip(skipCount).Take(takeCount).ToList();
-        }
-
-        public List<Account> SearchAccounts(string searchString, Dictionary<Account, IEnumerable<string>> userRolesDictionary)
-        {
-            var session = _sessionProvider.GetCurrentSession();
-
-            return
-                userRolesDictionary.Where(
-                    pair =>
-                        pair.Value.Any(role => _relativeEqualityComparer.Equals(role, searchString)) ||
-                        _relativeEqualityComparer.EqualsByLCS($"{pair.Key.Firstname} {pair.Key.Lastname}", searchString))
-                    .Select(pair => pair.Key).ToList();
         }
 
         public int GetUserRedmineId(int userId)
