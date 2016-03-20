@@ -73,6 +73,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminNotificationInfo.cs" />
     <Compile Include="DistributionPolicy.cs" />
     <Compile Include="DistributionPolicyFactory.cs" />
     <Compile Include="Event.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="INotificationService.cs" />
     <Compile Include="IProjectRelativesRepository.cs" />
     <Compile Include="IUsersRepository.cs" />
+    <Compile Include="NotificationEventSink.cs" />
     <Compile Include="NotificationService.cs" />
     <Compile Include="PaginationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

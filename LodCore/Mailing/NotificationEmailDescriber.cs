@@ -95,5 +95,10 @@ namespace Mailing
             return string.Format(EventDescriptionResources.OrderPlaced, order.CreatedOnDateTime.Date, order.Header,
                 order.Email, order.Description);
         }
+
+        private string Describe(AdminNotificationInfo @event)
+        {
+            return string.Format(@event.InfoText);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Web.Http;
 using FrontendServices.Authorization;
 using Journalist;
+using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
 
@@ -9,10 +10,11 @@ namespace FrontendServices.Controllers
 {
     public class AdminController : ApiController
     {
-        public AdminController(IConfirmationService confirmationService)
+        public AdminController(IConfirmationService confirmationService, NotificationEventSink notificationEventSink)
         {
             Require.NotNull(confirmationService, nameof(confirmationService));
             _confirmationService = confirmationService;
+            _notificationEventSink = notificationEventSink;
         }
 
         [HttpPost]
@@ -37,6 +39,19 @@ namespace FrontendServices.Controllers
             return Ok();
         }
 
+        [HttpPost]
+        [Route("admin/notification")]
+        [Authorization(AccountRole.Administrator)]
+        public IHttpActionResult SendAdminNotification([FromBody]string textInfo)
+        {
+            Require.NotEmpty(textInfo, nameof(textInfo));
+            
+            _notificationEventSink.ConsumeEvent(new AdminNotificationInfo(textInfo));
+
+            return Ok();
+        }
+
         private readonly IConfirmationService _confirmationService;
+        private readonly NotificationEventSink _notificationEventSink;
     }
 }

@@ -1,36 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using Common;
 using Journalist;
+using Journalist.Extensions;
+using NHibernate.Linq;
 using NHibernate.Util;
 using NotificationService;
+using ProjectManagement.Application;
+using ProjectManagement.Infrastructure;
 using UserManagement.Application;
-using UserManagement.Infrastructure;
+using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace UserManagement.Domain
 {
     public class UserManager : IUserManager
     {
         private readonly IConfirmationService _confirmationService;
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository _userRepository;
+        private readonly IProjectProvider _projectProvider;
         private readonly PaginationSettings _paginationSettings;
+        private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
+        private readonly Common.RelativeEqualityComparer _relativeEqualityComparer;
+
 
         public UserManager(
-            IUserRepository repository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings)
+            IUserRepository userRepository,
+            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory, RelativeEqualityComparer relativeEqualityComparer)
         {
-            Require.NotNull(repository, nameof(repository));
+            Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
 
-            _repository = repository;
+            _userRepository = userRepository;
             _confirmationService = confirmationService;
             _paginationSettings = paginationSettings;
+            _projectProvider = projectProvider;
+            _projectMembershipRepostiory = projectMembershipRepostiory;
+            _relativeEqualityComparer = relativeEqualityComparer;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
         {
-            return _repository.GetAllAccounts(criteria);
+            return _userRepository.GetAllAccounts(criteria);
         }
 
         public List<Account> GetUserList(int pageNumber, Func<Account, bool> criteria = null)
@@ -38,7 +50,7 @@ namespace UserManagement.Domain
             var projectToSkip = _paginationSettings.PageSize*pageNumber;
             var projectsToTake = _paginationSettings.PageSize;
 
-            return _repository.GetSomeAccounts(projectToSkip, projectsToTake, criteria);
+            return _userRepository.GetSomeAccounts(projectToSkip, projectsToTake, criteria);
 
         }
 
@@ -46,7 +58,7 @@ namespace UserManagement.Domain
         {
             Require.Positive(userId, nameof(userId));
 
-            var account = _repository.GetAccount(userId);
+            var account = _userRepository.GetAccount(userId);
             if (account == null)
             {
                 throw new AccountNotFoundException();
@@ -59,7 +71,7 @@ namespace UserManagement.Domain
         {
             Require.NotNull(request, nameof(request));
 
-            var doesExist = GetUserList(account => account.Email.Address == request.Email).Any();
+            var doesExist = EnumerableExtensions.Any(GetUserList(account => account.Email.Address == request.Email));
             if (doesExist)
             {
                 throw new AccountAlreadyExistsException();
@@ -77,7 +89,7 @@ namespace UserManagement.Domain
                 0,
                 0);
 
-            var userId = _repository.CreateAccount(newAccount);
+            var userId = _userRepository.CreateAccount(newAccount);
 
             _confirmationService.SetupEmailConfirmation(userId);
         }
@@ -86,20 +98,35 @@ namespace UserManagement.Domain
         {
             Require.NotNull(account, nameof(account));
 
-            var accountExists = _repository.GetAccount(account.UserId) != null;
+            var accountExists = _userRepository.GetAccount(account.UserId) != null;
             if (!accountExists)
             {
                 throw new AccountNotFoundException();
             }
 
-            _repository.UpdateAccount(account);
+            _userRepository.UpdateAccount(account);
         }
 
         public List<Account> GetUserList(string searchString)
         {
             Require.NotEmpty(searchString, nameof(searchString));
 
-            return _repository.SearchAccounts(searchString);
+            var allProjectMemberships = _projectMembershipRepostiory.GetAllProjectMemberships().ToList();
+
+            var allUsersToSearchByRole =
+                new HashSet<Account>(
+                    allProjectMemberships.Select(membership => _userRepository.GetAccount(membership.DeveloperId)));
+
+            var userRolesDictionary = allUsersToSearchByRole.ToDictionary(user => user,
+                user =>
+                    allProjectMemberships.Where(membership => membership.DeveloperId == user.UserId)
+                        .Select(that => that.Role));
+
+            return userRolesDictionary.Where(
+                pair =>
+                    pair.Value.Any(role => Extensions.Contains(role, searchString)) ||
+                    _relativeEqualityComparer.EqualsByLCS($"{pair.Key.Firstname} {pair.Key.Lastname}", searchString))
+                .Select(pair => pair.Key).ToList();
         }
     }
 }

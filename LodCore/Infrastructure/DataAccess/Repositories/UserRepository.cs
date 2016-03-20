@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
@@ -62,18 +63,6 @@ namespace DataAccess.Repositories
             return predicate == null
                 ? session.Query<Account>().Skip(skipCount).Take(takeCount).ToList()
                 : session.Query<Account>().Where(predicate).Skip(skipCount).Take(takeCount).ToList();
-        }
-
-        public List<Account> SearchAccounts(string searchString)
-        {
-            var session = _sessionProvider.GetCurrentSession();
-            return searchString.IsNullOrEmpty()
-                ? null
-                : session.Query<Account>().Where(
-                    account =>
-                        (account.Firstname + " " + account.Lastname).ToLower().Contains(searchString.ToLower()) ||
-                        (account.Role == AccountRole.User ? "разработчик" : "администратор").Contains(
-                            searchString.ToLower())).ToList();
         }
 
         public int GetUserRedmineId(int userId)

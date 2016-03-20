@@ -2,6 +2,7 @@
 using System.Collections.Specialized;
 using System.IO;
 using System.Web;
+using Common;
 using FilesManagement;
 using Gateways.Gitlab;
 using Gateways.Redmine;
@@ -36,6 +37,11 @@ namespace FrontendServices.App_Data
             return new UserRoleAnalyzerSettings(
                 int.Parse(settings["UserRoleAnalyzer.AppropriateEditDistance"]),
                 settings["UserRoleAnalyzer.DefaultRole"]);
+        }
+
+        public static RelativeEqualityComparer ReadRelativeEqualityComparerSettings(NameValueCollection settings)
+        {
+            return new RelativeEqualityComparer(int.Parse(settings["UserRoleAnalyzer.AppropriateEditDistance"]));
         }
 
         public static GitlabSettings ReadGitlabSettings(NameValueCollection settings)
