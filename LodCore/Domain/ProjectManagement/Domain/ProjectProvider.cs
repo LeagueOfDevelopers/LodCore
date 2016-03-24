@@ -19,7 +19,7 @@ namespace ProjectManagement.Domain
             IProjectRepository projectRepository,
             IEventSink eventSink,
             IUserRepository userRepository,
-            PaginationSettings paginationSettings)
+            PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
@@ -34,6 +34,7 @@ namespace ProjectManagement.Domain
             _eventSink = eventSink;
             _userRepository = userRepository;
             _paginationSettings = paginationSettings;
+            _issuePaginationSettings = issuePaginationSettings;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
@@ -52,7 +53,7 @@ namespace ProjectManagement.Domain
             return requiredProjects.ToList();
         }
 
-        public Project GetProject(int projectId)
+        public Project GetProject(int projectId, List<IssueType> issueTypes = null, List<IssueStatus> statusList = null)
         {
             Require.Positive(projectId, nameof(projectId));
             var project = _projectRepository.GetProject(projectId);
@@ -61,7 +62,9 @@ namespace ProjectManagement.Domain
                 throw new ProjectNotFoundException();
             }
 
-            var issues = _projectManagerGateway.GetProjectIssues(project.RedmineProjectInfo.ProjectId);
+            var issues = _projectManagerGateway.GetProjectIssues(project.RedmineProjectInfo.ProjectId,
+                _issuePaginationSettings.NumberOfIssues, issueTypes, statusList);
+
             foreach (var issue in issues)
             {
                 project.Issues.Add(issue);
@@ -178,6 +181,7 @@ namespace ProjectManagement.Domain
         private readonly IEventSink _eventSink;
         private readonly IUserRepository _userRepository;
         private readonly PaginationSettings _paginationSettings;
+        private readonly IssuePaginationSettings _issuePaginationSettings;
 
         private readonly IProjectManagerGateway _projectManagerGateway;
         private readonly IProjectRepository _projectRepository;

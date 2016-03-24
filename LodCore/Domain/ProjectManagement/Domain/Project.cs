@@ -61,7 +61,7 @@ namespace ProjectManagement.Domain
 
         public virtual RedmineProjectInfo RedmineProjectInfo { get; protected set; }
 
-        public virtual ISet<Issue> Issues { get; protected set; } = new HashSet<Issue>();
+        public virtual ISet<Issue> Issues { get; set; } = new HashSet<Issue>();
 
         public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
 

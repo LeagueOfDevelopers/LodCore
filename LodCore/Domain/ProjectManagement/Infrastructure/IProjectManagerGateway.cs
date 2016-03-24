@@ -1,4 +1,5 @@
-﻿using ProjectManagement.Application;
+﻿using System.Collections.Generic;
+using ProjectManagement.Application;
 using ProjectManagement.Domain;
 
 namespace ProjectManagement.Infrastructure
@@ -9,7 +10,7 @@ namespace ProjectManagement.Infrastructure
 
         void RemoveUserFromProject(int redmineProjectId, int redmineUserId);
 
-        Issue[] GetProjectIssues(int projectManagerProjectId);
+        Issue[] GetProjectIssues(int projectManagerProjectId, int countOfProjects, List<IssueType> issueTypes, List<IssueStatus> statusList);
 
         RedmineProjectInfo CreateProject(CreateProjectRequest request);
     }

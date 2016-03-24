@@ -19,6 +19,7 @@ using Redmine.Net.Api.Types;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using Issue = ProjectManagement.Domain.Issue;
+using IssueStatus = ProjectManagement.IssueStatus;
 using Project = Redmine.Net.Api.Types.Project;
 using ProjectMembership = Redmine.Net.Api.Types.ProjectMembership;
 using ProjectStatus = Redmine.Net.Api.Types.ProjectStatus;
@@ -76,11 +77,30 @@ namespace Gateways.Redmine
                 null);
         }
 
-        public Issue[] GetProjectIssues(int projectManagerProjectId)
+        public Issue[] GetProjectIssues(int projectManagerProjectId, int countOfProjects, List<IssueType> issueTypes, List<IssueStatus> statusList)
         {
             Require.Positive(projectManagerProjectId, nameof(projectManagerProjectId));
 
-            var parameters = new NameValueCollection {{"project_id", projectManagerProjectId.ToString()}};
+            var issueTypesInts = issueTypes.Select(e => (int) e);
+            var statusListInts = statusList.Select(e => (int)e);
+
+            var parameters = new NameValueCollection
+            {
+                {"project_id", projectManagerProjectId.ToString()},
+                {"sort", "desc:created_on" },
+                {"limit", countOfProjects.ToString()}
+            };
+
+            if (issueTypes != null)
+            {
+                parameters.Add( "tracker_id", string.Join("|", issueTypesInts));
+            }
+
+            if (statusList!=null)
+            {
+                parameters.Add( "status_id", string.Join("|", statusListInts));
+            }
+
             IList<global::Redmine.Net.Api.Types.Issue> issues = null;
             try
             {

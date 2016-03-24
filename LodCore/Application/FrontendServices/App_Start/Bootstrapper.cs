@@ -81,7 +81,8 @@ namespace FrontendServices
                     container.GetInstance<IProjectRepository>(),
                     container.GetInstance<ProjectsEventSink>(),
                     container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>(),
-                    container.GetInstance<ProjectManagement.Domain.PaginationSettings>()),
+                    container.GetInstance<ProjectManagement.Domain.PaginationSettings>(),
+                    container.GetInstance<IssuePaginationSettings>()),
                 Lifestyle.Singleton);
             container.Register<ProjectManagement.Infrastructure.IUserRepository>(
                 () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
@@ -128,6 +129,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadRelativeEqualityComparerSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadIssuePaginationSettings(settings), Lifestyle.Singleton);
         }
     }
 }
