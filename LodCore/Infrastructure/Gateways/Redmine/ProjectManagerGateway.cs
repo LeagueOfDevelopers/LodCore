@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Web;
 using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using Journalist.Collections;
@@ -101,22 +103,21 @@ namespace Gateways.Redmine
                 parameters.Add( "status_id", string.Join("|", statusListInts));
             }
 
-            IList<global::Redmine.Net.Api.Types.Issue> issues = null;
-            try
-            {
-                issues = _redmineManager.GetObjectList<global::Redmine.Net.Api.Types.Issue>(parameters);
-            }
-            catch (RedmineException)
-            {
-                // todo: add logging here
-                return EmptyArray.Get<Issue>();
-            }
-            if (issues == null)
-            {
-                return EmptyArray.Get<Issue>();
-            }
+            var paramsQuerry = string.Join("&",
+                parameters.AllKeys.Select(a => a + "=" + HttpUtility.UrlEncode(parameters[a])));
 
+            var client = new HttpClient();
+            var address = _redmineSettings.RedmineHost + "/issues.json";
+            var authHeaderByteArray = Encoding.ASCII.GetBytes($"{_redmineSettings.ApiKey}:pass");
+            client.DefaultRequestHeaders.Authorization
+                = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authHeaderByteArray));
+
+            var response = client.GetAsync(address + "?" + paramsQuerry).Result;
+            var returnedIssuesAsString = response.Content.ReadAsStringAsync().Result;
+
+            var issues = JObject.Parse(returnedIssuesAsString)["issues"].ToObject<global::Redmine.Net.Api.Types.Issue[]>();
             var lodIssue = issues.Select(IssueMapper.ToLodIssue);
+
             return lodIssue.ToArray();
         }
 
