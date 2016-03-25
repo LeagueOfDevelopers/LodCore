@@ -15,7 +15,8 @@ namespace Mailing
             string caption, 
             string messageTemplate, 
             int basicEmailTimeoutInSecond, 
-            int timeoutIncrementInSeconds)
+            int timeoutIncrementInSeconds,
+            int maxEmailTimeoutInSecond)
         {
             Require.NotEmpty(smtpServer, nameof(smtpServer));
             Require.Positive(port, nameof(port));
@@ -25,6 +26,10 @@ namespace Mailing
             Require.NotEmpty(messageTemplate, nameof(messageTemplate));
             Require.Positive(basicEmailTimeoutInSecond, nameof(basicEmailTimeoutInSecond));
             Require.Positive(timeoutIncrementInSeconds, nameof(timeoutIncrementInSeconds));
+            Require.True(
+                maxEmailTimeoutInSecond > basicEmailTimeoutInSecond, 
+                nameof(maxEmailTimeoutInSecond), 
+                "Max email timeout needs to be higher than basic");
 
             SmtpServer = smtpServer;
             Port = port;
@@ -34,6 +39,7 @@ namespace Mailing
             MessageTemplate = messageTemplate;
             BasicEmailTimeout = TimeSpan.FromSeconds(basicEmailTimeoutInSecond);
             TimeoutIncrement = TimeSpan.FromSeconds(timeoutIncrementInSeconds);
+            MaxEmailTimeoutInSecond = TimeSpan.FromSeconds(maxEmailTimeoutInSecond);
         }
 
         public string SmtpServer { get; }
@@ -46,6 +52,7 @@ namespace Mailing
 
         public TimeSpan BasicEmailTimeout { get; }
         public TimeSpan TimeoutIncrement { get; }
+        public TimeSpan MaxEmailTimeoutInSecond { get; }
 
         public SmtpClient GetSmtpClient()
         {

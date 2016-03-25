@@ -35,13 +35,16 @@ namespace Mailing.AsyncMailing
                     var emailProcessed = TryProcessEmail();
                     _currentTimeout = emailProcessed
                         ? _mailerSettings.BasicEmailTimeout
-                        : _currentTimeout + _mailerSettings.TimeoutIncrement;
+                        : _currentTimeout >= _mailerSettings.MaxEmailTimeoutInSecond
+                            ? _mailerSettings.MaxEmailTimeoutInSecond
+                            : _currentTimeout + _mailerSettings.TimeoutIncrement;
                     Task.Delay(_currentTimeout);
                 }
             }, 
             _cancellationTokenSource.Token, 
             TaskCreationOptions.LongRunning, 
             TaskScheduler.Default);
+            Trace.WriteLine("Email sending started");
         }
 
         public void StopSending()

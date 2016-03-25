@@ -24,7 +24,8 @@ namespace FrontendServices.App_Data
                 settings["MailerSettings.MessageTemplate"],
                 settings["MailerSettings.Caption"],
                 int.Parse(settings["MailerSettings.BasicEmailTimeoutInSecond"]),
-                int.Parse(settings["MailerSettings.TimeoutIncrementInSeconds"]));
+                int.Parse(settings["MailerSettings.TimeoutIncrementInSeconds"]),
+                int.Parse(settings["MailerSettings.MaxEmailTimeout"]));
         }
 
         public static RedmineSettings ReadRedmineSettings(NameValueCollection settings)
@@ -67,9 +68,9 @@ namespace FrontendServices.App_Data
                 settings["FileStorage.ImageExtensions"].Split(','));
         }
 
-        public static ProjectManagement.Domain.PaginationSettings ReadProjectsPaginationSettings(NameValueCollection settings)
+        public static PaginationSettings ReadProjectsPaginationSettings(NameValueCollection settings)
         {
-            return new ProjectManagement.Domain.PaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
+            return new PaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
         }
 
         public static NotificationService.PaginationSettings ReadNotificationsPaginationSettings(NameValueCollection settings)
