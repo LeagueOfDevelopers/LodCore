@@ -50,7 +50,8 @@ namespace ProjectManagementTests
                 _projectRepository.Object,
                 _eventSinkMock.Object,
                 _userRepository.Object,
-                paginationSettings);
+                paginationSettings,
+                new IssuePaginationSettings(25));
         }
 
         [TestMethod]

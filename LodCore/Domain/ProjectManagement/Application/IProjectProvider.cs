@@ -11,7 +11,7 @@ namespace ProjectManagement.Application
 
         List<Project> GetProjects(int pageNumber, Expression<Func<Project, bool>> predicate = null);
 
-        Project GetProject(int projectId);
+        Project GetProject(int projectId, List<IssueType> issueTypes = null, List<IssueStatus> statusList = null);
 
         void CreateProject(CreateProjectRequest request);
 

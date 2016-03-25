@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Web;
 using BinaryAnalysis.UnidecodeSharp;
 using Journalist;
 using Journalist.Collections;
@@ -19,6 +21,7 @@ using Redmine.Net.Api.Types;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using Issue = ProjectManagement.Domain.Issue;
+using IssueStatus = ProjectManagement.IssueStatus;
 using Project = Redmine.Net.Api.Types.Project;
 using ProjectMembership = Redmine.Net.Api.Types.ProjectMembership;
 using ProjectStatus = Redmine.Net.Api.Types.ProjectStatus;
@@ -76,27 +79,45 @@ namespace Gateways.Redmine
                 null);
         }
 
-        public Issue[] GetProjectIssues(int projectManagerProjectId)
+        public Issue[] GetProjectIssues(int projectManagerProjectId, int countOfProjects, List<IssueType> issueTypes, List<IssueStatus> statusList)
         {
             Require.Positive(projectManagerProjectId, nameof(projectManagerProjectId));
 
-            var parameters = new NameValueCollection {{"project_id", projectManagerProjectId.ToString()}};
-            IList<global::Redmine.Net.Api.Types.Issue> issues = null;
-            try
+            var issueTypesInts = issueTypes.Select(e => (int) e);
+            var statusListInts = statusList.Select(e => (int)e);
+
+            var parameters = new NameValueCollection
             {
-                issues = _redmineManager.GetObjectList<global::Redmine.Net.Api.Types.Issue>(parameters);
-            }
-            catch (RedmineException)
+                {"project_id", projectManagerProjectId.ToString()},
+                {"sort", "desc:created_on" },
+                {"limit", countOfProjects.ToString()}
+            };
+
+            if (issueTypes != null)
             {
-                // todo: add logging here
-                return EmptyArray.Get<Issue>();
-            }
-            if (issues == null)
-            {
-                return EmptyArray.Get<Issue>();
+                parameters.Add( "tracker_id", string.Join("|", issueTypesInts));
             }
 
+            if (statusList!=null)
+            {
+                parameters.Add( "status_id", string.Join("|", statusListInts));
+            }
+
+            var paramsQuerry = string.Join("&",
+                parameters.AllKeys.Select(a => a + "=" + HttpUtility.UrlEncode(parameters[a])));
+
+            var client = new HttpClient();
+            var address = _redmineSettings.RedmineHost + "/issues.json";
+            var authHeaderByteArray = Encoding.ASCII.GetBytes($"{_redmineSettings.ApiKey}:pass");
+            client.DefaultRequestHeaders.Authorization
+                = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authHeaderByteArray));
+
+            var response = client.GetAsync(address + "?" + paramsQuerry).Result;
+            var returnedIssuesAsString = response.Content.ReadAsStringAsync().Result;
+
+            var issues = JObject.Parse(returnedIssuesAsString)["issues"].ToObject<global::Redmine.Net.Api.Types.Issue[]>();
             var lodIssue = issues.Select(IssueMapper.ToLodIssue);
+
             return lodIssue.ToArray();
         }
 

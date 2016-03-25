@@ -3,8 +3,7 @@
     public enum IssueType
     {
         Bug,
-        Task,
         Research,
-        ChangeRequest
+        Task
     }
 }

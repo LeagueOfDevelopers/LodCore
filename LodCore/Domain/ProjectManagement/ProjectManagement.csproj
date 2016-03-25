@@ -67,6 +67,7 @@
     <Compile Include="Domain\Events\NewDeveloperOnProject.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueCompletionStatus.cs" />
+    <Compile Include="Domain\IssuePaginationSettings.cs" />
     <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\PaginationSettings.cs" />
     <Compile Include="Domain\Project.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Infrastructure\IProjectRepository.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\IVersionControlSystemGateway.cs" />
+    <Compile Include="IssueStatus.cs" />
     <Compile Include="ProjectCreationFailedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedmineProjectInfo.cs" />

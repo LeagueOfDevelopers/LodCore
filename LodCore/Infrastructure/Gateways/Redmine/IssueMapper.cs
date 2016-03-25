@@ -11,9 +11,8 @@ namespace Gateways.Redmine
         private static readonly Dictionary<int, IssueType> RedmineTrackerIdToIssueType = new Dictionary<int, IssueType>
         {
             {1, IssueType.Bug},
-            {2, IssueType.Task},
-            {3, IssueType.ChangeRequest},
-            {4, IssueType.Research}
+            {2, IssueType.Research},
+            {3, IssueType.Task}
         };
 
         public static Issue ToLodIssue(this global::Redmine.Net.Api.Types.Issue issue)

@@ -11,6 +11,7 @@ using FrontendServices.Models;
 using Journalist;
 using Journalist.Collections;
 using Journalist.Extensions;
+using ProjectManagement;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
@@ -194,9 +195,12 @@ namespace FrontendServices.Controllers
         {
             Require.Positive(projectId, nameof(projectId));
 
+            var issueTypes = new[] {IssueType.Research, IssueType.Task}.ToList();
+            var statusOfIssues = new[] {IssueStatus.Ready, IssueStatus.InProgress}.ToList();
+
             try
             {
-                var project = _projectProvider.GetProject(projectId);
+                var project = _projectProvider.GetProject(projectId, issueTypes, statusOfIssues);
 
                 if (User.IsInRole(AccountRole.User))
                 {

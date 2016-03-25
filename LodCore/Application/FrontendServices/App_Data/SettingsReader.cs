@@ -46,6 +46,11 @@ namespace FrontendServices.App_Data
             return new RelativeEqualityComparer(int.Parse(settings["UserRoleAnalyzer.AppropriateEditDistance"]));
         }
 
+        public static IssuePaginationSettings ReadIssuePaginationSettings(NameValueCollection settings)
+        {
+            return new IssuePaginationSettings(int.Parse(settings["Redmine.IssuePaginationSettings"]));
+        }
+
         public static GitlabSettings ReadGitlabSettings(NameValueCollection settings)
         {
             return new GitlabSettings(
