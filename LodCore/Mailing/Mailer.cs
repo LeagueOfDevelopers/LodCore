@@ -8,7 +8,7 @@ using IMailer = UserManagement.Application.IMailer;
 
 namespace Mailing
 {
-    public class Mailer : IMailer, NotificationService.IMailer
+    public class Mailer : IMailer
     {
         public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber,
             IUserRepository usersRepository)
@@ -28,7 +28,7 @@ namespace Mailing
             Require.NotNull(emailAddress, nameof(emailAddress));
 
             var mail = InitMail(emailAddress);
-            var client = InitClient();
+            var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.ConfirmationMailCaption;
             mail.Body = string.Format(MailingResources.ConfirmationMessageTemplate, confirmationLink);
@@ -46,7 +46,7 @@ namespace Mailing
             {
                 From = new MailAddress(_mailerSettings.From)
             };
-            var client = InitClient();
+            var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.NotificationMailCaption;
             mail.Body = string.Format(MailingResources.NotificationMessageTemplate,
@@ -70,17 +70,6 @@ namespace Mailing
             mail.From = new MailAddress(_mailerSettings.From);
             mail.To.Add(emailAddress);
             return mail;
-        }
-
-        private SmtpClient InitClient()
-        {
-            var client = new SmtpClient();
-            client.Host = _mailerSettings.SmtpServer;
-            client.Port = _mailerSettings.Port;
-            client.EnableSsl = true;
-            client.Credentials = new NetworkCredential(_mailerSettings.From, _mailerSettings.Password);
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            return client;
         }
 
         private readonly MailerSettings _mailerSettings;

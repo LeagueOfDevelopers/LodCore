@@ -24,6 +24,5 @@ namespace ProjectManagement.Domain
         public virtual int DeveloperId { get; protected set; }
 
         public virtual string Role { get; protected set; }
-
     }
 }

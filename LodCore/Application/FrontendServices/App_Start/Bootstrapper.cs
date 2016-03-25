@@ -13,6 +13,7 @@ using Gateways;
 using Gateways.Gitlab;
 using Gateways.Redmine;
 using Mailing;
+using Mailing.AsyncMailing;
 using NotificationService;
 using OrderManagement.Application;
 using OrderManagement.Domain;
@@ -41,6 +42,7 @@ namespace FrontendServices
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
 
             RegisterSettings(container);
+            container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
             container.Register<UserRepository>(Lifestyle.Singleton);
             container.Register<ProjectRepository>(Lifestyle.Singleton);
@@ -64,9 +66,6 @@ namespace FrontendServices
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
             container.Register<IUsersRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<IProjectRelativesRepository>(() => container.GetInstance<ProjectRepository>(), Lifestyle.Singleton);
-            container.Register<Mailer>(Lifestyle.Singleton);
-            container.Register<NotificationService.IMailer>(() => container.GetInstance<Mailer>(), Lifestyle.Singleton);
-            container.Register<IMailer>(() => container.GetInstance<Mailer>(), Lifestyle.Singleton);
             container.Register<IUserRoleAnalyzer, UserRoleAnalyzer>(Lifestyle.Singleton);
             container.Register<INotificationEmailDescriber, NotificationEmailDescriber>(Lifestyle.Singleton);
             container.Register<IOrderRepository, OrderRepository>(Lifestyle.Singleton);
@@ -95,7 +94,7 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.Register<OrderMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
-            container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
+            container.Register<INotificationMailRepository, NotificationMailRepository>(Lifestyle.Singleton);
             container.Register<IFileManager, FileManager>(Lifestyle.Singleton);
             container.Register<IUserPresentationProvider, UserPresentationProvider>(Lifestyle.Singleton);
             container.Register<INotificationSettingsRepository, NotificationSettingsRepository>(Lifestyle.Singleton);
@@ -111,7 +110,7 @@ namespace FrontendServices
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
-
+            RegisterMailing(container);
             container.Verify();
             return container;
         }
@@ -128,6 +127,17 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadRelativeEqualityComparerSettings(settings), Lifestyle.Singleton);
+        }
+
+        private static void RegisterMailing(Container container)
+        {
+            container.Register<Mailer>(Lifestyle.Singleton);
+            container.Register<MailerAsyncProxy>(Lifestyle.Singleton);
+            container.Register<NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
+            container.Register<IMailer>(container.GetInstance<Mailer>, Lifestyle.Singleton);
+            container.Register<NotificationMailSender>();
+            var sender = container.GetInstance<NotificationMailSender>();
+            sender.StartSending();
         }
     }
 }

@@ -22,7 +22,9 @@ namespace FrontendServices.App_Data
                 settings["MailerSettings.Password"],
                 settings["MailerSettings.From"],
                 settings["MailerSettings.MessageTemplate"],
-                settings["MailerSettings.Caption"]);
+                settings["MailerSettings.Caption"],
+                int.Parse(settings["MailerSettings.BasicEmailTimeoutInSecond"]),
+                int.Parse(settings["MailerSettings.TimeoutIncrementInSeconds"]));
         }
 
         public static RedmineSettings ReadRedmineSettings(NameValueCollection settings)

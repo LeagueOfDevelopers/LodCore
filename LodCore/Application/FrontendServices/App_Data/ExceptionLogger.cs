@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Web.Http.Filters;
 
 namespace FrontendServices.App_Data
@@ -14,7 +15,8 @@ namespace FrontendServices.App_Data
             }
 
             Trace.WriteLine(
-                string.Format("Exception {0} occured while processing request with content \n{1}\nStackTrace:\n{2}",
+                string.Format("\n{0}: Exception {1} occured while processing request with content \n{2}\nStackTrace:\n{3}",
+                    DateTime.Now,
                     actionExecutedContext.Exception.Message,
                     requestContent,
                     actionExecutedContext.Exception.StackTrace));
