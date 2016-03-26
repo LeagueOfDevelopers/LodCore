@@ -116,6 +116,7 @@ namespace Gateways.Redmine
             var returnedIssuesAsString = response.Content.ReadAsStringAsync().Result;
 
             var issues = JObject.Parse(returnedIssuesAsString)["issues"].ToObject<global::Redmine.Net.Api.Types.Issue[]>();
+            issues = issues ?? new global::Redmine.Net.Api.Types.Issue[0];
             var lodIssue = issues.Select(IssueMapper.ToLodIssue);
 
             return lodIssue.ToArray();
