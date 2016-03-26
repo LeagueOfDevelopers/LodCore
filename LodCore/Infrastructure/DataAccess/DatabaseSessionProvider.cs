@@ -1,4 +1,6 @@
-﻿using System.Web;
+﻿using System;
+using System.Threading;
+using System.Web;
 using DataAccess.Mappings;
 using NHibernate;
 using NHibernate.Cfg;
@@ -76,14 +78,44 @@ namespace DataAccess
 
         private ISession Session
         {
-            get { return HttpContext.Current.Items[SessionKey] as ISession; }
-            set { HttpContext.Current.Items[SessionKey] = value; }
+            get
+            {
+                var session = HttpContext.Current?.Items[SessionKey] as ISession;
+                return session 
+                    ?? Thread.GetData(Thread.GetNamedDataSlot(SessionKey)) as ISession;
+            }
+            set
+            {
+                if (HttpContext.Current != null)
+                {
+                    HttpContext.Current.Items[SessionKey] = value;
+                }
+                else
+                {
+                    Thread.SetData(Thread.GetNamedDataSlot(SessionKey), value);
+                }
+            }
         }
 
         private ITransaction Transaction
         {
-            get { return HttpContext.Current.Items[TransactionKey] as ITransaction; }
-            set { HttpContext.Current.Items[TransactionKey] = value; }
+            get
+            {
+                var transaction = HttpContext.Current?.Items[TransactionKey] as ITransaction;
+                return transaction
+                   ?? Thread.GetData(Thread.GetNamedDataSlot(TransactionKey)) as ITransaction;
+            }
+            set
+            {
+                if (HttpContext.Current != null)
+                {
+                    HttpContext.Current.Items[TransactionKey] = value;
+                }
+                else
+                {
+                    Thread.SetData(Thread.GetNamedDataSlot(TransactionKey), value);
+                }
+            }
         }
     }
 }

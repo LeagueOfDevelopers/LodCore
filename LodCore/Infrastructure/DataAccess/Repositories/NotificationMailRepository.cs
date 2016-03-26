@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using Journalist;
 using Mailing;
 using Mailing.AsyncMailing;
@@ -19,18 +20,25 @@ namespace DataAccess.Repositories
         public void SaveNotificationEmail(NotificationEmail email)
         {
             Require.NotNull(email, nameof(email));
+            _databaseSessionProvider.OpenSession();
             Session.Save(email);
+            _databaseSessionProvider.CloseSession();
         }
 
         public NotificationEmail PullNotificationEmail()
         {
-            return Session.Query<NotificationEmail>().FirstOrDefault();
+            _databaseSessionProvider.OpenSession();
+            var email = Session.Query<NotificationEmail>().FirstOrDefault();
+            _databaseSessionProvider.CloseSession();
+            return email;
         }
 
         public void RemoveNotificationEmail(NotificationEmail notificationMail)
         {
             Require.NotNull(notificationMail, nameof(notificationMail));
+            _databaseSessionProvider.OpenSession();
             Session.Delete(notificationMail);
+            _databaseSessionProvider.CloseSession();
         }
 
         private ISession Session => _databaseSessionProvider.GetCurrentSession();

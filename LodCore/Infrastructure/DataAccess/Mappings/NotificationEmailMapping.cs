@@ -9,6 +9,7 @@ namespace DataAccess.Mappings
         public NotificationEmailMapping()
         {
             Id(model => model.Id, mapper => mapper.Generator(Generators.Native));
+            Lazy(false);
             Set(model => model.UserIds, mapper =>
             {
                 mapper.Table("EmailReceivers");

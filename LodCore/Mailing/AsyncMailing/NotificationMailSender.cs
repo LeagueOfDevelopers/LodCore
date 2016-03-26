@@ -38,12 +38,13 @@ namespace Mailing.AsyncMailing
                         : _currentTimeout >= _mailerSettings.MaxEmailTimeoutInSecond
                             ? _mailerSettings.MaxEmailTimeoutInSecond
                             : _currentTimeout + _mailerSettings.TimeoutIncrement;
-                    Task.Delay(_currentTimeout);
+                    Task.Delay(_currentTimeout).Wait(_cancellationTokenSource.Token);
+                    Debug.WriteLine("After waiting for {0} seconds im going on next loop", _currentTimeout.Seconds);
                 }
             }, 
             _cancellationTokenSource.Token, 
             TaskCreationOptions.LongRunning, 
-            TaskScheduler.Default);
+            TaskScheduler.Current);
             Trace.WriteLine("Email sending started");
         }
 
