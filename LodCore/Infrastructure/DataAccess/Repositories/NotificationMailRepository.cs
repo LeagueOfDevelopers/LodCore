@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Journalist;
 using Mailing;
@@ -39,6 +40,11 @@ namespace DataAccess.Repositories
             _databaseSessionProvider.OpenSession();
             Session.Delete(notificationMail);
             _databaseSessionProvider.CloseSession();
+        }
+
+        public void ExecuteInNHibernateSession(Action action)
+        {
+            _databaseSessionProvider.ProcessInNHibernateSession(action);
         }
 
         private ISession Session => _databaseSessionProvider.GetCurrentSession();

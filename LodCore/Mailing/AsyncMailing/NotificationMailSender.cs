@@ -39,7 +39,6 @@ namespace Mailing.AsyncMailing
                             ? _mailerSettings.MaxEmailTimeoutInSecond
                             : _currentTimeout + _mailerSettings.TimeoutIncrement;
                     Task.Delay(_currentTimeout).Wait(_cancellationTokenSource.Token);
-                    Debug.WriteLine("After waiting for {0} seconds im going on next loop", _currentTimeout.Seconds);
                 }
             }, 
             _cancellationTokenSource.Token, 
@@ -66,7 +65,7 @@ namespace Mailing.AsyncMailing
 
             try
             {
-                SendMail(notificationEmail);
+                _notificationMailRepository.ExecuteInNHibernateSession(() => SendMail(notificationEmail));
                 _notificationMailRepository.RemoveNotificationEmail(notificationEmail);
             }
             catch (Exception exception)

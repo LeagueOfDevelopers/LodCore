@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Policy;
 using System.Threading;
 using System.Web;
 using DataAccess.Mappings;
@@ -71,6 +72,13 @@ namespace DataAccess
             }
 
             Session?.Dispose();
+        }
+
+        public void ProcessInNHibernateSession(Action action)
+        {
+            OpenSession();
+            action();
+            CloseSession();
         }
 
         private const string SessionKey = "NHibernateSession";

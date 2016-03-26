@@ -14,7 +14,8 @@ namespace DataAccess.Mappings
             {
                 mapper.Table("EmailReceivers");
                 mapper.Cascade(Cascade.All);
-            });
+                mapper.Lazy(CollectionLazy.NoLazy);
+            }, mod => mod.Element());
             Property(model => model.NotificationDescription);
         }
     }

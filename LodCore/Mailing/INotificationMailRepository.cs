@@ -1,4 +1,5 @@
-﻿using Mailing.AsyncMailing;
+﻿using System;
+using Mailing.AsyncMailing;
 
 namespace Mailing
 {
@@ -9,5 +10,7 @@ namespace Mailing
         NotificationEmail PullNotificationEmail();
 
         void RemoveNotificationEmail(NotificationEmail notificationMail);
+
+        void ExecuteInNHibernateSession(Action action);
     }
 }
