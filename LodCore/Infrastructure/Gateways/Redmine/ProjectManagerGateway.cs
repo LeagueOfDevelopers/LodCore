@@ -83,9 +83,6 @@ namespace Gateways.Redmine
         {
             Require.Positive(projectManagerProjectId, nameof(projectManagerProjectId));
 
-            var issueTypesInts = issueTypes.Select(e => (int) e);
-            var statusListInts = statusList.Select(e => (int)e);
-
             var parameters = new NameValueCollection
             {
                 {"project_id", projectManagerProjectId.ToString()},
@@ -95,11 +92,13 @@ namespace Gateways.Redmine
 
             if (issueTypes != null)
             {
+                var issueTypesInts = issueTypes.Select(e => (int)e);
                 parameters.Add( "tracker_id", string.Join("|", issueTypesInts));
             }
 
             if (statusList!=null)
             {
+                var statusListInts = statusList.Select(e => (int)e);
                 parameters.Add( "status_id", string.Join("|", statusListInts));
             }
 
