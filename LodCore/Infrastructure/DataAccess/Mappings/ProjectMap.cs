@@ -13,7 +13,17 @@ namespace DataAccess.Mappings
             Property(project => project.Name, mapper => mapper.Column("Name"));
             Property(project => project.AccessLevel, mapper => mapper.Column("AccessLevel"));
             Property(project => project.Info, mapper => mapper.Column("Info"));
-            Property(project => project.LandingImageUri, mapper => mapper.Column("LandingImageUri"));
+            Component(project => project.LandingImage,
+                mapper =>
+                {
+                    mapper.Lazy(false);
+                    mapper.Property(
+                        image => image.BigPhotoUri,
+                        propertyMapper => propertyMapper.Column("BigPhotoUri"));
+                    mapper.Property(
+                        image => image.SmallPhotoUri,
+                        propertyMapper => propertyMapper.Column("SmallPhotoUri"));
+                });
             Property(project => project.ProjectStatus, mapper => mapper.Column("ProjectStatus"));
             Set(project => project.ProjectTypes, mapper =>
             {

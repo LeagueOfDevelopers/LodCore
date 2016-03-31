@@ -1,12 +1,11 @@
 ﻿using System;
+using Common;
 
 namespace UserManagement.Domain
 {
     public class Profile
     {
-        public virtual Uri BigPhotoUri { get; set; }
-
-        public virtual Uri SmallPhotoUri { get; set; }
+        public virtual Image Image { get; set; }
 
         public virtual Uri VkProfileUri { get; set; }
 

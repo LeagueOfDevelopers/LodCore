@@ -9,6 +9,7 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
 using Common;
+using FilesManagement;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
@@ -28,6 +29,7 @@ namespace FrontendServices.Controllers
 
         private readonly IUserManager _userManager;
         private readonly IUserPresentationProvider _userPresentationProvider;
+        private readonly IImageResizer _imageResizer;
 
         private const string PageParamName = "page";
 
@@ -35,7 +37,7 @@ namespace FrontendServices.Controllers
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider)
+            IUserPresentationProvider userPresentationProvider, IImageResizer imageResizer)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
@@ -46,6 +48,7 @@ namespace FrontendServices.Controllers
             _mapper = mapper;
             _confirmationService = confirmationService;
             _userPresentationProvider = userPresentationProvider;
+            _imageResizer = imageResizer;
         }
 
         [Route("developers/random/{count}")]
@@ -173,10 +176,10 @@ namespace FrontendServices.Controllers
         [HttpPut]
         [Route("developers/{id}")]
         [Authorization(AccountRole.User)]
-        public IHttpActionResult UpdateProfile(int id, [FromBody] Profile profile)
+        public IHttpActionResult UpdateProfile(int id, [FromBody] ProfileUpdateRequest profileRequest)
         {
             Require.Positive(id, nameof(id));
-            Require.NotNull(profile, nameof(profile));
+            Require.NotNull(profileRequest, nameof(profileRequest));
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -195,8 +198,17 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            if (profile != null)
+            if (profileRequest != null)
             {
+                var profile = new Profile();
+                profile.Image = new Image(profileRequest.ImageUri, _imageResizer.ResizeImageByLengthOfLongestSide(profileRequest.ImageUri, _imageResizer.ReadLengthOfLongestSideOfResized()));
+                profile.InstituteName = profileRequest.InstituteName;
+                profile.PhoneNumber = profileRequest.InstituteName;
+                profile.Specialization = profileRequest.Specialization;
+                profile.StudentAccessionYear = profileRequest.StudentAccessionYear;
+                profile.StudyingDirection = profileRequest.StudyingDirection;
+                profile.VkProfileUri = profileRequest.VkProfileUri;
+
                 userToChange.Profile = profile;
             }
 

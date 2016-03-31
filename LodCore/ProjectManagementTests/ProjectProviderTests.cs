@@ -66,7 +66,7 @@ namespace ProjectManagementTests
                     project => project.Name == createRequest.Name
                                || project.Info == createRequest.Info
                                || project.AccessLevel == createRequest.AccessLevel
-                               || project.LandingImageUri == createRequest.LandingImageUri)),
+                               || project.LandingImage == createRequest.LandingImageUri)),
                 Times.Once);
             _vcsGateway.Verify(
                 vsc => vsc.CreateRepositoryForProject(It.Is<CreateProjectRequest>(

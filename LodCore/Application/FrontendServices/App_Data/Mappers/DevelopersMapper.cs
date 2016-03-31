@@ -32,7 +32,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId,
                 account.Firstname,
                 account.Lastname,
-                account.Profile.SmallPhotoUri,
+                account.Profile.Image,
                 role);
         }
 
@@ -52,7 +52,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId, 
                 account.Firstname,
                 account.Lastname, 
-                account.Profile?.SmallPhotoUri,
+                account.Profile?.Image,
                 role,
                 account.RegistrationTime,
                 projectCount,
@@ -76,7 +76,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.RedmineUserId,
                 account.GitlabUserId,
                 account.ConfirmationStatus,
-                account.Profile.BigPhotoUri,
+                account.Profile.Image,
                 account.RegistrationTime,
                 account.Profile.VkProfileUri,
                 account.Profile.PhoneNumber,
@@ -103,7 +103,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId,
                 account.Firstname,
                 account.Lastname,
-                account.Profile?.BigPhotoUri,
+                account.Profile?.Image,
                 account.RegistrationTime,
                 account.Profile?.VkProfileUri,
                 account.Profile?.StudentAccessionYear,
@@ -119,7 +119,7 @@ namespace FrontendServices.App_Data.Mappers
             var userMembership = project.ProjectMemberships.Single(membership => membership.DeveloperId == userId);
             return new DeveloperPageProjectPreview(
                 project.ProjectId,
-                project.LandingImageUri,
+                project.LandingImage,
                 project.Name,
                 project.ProjectStatus,
                 userMembership.Role);

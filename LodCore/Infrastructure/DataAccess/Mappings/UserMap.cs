@@ -30,10 +30,16 @@ namespace DataAccess.Mappings
 
             Component(x => x.Profile, m =>
             {
-                m.Property(profile => profile.BigPhotoUri, mapper => mapper.Column("BigPhotoUri"));
+                Component(
+                    account => account.Profile.Image,
+                    mapper =>
+                    {
+                        mapper.Lazy(false);
+                        mapper.Property(image => image.BigPhotoUri, propertyMapper => propertyMapper.Column("BigPhotoUri"));
+                        mapper.Property(image => image.SmallPhotoUri, propertyMapper => propertyMapper.Column("SmallPhotoUri"));
+                    });
                 m.Property(profile => profile.InstituteName, mapper => mapper.Column("InstituteName"));
                 m.Property(profile => profile.PhoneNumber, mapper => mapper.Column("PhoneNumber"));
-                m.Property(profile => profile.SmallPhotoUri, mapper => mapper.Column("SmallPhotoUri"));
                 m.Property(profile => profile.Specialization, mapper => mapper.Column("Specialization"));
                 m.Property(profile => profile.StudentAccessionYear, mapper => mapper.Column("StudentAccessionYear"));
                 m.Property(profile => profile.StudyingDirection, mapper => mapper.Column("StudyingDirection"));

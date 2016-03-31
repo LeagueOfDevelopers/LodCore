@@ -12,7 +12,7 @@ namespace ProjectManagement.Domain
             ISet<ProjectType> projectTypes, 
             string info, 
             ProjectStatus projectStatus, 
-            Uri landingImageUri, 
+            Image landingImage, 
             AccessLevel accessLevel,
             VersionControlSystemInfo versionControlSystemInfo,
             RedmineProjectInfo redmineProjectInfo, 
@@ -31,7 +31,7 @@ namespace ProjectManagement.Domain
             AccessLevel = accessLevel;
             Info = info;
             ProjectStatus = projectStatus;
-            LandingImageUri = landingImageUri;
+            LandingImage = landingImage;
             VersionControlSystemInfo = versionControlSystemInfo;
             RedmineProjectInfo = redmineProjectInfo;
             Issues = issues ?? new HashSet<Issue>();
@@ -55,7 +55,7 @@ namespace ProjectManagement.Domain
 
         public virtual ProjectStatus ProjectStatus { get; protected set; }
 
-        public virtual Uri LandingImageUri { get; protected set; }
+        public virtual Image LandingImage { get; protected set; }
 
         public virtual VersionControlSystemInfo VersionControlSystemInfo { get; protected set; }
 

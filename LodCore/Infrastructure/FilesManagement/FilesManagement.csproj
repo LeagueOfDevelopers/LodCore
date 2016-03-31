@@ -57,6 +57,7 @@
     <Compile Include="FileManager.cs" />
     <Compile Include="FileStorageSettings.cs" />
     <Compile Include="IFileManager.cs" />
+    <Compile Include="IImageResizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

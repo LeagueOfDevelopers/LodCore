@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Common;
+using FilesManagement;
 using Journalist;
 using NotificationService;
 using ProjectManagement.Application;
@@ -85,7 +86,11 @@ namespace ProjectManagement.Domain
                 new HashSet<ProjectType>(request.ProjectTypes),
                 request.Info,
                 request.ProjectStatus,
-                request.LandingImageUri,
+                new Image(
+                    request.LandingImageUri,
+                    _imageResizer.ResizeImageByLengthOfLongestSide(
+                        request.LandingImageUri,
+                        _imageResizer.ReadLengthOfLongestSideOfResized())),
                 request.AccessLevel,
                 versionControlSystemInfo,
                 projectManagementSystemId,
@@ -186,5 +191,7 @@ namespace ProjectManagement.Domain
         private readonly IProjectManagerGateway _projectManagerGateway;
         private readonly IProjectRepository _projectRepository;
         private readonly IVersionControlSystemGateway _versionControlSystemGateway;
+
+        private readonly IImageResizer _imageResizer;
     }
 }

@@ -33,7 +33,7 @@ namespace FrontendServices.App_Data.Mappers
         {
             Require.NotNull(project, nameof(project));
 
-            return new IndexPageProject(project.ProjectId, project.LandingImageUri, project.Name);
+            return new IndexPageProject(project.ProjectId, project.LandingImage, project.Name);
         }
 
         public ProjectPreview ToProjectPreview(Project project)
@@ -42,7 +42,7 @@ namespace FrontendServices.App_Data.Mappers
 
             return new ProjectPreview(
                 project.ProjectId, 
-                project.LandingImageUri, 
+                project.LandingImage, 
                 project.Name, 
                 project.ProjectStatus, 
                 project.ProjectTypes.ToArray());
@@ -56,7 +56,7 @@ namespace FrontendServices.App_Data.Mappers
                 project.ProjectTypes.ToArray(),
                 project.Info,
                 project.ProjectStatus,
-                project.LandingImageUri,
+                project.LandingImage,
                 project.AccessLevel,
                 project.VersionControlSystemInfo.ProjectUrl,
                 project.RedmineProjectInfo.ProjectUrl, 
@@ -73,7 +73,7 @@ namespace FrontendServices.App_Data.Mappers
                 project.ProjectTypes.ToArray(),
                 project.Info,
                 project.ProjectStatus,
-                project.LandingImageUri,
+                project.LandingImage,
                 project.VersionControlSystemInfo.ProjectUrl,
                 project.RedmineProjectInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues),
