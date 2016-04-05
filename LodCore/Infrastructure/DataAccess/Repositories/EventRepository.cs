@@ -61,5 +61,12 @@ namespace DataAccess.Repositories
                 session.Update(delivery);
             }
         }
+
+        public int GetCountOfUnreadEvents(int userId)
+        {
+            var session = _sessionProvider.GetCurrentSession();
+
+            return session.Query<Delivery>().Count(delivery => delivery.UserId == userId && !delivery.WasRead);
+        }
     }
 }

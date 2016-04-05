@@ -42,5 +42,19 @@ namespace FrontendServices.Controllers
 
             return _notificationService.GetEventsForUser(userId, pageId).ToList();
         }
+
+        [HttpGet]
+        [Route("event/count")]
+        public int GetCountOfUnreadEvents()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var userId = User.Identity.GetId();
+
+            return _notificationService.GetNumberOfUnreadEvents(userId);
+        }
     }
 }
