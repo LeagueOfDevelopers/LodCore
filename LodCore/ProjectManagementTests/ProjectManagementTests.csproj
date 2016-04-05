@@ -90,6 +90,10 @@
       <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>
       <Name>ProjectManagement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\FilesManagement\FilesManagement.csproj">
+      <Project>{40415DF3-C945-4695-81DF-0E1670E1787A}</Project>
+      <Name>FilesManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

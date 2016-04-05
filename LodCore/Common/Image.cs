@@ -4,15 +4,15 @@ namespace Common
 {
     public class Image
     {
+        public Image()
+        {
+            
+        }
+
         public Image(Uri bigPhotoUri, Uri smallPhotoUri)
         {
             BigPhotoUri = bigPhotoUri;
             SmallPhotoUri = smallPhotoUri;
-        }
-
-        public static implicit operator Uri(Image image)
-        {
-            return image.SmallPhotoUri;
         }
         
         public virtual Uri BigPhotoUri { get; set; }

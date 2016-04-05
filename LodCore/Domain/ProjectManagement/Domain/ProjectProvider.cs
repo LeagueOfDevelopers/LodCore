@@ -20,7 +20,7 @@ namespace ProjectManagement.Domain
             IProjectRepository projectRepository,
             IEventSink eventSink,
             IUserRepository userRepository,
-            PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings)
+            PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings, IImageResizer imageResizer)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
@@ -36,6 +36,7 @@ namespace ProjectManagement.Domain
             _userRepository = userRepository;
             _paginationSettings = paginationSettings;
             _issuePaginationSettings = issuePaginationSettings;
+            _imageResizer = imageResizer;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using FilesManagement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
@@ -21,6 +22,7 @@ namespace ProjectManagementTests
         private Mock<IProjectRepository> _projectRepository;
         private Mock<IUserRepository> _userRepository;
         private Mock<IVersionControlSystemGateway> _vcsGateway;
+        private Mock<IImageResizer> _imageResizer;
 
         [TestInitialize]
         public void Setup()
@@ -28,6 +30,7 @@ namespace ProjectManagementTests
             _fixture = new Fixture();
             _pmGateway = new Mock<IProjectManagerGateway>();
             _projectRepository = new Mock<IProjectRepository>();
+            _imageResizer = new Mock<IImageResizer>();
             _vcsGateway = new Mock<IVersionControlSystemGateway>();
             _eventSinkMock = new Mock<IEventSink>();
             _userRepository = new Mock<IUserRepository>();
@@ -51,7 +54,8 @@ namespace ProjectManagementTests
                 _eventSinkMock.Object,
                 _userRepository.Object,
                 paginationSettings,
-                new IssuePaginationSettings(25));
+                new IssuePaginationSettings(25),
+                _imageResizer.Object);
         }
 
         [TestMethod]
@@ -66,7 +70,7 @@ namespace ProjectManagementTests
                     project => project.Name == createRequest.Name
                                || project.Info == createRequest.Info
                                || project.AccessLevel == createRequest.AccessLevel
-                               || project.LandingImage == createRequest.LandingImageUri)),
+                               || project.LandingImage.BigPhotoUri == createRequest.LandingImageUri)),
                 Times.Once);
             _vcsGateway.Verify(
                 vsc => vsc.CreateRepositoryForProject(It.Is<CreateProjectRequest>(

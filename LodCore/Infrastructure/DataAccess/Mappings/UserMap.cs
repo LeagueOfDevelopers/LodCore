@@ -30,8 +30,8 @@ namespace DataAccess.Mappings
 
             Component(x => x.Profile, m =>
             {
-                Component(
-                    account => account.Profile.Image,
+                m.Component(
+                    account => account.Image,
                     mapper =>
                     {
                         mapper.Lazy(false);
