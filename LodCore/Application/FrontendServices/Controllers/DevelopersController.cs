@@ -52,9 +52,9 @@ namespace FrontendServices.Controllers
         public IEnumerable<IndexPageDeveloper> GetRandomIndexPageDevelopers(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-
+            
             var users = _userManager.GetUserList(
-                account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
+                GetAccountFilter())
                 .GetRandom(count);
             var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
@@ -64,8 +64,7 @@ namespace FrontendServices.Controllers
         [Route("developers/all")]
         public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
         {
-            var users = _userManager.GetUserList(
-                account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed);
+            var users = _userManager.GetUserList(GetAccountFilter());
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
@@ -95,7 +94,7 @@ namespace FrontendServices.Controllers
             }
 
             var users = _userManager.GetUserList(pageId,
-                account => account.ConfirmationStatus != ConfirmationStatus.Unconfirmed);
+                GetAccountFilter());
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
@@ -109,7 +108,7 @@ namespace FrontendServices.Controllers
             var users = _userManager.GetUserList(searchString);
 
             var developerPageDevelopers = users
-                .Where(user => user.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
+                .Where(GetAccountFilter())
                 .Select(_mapper.ToDeveloperPageDeveloper);
             return developerPageDevelopers;
         }
@@ -122,6 +121,11 @@ namespace FrontendServices.Controllers
             try
             {
                 var user = _userManager.GetUser(id);
+                if (!GetAccountFilter()(user))
+                {
+                    throw new AccountNotFoundException();
+                }
+
                 if (HttpContext.Current.User.IsInRole(AccountRole.User))
                 {
                     return Ok(_mapper.ToDeveloper(user));
@@ -325,6 +329,17 @@ namespace FrontendServices.Controllers
             }
 
             return Ok();
+        }
+
+        private Func<Account, bool> GetAccountFilter()
+        {
+            if (User.IsInRole(AccountRole.Administrator))
+            {
+                return account => account.ConfirmationStatus == ConfirmationStatus.EmailConfirmed
+                                  || account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
+            }
+
+            return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
         }
     }
 }
