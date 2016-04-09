@@ -74,11 +74,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminNotificationInfo.cs" />
+    <Compile Include="Delivery.cs" />
     <Compile Include="DistributionPolicy.cs" />
     <Compile Include="DistributionPolicyFactory.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventInfoBase.cs" />
     <Compile Include="EventSinkBase.cs" />
+    <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributionPolicyFactory.cs" />
     <Compile Include="IEventInfo.cs" />
     <Compile Include="IEventRepository.cs" />

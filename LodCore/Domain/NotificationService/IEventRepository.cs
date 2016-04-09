@@ -11,5 +11,7 @@
         void MarkEventsAsRead(int[] eventIds);
 
         int GetCountOfUnreadEvents(int userId);
+
+        bool WasThisEventRead(int eventId, int userId);
     }
 }

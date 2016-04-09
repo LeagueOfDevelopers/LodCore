@@ -1,6 +1,6 @@
-﻿using DataAccess.Entities;
-using NHibernate.Mapping.ByCode;
+﻿using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
+using NotificationService;
 
 namespace DataAccess.Mappings
 {

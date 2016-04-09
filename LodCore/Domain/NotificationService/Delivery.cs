@@ -1,6 +1,6 @@
 ﻿using Journalist;
 
-namespace DataAccess.Entities
+namespace NotificationService
 {
     public class Delivery
     {
