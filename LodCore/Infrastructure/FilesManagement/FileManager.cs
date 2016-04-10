@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Common;
 using Journalist;
 using Journalist.Extensions;
 
@@ -10,11 +11,12 @@ namespace FilesManagement
 {
     public class FileManager : IFileManager
     {
-        public FileManager(FileStorageSettings fileStorageSettings)
+        public FileManager(FileStorageSettings fileStorageSettings, IImageResizer imageResizer)
         {
             Require.NotNull(fileStorageSettings, nameof(fileStorageSettings));
 
             _fileStorageSettings = fileStorageSettings;
+            _imageResizer = imageResizer;
             CreateFoldersIfNeeded();
         }
 
@@ -42,18 +44,23 @@ namespace FilesManagement
             return newFileName;
         }
 
-        public async Task<string> UploadImageAsync(HttpContent content)
+        public async Task<Image> UploadImageAsync(HttpContent content)
         {
             Require.NotNull(content, nameof(content));
-            var filePath = await UploadAnyFileAsync(
+            var bigFilePath = await UploadAnyFileAsync(
                 content,
                 _fileStorageSettings.AllowedImageExtensions,
                 _fileStorageSettings.ImageStorageFolder);
-            var fileName = Path.GetFileName(filePath);
-            var newFileName = GenerateRandomFileName(fileName);
-            var newFilePath = Path.Combine(_fileStorageSettings.ImageStorageFolder, newFileName);
-            RenameFile(filePath, newFilePath);
-            return newFileName;
+
+            var smallFilePath = _imageResizer.ResizeImageByLengthOfLongestSide(new Uri(bigFilePath),
+                _imageResizer.ReadLengthOfLongestSideOfResized());
+
+            var bigFileName = Path.GetFileName(bigFilePath);
+            var newBigFileName = GenerateRandomFileName(bigFileName);
+            var newBigFilePath = Path.Combine(_fileStorageSettings.ImageStorageFolder, newBigFileName);
+            RenameFile(bigFilePath, newBigFilePath);
+
+            return new Image(new Uri(newBigFilePath), smallFilePath);
         }
 
         private Stream GetAnyFile(string folderPath, string fileName)
@@ -130,5 +137,6 @@ namespace FilesManagement
         }
 
         private readonly FileStorageSettings _fileStorageSettings;
+        private readonly IImageResizer _imageResizer;
     }
 }

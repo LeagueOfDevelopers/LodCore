@@ -77,9 +77,9 @@ namespace FrontendServices
             container.Register<INotificationService>(() =>
                 new NotificationService.NotificationService(
                     container.GetInstance<IEventRepository>(),
-                    container.GetInstance<PaginationSettings>()));
+                    container.GetInstance<PaginationSettings>()), Lifestyle.Singleton);
             container.Register<IImageResizer>(
-                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>()));
+                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>()), Lifestyle.Singleton);
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectManagerGateway>(),
@@ -88,8 +88,7 @@ namespace FrontendServices
                     container.GetInstance<ProjectsEventSink>(),
                     container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>(),
                     container.GetInstance<ProjectManagement.Domain.PaginationSettings>(),
-                    container.GetInstance<IssuePaginationSettings>(),
-                    container.GetInstance<IImageResizer>()),
+                    container.GetInstance<IssuePaginationSettings>()),
                 Lifestyle.Singleton);
             container.Register<ProjectManagement.Infrastructure.IUserRepository>(
                 () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);

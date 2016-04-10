@@ -5,10 +5,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Common;
 using FilesManagement;
 using FrontendServices.Authorization;
+using FrontendServices.Models;
 using Journalist;
 using UserManagement.Domain;
+using Image = FrontendServices.Models.Image;
 
 namespace FrontendServices.Controllers
 {
@@ -59,11 +62,13 @@ namespace FrontendServices.Controllers
         [HttpPost]
         [Route("image")]
         [Authorization(AccountRole.User)]
-        public async Task<string> UploadImage()
+        public async Task<Image> UploadImage()
         {
             try
             {
-                return await _fileManager.UploadImageAsync(Request.Content);
+                var image = await _fileManager.UploadImageAsync(Request.Content);
+
+                return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath), Path.GetFileName(image.SmallPhotoUri.LocalPath));
             }
             catch (NotSupportedException)
             {

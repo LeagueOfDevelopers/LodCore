@@ -23,7 +23,7 @@ namespace FrontendServices.Models
         [Required]
         public ProjectStatus ProjectStatus { get; set; }
 
-        public Uri LandingImageUri { get; set; }
+        public Common.Image LandingImage { get; set; }
 
         public Uri[] Screenshots { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Common;
 
 namespace FilesManagement
 {
@@ -12,6 +13,6 @@ namespace FilesManagement
 
         Task<string> UploadFileAsync(HttpContent content);
 
-        Task<string> UploadImageAsync(HttpContent content);
+        Task<Image> UploadImageAsync(HttpContent content);
     }
 }

@@ -1,10 +1,11 @@
 using System;
+using Common;
 
 namespace FrontendServices.Models
 {
     public class ProfileUpdateRequest
     {
-        public Uri ImageUri { get; set; }
+        public Common.Image Image { get; set; }
 
         public Uri VkProfileUri { get; set; }
 

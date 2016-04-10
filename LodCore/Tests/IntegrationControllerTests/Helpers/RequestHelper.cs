@@ -7,6 +7,7 @@ using Common;
 using FrontendServices.Models;
 using Newtonsoft.Json;
 using ProjectManagement.Domain;
+using Image = Common.Image;
 
 namespace IntegrationControllerTests.Helpers
 {
@@ -38,7 +39,9 @@ namespace IntegrationControllerTests.Helpers
                 Name = "TypicalNamsdfse",
                 AccessLevel = AccessLevel.Public,
                 Info = "TypicalInfo",
-                LandingImageUri = new Uri("https://pp.vk.me/c543107/v543107881/af01/zxFX1YLyVOE.jpg"),
+                LandingImage = new Image(
+                    new Uri("https://pp.vk.me/c543107/v543107881/af01/zxFX1YLyVOE.jpg"),
+                    new Uri("https://pp.vk.me/c543107/v543107881/af01/zxFX1YLyVOE.jpg")),
                 ProjectTypes = new[] { ProjectType.Game, ProjectType.MobileApp, }
             };
             var response =

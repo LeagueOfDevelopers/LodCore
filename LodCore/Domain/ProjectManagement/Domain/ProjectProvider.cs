@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Common;
-using FilesManagement;
 using Journalist;
 using NotificationService;
 using ProjectManagement.Application;
@@ -20,7 +19,7 @@ namespace ProjectManagement.Domain
             IProjectRepository projectRepository,
             IEventSink eventSink,
             IUserRepository userRepository,
-            PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings, IImageResizer imageResizer)
+            PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings)
         {
             Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
             Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
@@ -36,7 +35,6 @@ namespace ProjectManagement.Domain
             _userRepository = userRepository;
             _paginationSettings = paginationSettings;
             _issuePaginationSettings = issuePaginationSettings;
-            _imageResizer = imageResizer;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
@@ -87,11 +85,7 @@ namespace ProjectManagement.Domain
                 new HashSet<ProjectType>(request.ProjectTypes),
                 request.Info,
                 request.ProjectStatus,
-                new Image(
-                    request.LandingImageUri,
-                    _imageResizer.ResizeImageByLengthOfLongestSide(
-                        request.LandingImageUri,
-                        _imageResizer.ReadLengthOfLongestSideOfResized())),
+                request.LandingImage,
                 request.AccessLevel,
                 versionControlSystemInfo,
                 projectManagementSystemId,
@@ -192,7 +186,5 @@ namespace ProjectManagement.Domain
         private readonly IProjectManagerGateway _projectManagerGateway;
         private readonly IProjectRepository _projectRepository;
         private readonly IVersionControlSystemGateway _versionControlSystemGateway;
-
-        private readonly IImageResizer _imageResizer;
     }
 }

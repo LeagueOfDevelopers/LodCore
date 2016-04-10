@@ -7,7 +7,6 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
 using Common;
-using FilesManagement;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
@@ -23,7 +22,6 @@ namespace FrontendServices.Controllers
     {
         private const string PageParamName = "page";
         private readonly IConfirmationService _confirmationService;
-        private readonly IImageResizer _imageResizer;
         private readonly DevelopersMapper _mapper;
 
         private readonly IUserManager _userManager;
@@ -33,7 +31,7 @@ namespace FrontendServices.Controllers
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider, IImageResizer imageResizer)
+            IUserPresentationProvider userPresentationProvider)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
@@ -44,7 +42,6 @@ namespace FrontendServices.Controllers
             _mapper = mapper;
             _confirmationService = confirmationService;
             _userPresentationProvider = userPresentationProvider;
-            _imageResizer = imageResizer;
         }
 
         [Route("developers/random/{count}")]
@@ -200,16 +197,16 @@ namespace FrontendServices.Controllers
 
             if (profileRequest != null)
             {
-                var profile = new Profile();
-                profile.Image = new Image(profileRequest.ImageUri,
-                    _imageResizer.ResizeImageByLengthOfLongestSide(profileRequest.ImageUri,
-                        _imageResizer.ReadLengthOfLongestSideOfResized()));
-                profile.InstituteName = profileRequest.InstituteName;
-                profile.PhoneNumber = profileRequest.InstituteName;
-                profile.Specialization = profileRequest.Specialization;
-                profile.StudentAccessionYear = profileRequest.StudentAccessionYear;
-                profile.StudyingDirection = profileRequest.StudyingDirection;
-                profile.VkProfileUri = profileRequest.VkProfileUri;
+                var profile = new Profile
+                {
+                    Image = profileRequest.Image,
+                    InstituteName = profileRequest.InstituteName,
+                    PhoneNumber = profileRequest.InstituteName,
+                    Specialization = profileRequest.Specialization,
+                    StudentAccessionYear = profileRequest.StudentAccessionYear,
+                    StudyingDirection = profileRequest.StudyingDirection,
+                    VkProfileUri = profileRequest.VkProfileUri
+                };
 
                 userToChange.Profile = profile;
             }

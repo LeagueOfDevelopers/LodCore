@@ -103,7 +103,7 @@ namespace FrontendServices.Controllers
                 createProjectRequest.Info,
                 createProjectRequest.ProjectStatus,
                 createProjectRequest.AccessLevel,
-                createProjectRequest.LandingImageUri,
+                createProjectRequest.LandingImage,
                 createProjectRequest.Screenshots);
 
             _projectProvider.CreateProject(request);

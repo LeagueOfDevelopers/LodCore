@@ -11,7 +11,7 @@ namespace FilesManagement
         {
             var fileName = Path.GetFileName(imageToResizeUri.LocalPath);
 
-            var magicImage = new MagickImage(Path.Combine(fileStorageSettings.ImageStorageFolder, fileName));
+            var magicImage = new MagickImage(Path.Combine(_fileStorageSettings.ImageStorageFolder, fileName));
 
             var size = magicImage.Height >= magicImage.Width
                 ? new MagickGeometry(lengthOfLongestSideOfResized, 0)
@@ -21,7 +21,7 @@ namespace FilesManagement
 
             magicImage.Resize(size);
 
-            var pathOfNewImage = Path.Combine(fileStorageSettings.ImageStorageFolder, GenerateRandomFileName(magicImage.FileName));
+            var pathOfNewImage = Path.Combine(_fileStorageSettings.ImageStorageFolder, GenerateRandomFileName(magicImage.FileName));
             magicImage.Write(pathOfNewImage);
 
             return new Uri(pathOfNewImage);
@@ -39,12 +39,12 @@ namespace FilesManagement
         }
 
         private readonly int _lengthOfLongestSideOfResized;
-        private readonly FileStorageSettings fileStorageSettings;
+        private readonly FileStorageSettings _fileStorageSettings;
 
         public ImageResizer(int lengthOfLongestSideOfResized, FileStorageSettings fileStorageSettings)
         {
             _lengthOfLongestSideOfResized = lengthOfLongestSideOfResized;
-            this.fileStorageSettings = fileStorageSettings;
+            this._fileStorageSettings = fileStorageSettings;
         }
     }
 }

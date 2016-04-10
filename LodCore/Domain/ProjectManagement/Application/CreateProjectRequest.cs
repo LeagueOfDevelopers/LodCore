@@ -13,7 +13,7 @@ namespace ProjectManagement.Application
             string info, 
             ProjectStatus projectStatus,
             AccessLevel accessLevel, 
-            Uri landingImageUri, 
+            Image landingImage, 
             Uri[] screenshots)
         {
             Require.NotEmpty(name, nameof(name));
@@ -24,7 +24,7 @@ namespace ProjectManagement.Application
             ProjectTypes = projectTypes;
             Info = info;
             AccessLevel = accessLevel;
-            LandingImageUri = landingImageUri;
+            LandingImage = landingImage;
             ProjectStatus = projectStatus;
             Screenshots = screenshots;
         }
@@ -39,7 +39,7 @@ namespace ProjectManagement.Application
 
         public AccessLevel AccessLevel { get; private set; }
 
-        public Uri LandingImageUri { get; private set; }
+        public Image LandingImage { get; private set; }
 
         public Uri[] Screenshots { get; private set; }
     }
