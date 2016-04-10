@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using Journalist;
 using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
+using Event = FrontendServices.Models.Event;
 
 namespace FrontendServices.Controllers
 {
     public class EventController : ApiController
     {
         private readonly INotificationService _notificationService;
+        private readonly EventMapper eventMapper;
 
-        public EventController(INotificationService notificationService)
+        public EventController(INotificationService notificationService, EventMapper eventMapper)
         {
             _notificationService = notificationService;
+            this.eventMapper = eventMapper;
         }
 
         [HttpPut]
@@ -37,10 +41,26 @@ namespace FrontendServices.Controllers
             {
                 throw new UnauthorizedAccessException();
             }
+            var userId = User.Identity.GetId();
+
+            var events = _notificationService.GetEventsForUser(userId, pageId).ToList();
+
+
+            return events.Select(@event => eventMapper.ToEventPageEvent(@event, userId));
+        }
+
+        [HttpGet]
+        [Route("event/count")]
+        public int GetCountOfUnreadEvents()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                throw new UnauthorizedAccessException();
+            }
 
             var userId = User.Identity.GetId();
 
-            return _notificationService.GetEventsForUser(userId, pageId).ToList();
+            return _notificationService.GetNumberOfUnreadEvents(userId);
         }
     }
 }

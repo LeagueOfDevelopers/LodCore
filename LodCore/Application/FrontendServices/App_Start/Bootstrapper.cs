@@ -97,6 +97,7 @@ namespace FrontendServices
                     container.GetInstance<ContactsEventSink>()), 
                 Lifestyle.Singleton);
             container.Register<OrderMapper>(Lifestyle.Singleton);
+            container.Register<EventMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<INotificationMailRepository, NotificationMailRepository>(Lifestyle.Singleton);
             container.Register<IFileManager, FileManager>(Lifestyle.Singleton);

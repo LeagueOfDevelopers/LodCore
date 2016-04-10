@@ -113,9 +113,11 @@ namespace UserManagement.Domain
 
             var allProjectMemberships = _projectMembershipRepostiory.GetAllProjectMemberships().ToList();
 
+            var allUsers = new HashSet<Account>(_userRepository.GetAllAccounts());
+
             var allUsersToSearchByRole =
                 new HashSet<Account>(
-                    allProjectMemberships.Select(membership => _userRepository.GetAccount(membership.DeveloperId)));
+                    allProjectMemberships.Select(membership => allUsers.Single(account => account.UserId == membership.DeveloperId)));
 
             var userRolesDictionary = allUsersToSearchByRole.ToDictionary(user => user,
                 user =>
@@ -124,9 +126,13 @@ namespace UserManagement.Domain
 
             return userRolesDictionary.Where(
                 pair =>
-                    pair.Value.Any(role => Extensions.Contains(role, searchString)) ||
-                    _relativeEqualityComparer.EqualsByLCS($"{pair.Key.Firstname} {pair.Key.Lastname}", searchString))
-                .Select(pair => pair.Key).ToList();
+                    pair.Value.Any(role => Extensions.Contains(role, searchString)))
+                .Select(pair => pair.Key)
+                .Union(
+                    allUsers.Where(
+                        account =>
+                            Extensions.Contains($"{account.Firstname} {account.Lastname}",
+                                searchString))).ToList();
         }
     }
 }

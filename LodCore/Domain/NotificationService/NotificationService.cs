@@ -16,6 +16,16 @@
             _eventRepository.MarkEventsAsRead(eventIds);
         }
 
+        public int GetNumberOfUnreadEvents(int userId)
+        {
+            return _eventRepository.GetCountOfUnreadEvents(userId);
+        }
+
+        public bool WasEventRead(int eventId, int userId)
+        {
+            return _eventRepository.WasThisEventRead(eventId, userId);
+        }
+
         private readonly IEventRepository _eventRepository;
 
         private readonly PaginationSettings _paginationSettings;

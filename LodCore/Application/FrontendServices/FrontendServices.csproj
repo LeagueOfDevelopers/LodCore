@@ -135,6 +135,7 @@
   <ItemGroup>
     <Compile Include="App_Data\Authorization\ProjectsPolicies.cs" />
     <Compile Include="App_Data\ExceptionLogger.cs" />
+    <Compile Include="App_Data\Mappers\EventMapper.cs" />
     <Compile Include="App_Data\Mappers\OrderMapper.cs" />
     <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />
     <Compile Include="App_Data\SettingsReader.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />
     <Compile Include="Models\DeveloperPageProjectPreview.cs" />
+    <Compile Include="Models\Event.cs" />
     <Compile Include="Models\GuestDeveloper.cs" />
     <Compile Include="Models\IndexPageDeveloper.cs" />
     <Compile Include="App_Data\Mappers\DevelopersMapper.cs" />
@@ -183,6 +185,7 @@
     <Content Include="packages.config" />
     <Content Include="ConnectionStrings.config" />
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\FileDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\LodCore.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
