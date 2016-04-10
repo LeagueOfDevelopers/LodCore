@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,24 +12,22 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
-using Journalist.Extensions;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
-using NotificationSetting = UserPresentaton.NotificationSetting;
+using NotificationSetting = FrontendServices.Models.NotificationSetting;
 
 namespace FrontendServices.Controllers
 {
     public class DevelopersController : ApiController
     {
+        private const string PageParamName = "page";
         private readonly IConfirmationService _confirmationService;
+        private readonly IImageResizer _imageResizer;
         private readonly DevelopersMapper _mapper;
 
         private readonly IUserManager _userManager;
         private readonly IUserPresentationProvider _userPresentationProvider;
-        private readonly IImageResizer _imageResizer;
-
-        private const string PageParamName = "page";
 
         public DevelopersController(
             IUserManager userManager,
@@ -55,7 +51,7 @@ namespace FrontendServices.Controllers
         public IEnumerable<IndexPageDeveloper> GetRandomIndexPageDevelopers(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-            
+
             var users = _userManager.GetUserList(
                 GetAccountFilter())
                 .GetRandom(count);
@@ -132,7 +128,7 @@ namespace FrontendServices.Controllers
                 if (HttpContext.Current.User.IsInRole(AccountRole.User))
                 {
                     return Ok(_mapper.ToDeveloper(user));
-            }
+                }
 
                 return Ok(_mapper.ToGuestDeveloper(user));
             }
@@ -205,7 +201,9 @@ namespace FrontendServices.Controllers
             if (profileRequest != null)
             {
                 var profile = new Profile();
-                profile.Image = new Image(profileRequest.ImageUri, _imageResizer.ResizeImageByLengthOfLongestSide(profileRequest.ImageUri, _imageResizer.ReadLengthOfLongestSideOfResized()));
+                profile.Image = new Image(profileRequest.ImageUri,
+                    _imageResizer.ResizeImageByLengthOfLongestSide(profileRequest.ImageUri,
+                        _imageResizer.ReadLengthOfLongestSideOfResized()));
                 profile.InstituteName = profileRequest.InstituteName;
                 profile.PhoneNumber = profileRequest.InstituteName;
                 profile.Specialization = profileRequest.Specialization;
@@ -227,7 +225,7 @@ namespace FrontendServices.Controllers
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(newPassword, nameof(newPassword));
-            
+
             User.AssertResourceOwner(id);
 
             Account userToChange;
@@ -255,7 +253,7 @@ namespace FrontendServices.Controllers
         [Route("developers/notificationsettings/{id}")]
         [Authorization(AccountRole.User)]
         public IHttpActionResult UpdateNotificationSetiings(int id,
-            [FromBody] Models.NotificationSetting[] notificationSettings)
+            [FromBody] NotificationSetting[] notificationSettings)
         {
             Require.Positive(id, nameof(id));
             Require.NotNull(notificationSettings, nameof(notificationSettings));
@@ -270,10 +268,10 @@ namespace FrontendServices.Controllers
             if (!User.IsInRole(AccountRole.Administrator))
             {
                 if (notificationSettings?.Any(
-                setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
-            {
-                return BadRequest("You can't turn off notification sending");
-            }
+                    setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
+                {
+                    return BadRequest("You can't turn off notification sending");
+                }
             }
 
             try
@@ -290,7 +288,7 @@ namespace FrontendServices.Controllers
                 foreach (var notificationSetting in notificationSettings)
                 {
                     _userPresentationProvider.UpdateNotificationSetting(
-                        new NotificationSetting(
+                        new UserPresentaton.NotificationSetting(
                             id,
                             notificationSetting.NotificationType,
                             notificationSetting.NotificationSettingValue));
@@ -303,7 +301,7 @@ namespace FrontendServices.Controllers
         [HttpGet]
         [Route("developers/notificationsettings/{id}")]
         [Authorization(AccountRole.User)]
-        public Models.NotificationSetting[] GetNotificationSettings(int id)
+        public NotificationSetting[] GetNotificationSettings(int id)
         {
             Require.Positive(id, nameof(id));
             try
@@ -315,10 +313,14 @@ namespace FrontendServices.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Enum.GetValues(typeof (NotificationType)).Cast<NotificationType>().Select(name => new Models.NotificationSetting
-            {
-                NotificationType = name, NotificationSettingValue = _userPresentationProvider.GetUserEventSettings(id, name.ToString())
-            }).ToArray();
+            return
+                Enum.GetValues(typeof (NotificationType))
+                    .Cast<NotificationType>()
+                    .Select(name => new NotificationSetting
+                    {
+                        NotificationType = name,
+                        NotificationSettingValue = _userPresentationProvider.GetUserEventSettings(id, name.ToString())
+                    }).ToArray();
         }
 
         [HttpPost]

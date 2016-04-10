@@ -9,16 +9,16 @@ namespace FrontendServices.Models
     public class Project
     {
         public Project(
-            int projectId, 
-            string name, 
-            ProjectType[] projectType, 
-            string info, 
-            ProjectStatus projectStatus, 
-            Uri landingImageUri, 
+            int projectId,
+            string name,
+            ProjectType[] projectType,
+            string info,
+            ProjectStatus projectStatus,
+            Uri landingImageUri,
             Uri versionControlSystemUri,
-            Uri projectManagementSystemUri, 
-            HashSet<Issue> issues, 
-            HashSet<ProjectMembership> projectMemberships, 
+            Uri projectManagementSystemUri,
+            HashSet<Issue> issues,
+            HashSet<ProjectMembership> projectMemberships,
             HashSet<Uri> screenshots)
         {
             Require.Positive(projectId, nameof(projectId));

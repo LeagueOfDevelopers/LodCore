@@ -6,17 +6,17 @@ namespace FrontendServices.Models
     public class GuestDeveloper
     {
         public GuestDeveloper(
-            int userId, 
-            string firstName, 
+            int userId,
+            string firstName,
             string lastName,
-            Uri photoUri, 
-            DateTime registrationDate, 
-            Uri vkProfileUri, 
-            int? studentAccessionYear, 
-            string studyingDirection, 
-            string instituteName, 
-            string specialization, 
-            string role, 
+            Uri photoUri,
+            DateTime registrationDate,
+            Uri vkProfileUri,
+            int? studentAccessionYear,
+            string studyingDirection,
+            string instituteName,
+            string specialization,
+            string role,
             DeveloperPageProjectPreview[] projects)
         {
             Require.Positive(userId, nameof(userId));
@@ -42,7 +42,7 @@ namespace FrontendServices.Models
         public string FirstName { get; private set; }
 
         public string LastName { get; private set; }
-        
+
         public Uri PhotoUri { get; private set; }
 
         public DateTime RegistrationDate { get; private set; }

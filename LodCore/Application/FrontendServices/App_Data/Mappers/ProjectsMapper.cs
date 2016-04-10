@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FrontendServices.Models;
 using Gateways.Gitlab;
 using Gateways.Redmine;
 using Journalist;
-using Journalist.Collections;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using Project = ProjectManagement.Domain.Project;
-using ProjectMembershipDto = FrontendServices.Models.ProjectMembership;
 using ProjectMembership = ProjectManagement.Domain.ProjectMembership;
+using ProjectMembershipDto = FrontendServices.Models.ProjectMembership;
 
 namespace FrontendServices.App_Data.Mappers
 {
     public class ProjectsMapper
     {
+        private readonly IUserManager _userManager;
+
         public ProjectsMapper(
-            IUserManager userManager, 
-            RedmineSettings redmineSettings, 
+            IUserManager userManager,
+            RedmineSettings redmineSettings,
             GitlabSettings gitlabSettings)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(redmineSettings, nameof(redmineSettings));
             Require.NotNull(gitlabSettings, nameof(gitlabSettings));
-            
+
             _userManager = userManager;
         }
 
@@ -41,10 +41,10 @@ namespace FrontendServices.App_Data.Mappers
             Require.NotNull(project, nameof(project));
 
             return new ProjectPreview(
-                project.ProjectId, 
-                project.LandingImage.SmallPhotoUri, 
-                project.Name, 
-                project.ProjectStatus, 
+                project.ProjectId,
+                project.LandingImage.SmallPhotoUri,
+                project.Name,
+                project.ProjectStatus,
                 project.ProjectTypes.ToArray());
         }
 
@@ -59,8 +59,8 @@ namespace FrontendServices.App_Data.Mappers
                 project.LandingImage.BigPhotoUri,
                 project.AccessLevel,
                 project.VersionControlSystemInfo.ProjectUrl,
-                project.RedmineProjectInfo.ProjectUrl, 
-                new HashSet<Issue>(project.Issues), 
+                project.RedmineProjectInfo.ProjectUrl,
+                new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Uri>(project.Screenshots));
         }
@@ -86,7 +86,5 @@ namespace FrontendServices.App_Data.Mappers
             var user = _userManager.GetUser(projectMembership.DeveloperId);
             return new ProjectMembershipDto(user.UserId, user.Firstname, user.Lastname, projectMembership.Role);
         }
-
-        private readonly IUserManager _userManager;
     }
 }

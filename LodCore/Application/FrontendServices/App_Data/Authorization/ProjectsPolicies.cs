@@ -11,8 +11,8 @@ namespace FrontendServices.App_Data.Authorization
 
         public static bool OnlyDoneOrInProgress(Project project)
         {
-            return project.ProjectStatus == ProjectStatus.Done 
-                || project.ProjectStatus == ProjectStatus.InProgress;
-        } 
+            return project.ProjectStatus == ProjectStatus.Done
+                   || project.ProjectStatus == ProjectStatus.InProgress;
+        }
     }
 }

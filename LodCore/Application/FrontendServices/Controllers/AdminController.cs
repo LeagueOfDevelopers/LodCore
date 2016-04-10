@@ -10,6 +10,9 @@ namespace FrontendServices.Controllers
 {
     public class AdminController : ApiController
     {
+        private readonly IConfirmationService _confirmationService;
+        private readonly NotificationEventSink _notificationEventSink;
+
         public AdminController(IConfirmationService confirmationService, NotificationEventSink notificationEventSink)
         {
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -42,16 +45,13 @@ namespace FrontendServices.Controllers
         [HttpPost]
         [Route("admin/notification")]
         [Authorization(AccountRole.Administrator)]
-        public IHttpActionResult SendAdminNotification([FromBody]string textInfo)
+        public IHttpActionResult SendAdminNotification([FromBody] string textInfo)
         {
             Require.NotEmpty(textInfo, nameof(textInfo));
-            
+
             _notificationEventSink.ConsumeEvent(new AdminNotificationInfo(textInfo));
 
             return Ok();
         }
-
-        private readonly IConfirmationService _confirmationService;
-        private readonly NotificationEventSink _notificationEventSink;
     }
 }

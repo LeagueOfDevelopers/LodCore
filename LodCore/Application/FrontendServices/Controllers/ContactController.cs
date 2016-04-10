@@ -9,6 +9,8 @@ namespace FrontendServices.Controllers
 {
     public class ContactController : ApiController
     {
+        private readonly IContactsService _contactsService;
+
         public ContactController(IContactsService contactsService)
         {
             Require.NotNull(contactsService, nameof(contactsService));
@@ -17,7 +19,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("contact")]
-        public IHttpActionResult SendContactMessage([FromBody]ContactMessage contactMessage)
+        public IHttpActionResult SendContactMessage([FromBody] ContactMessage contactMessage)
         {
             if (!ModelState.IsValid)
             {
@@ -27,12 +29,10 @@ namespace FrontendServices.Controllers
             _contactsService.SendContactMessage(
                 new NewContactMessage(
                     contactMessage.ClientName,
-                    new MailAddress(contactMessage.ClientEmail), 
-                    contactMessage.MessageTopic, 
+                    new MailAddress(contactMessage.ClientEmail),
+                    contactMessage.MessageTopic,
                     contactMessage.MessageBody));
             return Ok();
         }
-
-        private readonly IContactsService _contactsService;
     }
 }

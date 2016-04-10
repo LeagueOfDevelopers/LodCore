@@ -5,6 +5,13 @@ namespace FrontendServices.App_Data.Mappers
 {
     public class EventMapper
     {
+        private readonly INotificationService _notificationService;
+
+        public EventMapper(INotificationService notificationService)
+        {
+            _notificationService = notificationService;
+        }
+
         public Event ToEventPageEvent(NotificationService.Event @event, int userId)
         {
             var wasRead = _notificationService.WasEventRead(@event.Id, userId);
@@ -14,13 +21,6 @@ namespace FrontendServices.App_Data.Mappers
                 @event.EventType,
                 @event.EventInfo,
                 wasRead);
-        }
-
-        private readonly INotificationService _notificationService;
-
-        public EventMapper(INotificationService notificationService)
-        {
-            _notificationService = notificationService;
         }
     }
 }

@@ -15,7 +15,8 @@ namespace FrontendServices.App_Data
             }
 
             Trace.WriteLine(
-                string.Format("\n{0}: Exception {1} occured while processing request with content \n{2}\nStackTrace:\n{3}",
+                string.Format(
+                    "\n{0}: Exception {1} occured while processing request with content \n{2}\nStackTrace:\n{3}",
                     DateTime.Now,
                     actionExecutedContext.Exception.Message,
                     requestContent,

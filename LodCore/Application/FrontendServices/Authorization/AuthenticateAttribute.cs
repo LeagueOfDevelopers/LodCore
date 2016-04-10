@@ -10,6 +10,8 @@ namespace FrontendServices.Authorization
 {
     public class AuthenticateAttribute : IAuthenticationFilter
     {
+        private readonly IAuthorizer _authorizer;
+
         public AuthenticateAttribute(IAuthorizer authorizer)
         {
             Require.NotNull(authorizer, nameof(authorizer));
@@ -32,13 +34,13 @@ namespace FrontendServices.Authorization
             if (tokenInfo == null)
             {
                 context.ErrorResult = new UnauthorizedResult(
-                    new AuthenticationHeaderValue[] {}, 
+                    new AuthenticationHeaderValue[] {},
                     context.Request);
                 await context.ErrorResult.ExecuteAsync(cancellationToken);
                 SetupUnauthenticated();
                 return;
             }
-            
+
             var identity = new LodIdentity(tokenInfo.UserId, true);
             var principal = new LodPrincipal(tokenInfo.Role, identity);
 
@@ -55,7 +57,5 @@ namespace FrontendServices.Authorization
         {
             Thread.CurrentPrincipal = LodPrincipal.EmptyPrincipal;
         }
-
-        private readonly IAuthorizer _authorizer;
     }
 }

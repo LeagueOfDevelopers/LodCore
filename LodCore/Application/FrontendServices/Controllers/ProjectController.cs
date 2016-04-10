@@ -9,21 +9,28 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
-using Journalist.Collections;
 using Journalist.Extensions;
 using ProjectManagement;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using UserManagement.Domain;
+using CreateProjectRequest = FrontendServices.Models.CreateProjectRequest;
 using Project = ProjectManagement.Domain.Project;
 
 namespace FrontendServices.Controllers
 {
     public class ProjectController : ApiController
     {
+        private const string CategoriesQueryParameterName = "categories";
+        private const string PageParameterName = "page";
+
+        private readonly IProjectProvider _projectProvider;
+        private readonly ProjectsMapper _projectsMapper;
+        private readonly IUserManager _userManager;
+
         public ProjectController(
-            IProjectProvider projectProvider, 
+            IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
             IAuthorizer authorizer, IUserManager userManager)
         {
@@ -45,13 +52,12 @@ namespace FrontendServices.Controllers
             if (User.IsInRole(AccountRole.User))
             {
                 requiredProjects = _projectProvider.GetProjects();
-                
             }
             else
             {
                 requiredProjects = _projectProvider.GetProjects(
-                       project => ProjectsPolicies.OnlyDoneOrInProgress(project)
-                                  && ProjectsPolicies.OnlyPublic(project));
+                    project => ProjectsPolicies.OnlyDoneOrInProgress(project)
+                               && ProjectsPolicies.OnlyPublic(project));
             }
 
             var randomProjects = requiredProjects.GetRandom(count);
@@ -68,7 +74,7 @@ namespace FrontendServices.Controllers
             var paramsDictionary =
                 paramsQuery.Split(new[] {'?', '&'}, StringSplitOptions.RemoveEmptyEntries)
                     .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
-            
+
             var requiredProjects = GetSomeProjects(paramsDictionary);
 
             if (!User.IsInRole(AccountRole.User))
@@ -84,7 +90,7 @@ namespace FrontendServices.Controllers
         [HttpPost]
         [Route("projects")]
         [Authorization(AccountRole.Administrator)]
-        public IHttpActionResult CreateProject([FromBody]Models.CreateProjectRequest createProjectRequest)
+        public IHttpActionResult CreateProject([FromBody] CreateProjectRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -108,7 +114,7 @@ namespace FrontendServices.Controllers
         [HttpPost]
         [Route("projects/{projectId}/developer/{developerId}")]
         [Authorization(AccountRole.User)]
-        public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody]string role)
+        public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody] string role)
         {
             if (!ModelState.IsValid)
             {
@@ -170,12 +176,12 @@ namespace FrontendServices.Controllers
             }
 
             if (projectToDeleteUser.ProjectMemberships.Where(
-                    membership => membership.DeveloperId == developerId)
-                    .ToList().IsEmpty())
+                membership => membership.DeveloperId == developerId)
+                .ToList().IsEmpty())
             {
                 return NotFound();
             }
-                
+
             _projectProvider.RemoveUserFromProject(projectId, developerId);
 
             return Ok();
@@ -240,22 +246,15 @@ namespace FrontendServices.Controllers
             paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
 
             var projectTypes = categoriesQuery.IsNullOrEmpty()
-                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
-                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
+                ? Enum.GetValues(typeof (ProjectType)) as IEnumerable<ProjectType>
+                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType) category).ToArray();
 
 
             var requiredProjects = _projectProvider.GetProjects(pageNumber,
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
-            
+
             return requiredProjects;
-        } 
-
-        private readonly IProjectProvider _projectProvider;
-        private readonly ProjectsMapper _projectsMapper;
-        private readonly IUserManager _userManager;
-
-        private const string CategoriesQueryParameterName = "categories";
-        private const string PageParameterName = "page";
+        }
     }
 }

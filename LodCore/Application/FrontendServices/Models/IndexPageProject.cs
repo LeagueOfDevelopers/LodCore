@@ -12,7 +12,7 @@ namespace FrontendServices.Models
         }
 
         public int ProjectId { get; private set; }
-         
+
         public Uri PhotoUri { get; private set; }
 
         public string Name { get; private set; }

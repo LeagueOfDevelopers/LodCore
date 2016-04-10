@@ -12,12 +12,12 @@ namespace FrontendServices.Authorization
 
         public int UserId { get; }
 
+        public static LodIdentity EmptyIdentity => new LodIdentity(0, false);
+
         public string Name => UserId.ToString();
 
         public string AuthenticationType => "Token";
 
         public bool IsAuthenticated { get; }
-
-        public static LodIdentity EmptyIdentity => new LodIdentity(0, false);
     }
 }

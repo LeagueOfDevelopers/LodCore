@@ -4,7 +4,6 @@ using FrontendServices.App_Data.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using ProjectManagement.Application;
-using ProjectManagement.Domain;
 using UserManagement.Domain;
 using Project = ProjectManagement.Domain.Project;
 
@@ -12,8 +11,12 @@ namespace FrontendServices.App_Data.Mappers
 {
     public class DevelopersMapper
     {
+        private readonly IProjectProvider _projectProvider;
+
+        private readonly IUserRoleAnalyzer _userRoleAnalyzer;
+
         public DevelopersMapper(
-            IUserRoleAnalyzer userRoleAnalyzer, 
+            IUserRoleAnalyzer userRoleAnalyzer,
             IProjectProvider projectProvider)
         {
             Require.NotNull(userRoleAnalyzer, nameof(userRoleAnalyzer));
@@ -46,12 +49,12 @@ namespace FrontendServices.App_Data.Mappers
                 _projectProvider.GetProjects(
                     project => project.ProjectMemberships.Any(
                         membership => membership.DeveloperId == account.UserId))
-                            .Count;
+                    .Count;
 
             return new DeveloperPageDeveloper(
-                account.UserId, 
+                account.UserId,
                 account.Firstname,
-                account.Lastname, 
+                account.Lastname,
                 account.Profile?.Image.SmallPhotoUri,
                 role,
                 account.RegistrationTime,
@@ -87,7 +90,7 @@ namespace FrontendServices.App_Data.Mappers
                 _userRoleAnalyzer.GetUserCommonRole(account.UserId),
                 projectPreviews.ToArray());
         }
-        
+
         public GuestDeveloper ToGuestDeveloper(Account account)
         {
             Require.NotNull(account, nameof(account));
@@ -95,8 +98,8 @@ namespace FrontendServices.App_Data.Mappers
             var projectList = _projectProvider.GetProjects(
                 project => project.ProjectMemberships.Any(
                     membership => membership.DeveloperId == account.UserId))
-                    .Where(ProjectsPolicies.OnlyDoneOrInProgress)
-                    .Where(ProjectsPolicies.OnlyPublic);
+                .Where(ProjectsPolicies.OnlyDoneOrInProgress)
+                .Where(ProjectsPolicies.OnlyPublic);
             var projectPreviews = GetDeveloperProjectPreviews(account, projectList.ToList());
 
             return new GuestDeveloper(
@@ -126,15 +129,12 @@ namespace FrontendServices.App_Data.Mappers
         }
 
         private IEnumerable<DeveloperPageProjectPreview> GetDeveloperProjectPreviews(
-            Account account, 
+            Account account,
             List<Project> userProjects)
         {
             var projectPreviews = userProjects.Select(
                 project => ToDeveloperPageProjectPreview(account.UserId, project));
             return projectPreviews;
         }
-
-        private readonly IUserRoleAnalyzer _userRoleAnalyzer;
-        private readonly IProjectProvider _projectProvider;
     }
 }

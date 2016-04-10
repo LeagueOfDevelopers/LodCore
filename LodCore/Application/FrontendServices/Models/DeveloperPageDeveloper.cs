@@ -6,13 +6,13 @@ namespace FrontendServices.Models
     public class DeveloperPageDeveloper
     {
         public DeveloperPageDeveloper(
-            int userId, 
-            string firstName, 
+            int userId,
+            string firstName,
             string lastName,
-            Uri photoUri, 
+            Uri photoUri,
             string role,
-            DateTime registrationDate, 
-            int projectCount, 
+            DateTime registrationDate,
+            int projectCount,
             Uri vkPageUri)
         {
             Require.Positive(userId, nameof(userId));

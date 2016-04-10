@@ -80,7 +80,6 @@
     <Compile Include="Event.cs" />
     <Compile Include="EventInfoBase.cs" />
     <Compile Include="EventSinkBase.cs" />
-    <Compile Include="IDeliveryRepository.cs" />
     <Compile Include="IDistributionPolicyFactory.cs" />
     <Compile Include="IEventInfo.cs" />
     <Compile Include="IEventRepository.cs" />

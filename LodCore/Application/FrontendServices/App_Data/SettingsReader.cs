@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.IO;
-using System.Web;
 using Common;
 using FilesManagement;
 using Gateways.Gitlab;
@@ -18,7 +16,7 @@ namespace FrontendServices.App_Data
         {
             return new MailerSettings(
                 settings["MailerSettings.SmtpServer"],
-                int.Parse(settings["MailerSettings.Port"]), 
+                int.Parse(settings["MailerSettings.Port"]),
                 settings["MailerSettings.Password"],
                 settings["MailerSettings.From"],
                 settings["MailerSettings.MessageTemplate"],
@@ -73,7 +71,8 @@ namespace FrontendServices.App_Data
             return new PaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
         }
 
-        public static NotificationService.PaginationSettings ReadNotificationsPaginationSettings(NameValueCollection settings)
+        public static NotificationService.PaginationSettings ReadNotificationsPaginationSettings(
+            NameValueCollection settings)
         {
             return new NotificationService.PaginationSettings(int.Parse(settings["Notifications.Pagination.PageSize"]));
         }

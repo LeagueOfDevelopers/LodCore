@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Web;
+﻿using System.Web;
 using System.Web.Http;
 using DataAccess;
-using SimpleInjector;
 using SimpleInjector.Integration.WebApi;
 
 namespace FrontendServices
@@ -13,21 +11,21 @@ namespace FrontendServices
         {
             var container = new Bootstrapper().Configure();
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
-            
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
 
         protected void Application_BeginRequest()
         {
             var sessionProvider = GlobalConfiguration.Configuration.DependencyResolver.GetService(
-                typeof(DatabaseSessionProvider)) as DatabaseSessionProvider;
+                typeof (DatabaseSessionProvider)) as DatabaseSessionProvider;
             sessionProvider.OpenSession();
         }
 
         protected void Application_EndRequest()
         {
             var sessionProvider = GlobalConfiguration.Configuration.DependencyResolver.GetService(
-                typeof(DatabaseSessionProvider)) as DatabaseSessionProvider;
+                typeof (DatabaseSessionProvider)) as DatabaseSessionProvider;
             sessionProvider.CloseSession();
         }
     }

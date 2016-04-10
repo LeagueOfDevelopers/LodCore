@@ -8,10 +8,10 @@ namespace FrontendServices.Models
     public class ProjectPreview
     {
         public ProjectPreview(
-            int projectId, 
-            Uri photoUri, 
-            string name, 
-            ProjectStatus projectStatus, 
+            int projectId,
+            Uri photoUri,
+            string name,
+            ProjectStatus projectStatus,
             ProjectType[] projectTypes)
         {
             Require.Positive(projectId, nameof(projectId));

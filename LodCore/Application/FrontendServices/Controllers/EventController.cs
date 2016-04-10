@@ -6,8 +6,6 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using Journalist;
 using NotificationService;
-using UserManagement.Application;
-using UserManagement.Domain;
 using Event = FrontendServices.Models.Event;
 
 namespace FrontendServices.Controllers
