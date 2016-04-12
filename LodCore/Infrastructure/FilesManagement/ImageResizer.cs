@@ -21,10 +21,11 @@ namespace FilesManagement
 
             magicImage.Resize(size);
 
-            var pathOfNewImage = Path.Combine(_fileStorageSettings.ImageStorageFolder, GenerateRandomFileName(magicImage.FileName));
+            var newName = GenerateRandomFileName(magicImage.FileName);
+            var pathOfNewImage = Path.Combine(_fileStorageSettings.ImageStorageFolder, newName);
             magicImage.Write(pathOfNewImage);
 
-            return new Uri(pathOfNewImage);
+            return new Uri("http://api.lod-misis.ru/image/" + newName);
         }
 
         public int ReadLengthOfLongestSideOfResized()
