@@ -30,8 +30,7 @@ namespace FrontendServices.Controllers
             allAccounts.ForEach(
                     account =>
                         account.Profile.Image.SmallPhotoUri =
-                            _imageResizer.ResizeImageByLengthOfLongestSide(account.Profile.Image.BigPhotoUri,
-                                _imageResizer.ReadLengthOfLongestSideOfResized()));
+                            _imageResizer.ResizeImageByLengthOfLongestSide(account.Profile.Image.BigPhotoUri));
 
             allAccounts.ForEach(_userManager.UpdateUser);
 
@@ -40,8 +39,7 @@ namespace FrontendServices.Controllers
             allProjectsWithLandingImage.ForEach(
                 project =>
                     project.LandingImage.SmallPhotoUri =
-                        _imageResizer.ResizeImageByLengthOfLongestSide(project.LandingImage.BigPhotoUri,
-                            _imageResizer.ReadLengthOfLongestSideOfResized()));
+                        _imageResizer.ResizeImageByLengthOfLongestSide(project.LandingImage.BigPhotoUri));
 
             var allProjectsWithScreenshots =
                 allProjectsWithLandingImage.Union(_projectProvider.GetProjects(project => project.LandingImage == null));
@@ -52,8 +50,7 @@ namespace FrontendServices.Controllers
 
                 foreach (var screenshot in project.Screenshots)
                 {
-                    var smallPhotoUri = _imageResizer.ResizeImageByLengthOfLongestSide(screenshot.BigPhotoUri,
-                        _imageResizer.ReadLengthOfLongestSideOfResized());
+                    var smallPhotoUri = _imageResizer.ResizeImageByLengthOfLongestSide(screenshot.BigPhotoUri);
 
                     newScreenshotSet.Add(new Image(screenshot.BigPhotoUri, smallPhotoUri));
                 }

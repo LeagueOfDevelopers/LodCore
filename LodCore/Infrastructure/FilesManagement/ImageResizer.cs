@@ -7,15 +7,15 @@ namespace FilesManagement
 {
     public class ImageResizer : IImageResizer
     {
-        public Uri ResizeImageByLengthOfLongestSide(Uri imageToResizeUri, int lengthOfLongestSideOfResized)
+        public Uri ResizeImageByLengthOfLongestSide(Uri imageToResizeUri)
         {
             var fileName = Path.GetFileName(imageToResizeUri.LocalPath);
 
             var magicImage = new MagickImage(Path.Combine(_fileStorageSettings.ImageStorageFolder, fileName));
 
             var size = magicImage.Height >= magicImage.Width
-                ? new MagickGeometry(lengthOfLongestSideOfResized, 0)
-                : new MagickGeometry(0, lengthOfLongestSideOfResized);
+                ? new MagickGeometry(_lengthOfLongestSideOfResized, 0)
+                : new MagickGeometry(0, _lengthOfLongestSideOfResized);
 
             size.IgnoreAspectRatio = false;
 
@@ -26,11 +26,6 @@ namespace FilesManagement
             magicImage.Write(pathOfNewImage);
 
             return new Uri("http://api.lod-misis.ru/image/" + newName);
-        }
-
-        public int ReadLengthOfLongestSideOfResized()
-        {
-            return _lengthOfLongestSideOfResized;
         }
 
         private string GenerateRandomFileName(string fileName)

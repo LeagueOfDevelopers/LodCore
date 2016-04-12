@@ -52,8 +52,7 @@ namespace FilesManagement
                 _fileStorageSettings.AllowedImageExtensions,
                 _fileStorageSettings.ImageStorageFolder);
 
-            var smallFilePath = _imageResizer.ResizeImageByLengthOfLongestSide(new Uri(bigFilePath),
-                _imageResizer.ReadLengthOfLongestSideOfResized());
+            var smallFilePath = _imageResizer.ResizeImageByLengthOfLongestSide(new Uri(bigFilePath));
 
             var bigFileName = Path.GetFileName(bigFilePath);
             var newBigFileName = GenerateRandomFileName(bigFileName);
