@@ -62,7 +62,7 @@ namespace FrontendServices.App_Data.Mappers
                 project.RedmineProjectInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<Uri>(project.Screenshots));
+                new HashSet<Common.Image>(project.Screenshots));
         }
 
         public Models.Project ToProject(Project project)
@@ -78,7 +78,7 @@ namespace FrontendServices.App_Data.Mappers
                 project.RedmineProjectInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<Uri>(project.Screenshots));
+                new HashSet<Common.Image>(project.Screenshots));
         }
 
         private ProjectMembershipDto ToProjectMembershipDto(ProjectMembership projectMembership)

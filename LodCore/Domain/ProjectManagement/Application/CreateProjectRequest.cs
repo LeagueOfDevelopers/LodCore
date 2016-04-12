@@ -14,7 +14,7 @@ namespace ProjectManagement.Application
             ProjectStatus projectStatus,
             AccessLevel accessLevel, 
             Image landingImage, 
-            Uri[] screenshots)
+            Image[] screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotEmpty(info, nameof(info));
@@ -41,6 +41,6 @@ namespace ProjectManagement.Application
 
         public Image LandingImage { get; private set; }
 
-        public Uri[] Screenshots { get; private set; }
+        public Image[] Screenshots { get; private set; }
     }
 }

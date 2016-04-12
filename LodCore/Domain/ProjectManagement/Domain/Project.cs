@@ -18,7 +18,7 @@ namespace ProjectManagement.Domain
             RedmineProjectInfo redmineProjectInfo, 
             ISet<Issue> issues, 
             ISet<ProjectMembership> projectDevelopers,
-            ISet<Uri> screenshots)
+            ISet<Image> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
@@ -36,7 +36,7 @@ namespace ProjectManagement.Domain
             RedmineProjectInfo = redmineProjectInfo;
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
-            Screenshots = screenshots ?? new HashSet<Uri>();
+            Screenshots = screenshots ?? new HashSet<Image>();
         }
 
         protected Project()
@@ -65,6 +65,6 @@ namespace ProjectManagement.Domain
 
         public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
 
-        public virtual ISet<Uri> Screenshots { get; protected set; }
+        public virtual ISet<Image> Screenshots { get; set; }
     }
 }

@@ -25,6 +25,6 @@ namespace FrontendServices.Models
 
         public Common.Image LandingImage { get; set; }
 
-        public Uri[] Screenshots { get; set; }
+        public Common.Image[] Screenshots { get; set; }
     }
 }

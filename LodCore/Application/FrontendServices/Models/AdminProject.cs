@@ -20,7 +20,7 @@ namespace FrontendServices.Models
             Uri projectManagementSystemUri,
             HashSet<Issue> issues,
             HashSet<ProjectMembership> projectDevelopers,
-            HashSet<Uri> screenshots)
+            HashSet<Common.Image> screenshots)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
@@ -39,7 +39,7 @@ namespace FrontendServices.Models
             ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
-            Screenshots = screenshots ?? new HashSet<Uri>();
+            Screenshots = screenshots ?? new HashSet<Common.Image>();
         }
 
         public int ProjectId { get; private set; }
@@ -64,6 +64,6 @@ namespace FrontendServices.Models
 
         public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
 
-        public HashSet<Uri> Screenshots { get; private set; }
+        public HashSet<Common.Image> Screenshots { get; private set; }
     }
 }

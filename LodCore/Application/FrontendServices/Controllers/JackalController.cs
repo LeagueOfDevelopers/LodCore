@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using System.Web.Http;
+using Common;
 using FilesManagement;
 using FrontendServices.Authorization;
 using ProjectManagement.Application;
+using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
+using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -30,15 +35,33 @@ namespace FrontendServices.Controllers
 
             allAccounts.ForEach(_userManager.UpdateUser);
 
-            var allProjects = _projectProvider.GetProjects(project => project.LandingImage != null);
+            var allProjectsWithLandingImage = _projectProvider.GetProjects(project => project.LandingImage != null);
 
-            allProjects.ForEach(
+            allProjectsWithLandingImage.ForEach(
                 project =>
                     project.LandingImage.SmallPhotoUri =
                         _imageResizer.ResizeImageByLengthOfLongestSide(project.LandingImage.BigPhotoUri,
                             _imageResizer.ReadLengthOfLongestSideOfResized()));
 
-            allProjects.ForEach(_projectProvider.UpdateProject);
+            var allProjectsWithScreenshots =
+                allProjectsWithLandingImage.Union(_projectProvider.GetProjects(project => project.LandingImage == null));
+
+            foreach (var project in allProjectsWithScreenshots)
+            {
+                var newScreenshotSet = new HashSet<Image>();
+
+                foreach (var screenshot in project.Screenshots)
+                {
+                    var smallPhotoUri = _imageResizer.ResizeImageByLengthOfLongestSide(screenshot.BigPhotoUri,
+                        _imageResizer.ReadLengthOfLongestSideOfResized());
+
+                    newScreenshotSet.Add(new Image(screenshot.BigPhotoUri, smallPhotoUri));
+                }
+
+                project.Screenshots = newScreenshotSet;
+            }
+
+            allProjectsWithLandingImage.ForEach(_projectProvider.UpdateProject);
 
             return Ok("All image were successfuly jackaled!");
         }

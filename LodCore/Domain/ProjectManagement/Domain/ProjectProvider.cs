@@ -92,7 +92,7 @@ namespace ProjectManagement.Domain
                 null,
                 null,
                 request.Screenshots != null 
-                ? new HashSet<Uri>(request.Screenshots) 
+                ? new HashSet<Image>(request.Screenshots) 
                 : null );
             var projectId = _projectRepository.SaveProject(project);
 
