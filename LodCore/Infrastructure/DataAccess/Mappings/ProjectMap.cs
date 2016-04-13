@@ -19,7 +19,7 @@ namespace DataAccess.Mappings
                     mapper.Lazy(false);
                     mapper.Property(
                         image => image.BigPhotoUri,
-                        propertyMapper => propertyMapper.Column("BigPhotoUri"));
+                        propertyMapper => propertyMapper.Column("LandingImageUri"));
                     mapper.Property(
                         image => image.SmallPhotoUri,
                         propertyMapper => propertyMapper.Column("SmallPhotoUri"));

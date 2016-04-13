@@ -25,15 +25,6 @@ namespace FrontendServices.Controllers
                 throw new AccessViolationException("Wrong number, bitch!");
             }
 
-            var allAccounts = _userRepository.GetAllAccounts(account => account.Profile.Image != null);
-
-            allAccounts.ForEach(
-                    account =>
-                        account.Profile.Image.SmallPhotoUri =
-                            _imageResizer.ResizeImageByLengthOfLongestSide(account.Profile.Image.BigPhotoUri));
-
-            allAccounts.ForEach(_userManager.UpdateUser);
-
             var allProjectsWithLandingImage = _projectProvider.GetProjects(project => project.LandingImage != null);
 
             allProjectsWithLandingImage.ForEach(
