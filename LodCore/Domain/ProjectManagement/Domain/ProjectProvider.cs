@@ -73,7 +73,7 @@ namespace ProjectManagement.Domain
             return project;
         }
 
-        public void CreateProject(CreateProjectRequest request)
+        public int CreateProject(CreateProjectRequest request)
         {
             Require.NotNull(request, nameof(request));
 
@@ -97,6 +97,8 @@ namespace ProjectManagement.Domain
             var projectId = _projectRepository.SaveProject(project);
 
             _eventSink.ConsumeEvent(new NewProjectCreated(projectId));
+
+            return projectId;
         }
 
         public void UpdateProject(Project project)

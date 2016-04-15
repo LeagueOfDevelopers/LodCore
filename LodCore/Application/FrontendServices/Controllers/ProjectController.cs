@@ -107,9 +107,9 @@ namespace FrontendServices.Controllers
                 createProjectRequest.LandingImage,
                 createProjectRequest.Screenshots);
 
-            _projectProvider.CreateProject(request);
+            var projectId = _projectProvider.CreateProject(request);
 
-            return Ok();
+            return Ok(projectId);
         }
 
         [HttpPost]
