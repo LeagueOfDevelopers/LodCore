@@ -16,7 +16,6 @@ using ProjectManagement.Domain;
 using UserManagement.Application;
 using UserManagement.Domain;
 using CreateProjectRequest = FrontendServices.Models.CreateProjectRequest;
-using Image = Common.Image;
 using Project = ProjectManagement.Domain.Project;
 
 namespace FrontendServices.Controllers

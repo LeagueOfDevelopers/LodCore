@@ -14,7 +14,7 @@ namespace FrontendServices.Models
             ProjectType[] projectType,
             string info,
             ProjectStatus projectStatus,
-            Uri landingImageUri,
+            Common.Image landingImageUri,
             AccessLevel accessLevel,
             Uri versionControlSystemUri,
             Uri projectManagementSystemUri,
@@ -54,7 +54,7 @@ namespace FrontendServices.Models
 
         public ProjectStatus ProjectStatus { get; private set; }
 
-        public Uri LandingImageUri { get; private set; }
+        public Common.Image LandingImageUri { get; private set; }
 
         public Uri VersionControlSystemUri { get; private set; }
 
