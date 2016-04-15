@@ -50,8 +50,11 @@ namespace UserManagement.Domain
             var projectToSkip = _paginationSettings.PageSize*pageNumber;
             var projectsToTake = _paginationSettings.PageSize;
 
-            return _userRepository.GetSomeAccounts(projectToSkip, projectsToTake, criteria);
-
+            return _userRepository.GetSomeAccounts(
+                projectToSkip, 
+                projectsToTake, 
+                account => account.RegistrationTime, 
+                criteria);
         }
 
         public Account GetUser(int userId)

@@ -57,12 +57,18 @@ namespace DataAccess.Repositories
                 : session.Query<Account>().Where(predicate).ToList();
         }
 
-        public List<Account> GetSomeAccounts(int skipCount, int takeCount, Func<Account, bool> predicate = null)
+        public List<Account> GetSomeAccounts<TComparable>(
+            int skipCount, 
+            int takeCount,
+            Func<Account, TComparable> orderer, 
+            Func<Account, bool> predicate = null)
         {
             var session = _sessionProvider.GetCurrentSession();
-            return predicate == null
-                ? session.Query<Account>().Skip(skipCount).Take(takeCount).ToList()
-                : session.Query<Account>().Where(predicate).Skip(skipCount).Take(takeCount).ToList();
+            var query = session.Query<Account>();
+            var customizedQuery = predicate == null
+                ? query
+                : query.Where(predicate);
+            return customizedQuery.OrderBy(orderer).Skip(skipCount).Take(takeCount).ToList();
         }
 
         public int GetUserRedmineId(int userId)
