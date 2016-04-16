@@ -6,6 +6,7 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using Journalist;
 using NotificationService;
+using UserManagement.Domain;
 using Event = FrontendServices.Models.Event;
 
 namespace FrontendServices.Controllers
@@ -31,14 +32,11 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("event/{pageId}")]
+        [Authorization(AccountRole.User)]
         public IEnumerable<Event> GetEventsByPage(int pageId)
         {
             Require.ZeroOrGreater(pageId, nameof(pageId));
 
-            if (!User.Identity.IsAuthenticated)
-            {
-                throw new UnauthorizedAccessException();
-            }
             var userId = User.Identity.GetId();
 
             var events = _notificationService.GetEventsForUser(userId, pageId).ToList();
@@ -49,13 +47,9 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("event/count")]
+        [Authorization(AccountRole.User)]
         public int GetCountOfUnreadEvents()
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                throw new UnauthorizedAccessException();
-            }
-
             var userId = User.Identity.GetId();
 
             return _notificationService.GetNumberOfUnreadEvents(userId);
