@@ -15,7 +15,7 @@ using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using UserManagement.Domain;
-using CreateProjectRequest = FrontendServices.Models.CreateProjectRequest;
+using ProjectRequest = FrontendServices.Models.CreateProjectRequest;
 using Image = Common.Image;
 using Project = ProjectManagement.Domain.Project;
 
@@ -91,14 +91,14 @@ namespace FrontendServices.Controllers
         [HttpPost]
         [Route("projects")]
         [Authorization(AccountRole.Administrator)]
-        public IHttpActionResult CreateProject([FromBody] CreateProjectRequest createProjectRequest)
+        public IHttpActionResult CreateProject([FromBody] ProjectRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var request = new ProjectManagement.Application.CreateProjectRequest(
+            var request = new ProjectManagement.Application.ProjectActionRequest(
                 createProjectRequest.Name,
                 createProjectRequest.ProjectTypes,
                 createProjectRequest.Info,
@@ -145,6 +145,32 @@ namespace FrontendServices.Controllers
             {
                 return Conflict();
             }
+
+            return Ok();
+        }
+
+        [HttpPut]
+        [Route("projects/{projectId}")]
+        public IHttpActionResult UpdateProject(int projectId, [FromBody] ProjectRequest updateProjectRequest)
+        {
+            Require.Positive(projectId, nameof(projectId));
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var projectToUpdate = _projectProvider.GetProject(projectId);
+
+            projectToUpdate.Info = updateProjectRequest.Info;
+            projectToUpdate.AccessLevel = updateProjectRequest.AccessLevel;
+            projectToUpdate.Name = updateProjectRequest.Name;
+            projectToUpdate.ProjectTypes = new HashSet<ProjectType>(updateProjectRequest.ProjectTypes);
+            projectToUpdate.ProjectStatus = updateProjectRequest.ProjectStatus;
+            projectToUpdate.LandingImage = updateProjectRequest.LandingImage;
+            projectToUpdate.Screenshots = new HashSet<Image>(updateProjectRequest.Screenshots);
+
+            _projectProvider.UpdateProject(projectToUpdate);
 
             return Ok();
         }

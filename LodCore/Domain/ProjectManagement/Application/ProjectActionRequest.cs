@@ -5,9 +5,9 @@ using ProjectManagement.Domain;
 
 namespace ProjectManagement.Application
 {
-    public class CreateProjectRequest
+    public class ProjectActionRequest
     {
-        public CreateProjectRequest(
+        public ProjectActionRequest(
             string name, 
             ProjectType[] projectTypes, 
             string info, 

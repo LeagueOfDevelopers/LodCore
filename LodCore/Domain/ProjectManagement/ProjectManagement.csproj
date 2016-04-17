@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\CreateProjectRequest.cs" />
+    <Compile Include="Application\ProjectActionRequest.cs" />
     <Compile Include="Application\IUserRoleAnalyzer.cs" />
     <Compile Include="Domain\AccessLevel.cs" />
     <Compile Include="Application\IProjectProvider.cs" />

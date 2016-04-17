@@ -13,7 +13,7 @@ namespace ProjectManagement.Application
 
         Project GetProject(int projectId, List<IssueType> issueTypes = null, List<IssueStatus> statusList = null);
 
-        void CreateProject(CreateProjectRequest request);
+        void CreateProject(ProjectActionRequest actionRequest);
 
         void UpdateProject(Project project);
 

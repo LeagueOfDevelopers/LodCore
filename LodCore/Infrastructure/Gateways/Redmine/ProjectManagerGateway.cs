@@ -121,17 +121,17 @@ namespace Gateways.Redmine
             return lodIssue.ToArray();
         }
 
-        public RedmineProjectInfo CreateProject(CreateProjectRequest request)
+        public RedmineProjectInfo CreateProject(ProjectActionRequest actionRequest)
         {
-            Require.NotNull(request, nameof(request));
+            Require.NotNull(actionRequest, nameof(actionRequest));
 
             var project = new Project
             {
-                Name = request.Name,
-                Identifier = GetProjectIdentifier(request.Name),
+                Name = actionRequest.Name,
+                Identifier = GetProjectIdentifier(actionRequest.Name),
                 Status = ProjectStatus.Active,
-                Description = request.Info,
-                IsPublic = request.AccessLevel == AccessLevel.Public
+                Description = actionRequest.Info,
+                IsPublic = actionRequest.AccessLevel == AccessLevel.Public
             };
 
             var readyProject = _redmineManager.CreateObject(project);

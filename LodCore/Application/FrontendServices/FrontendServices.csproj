@@ -154,7 +154,6 @@
     <Compile Include="Controllers\DevelopersController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="Controllers\JackalController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\TestAssignmentController.cs" />

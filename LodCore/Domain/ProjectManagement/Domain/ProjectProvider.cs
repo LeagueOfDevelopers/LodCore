@@ -73,26 +73,26 @@ namespace ProjectManagement.Domain
             return project;
         }
 
-        public void CreateProject(CreateProjectRequest request)
+        public void CreateProject(ProjectActionRequest actionRequest)
         {
-            Require.NotNull(request, nameof(request));
+            Require.NotNull(actionRequest, nameof(actionRequest));
 
-            var versionControlSystemInfo = _versionControlSystemGateway.CreateRepositoryForProject(request);
-            var projectManagementSystemId = _projectManagerGateway.CreateProject(request);
+            var versionControlSystemInfo = _versionControlSystemGateway.CreateRepositoryForProject(actionRequest);
+            var projectManagementSystemId = _projectManagerGateway.CreateProject(actionRequest);
 
             var project = new Project(
-                request.Name,
-                new HashSet<ProjectType>(request.ProjectTypes),
-                request.Info,
-                request.ProjectStatus,
-                request.LandingImage,
-                request.AccessLevel,
+                actionRequest.Name,
+                new HashSet<ProjectType>(actionRequest.ProjectTypes),
+                actionRequest.Info,
+                actionRequest.ProjectStatus,
+                actionRequest.LandingImage,
+                actionRequest.AccessLevel,
                 versionControlSystemInfo,
                 projectManagementSystemId,
                 null,
                 null,
-                request.Screenshots != null 
-                ? new HashSet<Image>(request.Screenshots) 
+                actionRequest.Screenshots != null 
+                ? new HashSet<Image>(actionRequest.Screenshots) 
                 : null );
             var projectId = _projectRepository.SaveProject(project);
 
@@ -102,6 +102,8 @@ namespace ProjectManagement.Domain
         public void UpdateProject(Project project)
         {
             Require.NotNull(project, nameof(project));
+
+            _versionControlSystemGateway.UpdateRepositoryForProject(project);
 
             _projectRepository.UpdateProject(project);
         }

@@ -35,10 +35,10 @@ namespace ProjectManagementTests
             var paginationSettings = new ProjectManagement.Domain.PaginationSettings(10);
 
             _pmGateway
-                .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
+                .Setup(pm => pm.CreateProject(It.IsAny<ProjectActionRequest>()))
                 .Returns(_fixture.Create<RedmineProjectInfo>());
             _vcsGateway
-                .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<CreateProjectRequest>()))
+                .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<ProjectActionRequest>()))
                 .Returns(_fixture.Create<VersionControlSystemInfo>());
             _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
@@ -58,7 +58,7 @@ namespace ProjectManagementTests
         [TestMethod]
         public void ProjectHasToBeAddedSuccessfully()
         {
-            var createRequest = _fixture.Create<CreateProjectRequest>();
+            var createRequest = _fixture.Create<ProjectActionRequest>();
 
             _projectProvider.CreateProject(createRequest);
 
@@ -70,10 +70,10 @@ namespace ProjectManagementTests
                                || project.LandingImage.BigPhotoUri == createRequest.LandingImage.BigPhotoUri)),
                 Times.Once);
             _vcsGateway.Verify(
-                vsc => vsc.CreateRepositoryForProject(It.Is<CreateProjectRequest>(
+                vsc => vsc.CreateRepositoryForProject(It.Is<ProjectActionRequest>(
                     request => request.Equals(createRequest))),
                 Times.Once);
-            _pmGateway.Verify(pm => pm.CreateProject(It.Is<CreateProjectRequest>(
+            _pmGateway.Verify(pm => pm.CreateProject(It.Is<ProjectActionRequest>(
                 request => request.Equals(createRequest))),
                 Times.Once);
             _eventSinkMock.Verify(
