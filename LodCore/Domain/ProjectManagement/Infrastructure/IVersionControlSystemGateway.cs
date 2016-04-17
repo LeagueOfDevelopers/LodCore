@@ -7,6 +7,8 @@ namespace ProjectManagement.Infrastructure
     {
         VersionControlSystemInfo CreateRepositoryForProject(CreateProjectRequest request);
 
+        VersionControlSystemInfo UpdateRepositoryForProject(Project projectToUpdate);
+
         void AddUserToRepository(Project project, int gitlabUserId);
 
         void RemoveUserFromProject(Project project, int userId);

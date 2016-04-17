@@ -105,6 +105,8 @@ namespace ProjectManagement.Domain
         {
             Require.NotNull(project, nameof(project));
 
+            _versionControlSystemGateway.UpdateRepositoryForProject(project);
+
             _projectRepository.UpdateProject(project);
         }
 

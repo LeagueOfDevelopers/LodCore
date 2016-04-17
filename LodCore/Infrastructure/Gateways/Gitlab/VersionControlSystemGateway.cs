@@ -40,6 +40,21 @@ namespace Gateways.Gitlab
             return new VersionControlSystemInfo(createdProject.Id, new Uri(createdProject.WebUrl));
         }
 
+        public VersionControlSystemInfo UpdateRepositoryForProject(Project projectToUpdate)
+        {
+            var project = new ProjectUpdate
+            {
+                Id = projectToUpdate.VersionControlSystemInfo.ProjectId,
+                Name = projectToUpdate.Name,
+                Description = projectToUpdate.Info,
+                Public = projectToUpdate.AccessLevel == AccessLevel.Public,
+                VisibilityLevel = projectToUpdate.AccessLevel == AccessLevel.Public ? VisibilityLevel.Public : VisibilityLevel.Private
+            };
+
+            var updatedProject = _gitLabClient.Projects.Update(project);
+            return new VersionControlSystemInfo(updatedProject.Id, new Uri(updatedProject.WebUrl));
+        }
+
         public void AddUserToRepository(Project project, int gitlabUserId)
         {
             Require.NotNull(project, nameof(project));

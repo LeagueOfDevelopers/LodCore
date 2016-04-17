@@ -163,7 +163,7 @@
     <Compile Include="App_Data\Authorization\DevelopersPolicies.cs" />
     <Compile Include="Models\AdminProject.cs" />
     <Compile Include="Models\ContactMessage.cs" />
-    <Compile Include="Models\CreateProjectRequest.cs" />
+    <Compile Include="Models\ProjectActionRequest.cs" />
     <Compile Include="Models\Credentials.cs" />
     <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />

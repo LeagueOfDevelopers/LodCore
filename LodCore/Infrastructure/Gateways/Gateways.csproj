@@ -38,7 +38,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NGitLab">
+    <Reference Include="NGitLab, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ExternalLibs\NGitLab.dll</HintPath>
     </Reference>
     <Reference Include="redmine-net45-api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
