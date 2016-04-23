@@ -1,11 +1,12 @@
 ﻿using System;
 using Common;
+using DataAccess.Pagination;
 using Journalist;
 using ProjectManagement.Domain;
 
 namespace FrontendServices.Models
 {
-    public class ProjectPreview
+    public class ProjectPreview : IPaginable
     {
         public ProjectPreview(
             int projectId,

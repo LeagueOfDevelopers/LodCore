@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
 using Common;
+using FrontendServices.App_Data;
 using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
@@ -30,10 +32,12 @@ namespace FrontendServices.Controllers
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
 
+        private readonly IPaginationWrapper<ProjectManagement.Domain.Project> _paginationWrapper; 
+
         public ProjectController(
             IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
-            IAuthorizer authorizer, IUserManager userManager)
+            IAuthorizer authorizer, IUserManager userManager, IPaginationWrapper<Project> paginationWrapper)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
@@ -42,6 +46,7 @@ namespace FrontendServices.Controllers
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
             _userManager = userManager;
+            _paginationWrapper = paginationWrapper;
         }
 
         [Route("projects/random/{count}")]
@@ -68,7 +73,7 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("projects")]
-        public IEnumerable<ProjectPreview> GetAllProjects()
+        public PaginableObject GetAllProjects()
         {
             var paramsQuery = Request.RequestUri.Query;
 
@@ -85,7 +90,8 @@ namespace FrontendServices.Controllers
                     .Where(ProjectsPolicies.OnlyDoneOrInProgress);
             }
 
-            return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+            var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
+            return _paginationWrapper.WrapResponse(projecsPreviews, GetCriteriesExpression(paramsDictionary));
         }
 
         [HttpPost]
@@ -215,11 +221,13 @@ namespace FrontendServices.Controllers
         }
 
         [Route("projects/page/{pageNumber}")]
-        public IEnumerable<ProjectPreview> GetProjectByPage(int pageNumber)
+        public PaginableObject GetProjectByPage(int pageNumber)
         {
             var requiredProjects = _projectProvider.GetProjects(pageNumber);
 
-            return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+            var projectsPreview = requiredProjects.Select(_projectsMapper.ToProjectPreview);
+
+            return _paginationWrapper.WrapResponse(projectsPreview);
         }
 
         [HttpGet]
@@ -283,5 +291,18 @@ namespace FrontendServices.Controllers
 
             return requiredProjects;
         }
+
+        private Expression<Func<Project, bool>> GetCriteriesExpression(Dictionary<string, string> paramsDictionary)
+        {
+            string categoriesQuery;
+
+            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
+
+            var projectTypes = categoriesQuery.IsNullOrEmpty()
+                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
+                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
+
+            return project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType));
+        } 
     }
 }

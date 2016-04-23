@@ -4,6 +4,7 @@ using System.Web.Http;
 using ContactContext;
 using ContactContext.Events;
 using DataAccess;
+using DataAccess.Pagination;
 using DataAccess.Repositories;
 using FilesManagement;
 using FrontendServices.App_Data;
@@ -30,6 +31,7 @@ using UserManagement.Infrastructure;
 using UserPresentaton;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
+using NotificationService = NotificationService.NotificationService;
 using PaginationSettings = NotificationService.PaginationSettings;
 
 namespace FrontendServices
@@ -55,6 +57,28 @@ namespace FrontendServices
             container.Register<VersionControlSystemGateway>(Lifestyle.Singleton);
             container.Register<IGitlabUserRegistrar>(() => container.GetInstance<VersionControlSystemGateway>(),
                 Lifestyle.Singleton);
+
+            //todo: replace to open-generic registration
+            container.Register<IPaginableRepository<Account>>(
+                () => new PaginableRepository<Account>(container.GetInstance<DatabaseSessionProvider>()),
+                Lifestyle.Singleton);
+            container.Register<IPaginableRepository<Delivery>>(
+               () => new PaginableRepository<Delivery>(container.GetInstance<DatabaseSessionProvider>()),
+               Lifestyle.Singleton);
+            container.Register<IPaginableRepository<Project>>(
+               () => new PaginableRepository<Project>(container.GetInstance<DatabaseSessionProvider>()),
+               Lifestyle.Singleton);
+
+            container.Register<IPaginationWrapper<Account>>(
+                () => new PaginationWrapper<Account>(container.GetInstance<IPaginableRepository<Account>>()),
+                Lifestyle.Singleton);
+            container.Register<IPaginationWrapper<Delivery>>(
+               () => new PaginationWrapper<Delivery>(container.GetInstance<IPaginableRepository<Delivery>>()),
+               Lifestyle.Singleton);
+            container.Register<IPaginationWrapper<Project>>(
+                () => new PaginationWrapper<Project>(container.GetInstance<IPaginableRepository<Project>>()),
+                Lifestyle.Singleton);
+
             container.Register<IVersionControlSystemGateway>(
                 () => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
             container.Register<IConfirmationService>(() => new ConfirmationService(
@@ -75,7 +99,7 @@ namespace FrontendServices
             container.Register<INotificationEmailDescriber, NotificationEmailDescriber>(Lifestyle.Singleton);
             container.Register<IOrderRepository, OrderRepository>(Lifestyle.Singleton);
             container.Register<INotificationService>(() =>
-                new NotificationService.NotificationService(
+                new global::NotificationService.NotificationService(
                     container.GetInstance<IEventRepository>(),
                     container.GetInstance<PaginationSettings>()), Lifestyle.Singleton);
             container.Register<IImageResizer>(
@@ -143,7 +167,7 @@ namespace FrontendServices
         {
             container.Register<Mailer>(Lifestyle.Singleton);
             container.Register<MailerAsyncProxy>(Lifestyle.Singleton);
-            container.Register<NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
+            container.Register<global::NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
             container.Register<IMailer>(container.GetInstance<Mailer>, Lifestyle.Singleton);
             container.Register<NotificationMailSender>();
             var sender = container.GetInstance<NotificationMailSender>();

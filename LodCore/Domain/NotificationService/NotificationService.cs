@@ -1,4 +1,6 @@
-﻿namespace NotificationService
+﻿using Journalist;
+
+namespace NotificationService
 {
     public class NotificationService : INotificationService
     {
@@ -18,6 +20,8 @@
 
         public int GetNumberOfUnreadEvents(int userId)
         {
+            Require.Positive(userId, nameof(userId));
+
             return _eventRepository.GetCountOfUnreadEvents(userId);
         }
 

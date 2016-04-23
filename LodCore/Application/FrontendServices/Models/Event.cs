@@ -1,9 +1,10 @@
 ﻿using System;
+using DataAccess.Pagination;
 using Journalist;
 
 namespace FrontendServices.Models
 {
-    public class Event
+    public class Event : IPaginable
     {
         public Event(int id, DateTime occuredOn, string eventType, string eventInfo, bool wasRead)
         {

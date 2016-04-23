@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
 using Common;
+using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
@@ -27,11 +29,13 @@ namespace FrontendServices.Controllers
         private readonly IUserManager _userManager;
         private readonly IUserPresentationProvider _userPresentationProvider;
 
+        private readonly IPaginationWrapper<UserManagement.Domain.Account> _paginationWrapper;
+
         public DevelopersController(
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider)
+            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
@@ -42,6 +46,7 @@ namespace FrontendServices.Controllers
             _mapper = mapper;
             _confirmationService = confirmationService;
             _userPresentationProvider = userPresentationProvider;
+            _paginationWrapper = paginationWrapper;
         }
 
         [Route("developers/random/{count}")]
@@ -58,16 +63,16 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("developers/all")]
-        public IEnumerable<DeveloperPageDeveloper> GetAllDevelopers()
+        public PaginableObject GetAllDevelopers()
         {
             var users = _userManager.GetUserList(GetAccountFilter());
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
-            return developerPageDevelopers;
+            return _paginationWrapper.WrapResponse(developerPageDevelopers);
         }
 
         [HttpGet]
         [Route("developers")]
-        public IEnumerable<DeveloperPageDeveloper> GetDevelopersByPage()
+        public PaginableObject GetDevelopersByPage()
         {
             var paramsQuery = Request.RequestUri.Query;
 
@@ -92,7 +97,8 @@ namespace FrontendServices.Controllers
             var users = _userManager.GetUserList(pageId,
                 GetAccountFilter());
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
-            return developerPageDevelopers;
+            
+            return _paginationWrapper.WrapResponse(developerPageDevelopers, GetAccountFilterExpression());
         }
 
         [HttpGet]
@@ -343,6 +349,17 @@ namespace FrontendServices.Controllers
         }
 
         private Func<Account, bool> GetAccountFilter()
+        {
+            if (User.IsInRole(AccountRole.Administrator))
+            {
+                return account => account.ConfirmationStatus == ConfirmationStatus.EmailConfirmed
+                                  || account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
+            }
+
+            return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
+        }
+
+        private Expression<Func<Account, bool>> GetAccountFilterExpression()
         {
             if (User.IsInRole(AccountRole.Administrator))
             {
