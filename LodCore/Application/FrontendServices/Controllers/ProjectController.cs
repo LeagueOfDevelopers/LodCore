@@ -302,11 +302,13 @@ namespace FrontendServices.Controllers
                 ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
                 : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
 
-            return
-                project =>
+            return User.IsInRole(AccountRole.Administrator) || User.IsInRole(AccountRole.User)
+                ? (Expression<Func<Project, bool>>) (project =>
+                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
+                : (project =>
                     project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)) &&
                     project.AccessLevel == AccessLevel.Public && (project.ProjectStatus == ProjectStatus.Done
-                    || project.ProjectStatus == ProjectStatus.InProgress);
+                                                                  || project.ProjectStatus == ProjectStatus.InProgress));
         } 
     }
 }
