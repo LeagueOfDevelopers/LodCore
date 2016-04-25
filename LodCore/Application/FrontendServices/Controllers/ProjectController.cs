@@ -91,7 +91,7 @@ namespace FrontendServices.Controllers
             }
 
             var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-            return _paginationWrapper.WrapResponse(projecsPreviews, GetCriteriesExpression(paramsDictionary));
+            return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
         }
 
         [HttpPost]
@@ -292,7 +292,7 @@ namespace FrontendServices.Controllers
             return requiredProjects;
         }
 
-        private Expression<Func<Project, bool>> GetCriteriesExpression(Dictionary<string, string> paramsDictionary)
+        private Expression<Func<Project, bool>> GetPublicProjectsCounterExpression(Dictionary<string, string> paramsDictionary)
         {
             string categoriesQuery;
 
@@ -302,7 +302,11 @@ namespace FrontendServices.Controllers
                 ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
                 : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
 
-            return project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType));
+            return
+                project =>
+                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)) &&
+                    project.AccessLevel == AccessLevel.Public && (project.ProjectStatus == ProjectStatus.Done
+                    || project.ProjectStatus == ProjectStatus.InProgress);
         } 
     }
 }
