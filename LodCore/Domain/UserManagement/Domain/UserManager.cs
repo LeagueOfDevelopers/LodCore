@@ -11,6 +11,8 @@ using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
+using UserManagement.Infrastructure;
+using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace UserManagement.Domain
@@ -22,12 +24,13 @@ namespace UserManagement.Domain
         private readonly IProjectProvider _projectProvider;
         private readonly PaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
-        private readonly Common.RelativeEqualityComparer _relativeEqualityComparer;
+        private readonly IMailer _mailer;
+        private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
 
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory, RelativeEqualityComparer relativeEqualityComparer)
+            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory, RelativeEqualityComparer relativeEqualityComparer, IMailer mailer, IPasswordChangeRequestRepository passwordChangeRequestRepository)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -37,7 +40,8 @@ namespace UserManagement.Domain
             _paginationSettings = paginationSettings;
             _projectProvider = projectProvider;
             _projectMembershipRepostiory = projectMembershipRepostiory;
-            _relativeEqualityComparer = relativeEqualityComparer;
+            _mailer = mailer;
+            _passwordChangeRequestRepository = passwordChangeRequestRepository;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -108,6 +112,28 @@ namespace UserManagement.Domain
             }
 
             _userRepository.UpdateAccount(account);
+        }
+
+        public void InitiatePasswordChangingProcedure(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var userToInitiateProcedure = GetUser(userId);
+
+            var request = _passwordChangeRequestRepository.GetPasswordChangeRequest(userId);
+
+            if (_passwordChangeRequestRepository.GetPasswordChangeRequest(userId) == null)
+            {
+                request = new PasswordChangeRequest(userId, Extensions.GenerateToken());
+            }
+
+            var passwordChangeRequest = request;
+
+            var link = $"http://api.lod-misis.ru/password/{passwordChangeRequest.Token}";
+
+            _passwordChangeRequestRepository.SavePasswordChangeRequestt(request);
+
+            _mailer.SendPasswordResertMail(link, userToInitiateProcedure.Email);
         }
 
         public List<Account> GetUserList(string searchString)

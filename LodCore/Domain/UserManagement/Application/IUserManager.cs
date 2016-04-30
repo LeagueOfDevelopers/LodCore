@@ -17,5 +17,7 @@ namespace UserManagement.Application
         void CreateUser(CreateAccountRequest request);
 
         void UpdateUser(Account account);
+
+        void InitiatePasswordChangingProcedure(int userId);
     }
 }

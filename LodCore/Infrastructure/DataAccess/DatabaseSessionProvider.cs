@@ -28,6 +28,7 @@ namespace DataAccess
             modelMapper.AddMapping<NotificationSettingMap>();
             modelMapper.AddMapping<OrderMap>();
             modelMapper.AddMapping<NotificationEmailMapping>();
+            modelMapper.AddMapping<PasswordChangeRequestMap>();
             configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
 
             _factory = configuration.BuildSessionFactory();

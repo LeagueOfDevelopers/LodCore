@@ -348,6 +348,16 @@ namespace FrontendServices.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        [Route("developers/password")]
+        [Authorization(AccountRole.User)]
+        public IHttpActionResult InitiateProcedureOfPasswordChangeing()
+        {
+            _userManager.InitiatePasswordChangingProcedure(User.Identity.GetId());
+
+            return Ok();
+        }
+
         private Func<Account, bool> GetAccountFilter()
         {
             if (User.IsInRole(AccountRole.Administrator))
