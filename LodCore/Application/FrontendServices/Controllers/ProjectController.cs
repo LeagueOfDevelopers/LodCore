@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web.Http;
 using Common;
+using FrontendServices.App_Data;
 using FrontendServices.App_Data.Authorization;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
@@ -15,8 +17,9 @@ using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using UserManagement.Domain;
-using CreateProjectRequest = FrontendServices.Models.CreateProjectRequest;
+using Image = Common.Image;
 using Project = ProjectManagement.Domain.Project;
+using ProjectActionRequest = FrontendServices.Models.ProjectActionRequest;
 
 namespace FrontendServices.Controllers
 {
@@ -29,10 +32,12 @@ namespace FrontendServices.Controllers
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
 
+        private readonly IPaginationWrapper<ProjectManagement.Domain.Project> _paginationWrapper; 
+
         public ProjectController(
             IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
-            IAuthorizer authorizer, IUserManager userManager)
+            IAuthorizer authorizer, IUserManager userManager, IPaginationWrapper<Project> paginationWrapper)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
@@ -41,6 +46,7 @@ namespace FrontendServices.Controllers
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
             _userManager = userManager;
+            _paginationWrapper = paginationWrapper;
         }
 
         [Route("projects/random/{count}")]
@@ -67,7 +73,7 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("projects")]
-        public IEnumerable<ProjectPreview> GetAllProjects()
+        public PaginableObject GetAllProjects()
         {
             var paramsQuery = Request.RequestUri.Query;
 
@@ -84,20 +90,21 @@ namespace FrontendServices.Controllers
                     .Where(ProjectsPolicies.OnlyDoneOrInProgress);
             }
 
-            return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+            var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
+            return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
         }
 
         [HttpPost]
         [Route("projects")]
         [Authorization(AccountRole.Administrator)]
-        public IHttpActionResult CreateProject([FromBody] CreateProjectRequest createProjectRequest)
+        public IHttpActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var request = new ProjectManagement.Application.CreateProjectRequest(
+            var request = new CreateProjectRequest(
                 createProjectRequest.Name,
                 createProjectRequest.ProjectTypes,
                 createProjectRequest.Info,
@@ -148,6 +155,32 @@ namespace FrontendServices.Controllers
             return Ok();
         }
 
+        [HttpPut]
+        [Route("projects/{projectId}")]
+        public IHttpActionResult UpdateProject(int projectId, [FromBody] ProjectActionRequest updateProjectRequest)
+        {
+            Require.Positive(projectId, nameof(projectId));
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var projectToUpdate = _projectProvider.GetProject(projectId);
+
+            projectToUpdate.Info = updateProjectRequest.Info;
+            projectToUpdate.AccessLevel = updateProjectRequest.AccessLevel;
+            projectToUpdate.Name = updateProjectRequest.Name;
+            projectToUpdate.ProjectTypes = new HashSet<ProjectType>(updateProjectRequest.ProjectTypes);
+            projectToUpdate.ProjectStatus = updateProjectRequest.ProjectStatus;
+            projectToUpdate.LandingImage = updateProjectRequest.LandingImage;
+            projectToUpdate.Screenshots = new HashSet<Image>(updateProjectRequest.Screenshots);
+
+            _projectProvider.UpdateProject(projectToUpdate);
+
+            return Ok();
+        }
+
         [HttpDelete]
         [Route("projects/{projectId}/developer/{developerId}")]
         [Authorization(AccountRole.User)]
@@ -188,11 +221,13 @@ namespace FrontendServices.Controllers
         }
 
         [Route("projects/page/{pageNumber}")]
-        public IEnumerable<ProjectPreview> GetProjectByPage(int pageNumber)
+        public PaginableObject GetProjectByPage(int pageNumber)
         {
             var requiredProjects = _projectProvider.GetProjects(pageNumber);
 
-            return requiredProjects.Select(_projectsMapper.ToProjectPreview);
+            var projectsPreview = requiredProjects.Select(_projectsMapper.ToProjectPreview);
+
+            return _paginationWrapper.WrapResponse(projectsPreview);
         }
 
         [HttpGet]
@@ -256,5 +291,24 @@ namespace FrontendServices.Controllers
 
             return requiredProjects;
         }
+
+        private Expression<Func<Project, bool>> GetPublicProjectsCounterExpression(Dictionary<string, string> paramsDictionary)
+        {
+            string categoriesQuery;
+
+            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
+
+            var projectTypes = categoriesQuery.IsNullOrEmpty()
+                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
+                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
+
+            return User.IsInRole(AccountRole.Administrator) || User.IsInRole(AccountRole.User)
+                ? (Expression<Func<Project, bool>>) (project =>
+                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
+                : (project =>
+                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)) &&
+                    project.AccessLevel == AccessLevel.Public && (project.ProjectStatus == ProjectStatus.Done
+                                                                  || project.ProjectStatus == ProjectStatus.InProgress));
+        } 
     }
 }

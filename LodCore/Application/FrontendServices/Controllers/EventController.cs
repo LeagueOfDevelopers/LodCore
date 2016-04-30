@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
+using FrontendServices.Models;
 using Journalist;
 using NotificationService;
 using UserManagement.Domain;
@@ -14,12 +16,14 @@ namespace FrontendServices.Controllers
     public class EventController : ApiController
     {
         private readonly INotificationService _notificationService;
-        private readonly EventMapper eventMapper;
+        private readonly EventMapper _eventMapper;
+        private readonly IPaginationWrapper<NotificationService.Delivery> _paginationWrapper; 
 
-        public EventController(INotificationService notificationService, EventMapper eventMapper)
+        public EventController(INotificationService notificationService, EventMapper eventMapper, IPaginationWrapper<NotificationService.Delivery> paginationWrapper)
         {
             _notificationService = notificationService;
-            this.eventMapper = eventMapper;
+            _eventMapper = eventMapper;
+            _paginationWrapper = paginationWrapper;
         }
 
         [HttpPut]
@@ -33,7 +37,7 @@ namespace FrontendServices.Controllers
         [HttpGet]
         [Route("event/{pageId}")]
         [Authorization(AccountRole.User)]
-        public IEnumerable<Event> GetEventsByPage(int pageId)
+        public PaginableObject GetEventsByPage(int pageId)
         {
             Require.ZeroOrGreater(pageId, nameof(pageId));
 
@@ -41,8 +45,8 @@ namespace FrontendServices.Controllers
 
             var events = _notificationService.GetEventsForUser(userId, pageId).ToList();
 
-
-            return events.Select(@event => eventMapper.ToEventPageEvent(@event, userId));
+            var eventsPreview = events.Select(@event => _eventMapper.ToEventPageEvent(@event, userId));
+            return _paginationWrapper.WrapResponse(eventsPreview, @event => @event.UserId == userId);
         }
 
         [HttpGet]

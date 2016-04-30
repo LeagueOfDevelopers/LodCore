@@ -45,17 +45,17 @@ namespace ProjectManagement.Domain
 
         public virtual int ProjectId { get; protected set; }
 
-        public virtual string Name { get; protected set; }
+        public virtual string Name { get; set; }
 
-        public virtual ISet<ProjectType> ProjectTypes { get; protected set; }
+        public virtual ISet<ProjectType> ProjectTypes { get; set; }
 
-        public virtual AccessLevel AccessLevel { get; protected set; }
+        public virtual AccessLevel AccessLevel { get; set; }
 
-        public virtual string Info { get; protected set; }
+        public virtual string Info { get; set; }
 
-        public virtual ProjectStatus ProjectStatus { get; protected set; }
+        public virtual ProjectStatus ProjectStatus { get; set; }
 
-        public virtual Image LandingImage { get; protected set; }
+        public virtual Image LandingImage { get; set; }
 
         public virtual VersionControlSystemInfo VersionControlSystemInfo { get; protected set; }
 

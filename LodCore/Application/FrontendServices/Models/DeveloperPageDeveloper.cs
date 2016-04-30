@@ -1,9 +1,10 @@
 ﻿using System;
+using DataAccess.Pagination;
 using Journalist;
 
 namespace FrontendServices.Models
 {
-    public class DeveloperPageDeveloper
+    public class DeveloperPageDeveloper : IPaginable
     {
         public DeveloperPageDeveloper(
             int userId,

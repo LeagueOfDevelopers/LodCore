@@ -5,7 +5,7 @@ using ProjectManagement.Domain;
 
 namespace FrontendServices.Models
 {
-    public class CreateProjectRequest
+    public class ProjectActionRequest
     {
         [MaxLength(25)]
         [Required]

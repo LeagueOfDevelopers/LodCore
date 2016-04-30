@@ -34,7 +34,7 @@ namespace IntegrationControllerTests.Helpers
         public static async Task<HttpResponseMessage> CreateProjectAsync()
         {
             var client = new HttpClient();
-            var project = new CreateProjectRequest()
+            var project = new ProjectActionRequest()
             {
                 Name = "TypicalNamsdfse",
                 AccessLevel = AccessLevel.Public,

@@ -137,9 +137,11 @@
   <ItemGroup>
     <Compile Include="App_Data\Authorization\ProjectsPolicies.cs" />
     <Compile Include="App_Data\ExceptionLogger.cs" />
+    <Compile Include="App_Data\IPaginationWrapper.cs" />
     <Compile Include="App_Data\Mappers\EventMapper.cs" />
     <Compile Include="App_Data\Mappers\OrderMapper.cs" />
     <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />
+    <Compile Include="App_Data\PaginationWrapper.cs" />
     <Compile Include="App_Data\SettingsReader.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -163,7 +165,8 @@
     <Compile Include="App_Data\Authorization\DevelopersPolicies.cs" />
     <Compile Include="Models\AdminProject.cs" />
     <Compile Include="Models\ContactMessage.cs" />
-    <Compile Include="Models\CreateProjectRequest.cs" />
+    <Compile Include="Models\PaginableObject.cs" />
+    <Compile Include="Models\ProjectActionRequest.cs" />
     <Compile Include="Models\Credentials.cs" />
     <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\DeveloperPageDeveloper.cs" />

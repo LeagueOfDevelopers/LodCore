@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DataAccess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Application\FrontendServices\Bin\DataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -82,11 +86,14 @@
     <Compile Include="Mappings\ProjectMembershipMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Pagination\IPaginable.cs" />
+    <Compile Include="Pagination\IPaginableRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\NotificationMailRepository.cs" />
     <Compile Include="Repositories\NotificationSettingsRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
+    <Compile Include="Repositories\PaginableRepository.cs" />
     <Compile Include="Repositories\ProjectMembershipRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
