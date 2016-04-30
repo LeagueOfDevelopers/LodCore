@@ -201,7 +201,7 @@ namespace FrontendServices.Controllers
                 {
                     Image = profileRequest.Image,
                     InstituteName = profileRequest.InstituteName,
-                    PhoneNumber = profileRequest.InstituteName,
+                    PhoneNumber = profileRequest.PhoneNumber,
                     Specialization = profileRequest.Specialization,
                     StudentAccessionYear = profileRequest.StudentAccessionYear,
                     StudyingDirection = profileRequest.StudyingDirection,

@@ -14,7 +14,7 @@ namespace FrontendServices.Models
             ProjectType[] projectType,
             string info,
             ProjectStatus projectStatus,
-            Common.Image landingImageUri,
+            Common.Image landingImage,
             AccessLevel accessLevel,
             Uri versionControlSystemUri,
             Uri projectManagementSystemUri,
@@ -34,7 +34,7 @@ namespace FrontendServices.Models
             AccessLevel = accessLevel;
             Info = info;
             ProjectStatus = projectStatus;
-            LandingImageUri = landingImageUri;
+            LandingImage = landingImage;
             VersionControlSystemUri = versionControlSystemUri;
             ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues ?? new HashSet<Issue>();
@@ -54,7 +54,7 @@ namespace FrontendServices.Models
 
         public ProjectStatus ProjectStatus { get; private set; }
 
-        public Common.Image LandingImageUri { get; private set; }
+        public Common.Image LandingImage { get; private set; }
 
         public Uri VersionControlSystemUri { get; private set; }
 
