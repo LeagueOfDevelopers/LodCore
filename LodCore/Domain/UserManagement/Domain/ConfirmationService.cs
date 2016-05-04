@@ -42,7 +42,7 @@ namespace UserManagement.Domain
         {
             Require.Positive(userId, nameof(userId));
 
-            var token = Extensions.GenerateToken();
+            var token = TokenGenerator.GenerateToken();
             var request = new MailValidationRequest(userId, token);
             _validationRequestsRepository.SaveValidationRequest(request);
 

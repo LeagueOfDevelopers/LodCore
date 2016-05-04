@@ -50,6 +50,11 @@ namespace FrontendServices.App_Data
             return new IssuePaginationSettings(int.Parse(settings["Redmine.IssuePaginationSettings"]));
         }
 
+        public static ApplicationLocationSettings ReadApplicationLocationSettings(NameValueCollection settings)
+        {
+            return new ApplicationLocationSettings(settings["BackendDomain"]);
+        }
+
         public static GitlabSettings ReadGitlabSettings(NameValueCollection settings)
         {
             return new GitlabSettings(

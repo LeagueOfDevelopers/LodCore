@@ -37,7 +37,7 @@ namespace Mailing
             client.Dispose();
         }
 
-        public void SendPasswordResertMail(string resetLink, MailAddress emailAddress)
+        public void SendPasswordResetMail(string resetLink, MailAddress emailAddress)
         {
             Require.NotNull(resetLink, nameof(resetLink));
             Require.NotNull(emailAddress, nameof(emailAddress));

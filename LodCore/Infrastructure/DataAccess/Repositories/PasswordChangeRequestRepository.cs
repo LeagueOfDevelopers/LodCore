@@ -15,7 +15,7 @@ namespace DataAccess.Repositories
             _sessionProvider = sessionProvider;
         }
 
-        public void SavePasswordChangeRequestt(PasswordChangeRequest request)
+        public void SavePasswordChangeRequest(PasswordChangeRequest request)
         {
             Require.NotNull(request, nameof(request));
 

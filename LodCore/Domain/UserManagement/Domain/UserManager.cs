@@ -8,10 +8,8 @@ using Journalist.Extensions;
 using NHibernate.Linq;
 using NHibernate.Util;
 using NotificationService;
-using ProjectManagement.Application;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
-using UserManagement.Infrastructure;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
@@ -21,16 +19,16 @@ namespace UserManagement.Domain
     {
         private readonly IConfirmationService _confirmationService;
         private readonly IUserRepository _userRepository;
-        private readonly IProjectProvider _projectProvider;
         private readonly PaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
         private readonly IMailer _mailer;
-        private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
+        private readonly IPasswordRecoveryManager _passwordRecoveryManager;
+        private readonly ApplicationLocationSettings _applicationLocationSettings;
 
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory, RelativeEqualityComparer relativeEqualityComparer, IMailer mailer, IPasswordChangeRequestRepository passwordChangeRequestRepository)
+            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectMembershipRepostiory projectMembershipRepostiory, IMailer mailer, ApplicationLocationSettings applicationLocationSettings, IPasswordRecoveryManager passwordRecoveryManager)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -38,10 +36,10 @@ namespace UserManagement.Domain
             _userRepository = userRepository;
             _confirmationService = confirmationService;
             _paginationSettings = paginationSettings;
-            _projectProvider = projectProvider;
             _projectMembershipRepostiory = projectMembershipRepostiory;
             _mailer = mailer;
-            _passwordChangeRequestRepository = passwordChangeRequestRepository;
+            _applicationLocationSettings = applicationLocationSettings;
+            _passwordRecoveryManager = passwordRecoveryManager;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -114,26 +112,46 @@ namespace UserManagement.Domain
             _userRepository.UpdateAccount(account);
         }
 
+        public void ChangeUserPassword(int userId, string newPassword)
+        {
+            Require.Positive(userId, nameof(userId));
+            Require.NotEmpty(newPassword, nameof(newPassword));
+
+            var user = _userRepository.GetAccount(userId);
+
+            var accountExists = user != null;
+            if (!accountExists)
+            {
+                throw new AccountNotFoundException();
+            }
+
+            _passwordRecoveryManager.UpdateUserPassword(userId, newPassword);
+
+            user.Password = new Password(newPassword);
+
+            _userRepository.UpdateAccount(user);
+        }
+
         public void InitiatePasswordChangingProcedure(int userId)
         {
             Require.Positive(userId, nameof(userId));
 
             var userToInitiateProcedure = GetUser(userId);
 
-            var request = _passwordChangeRequestRepository.GetPasswordChangeRequest(userId);
+            var request = _passwordRecoveryManager.GetPasswordChangeRequest(userId);
 
-            if (_passwordChangeRequestRepository.GetPasswordChangeRequest(userId) == null)
+            if (_passwordRecoveryManager.GetPasswordChangeRequest(userId) == null)
             {
-                request = new PasswordChangeRequest(userId, Extensions.GenerateToken());
+                request = new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
             }
 
             var passwordChangeRequest = request;
 
-            var link = $"http://api.lod-misis.ru/password/{passwordChangeRequest.Token}";
+            var link = $"{_applicationLocationSettings.BackendAdress}/password/{passwordChangeRequest.Token}";
 
-            _passwordChangeRequestRepository.SavePasswordChangeRequestt(request);
+            _passwordRecoveryManager.SavePasswordChangeRequest(request);
 
-            _mailer.SendPasswordResertMail(link, userToInitiateProcedure.Email);
+            _mailer.SendPasswordResetMail(link, userToInitiateProcedure.Email);
         }
 
         public List<Account> GetUserList(string searchString)

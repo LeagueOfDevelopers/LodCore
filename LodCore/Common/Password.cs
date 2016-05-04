@@ -66,5 +66,10 @@ namespace Common
         {
             return (Value != null ? Value.GetHashCode() : 0);
         }
+
+        public static bool IsStringCorrectPassword(string passwordToCheck)
+        {
+            return Regex.IsMatch(passwordToCheck, "^.{6,18}$");
+        }
     }
 }

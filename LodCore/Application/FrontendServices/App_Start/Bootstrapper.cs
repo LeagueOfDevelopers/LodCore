@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Http;
+using Common;
 using ContactContext;
 using ContactContext.Events;
 using DataAccess;
@@ -104,7 +105,7 @@ namespace FrontendServices
                     container.GetInstance<IEventRepository>(),
                     container.GetInstance<PaginationSettings>()), Lifestyle.Singleton);
             container.Register<IImageResizer>(
-                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>()), Lifestyle.Singleton);
+                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>(), container.GetInstance<ApplicationLocationSettings>()), Lifestyle.Singleton);
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectManagerGateway>(),
@@ -162,6 +163,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadRelativeEqualityComparerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadIssuePaginationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadApplicationLocationSettings(settings), Lifestyle.Singleton);
         }
 
         private static void RegisterMailing(Container container)

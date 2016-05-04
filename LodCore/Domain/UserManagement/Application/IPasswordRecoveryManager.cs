@@ -1,9 +1,12 @@
 ﻿using UserManagement.Domain;
 
-namespace UserManagement.Infrastructure
+namespace UserManagement.Application
 {
-    public interface IPasswordChangeRequestRepository
+    public interface IPasswordRecoveryManager
     {
+        Account GetUserByPasswordRecoveryToken(string token);
+        void UpdateUserPassword(int userId, string newPassword);
+
         void SavePasswordChangeRequest(PasswordChangeRequest request);
 
         PasswordChangeRequest GetPasswordChangeRequest(string token);

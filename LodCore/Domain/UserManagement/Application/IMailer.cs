@@ -6,6 +6,6 @@ namespace UserManagement.Application
     {
         void SendConfirmationMail(string confirmationLink, MailAddress emailAddress);
 
-        void SendPasswordResertMail(string resetLink, MailAddress emailAddress);
+        void SendPasswordResetMail(string resetLink, MailAddress emailAddress);
     }
 }

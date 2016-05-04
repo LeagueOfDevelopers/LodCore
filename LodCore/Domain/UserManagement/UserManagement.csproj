@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\ConfirmationSettings.cs" />
+    <Compile Include="Application\IPasswordRecoveryManager.cs" />
     <Compile Include="Domain\AuthorizationTokenInfo.cs" />
     <Compile Include="Domain\Authorizer.cs" />
     <Compile Include="Application\CreateAccountRequest.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Domain\Events\UserManagementEventSink.cs" />
     <Compile Include="Domain\MailValidationRequest.cs" />
     <Compile Include="Domain\PasswordChangeRequest.cs" />
+    <Compile Include="Domain\PasswordRecoveryManager.cs" />
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\TokenNotFoundException.cs" />
     <Compile Include="Domain\UserManager.cs" />

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Results;
 using Common;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
@@ -28,6 +29,7 @@ namespace FrontendServices.Controllers
 
         private readonly IUserManager _userManager;
         private readonly IUserPresentationProvider _userPresentationProvider;
+        private readonly IPasswordRecoveryManager _passwordRecoveryManager;
 
         private readonly IPaginationWrapper<UserManagement.Domain.Account> _paginationWrapper;
 
@@ -35,7 +37,7 @@ namespace FrontendServices.Controllers
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper)
+            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper, IPasswordRecoveryManager passwordRecoveryManager)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
@@ -47,6 +49,7 @@ namespace FrontendServices.Controllers
             _confirmationService = confirmationService;
             _userPresentationProvider = userPresentationProvider;
             _paginationWrapper = paginationWrapper;
+            _passwordRecoveryManager = passwordRecoveryManager;
         }
 
         [Route("developers/random/{count}")]
@@ -223,31 +226,28 @@ namespace FrontendServices.Controllers
         }
 
         [HttpPut]
-        [Route("developers/password/{id}")]
-        public IHttpActionResult ChangePassword(int id, [FromBody] string newPassword)
+        [Route("developers/password/{token}")]
+        public IHttpActionResult ChangePassword(string token, [FromBody] string newPassword)
         {
-            Require.Positive(id, nameof(id));
-            Require.NotNull(newPassword, nameof(newPassword));
+            Require.NotEmpty(token, nameof(token));
 
-            User.AssertResourceOwner(id);
+            var userToChange = _passwordRecoveryManager.GetUserByPasswordRecoveryToken(token);
 
-            Account userToChange;
-
-            try
-            {
-                userToChange = _userManager.GetUser(id);
-            }
-            catch (AccountNotFoundException)
+            if (userToChange == null)
             {
                 return NotFound();
             }
 
-            if (newPassword != null)
+            var userId = userToChange.UserId;
+
+            User.AssertResourceOwner(userId);
+
+            if (Password.IsStringCorrectPassword(newPassword))
             {
-                userToChange.Password = new Password(newPassword);
+                return BadRequest();
             }
 
-            _userManager.UpdateUser(userToChange);
+            _userManager.ChangeUserPassword(userId, newPassword);
 
             return Ok();
         }
