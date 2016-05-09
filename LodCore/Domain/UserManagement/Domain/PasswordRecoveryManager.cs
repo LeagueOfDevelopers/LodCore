@@ -7,12 +7,16 @@ namespace UserManagement.Domain
     public class PasswordRecoveryManager : IPasswordRecoveryManager
     {
         private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
-        private readonly IUserManager _userManager;
+        private readonly IUserRepository _userRepository;
+        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
+        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
 
-        public PasswordRecoveryManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserManager userManager)
+        public PasswordRecoveryManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserRepository userRepository, IGitlabUserRegistrar gitlabUserRegistrar, IRedmineUserRegistrar redmineUserRegistrar)
         {
             _passwordChangeRequestRepository = passwordChangeRequestRepository;
-            _userManager = userManager;
+            _userRepository = userRepository;
+            _gitlabUserRegistrar = gitlabUserRegistrar;
+            _redmineUserRegistrar = redmineUserRegistrar;
         }
 
         public Account GetUserByPasswordRecoveryToken(string token)
@@ -21,12 +25,18 @@ namespace UserManagement.Domain
 
             return request == null 
                 ? null 
-                : _userManager.GetUser(request.UserId);
+                : _userRepository.GetAccount(request.UserId);
         }
 
         public void UpdateUserPassword(int userId, string newPassword)
         {
-            throw new System.NotImplementedException();
+            Require.Positive(userId, nameof(userId));
+            Require.NotEmpty(newPassword, nameof(newPassword));
+
+            var account = _userRepository.GetAccount(userId);
+
+            _redmineUserRegistrar.ChangeUserPassword(account, newPassword);
+            _gitlabUserRegistrar.ChangeUserPassword(account, newPassword);
         }
 
         public void SavePasswordChangeRequest(PasswordChangeRequest request)

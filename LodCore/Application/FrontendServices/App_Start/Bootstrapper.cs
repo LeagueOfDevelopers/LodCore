@@ -49,6 +49,7 @@ namespace FrontendServices
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
             container.Register<UserRepository>(Lifestyle.Singleton);
             container.Register<ProjectRepository>(Lifestyle.Singleton);
+            container.Register<IPasswordRecoveryManager, PasswordRecoveryManager>(Lifestyle.Singleton);
             container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<ProjectManagerGateway>(Lifestyle.Singleton);
             container.Register<IRedmineUserRegistrar>(() => container.GetInstance<ProjectManagerGateway>(),

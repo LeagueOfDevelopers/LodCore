@@ -69,7 +69,7 @@ namespace Common
 
         public static bool IsStringCorrectPassword(string passwordToCheck)
         {
-            return Regex.IsMatch(passwordToCheck, "^.{6,18}$");
+            return Regex.IsMatch(passwordToCheck, "^.{8,18}$");
         }
     }
 }

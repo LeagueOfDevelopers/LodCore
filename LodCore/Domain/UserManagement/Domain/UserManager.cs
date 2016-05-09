@@ -147,7 +147,7 @@ namespace UserManagement.Domain
 
             var passwordChangeRequest = request;
 
-            var link = $"{_applicationLocationSettings.BackendAdress}/password/{passwordChangeRequest.Token}";
+            var link = $"{_applicationLocationSettings.BackendAdress}/developers/password/{passwordChangeRequest.Token}";
 
             _passwordRecoveryManager.SavePasswordChangeRequest(request);
 

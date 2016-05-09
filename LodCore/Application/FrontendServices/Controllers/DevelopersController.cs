@@ -242,7 +242,7 @@ namespace FrontendServices.Controllers
 
             User.AssertResourceOwner(userId);
 
-            if (Password.IsStringCorrectPassword(newPassword))
+            if (!Password.IsStringCorrectPassword(newPassword))
             {
                 return BadRequest();
             }
