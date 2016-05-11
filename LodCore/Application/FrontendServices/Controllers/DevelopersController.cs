@@ -29,7 +29,7 @@ namespace FrontendServices.Controllers
 
         private readonly IUserManager _userManager;
         private readonly IUserPresentationProvider _userPresentationProvider;
-        private readonly IPasswordRecoveryManager _passwordRecoveryManager;
+        private readonly IPasswordManager _passwordManager;
 
         private readonly IPaginationWrapper<UserManagement.Domain.Account> _paginationWrapper;
 
@@ -37,7 +37,7 @@ namespace FrontendServices.Controllers
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper, IPasswordRecoveryManager passwordRecoveryManager)
+            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper, IPasswordManager passwordManager)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
@@ -49,7 +49,7 @@ namespace FrontendServices.Controllers
             _confirmationService = confirmationService;
             _userPresentationProvider = userPresentationProvider;
             _paginationWrapper = paginationWrapper;
-            _passwordRecoveryManager = passwordRecoveryManager;
+            _passwordManager = passwordManager;
         }
 
         [Route("developers/random/{count}")]
@@ -226,12 +226,21 @@ namespace FrontendServices.Controllers
         }
 
         [HttpPut]
-        [Route("developers/password/{token}")]
-        public IHttpActionResult ChangePassword(string token, [FromBody] string newPassword)
+        [Route("password")]
+        public IHttpActionResult ChangePassword([FromBody]Models.PasswordChangeRequest request)
         {
-            Require.NotEmpty(token, nameof(token));
+            Account userToChange;
 
-            var userToChange = _passwordRecoveryManager.GetUserByPasswordRecoveryToken(token);
+            if (User.IsInRole(AccountRole.User))
+            {
+                userToChange = _userManager.GetUser(User.Identity.GetId());
+            }
+            else if (request.Token != null)
+            {
+                userToChange = _passwordManager.GetUserByPasswordRecoveryToken(request.Token);
+            }
+            else
+            {  return BadRequest(); }
 
             if (userToChange == null)
             {
@@ -240,14 +249,12 @@ namespace FrontendServices.Controllers
 
             var userId = userToChange.UserId;
 
-            User.AssertResourceOwner(userId);
-
-            if (!Password.IsStringCorrectPassword(newPassword))
+            if (!Password.IsStringCorrectPassword(request.NewPassword))
             {
                 return BadRequest();
             }
 
-            _userManager.ChangeUserPassword(userId, newPassword);
+            _userManager.ChangeUserPassword(userId, request.NewPassword);
 
             return Ok();
         }
@@ -348,12 +355,16 @@ namespace FrontendServices.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        [Route("developers/password")]
-        [Authorization(AccountRole.User)]
-        public IHttpActionResult InitiateProcedureOfPasswordChangeing()
+        [HttpPost]
+        [Route("password/recovery")]
+        public IHttpActionResult InitiateProcedureOfPasswordRecovery([FromBody]string email)
         {
-            _userManager.InitiatePasswordChangingProcedure(User.Identity.GetId());
+            var accountToRecover = _userManager.GetUserList(user => user.Email.Address == email).SingleOrDefault();
+
+            if (accountToRecover != null)
+            {
+                _userManager.InitiatePasswordChangingProcedure(accountToRecover.UserId);
+            }
 
             return Ok();
         }

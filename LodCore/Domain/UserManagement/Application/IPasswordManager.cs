@@ -2,7 +2,7 @@
 
 namespace UserManagement.Application
 {
-    public interface IPasswordRecoveryManager
+    public interface IPasswordManager
     {
         Account GetUserByPasswordRecoveryToken(string token);
         void UpdateUserPassword(int userId, string newPassword);

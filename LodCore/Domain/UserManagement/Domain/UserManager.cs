@@ -22,13 +22,13 @@ namespace UserManagement.Domain
         private readonly PaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
         private readonly IMailer _mailer;
-        private readonly IPasswordRecoveryManager _passwordRecoveryManager;
+        private readonly IPasswordManager _passwordManager;
         private readonly ApplicationLocationSettings _applicationLocationSettings;
 
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectMembershipRepostiory projectMembershipRepostiory, IMailer mailer, ApplicationLocationSettings applicationLocationSettings, IPasswordRecoveryManager passwordRecoveryManager)
+            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectMembershipRepostiory projectMembershipRepostiory, IMailer mailer, ApplicationLocationSettings applicationLocationSettings, IPasswordManager passwordManager)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -39,7 +39,7 @@ namespace UserManagement.Domain
             _projectMembershipRepostiory = projectMembershipRepostiory;
             _mailer = mailer;
             _applicationLocationSettings = applicationLocationSettings;
-            _passwordRecoveryManager = passwordRecoveryManager;
+            _passwordManager = passwordManager;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -125,11 +125,18 @@ namespace UserManagement.Domain
                 throw new AccountNotFoundException();
             }
 
-            _passwordRecoveryManager.UpdateUserPassword(userId, newPassword);
+            _passwordManager.UpdateUserPassword(userId, newPassword);
 
             user.Password = new Password(newPassword);
 
             _userRepository.UpdateAccount(user);
+
+            var requestToDelete = _passwordManager.GetPasswordChangeRequest(userId);
+
+            if (requestToDelete != null)
+            {
+                _passwordManager.DeletePasswordChangeRequest(requestToDelete);
+            }
         }
 
         public void InitiatePasswordChangingProcedure(int userId)
@@ -138,18 +145,18 @@ namespace UserManagement.Domain
 
             var userToInitiateProcedure = GetUser(userId);
 
-            var request = _passwordRecoveryManager.GetPasswordChangeRequest(userId);
+            var request = _passwordManager.GetPasswordChangeRequest(userId);
 
-            if (_passwordRecoveryManager.GetPasswordChangeRequest(userId) == null)
+            if (_passwordManager.GetPasswordChangeRequest(userId) == null)
             {
                 request = new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
             }
 
             var passwordChangeRequest = request;
 
-            var link = $"{_applicationLocationSettings.BackendAdress}/developers/password/{passwordChangeRequest.Token}";
+            var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{passwordChangeRequest.Token}";
 
-            _passwordRecoveryManager.SavePasswordChangeRequest(request);
+            _passwordManager.SavePasswordChangeRequest(request);
 
             _mailer.SendPasswordResetMail(link, userToInitiateProcedure.Email);
         }

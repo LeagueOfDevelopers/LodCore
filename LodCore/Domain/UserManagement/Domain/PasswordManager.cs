@@ -4,14 +4,14 @@ using UserManagement.Infrastructure;
 
 namespace UserManagement.Domain
 {
-    public class PasswordRecoveryManager : IPasswordRecoveryManager
+    public class PasswordManager : IPasswordManager
     {
         private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
         private readonly IUserRepository _userRepository;
         private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
         private readonly IRedmineUserRegistrar _redmineUserRegistrar;
 
-        public PasswordRecoveryManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserRepository userRepository, IGitlabUserRegistrar gitlabUserRegistrar, IRedmineUserRegistrar redmineUserRegistrar)
+        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserRepository userRepository, IGitlabUserRegistrar gitlabUserRegistrar, IRedmineUserRegistrar redmineUserRegistrar)
         {
             _passwordChangeRequestRepository = passwordChangeRequestRepository;
             _userRepository = userRepository;

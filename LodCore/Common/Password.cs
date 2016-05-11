@@ -10,7 +10,7 @@ namespace Common
     {
         public Password(string pass)
         {
-            if (Regex.IsMatch(pass, "^.{6,18}$"))
+            if (Regex.IsMatch(pass, "^.{8,18}$"))
             {
                 var md5Hasher = MD5.Create();
 

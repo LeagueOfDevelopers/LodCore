@@ -52,7 +52,7 @@ namespace FrontendServices.App_Data
 
         public static ApplicationLocationSettings ReadApplicationLocationSettings(NameValueCollection settings)
         {
-            return new ApplicationLocationSettings(settings["BackendDomain"]);
+            return new ApplicationLocationSettings(settings["BackendDomain"], settings["FrontendDomain"]);
         }
 
         public static GitlabSettings ReadGitlabSettings(NameValueCollection settings)
