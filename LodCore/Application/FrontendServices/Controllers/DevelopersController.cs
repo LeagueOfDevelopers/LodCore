@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Common;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
@@ -18,6 +17,7 @@ using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
 using NotificationSetting = FrontendServices.Models.NotificationSetting;
+using PasswordChangeRequest = FrontendServices.Models.PasswordChangeRequest;
 
 namespace FrontendServices.Controllers
 {
@@ -27,17 +27,18 @@ namespace FrontendServices.Controllers
         private readonly IConfirmationService _confirmationService;
         private readonly DevelopersMapper _mapper;
 
-        private readonly IUserManager _userManager;
-        private readonly IUserPresentationProvider _userPresentationProvider;
+        private readonly IPaginationWrapper<Account> _paginationWrapper;
         private readonly IPasswordManager _passwordManager;
 
-        private readonly IPaginationWrapper<UserManagement.Domain.Account> _paginationWrapper;
+        private readonly IUserManager _userManager;
+        private readonly IUserPresentationProvider _userPresentationProvider;
 
         public DevelopersController(
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper, IPasswordManager passwordManager)
+            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper,
+            IPasswordManager passwordManager)
         {
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(mapper, nameof(mapper));
@@ -100,7 +101,7 @@ namespace FrontendServices.Controllers
             var users = _userManager.GetUserList(pageId,
                 GetAccountFilter());
             var developerPageDevelopers = users.Select(_mapper.ToDeveloperPageDeveloper);
-            
+
             return _paginationWrapper.WrapResponse(developerPageDevelopers, GetAccountFilterExpression());
         }
 
@@ -227,7 +228,7 @@ namespace FrontendServices.Controllers
 
         [HttpPut]
         [Route("password")]
-        public IHttpActionResult ChangePassword([FromBody]Models.PasswordChangeRequest request)
+        public IHttpActionResult ChangePassword([FromBody] PasswordChangeRequest request)
         {
             Account userToChange;
 
@@ -240,7 +241,9 @@ namespace FrontendServices.Controllers
                 userToChange = _passwordManager.GetUserByPasswordRecoveryToken(request.Token);
             }
             else
-            {  return BadRequest(); }
+            {
+                return BadRequest();
+            }
 
             if (userToChange == null)
             {
@@ -357,7 +360,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("password/recovery")]
-        public IHttpActionResult InitiateProcedureOfPasswordRecovery([FromBody]string email)
+        public IHttpActionResult InitiateProcedureOfPasswordRecovery([FromBody] string email)
         {
             var accountToRecover = _userManager.GetUserList(user => user.Email.Address == email).SingleOrDefault();
 
