@@ -71,6 +71,17 @@ namespace Mailing {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на На сайте Лиги {0} оставил сообщение на тему {1}:
+        ///{2}
+        ///Обратный адрес - {3}.
+        /// </summary>
+        public static string NewContactMessage {
+            get {
+                return ResourceManager.GetString("NewContactMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на На проект {0} пришел новый разработчик! Встречайте - {1}! Теперь работа над проектом пойдет гораздо быстрее!.
         /// </summary>
         public static string NewDeveloperOnProject {

@@ -1,4 +1,5 @@
-﻿using Journalist;
+﻿using ContactContext.Events;
+using Journalist;
 using NotificationService;
 using OrderManagement.Domain.Events;
 using OrderManagement.Infrastructure;
@@ -34,6 +35,14 @@ namespace Mailing
             return Describe((dynamic) @eventInfo);
         }
 
+
+        private string Describe(NewContactMessage @event)
+        {
+            Require.NotNull(@event, nameof(@event));
+
+            return string.Format(EventDescriptionResources.NewContactMessage, @event.ClientName, @event.MessageTopic,
+                @event.MessageBody, @event.ClientEmalAddress);
+        }
         private string Describe(DeveloperHasLeftProject @event)
         {
             Require.NotNull(@event, nameof(@event));
