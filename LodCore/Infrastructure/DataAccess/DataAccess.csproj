@@ -83,6 +83,7 @@
     <Compile Include="Mappings\NotificationEmailMapping.cs" />
     <Compile Include="Mappings\NotificationSettingMap.cs" />
     <Compile Include="Mappings\OrderMap.cs" />
+    <Compile Include="Mappings\PasswordChangeRequestMap.cs" />
     <Compile Include="Mappings\ProjectMembershipMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Repositories\NotificationSettingsRepository.cs" />
     <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\PaginableRepository.cs" />
+    <Compile Include="Repositories\PasswordChangeRequestRepository.cs" />
     <Compile Include="Repositories\ProjectMembershipRepository.cs" />
     <Compile Include="Repositories\ProjectRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />

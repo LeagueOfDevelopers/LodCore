@@ -22,6 +22,8 @@ namespace ContactContext.Events
             var distributionPolicy = DistributionPolicyFactory.GetAdminRelatedPolicy();
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
+
+            Mailer.SendNotificationEmail(distributionPolicy.ReceiverIds, eventInfo);
         }
     }
 }

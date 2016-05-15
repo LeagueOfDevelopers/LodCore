@@ -1,12 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Common;
 using ImageMagick;
 
 namespace FilesManagement
 {
     public class ImageResizer : IImageResizer
     {
+        private ApplicationLocationSettings _applicationLocationSettings;
+
         public Uri ResizeImageByLengthOfLongestSide(Uri imageToResizeUri)
         {
             var fileName = Path.GetFileName(imageToResizeUri.LocalPath);
@@ -25,7 +28,7 @@ namespace FilesManagement
             var pathOfNewImage = Path.Combine(_fileStorageSettings.ImageStorageFolder, newName);
             magicImage.Write(pathOfNewImage);
 
-            return new Uri("http://api.lod-misis.ru/image/" + newName);
+            return new Uri($"{_applicationLocationSettings.BackendAdress}/image/" + newName);
         }
 
         private string GenerateRandomFileName(string fileName)
@@ -37,10 +40,11 @@ namespace FilesManagement
         private readonly int _lengthOfLongestSideOfResized;
         private readonly FileStorageSettings _fileStorageSettings;
 
-        public ImageResizer(int lengthOfLongestSideOfResized, FileStorageSettings fileStorageSettings)
+        public ImageResizer(int lengthOfLongestSideOfResized, FileStorageSettings fileStorageSettings, ApplicationLocationSettings applicationLocationSettings)
         {
             _lengthOfLongestSideOfResized = lengthOfLongestSideOfResized;
             this._fileStorageSettings = fileStorageSettings;
+            _applicationLocationSettings = applicationLocationSettings;
         }
     }
 }

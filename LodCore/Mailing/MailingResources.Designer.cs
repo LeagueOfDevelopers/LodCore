@@ -131,6 +131,31 @@ namespace Mailing {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Восстановление пароля на сайте Лиги Разработчиков.
+        /// </summary>
+        internal static string PasswordResetCaption {
+            get {
+                return ResourceManager.GetString("PasswordResetCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
+        ///
+        ///
+        /// На сайте Лиги Разработчиков было запрошено восстановление пароля на учетную запись, привязанную к Вашему e-mail.
+        ///
+        ///Ссылка для восстановления пароля: {0}
+        ///
+        ///Если же вы не запрашивали восстановления пароля - просто проигнорируйте это письмо..
+        /// </summary>
+        internal static string PasswordResetMessageTemplate {
+            get {
+                return ResourceManager.GetString("PasswordResetMessageTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 25.
         /// </summary>
         internal static string Port {

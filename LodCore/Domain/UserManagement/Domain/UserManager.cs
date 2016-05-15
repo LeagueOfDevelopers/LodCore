@@ -8,9 +8,9 @@ using Journalist.Extensions;
 using NHibernate.Linq;
 using NHibernate.Util;
 using NotificationService;
-using ProjectManagement.Application;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
+using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace UserManagement.Domain
@@ -19,15 +19,16 @@ namespace UserManagement.Domain
     {
         private readonly IConfirmationService _confirmationService;
         private readonly IUserRepository _userRepository;
-        private readonly IProjectProvider _projectProvider;
         private readonly PaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
-        private readonly Common.RelativeEqualityComparer _relativeEqualityComparer;
+        private readonly IMailer _mailer;
+        private readonly IPasswordManager _passwordManager;
+        private readonly ApplicationLocationSettings _applicationLocationSettings;
 
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectProvider projectProvider, IProjectMembershipRepostiory projectMembershipRepostiory, RelativeEqualityComparer relativeEqualityComparer)
+            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectMembershipRepostiory projectMembershipRepostiory, IMailer mailer, ApplicationLocationSettings applicationLocationSettings, IPasswordManager passwordManager)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -35,9 +36,10 @@ namespace UserManagement.Domain
             _userRepository = userRepository;
             _confirmationService = confirmationService;
             _paginationSettings = paginationSettings;
-            _projectProvider = projectProvider;
             _projectMembershipRepostiory = projectMembershipRepostiory;
-            _relativeEqualityComparer = relativeEqualityComparer;
+            _mailer = mailer;
+            _applicationLocationSettings = applicationLocationSettings;
+            _passwordManager = passwordManager;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -108,6 +110,55 @@ namespace UserManagement.Domain
             }
 
             _userRepository.UpdateAccount(account);
+        }
+
+        public void ChangeUserPassword(int userId, string newPassword)
+        {
+            Require.Positive(userId, nameof(userId));
+            Require.NotEmpty(newPassword, nameof(newPassword));
+
+            var user = _userRepository.GetAccount(userId);
+
+            var accountExists = user != null;
+            if (!accountExists)
+            {
+                throw new AccountNotFoundException();
+            }
+
+            _passwordManager.UpdateUserPassword(userId, newPassword);
+
+            user.Password = new Password(newPassword);
+
+            _userRepository.UpdateAccount(user);
+
+            var requestToDelete = _passwordManager.GetPasswordChangeRequest(userId);
+
+            if (requestToDelete != null)
+            {
+                _passwordManager.DeletePasswordChangeRequest(requestToDelete);
+            }
+        }
+
+        public void InitiatePasswordChangingProcedure(int userId)
+        {
+            Require.Positive(userId, nameof(userId));
+
+            var userToInitiateProcedure = GetUser(userId);
+
+            var request = _passwordManager.GetPasswordChangeRequest(userId);
+
+            if (_passwordManager.GetPasswordChangeRequest(userId) == null)
+            {
+                request = new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
+            }
+
+            var passwordChangeRequest = request;
+
+            var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{passwordChangeRequest.Token}";
+
+            _passwordManager.SavePasswordChangeRequest(request);
+
+            _mailer.SendPasswordResetMail(link, userToInitiateProcedure.Email);
         }
 
         public List<Account> GetUserList(string searchString)

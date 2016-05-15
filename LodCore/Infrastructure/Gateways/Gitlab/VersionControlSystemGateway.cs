@@ -96,6 +96,19 @@ namespace Gateways.Gitlab
             return addedUser.Id;
         }
 
+        public void ChangeUserPassword(Account account, string newPassword)
+        {
+            Require.NotNull(account, nameof(account));
+            Require.NotEmpty(newPassword, nameof(newPassword));
+
+            var user = new UserUpsert
+            {
+                Password = newPassword
+            };
+
+            _gitLabClient.Users.Update(account.GitlabUserId, user);
+        }
+
         private string GetUserNameByLastName(string lastName)
         {
             return lastName.Unidecode().Replace(@"'", string.Empty);

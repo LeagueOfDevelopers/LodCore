@@ -169,6 +169,27 @@ namespace Gateways.Redmine
             return (int)createdUser["user"]["id"];
         }
 
+        public void ChangeUserPassword(Account account, string newPassword)
+        {
+            Require.NotNull(account, nameof(account));
+
+            var user = new RedmineUser
+            {
+                Id = account.RedmineUserId,
+                Password = newPassword
+            };
+
+            var client = new HttpClient();
+            var address = _redmineSettings.RedmineHost + $"/users/{account.RedmineUserId}.json";
+            var authHeaderByteArray = Encoding.ASCII.GetBytes($"{_redmineSettings.ApiKey}:pass");
+            client.DefaultRequestHeaders.Authorization
+                = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authHeaderByteArray));
+            client.PutAsync(
+                address,
+                user,
+                new XmlMediaTypeFormatter { UseXmlSerializer = true });
+        }
+
         private static string GetProjectIdentifier(string projectName)
         {
             return projectName.Unidecode().Replace(" ", string.Empty).ToLower();

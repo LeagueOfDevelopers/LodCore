@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using Common;
 using Journalist;
 using NotificationService;
 using UserManagement.Application;
@@ -40,7 +42,7 @@ namespace UserManagement.Domain
         {
             Require.Positive(userId, nameof(userId));
 
-            var token = GenerateToken();
+            var token = TokenGenerator.GenerateToken();
             var request = new MailValidationRequest(userId, token);
             _validationRequestsRepository.SaveValidationRequest(request);
 
@@ -115,14 +117,6 @@ namespace UserManagement.Domain
             _userRepository.UpdateAccount(userAccount);
 
             _userManagementEventSink.ConsumeEvent(new NewFullConfirmedDeveloper(userId));
-        }
-
-        private string GenerateToken()
-        {
-            return Convert
-                .ToBase64String(Guid.NewGuid().ToByteArray())
-                .Replace('+', '-')
-                .Replace('/', '_');
         }
 
         private void CreateGitlabAccount(Account account)

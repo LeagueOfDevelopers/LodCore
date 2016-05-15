@@ -8,8 +8,13 @@ namespace DataAccess.Mappings
     {
         public EventMap()
         {
+            Table("eventinfo");
             Id(@event => @event.Id, mapper => mapper.Generator(Generators.Identity));
-            Property(@event => @event.EventInfo, mapper => mapper.Column("EventInfo"));
+            Property(@event => @event.EventInfo, mapper =>
+            {
+                mapper.Column("EventInfo");
+                mapper.Length(1000);
+            });
             Property(@event => @event.EventType, mapper => mapper.Column("EventType"));
             Property(@event => @event.OccuredOn, mapper => mapper.Column("OccuredOn"));
         }

@@ -121,6 +121,11 @@
     <value>К сожалению, {0} больше не работает над проектом {1}  :( 
 Проект всё равно будет завершен!</value>
   </data>
+  <data name="NewContactMessage" xml:space="preserve">
+    <value>На сайте Лиги {0} оставил сообщение на тему {1}:
+{2}
+Обратный адрес - {3}</value>
+  </data>
   <data name="NewDeveloperOnProject" xml:space="preserve">
     <value>На проект {0} пришел новый разработчик! Встречайте - {1}! Теперь работа над проектом пойдет гораздо быстрее!</value>
   </data>

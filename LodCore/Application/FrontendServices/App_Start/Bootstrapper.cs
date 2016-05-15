@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Http;
+using Common;
 using ContactContext;
 using ContactContext.Events;
 using DataAccess;
@@ -48,6 +49,7 @@ namespace FrontendServices
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
             container.Register<UserRepository>(Lifestyle.Singleton);
             container.Register<ProjectRepository>(Lifestyle.Singleton);
+            container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
             container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<ProjectManagerGateway>(Lifestyle.Singleton);
             container.Register<IRedmineUserRegistrar>(() => container.GetInstance<ProjectManagerGateway>(),
@@ -92,6 +94,7 @@ namespace FrontendServices
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
+            container.Register<IPasswordChangeRequestRepository, PasswordChangeRequestRepository>(Lifestyle.Singleton);
             container.Register<IUsersRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<IProjectRelativesRepository>(() => container.GetInstance<ProjectRepository>(),
                 Lifestyle.Singleton);
@@ -103,7 +106,7 @@ namespace FrontendServices
                     container.GetInstance<IEventRepository>(),
                     container.GetInstance<PaginationSettings>()), Lifestyle.Singleton);
             container.Register<IImageResizer>(
-                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>()), Lifestyle.Singleton);
+                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>(), container.GetInstance<ApplicationLocationSettings>()), Lifestyle.Singleton);
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectManagerGateway>(),
@@ -161,6 +164,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadRelativeEqualityComparerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadIssuePaginationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadApplicationLocationSettings(settings), Lifestyle.Singleton);
         }
 
         private static void RegisterMailing(Container container)

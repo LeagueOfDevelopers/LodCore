@@ -37,6 +37,21 @@ namespace Mailing
             client.Dispose();
         }
 
+        public void SendPasswordResetMail(string resetLink, MailAddress emailAddress)
+        {
+            Require.NotNull(resetLink, nameof(resetLink));
+            Require.NotNull(emailAddress, nameof(emailAddress));
+
+            var mail = InitMail(emailAddress);
+            var client = _mailerSettings.GetSmtpClient();
+
+            mail.Subject = MailingResources.PasswordResetCaption;
+            mail.Body = string.Format(MailingResources.PasswordResetMessageTemplate, resetLink);
+
+            client.Send(mail);
+            client.Dispose();
+        }
+
         public void SendNotificationEmail(int[] userIds, IEventInfo eventInfo)
         {
             Require.NotNull(eventInfo, nameof(eventInfo));
