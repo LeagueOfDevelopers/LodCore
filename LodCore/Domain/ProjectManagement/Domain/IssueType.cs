@@ -2,8 +2,8 @@
 {
     public enum IssueType
     {
-        Bug,
-        Research,
-        Task
+        Bug = 1,
+        Research = 4,
+        Task = 2
     }
 }

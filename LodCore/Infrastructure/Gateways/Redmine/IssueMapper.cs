@@ -11,7 +11,7 @@ namespace Gateways.Redmine
         private static readonly Dictionary<int, IssueType> RedmineTrackerIdToIssueType = new Dictionary<int, IssueType>
         {
             {1, IssueType.Bug},
-            {2, IssueType.Research},
+            {4, IssueType.Research},
             {3, IssueType.Task}
         };
 
