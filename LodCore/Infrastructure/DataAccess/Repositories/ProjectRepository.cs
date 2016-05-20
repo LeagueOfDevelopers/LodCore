@@ -39,14 +39,19 @@ namespace DataAccess.Repositories
             return allProjects.ToArray();
         }
 
-        public Project[] GetSomeProjects(int skipCount, int takeCount, Expression<Func<Project, bool>> predicate = null)
+        public Project[] GetSomeProjects(
+            int skipCount, 
+            int takeCount, 
+            Expression<Func<Project, int>> orderer, 
+            Expression<Func<Project, bool>> predicate = null)
         {
             var session = _databaseSessionProvider.GetCurrentSession();
             IQueryable<Project> requiredProjects;
-            if (predicate == null) requiredProjects = session.Query<Project>().Skip(skipCount).Take(takeCount);
+            var query = session.Query<Project>().OrderBy(orderer);
+            if (predicate == null) requiredProjects = query.Skip(skipCount).Take(takeCount);
             else
                 requiredProjects =
-                    session.Query<Project>().Where(predicate).Skip(skipCount).Take(takeCount);
+                    query.Where(predicate).Skip(skipCount).Take(takeCount);
             return requiredProjects.ToArray();
         }
 

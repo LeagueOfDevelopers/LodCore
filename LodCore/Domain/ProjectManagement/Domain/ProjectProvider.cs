@@ -49,7 +49,12 @@ namespace ProjectManagement.Domain
             var requiredProjects = _projectRepository.GetSomeProjects(
                 projectsToSkip,
                 _paginationSettings.PageSize,
-                predicate);
+                project => project.ProjectStatus == ProjectStatus.Done // well, that's a funny workaround
+                    ? 1 // i can't figure out, how to sort it other way
+                    : project.ProjectStatus == ProjectStatus.InProgress // even simple switch clause doesn't work here
+                        ? 2 // proper way to do this is rearrange enum values and change database accordingly
+                        : project.ProjectStatus == ProjectStatus.Planned ? 3 : 4, // but it would be tough to do this all the time i want to change order
+                predicate); // so let it be so
             return requiredProjects.ToList();
         }
 
