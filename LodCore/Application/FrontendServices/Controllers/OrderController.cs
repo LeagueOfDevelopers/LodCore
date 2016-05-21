@@ -1,8 +1,12 @@
-﻿using System.Web.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Http;
 using FrontendServices.App_Data.Mappers;
+using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
 using OrderManagement.Application;
+using UserManagement.Domain;
 
 namespace FrontendServices.Controllers
 {
@@ -22,7 +26,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("orders")]
-        public IHttpActionResult RegisterNewOrder([FromBody] RegisterNewOrderRequest request)
+        public IHttpActionResult RegisterNewOrder([FromBody] Order request)
         {
             Require.NotNull(request, nameof(request));
             if (!ModelState.IsValid)
@@ -33,5 +37,14 @@ namespace FrontendServices.Controllers
             _orderManager.AddOrder(order);
             return Ok();
         }
+
+        [HttpGet]
+        [Authorization(AccountRole.Administrator)]
+        [Route("orders")]
+        public IEnumerable<Order> GetAllOrders()
+        {
+            var orders = _orderManager.GetAllOrders();
+            return orders.Select(order => _orderMapper.ToModel(order));
+        } 
     }
 }

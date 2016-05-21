@@ -4,7 +4,7 @@ using Common;
 
 namespace FrontendServices.Models
 {
-    public class RegisterNewOrderRequest
+    public class Order
     {
         [MaxLength(50)]
         public string Header { get; set; }

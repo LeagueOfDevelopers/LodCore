@@ -5,16 +5,17 @@ using System.Net.Mail;
 using FrontendServices.Models;
 using Journalist;
 using OrderManagement.Domain;
+using Order = FrontendServices.Models.Order;
 
 namespace FrontendServices.App_Data.Mappers
 {
     public class OrderMapper
     {
-        public Order ToDomainEntity(RegisterNewOrderRequest request)
+        public OrderManagement.Domain.Order ToDomainEntity(Order request)
         {
             Require.NotNull(request, nameof(request));
 
-            var order = new Order(
+            var order = new OrderManagement.Domain.Order(
                 request.Header,
                 request.CustomerName,
                 DateTime.Now,
@@ -25,6 +26,24 @@ namespace FrontendServices.App_Data.Mappers
                 request.ProjectType);
 
             return order;
+        }
+
+        public Order ToModel(OrderManagement.Domain.Order order)
+        {
+            Require.NotNull(order, nameof(order));
+
+            var orderModel = new Order()
+            {
+                ProjectType = order.ProjectType,
+                Email = order.Email.Address,
+                CustomerName = order.CustomerName,
+                DeadLine = order.DeadLine,
+                Description = order.Description,
+                Attachments = order.Attachments.Select(uri => uri.AbsoluteUri).ToArray(),
+                Header = order.Header
+            };
+
+            return orderModel;
         }
     }
 }
