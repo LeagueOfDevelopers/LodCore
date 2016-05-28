@@ -2,7 +2,7 @@
 
 namespace OrderManagement.Domain
 {
-    internal class OrderNotFoundException : Exception
+    public class OrderNotFoundException : Exception
     {
     }
 }

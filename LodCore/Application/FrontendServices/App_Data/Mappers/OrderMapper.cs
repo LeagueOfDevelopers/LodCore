@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using FrontendServices.Models;
 using Journalist;
-using OrderManagement.Domain;
 using Order = FrontendServices.Models.Order;
 
 namespace FrontendServices.App_Data.Mappers
@@ -32,8 +30,9 @@ namespace FrontendServices.App_Data.Mappers
         {
             Require.NotNull(order, nameof(order));
 
-            var orderModel = new Order()
+            var orderModel = new Order
             {
+                Id = order.Id,
                 ProjectType = order.ProjectType,
                 Email = order.Email.Address,
                 CustomerName = order.CustomerName,

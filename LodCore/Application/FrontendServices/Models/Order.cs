@@ -6,6 +6,8 @@ namespace FrontendServices.Models
 {
     public class Order
     {
+        public int Id { get; set; }
+
         [MaxLength(50)]
         public string Header { get; set; }
 
