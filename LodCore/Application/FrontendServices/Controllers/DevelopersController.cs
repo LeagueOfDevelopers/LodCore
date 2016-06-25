@@ -380,7 +380,7 @@ namespace FrontendServices.Controllers
                                   || account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
             }
 
-            return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
+            return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !account.IsHidden;
         }
 
         private Expression<Func<Account, bool>> GetAccountFilterExpression()
@@ -391,7 +391,7 @@ namespace FrontendServices.Controllers
                                   || account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
             }
 
-            return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
+            return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !account.IsHidden;
         }
     }
 }
