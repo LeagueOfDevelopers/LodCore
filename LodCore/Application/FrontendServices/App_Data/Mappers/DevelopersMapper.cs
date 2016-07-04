@@ -59,7 +59,10 @@ namespace FrontendServices.App_Data.Mappers
                 role,
                 account.RegistrationTime,
                 projectCount,
-                account.Profile?.VkProfileUri);
+                account.Profile?.VkProfileUri,
+                account.Role,
+                account.ConfirmationStatus,
+                account.IsHidden);
         }
 
         public Developer ToDeveloper(Account account)

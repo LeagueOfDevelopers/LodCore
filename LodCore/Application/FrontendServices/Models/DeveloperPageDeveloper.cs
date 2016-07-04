@@ -1,6 +1,7 @@
 ﻿using System;
 using DataAccess.Pagination;
 using Journalist;
+using UserManagement.Domain;
 
 namespace FrontendServices.Models
 {
@@ -14,7 +15,10 @@ namespace FrontendServices.Models
             string role,
             DateTime registrationDate,
             int projectCount,
-            Uri vkPageUri)
+            Uri vkPageUri,
+            AccountRole accountRole, 
+            ConfirmationStatus confirmationStatus, 
+            bool isHidden)
         {
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(firstName, nameof(firstName));
@@ -30,6 +34,9 @@ namespace FrontendServices.Models
             RegistrationDate = registrationDate;
             ProjectCount = projectCount;
             VkPageUri = vkPageUri;
+            AccountRole = accountRole;
+            ConfirmationStatus = confirmationStatus;
+            IsHidden = isHidden;
         }
 
         public int UserId { get; private set; }
@@ -47,5 +54,11 @@ namespace FrontendServices.Models
         public int ProjectCount { get; private set; }
 
         public Uri VkPageUri { get; private set; }
+
+        public AccountRole AccountRole { get; private set; }
+
+        public ConfirmationStatus ConfirmationStatus { get; private set; }
+
+        public bool IsHidden { get; private set; }
     }
 }
