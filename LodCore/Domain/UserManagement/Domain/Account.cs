@@ -58,7 +58,9 @@ namespace UserManagement.Domain
 
         public virtual int GitlabUserId { get; set; }
 
-        public virtual AccountRole Role { get; protected set; }
+        public virtual bool IsHidden { get; set; }
+
+        public virtual AccountRole Role { get; set; }
 
         public virtual ConfirmationStatus ConfirmationStatus { get; set; }
 

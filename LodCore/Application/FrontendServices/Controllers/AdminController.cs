@@ -12,12 +12,17 @@ namespace FrontendServices.Controllers
     {
         private readonly IConfirmationService _confirmationService;
         private readonly NotificationEventSink _notificationEventSink;
+        private readonly IUserManager _userManager;
 
-        public AdminController(IConfirmationService confirmationService, NotificationEventSink notificationEventSink)
+        public AdminController(
+            IConfirmationService confirmationService, 
+            NotificationEventSink notificationEventSink, 
+            IUserManager userManager)
         {
             Require.NotNull(confirmationService, nameof(confirmationService));
             _confirmationService = confirmationService;
             _notificationEventSink = notificationEventSink;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -50,6 +55,34 @@ namespace FrontendServices.Controllers
             Require.NotEmpty(textInfo, nameof(textInfo));
 
             _notificationEventSink.ConsumeEvent(new AdminNotificationInfo(textInfo));
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("admin/developers/{id}/hide/{condition}")]
+        [Authorization(AccountRole.Administrator)]
+        public IHttpActionResult ChangeUserHideStatus(int id, bool condition)
+        {
+            Require.Positive(id, "id");
+
+            var account = _userManager.GetUser(id);
+            account.IsHidden = condition;
+            _userManager.UpdateUser(account);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("admin/{id}")]
+        [Authorization(AccountRole.Administrator)]
+        public IHttpActionResult PromoteToAdmin(int id)
+        {
+            Require.Positive(id, "id");
+
+            var account = _userManager.GetUser(id);
+            account.Role = AccountRole.Administrator;
+            _userManager.UpdateUser(account);
 
             return Ok();
         }
