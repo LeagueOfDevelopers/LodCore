@@ -8,7 +8,8 @@ namespace FrontendServices.Controllers
     {
         public string Get()
         {
-            var eventsCount = new Random().Next(0, 4);
+            var currentTimeInMinutes = DateTime.UtcNow.Minute;
+            var eventsCount = new Random(currentTimeInMinutes).Next(0, 4);
             var statisticEvents = Enumerable
                 .Range(0, eventsCount)
                 .Select(_ => new StatisticEvent());
