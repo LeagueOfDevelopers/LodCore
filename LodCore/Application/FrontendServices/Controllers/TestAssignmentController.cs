@@ -12,7 +12,7 @@ namespace FrontendServices.Controllers
             var eventsCount = new Random(currentTimeInMinutes).Next(0, 4);
             var statisticEvents = Enumerable
                 .Range(0, eventsCount)
-                .Select(_ => new StatisticEvent());
+                .Select(_ => new StatisticEvent(currentTimeInMinutes));
             var statisticsEventString = statisticEvents.Select(@event => $"{@event.Gender}:{@event.Condition}");
             return
                 statisticsEventString.Any()
@@ -27,10 +27,11 @@ namespace FrontendServices.Controllers
 
             private static readonly string[] conditions = {"Born", "Died"};
 
-            public StatisticEvent()
+            public StatisticEvent(int seed)
             {
-                Gender = genders.OrderBy(gender => Guid.NewGuid()).FirstOrDefault();
-                Condition = conditions.OrderBy(condition => Guid.NewGuid()).FirstOrDefault();
+                var randomGenerator = new Random(seed);
+                Gender = genders.OrderBy(gender => randomGenerator.Next(0, 4)).FirstOrDefault();
+                Condition = conditions.OrderBy(condition => randomGenerator.Next(0, 4)).FirstOrDefault();
             }
 
             public string Gender { get; }
