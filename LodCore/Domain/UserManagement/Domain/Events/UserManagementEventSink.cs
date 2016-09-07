@@ -32,7 +32,7 @@ namespace UserManagement.Domain.Events
 
         private DistributionPolicy GetDistributionPolicyForEvent(NewFullConfirmedDeveloper eventInfo)
         {
-            return DistributionPolicyFactory.GetAllPolicy();
+            return DistributionPolicyFactory.GetVerificatedDevelopersPolicy();
         }
     }
 }

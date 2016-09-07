@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using Common;
 using Journalist;
 using Journalist.Extensions;
@@ -98,6 +99,14 @@ namespace DataAccess.Repositories
             var session = _sessionProvider.GetCurrentSession();
             return session.Query<Account>()
                 .Where(account => account.Role == AccountRole.Administrator)
+                .SelectToArray(account => account.UserId);
+        }
+
+        public int[] GetAllIdsByCriteria(Expression<Func<Account, bool>> criteria)
+        {
+            var session = _sessionProvider.GetCurrentSession();
+            return session.Query<Account>()
+                .Where(criteria)
                 .SelectToArray(account => account.UserId);
         }
     }

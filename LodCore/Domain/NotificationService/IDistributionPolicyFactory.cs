@@ -4,6 +4,8 @@
     {
         DistributionPolicy GetAllPolicy();
 
+        DistributionPolicy GetVerificatedDevelopersPolicy();
+
         DistributionPolicy GetProjectRelatedPolicy(int projectId);
 
         DistributionPolicy GetAdminRelatedPolicy();

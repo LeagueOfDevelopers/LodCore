@@ -1,5 +1,6 @@
 ﻿using Journalist;
 using Journalist.Collections;
+using UserManagement.Domain;
 
 namespace NotificationService
 {
@@ -14,6 +15,14 @@ namespace NotificationService
 
             _usersRepository = usersRepository;
             _projectRelativesRepository = projectRelativesRepository;
+        }
+
+        public DistributionPolicy GetVerificatedDevelopersPolicy()
+        {
+            var receivers =
+                _usersRepository.GetAllIdsByCriteria(
+                    account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed);
+            return new DistributionPolicy(receivers);
         }
 
         public DistributionPolicy GetAllPolicy()
