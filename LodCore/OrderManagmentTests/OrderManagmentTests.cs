@@ -8,8 +8,6 @@ using OrderManagement.Infrastructure;
 
 namespace OrderManagmentTests
 {
-    // Не удаётся загрузить символы - причина ошибки
-
     [TestClass]
     public class OrderManagmentTests
     {
@@ -24,6 +22,7 @@ namespace OrderManagmentTests
             _orderRepository = new Mock<IOrderRepository>();
             _eventSink = new Mock<IEventSink>();
 
+            _orderRepository.Setup(repo => repo.SaveOrder(It.IsAny<Order>())).Returns(1);
             _orderManagment = new OrderManagment(_orderRepository.Object, _eventSink.Object);
         }
 
@@ -64,7 +63,6 @@ namespace OrderManagmentTests
                     mock.ConsumeEvent(new OrderPlaced(orderMock.Object.Id)));
 
             _orderRepository.Setup(mock => mock.GetOrder(orderMock.Object.Id)).Returns(orderMock.Object);
-
             //act
             _orderManagment.AddOrder(orderMock.Object);
             _orderManagment.GetOrder(orderMock.Object.Id);
