@@ -8,8 +8,6 @@ using ProjectManagement.Infrastructure;
 
 namespace ProjectManagementTests
 {
-    // Не удаётся загрузить символы - причина ошибки
-
     [TestClass]
     public class UserRoleAnalyzerTests
     {
@@ -78,8 +76,10 @@ namespace ProjectManagementTests
                         return stub;
                     });
             _projectRepositoryStub
-                .Setup(repo => repo.GetAllProjects(It.IsAny<Func<Project, bool>>()))
-                .Returns(projects.Select(project => project.Object).ToArray());
+                .Setup(repo => repo.GetUserRoles(userId))
+                .Returns(projects.SelectMany(project => project.Object.ProjectMemberships
+                .Where(memberships => memberships.DeveloperId == userId)
+                .Select(memberships => memberships.Role)));
         }
     }
 }
