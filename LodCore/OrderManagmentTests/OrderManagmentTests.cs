@@ -8,6 +8,8 @@ using OrderManagement.Infrastructure;
 
 namespace OrderManagmentTests
 {
+    // Не удаётся загрузить символы - причина ошибки
+
     [TestClass]
     public class OrderManagmentTests
     {
@@ -49,6 +51,7 @@ namespace OrderManagmentTests
         [TestMethod]
         public void GetOrderReturnsOrders()
         {
+
             //arrange
             var orderMock = new Mock<Order>();
             orderMock.Setup(mock => mock.Id).Returns(42);

@@ -20,6 +20,7 @@ namespace ProjectManagement.Domain
         public string GetUserCommonRole(int userId)
         {
             Require.Positive(userId, nameof(userId));
+            var projects = _repository.GetAllProjects();
             var allRoles = _repository.GetUserRoles(userId);
             if (!allRoles.Any())
             {

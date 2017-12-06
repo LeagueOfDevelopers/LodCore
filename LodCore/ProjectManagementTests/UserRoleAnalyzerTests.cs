@@ -8,6 +8,8 @@ using ProjectManagement.Infrastructure;
 
 namespace ProjectManagementTests
 {
+    // Не удаётся загрузить символы - причина ошибки
+
     [TestClass]
     public class UserRoleAnalyzerTests
     {
@@ -72,7 +74,7 @@ namespace ProjectManagementTests
                     memberships =>
                     {
                         var stub = new Mock<Project>();
-                        stub.SetupGet(project => project.ProjectMemberships).Returns(memberships);
+                        stub.Setup(project => project.ProjectMemberships).Returns(memberships);
                         return stub;
                     });
             _projectRepositoryStub
