@@ -13,7 +13,6 @@ namespace DataAccessTests
         [TestMethod]
         public void EventIsStoredSuccessfully()
         {
-            //ломается DatabaseSessionProvider
             var provider = new DatabaseSessionProvider();
             var repository = new EventRepository(provider);
             var eventInfo = new NewEmailConfirmedDeveloper(1);
