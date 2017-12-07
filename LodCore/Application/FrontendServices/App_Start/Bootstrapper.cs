@@ -32,7 +32,6 @@ using UserManagement.Infrastructure;
 using UserPresentaton;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
-using NotificationService = NotificationService.NotificationService;
 using PaginationSettings = NotificationService.PaginationSettings;
 
 namespace FrontendServices

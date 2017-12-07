@@ -216,3 +216,6 @@ ConnectionStrings.config
 Files/
 Images/
 ExternalLibs/
+
+# EntityFramework & Pgsql local DB
+LocalDB.cs
