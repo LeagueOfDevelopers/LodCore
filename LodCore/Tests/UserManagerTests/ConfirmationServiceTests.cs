@@ -6,6 +6,7 @@ using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using IMailer = UserManagement.Application.IMailer;
+using Common;
 
 namespace UserManagerTests
 {
@@ -87,6 +88,7 @@ namespace UserManagerTests
 
             var testAccMock = new Mock<Account>();
             testAccMock.Setup(acc => acc.UserId).Returns(42);
+            testAccMock.Setup(acc => acc.Password).Returns(Password.FromPlainString("f34password"));
             testAccMock.Setup(acc => acc.ConfirmationStatus).Returns(ConfirmationStatus.Unconfirmed);
 
             _userRepoStub.Setup(rep => rep.GetAccount(mailValidationRq.UserId)).Returns(testAccMock.Object);

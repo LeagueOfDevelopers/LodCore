@@ -6,7 +6,6 @@ using Journalist;
 using NHibernate.Linq;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
-using UserManagement.Domain;
 
 namespace DataAccess.Repositories
 {

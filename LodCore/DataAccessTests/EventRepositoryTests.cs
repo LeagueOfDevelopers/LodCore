@@ -14,6 +14,7 @@ namespace DataAccessTests
         public void EventIsStoredSuccessfully()
         {
             var provider = new DatabaseSessionProvider();
+            provider.OpenSession();
             var repository = new EventRepository(provider);
             var eventInfo = new NewEmailConfirmedDeveloper(1);
             var @event = new Event(eventInfo);

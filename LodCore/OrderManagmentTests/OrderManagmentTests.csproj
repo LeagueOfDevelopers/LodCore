@@ -59,10 +59,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Domain\NotificationService\NotificationService.csproj">
       <Project>{11a53a10-354f-4951-aa63-9e217aa0fbdd}</Project>
       <Name>NotificationService</Name>

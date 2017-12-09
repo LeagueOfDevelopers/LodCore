@@ -72,12 +72,14 @@ namespace ProjectManagementTests
                     memberships =>
                     {
                         var stub = new Mock<Project>();
-                        stub.SetupGet(project => project.ProjectMemberships).Returns(memberships);
+                        stub.Setup(project => project.ProjectMemberships).Returns(memberships);
                         return stub;
                     });
             _projectRepositoryStub
-                .Setup(repo => repo.GetAllProjects(It.IsAny<Func<Project, bool>>()))
-                .Returns(projects.Select(project => project.Object).ToArray());
+                .Setup(repo => repo.GetUserRoles(userId))
+                .Returns(projects.SelectMany(project => project.Object.ProjectMemberships
+                .Where(memberships => memberships.DeveloperId == userId)
+                .Select(memberships => memberships.Role)));
         }
     }
 }

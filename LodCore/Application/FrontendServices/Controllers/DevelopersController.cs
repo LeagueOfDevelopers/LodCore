@@ -360,16 +360,17 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("password/recovery")]
-        public IHttpActionResult InitiateProcedureOfPasswordRecovery([FromBody] string email)
+        public IHttpActionResult InitiateProcedureOfPasswordRecovery(Credentials credentials)
         {
-            var accountToRecover = _userManager.GetUserList(user => user.Email.Address == email).SingleOrDefault();
+            var accountToRecover = _userManager.GetUserList(user => user.Email.Address == credentials.Email).SingleOrDefault();
 
             if (accountToRecover != null)
             {
                 _userManager.InitiatePasswordChangingProcedure(accountToRecover.UserId);
+                return Ok();
             }
 
-            return Ok();
+            return NotFound();
         }
 
         private Func<Account, bool> GetAccountFilter()
