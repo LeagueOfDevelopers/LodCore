@@ -309,9 +309,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="settings.config" />
     <Content Include="packages.config" />
-    <Content Include="ConnectionStrings.config" />
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\FileDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\LodCore.pubxml" />
