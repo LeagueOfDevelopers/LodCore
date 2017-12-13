@@ -15,7 +15,7 @@ namespace NotificationService
 
             var @event = new Event(eventInfo);
 
-            var distributionPolicy = DistributionPolicyFactory.GetVerificatedDevelopersPolicy();
+            var distributionPolicy = DistributionPolicyFactory.GetAllPolicy();
 
             EventRepository.DistrubuteEvent(@event, distributionPolicy);
 

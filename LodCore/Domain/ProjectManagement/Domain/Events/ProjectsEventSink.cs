@@ -41,7 +41,7 @@ namespace ProjectManagement.Domain.Events
 
         private DistributionPolicy GetDistributionPolicyForEvent(NewProjectCreated @eventInfo)
         {
-            return DistributionPolicyFactory.GetVerificatedDevelopersPolicy();
+            return DistributionPolicyFactory.GetAllPolicy();
         }
     }
 }
