@@ -15,8 +15,6 @@ namespace FrontendServices.Models
             string info,
             ProjectStatus projectStatus,
             Common.Image landingImage,
-            Uri versionControlSystemUri,
-            Uri projectManagementSystemUri,
             HashSet<Issue> issues,
             HashSet<ProjectMembership> projectMemberships,
             HashSet<Common.Image> screenshots)
@@ -24,8 +22,6 @@ namespace FrontendServices.Models
             Require.Positive(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            Require.NotNull(versionControlSystemUri, nameof(versionControlSystemUri));
-            Require.NotNull(projectManagementSystemUri, nameof(projectManagementSystemUri));
 
             ProjectId = projectId;
             Name = name;
@@ -33,8 +29,6 @@ namespace FrontendServices.Models
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
-            VersionControlSystemUri = versionControlSystemUri;
-            ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues;
             ProjectMemberships = projectMemberships;
             Screenshots = screenshots;

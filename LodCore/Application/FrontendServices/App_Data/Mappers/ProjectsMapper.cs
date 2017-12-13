@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using FrontendServices.Models;
-using Gateways.Gitlab;
-using Gateways.Redmine;
 using Journalist;
 using ProjectManagement.Domain;
 using UserManagement.Application;
@@ -17,14 +14,9 @@ namespace FrontendServices.App_Data.Mappers
     {
         private readonly IUserManager _userManager;
 
-        public ProjectsMapper(
-            IUserManager userManager,
-            RedmineSettings redmineSettings,
-            GitlabSettings gitlabSettings)
+        public ProjectsMapper(IUserManager userManager)
         {
             Require.NotNull(userManager, nameof(userManager));
-            Require.NotNull(redmineSettings, nameof(redmineSettings));
-            Require.NotNull(gitlabSettings, nameof(gitlabSettings));
 
             _userManager = userManager;
         }
@@ -58,8 +50,6 @@ namespace FrontendServices.App_Data.Mappers
                 project.ProjectStatus,
                 project.LandingImage,
                 project.AccessLevel,
-                project.VersionControlSystemInfo.ProjectUrl,
-                project.RedmineProjectInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Common.Image>(project.Screenshots));
@@ -74,8 +64,6 @@ namespace FrontendServices.App_Data.Mappers
                 project.Info,
                 project.ProjectStatus,
                 project.LandingImage,
-                project.VersionControlSystemInfo.ProjectUrl,
-                project.RedmineProjectInfo.ProjectUrl,
                 new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<Common.Image>(project.Screenshots));

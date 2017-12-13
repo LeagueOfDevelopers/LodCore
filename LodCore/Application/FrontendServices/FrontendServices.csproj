@@ -350,10 +350,6 @@
       <Project>{40415DF3-C945-4695-81DF-0E1670E1787A}</Project>
       <Name>FilesManagement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Gateways\Gateways.csproj">
-      <Project>{5E398EDA-A84B-4C94-AEAB-C91907D2D1AA}</Project>
-      <Name>Gateways</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Mailing\Mailing.csproj">
       <Project>{B2881AD8-9B31-4741-A0B0-36CC210FDBDB}</Project>
       <Name>Mailing</Name>

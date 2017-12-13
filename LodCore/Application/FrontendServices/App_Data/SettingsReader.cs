@@ -2,8 +2,6 @@
 using System.Collections.Specialized;
 using Common;
 using FilesManagement;
-using Gateways.Gitlab;
-using Gateways.Redmine;
 using Mailing;
 using ProjectManagement.Domain;
 using UserManagement.Application;
@@ -26,13 +24,6 @@ namespace FrontendServices.App_Data
                 int.Parse(settings["MailerSettings.MaxEmailTimeout"]));
         }
 
-        public static RedmineSettings ReadRedmineSettings(NameValueCollection settings)
-        {
-            return new RedmineSettings(
-                settings["Redmine.Host"],
-                settings["Redmine.ApiKey"]);
-        }
-
         public static UserRoleAnalyzerSettings ReadUserRoleAnalyzerSettings(NameValueCollection settings)
         {
             return new UserRoleAnalyzerSettings(
@@ -47,19 +38,12 @@ namespace FrontendServices.App_Data
 
         public static IssuePaginationSettings ReadIssuePaginationSettings(NameValueCollection settings)
         {
-            return new IssuePaginationSettings(int.Parse(settings["Redmine.IssuePaginationSettings"]));
+            return new IssuePaginationSettings(0);
         }
 
         public static ApplicationLocationSettings ReadApplicationLocationSettings(NameValueCollection settings)
         {
             return new ApplicationLocationSettings(settings["BackendDomain"], settings["FrontendDomain"]);
-        }
-
-        public static GitlabSettings ReadGitlabSettings(NameValueCollection settings)
-        {
-            return new GitlabSettings(
-                settings["Gitlab.Host"],
-                settings["Gitlab.ApiKey"]);
         }
 
         public static FileStorageSettings ReadFileStorageSettings(NameValueCollection settings)
@@ -84,10 +68,7 @@ namespace FrontendServices.App_Data
 
         public static ConfirmationSettings ReadConfirmationSettings(NameValueCollection settings)
         {
-            return new ConfirmationSettings(
-                new Uri(settings["Confirmation.FrontendConfirmationUri"]),
-                bool.Parse(settings["Confirmation.GitlabAccountCreationEnabled"]),
-                bool.Parse(settings["Confirmation.RedmineAccountCreationEnabled"]));
+            return new ConfirmationSettings(new Uri(settings["Confirmation.FrontendConfirmationUri"]));
         }
     }
 }

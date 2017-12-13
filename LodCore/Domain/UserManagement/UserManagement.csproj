@@ -91,9 +91,7 @@
     <Compile Include="Domain\Profile.cs" />
     <Compile Include="Domain\TokenNotFoundException.cs" />
     <Compile Include="Domain\UserManager.cs" />
-    <Compile Include="Infrastructure\IGitlabUserRegistrar.cs" />
     <Compile Include="Infrastructure\IPasswordChangeRequestRepository.cs" />
-    <Compile Include="Infrastructure\IRedmineUserRegistrar.cs" />
     <Compile Include="Infrastructure\IUserRepository.cs" />
     <Compile Include="Infrastructure\IValidationRequestsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

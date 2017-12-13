@@ -8,15 +8,11 @@ namespace UserManagement.Domain
     {
         private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IGitlabUserRegistrar _gitlabUserRegistrar;
-        private readonly IRedmineUserRegistrar _redmineUserRegistrar;
 
-        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserRepository userRepository, IGitlabUserRegistrar gitlabUserRegistrar, IRedmineUserRegistrar redmineUserRegistrar)
+        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserRepository userRepository)
         {
             _passwordChangeRequestRepository = passwordChangeRequestRepository;
             _userRepository = userRepository;
-            _gitlabUserRegistrar = gitlabUserRegistrar;
-            _redmineUserRegistrar = redmineUserRegistrar;
         }
 
         public Account GetUserByPasswordRecoveryToken(string token)
@@ -34,9 +30,6 @@ namespace UserManagement.Domain
             Require.NotEmpty(newPassword, nameof(newPassword));
 
             var account = _userRepository.GetAccount(userId);
-
-            _redmineUserRegistrar.ChangeUserPassword(account, newPassword);
-            _gitlabUserRegistrar.ChangeUserPassword(account, newPassword);
         }
 
         public void SavePasswordChangeRequest(PasswordChangeRequest request)

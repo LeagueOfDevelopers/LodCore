@@ -16,8 +16,6 @@ namespace FrontendServices.Models
             ProjectStatus projectStatus,
             Common.Image landingImage,
             AccessLevel accessLevel,
-            Uri versionControlSystemUri,
-            Uri projectManagementSystemUri,
             HashSet<Issue> issues,
             HashSet<ProjectMembership> projectDevelopers,
             HashSet<Common.Image> screenshots)
@@ -25,8 +23,6 @@ namespace FrontendServices.Models
             Require.Positive(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            Require.NotNull(versionControlSystemUri, nameof(versionControlSystemUri));
-            Require.NotNull(projectManagementSystemUri, nameof(projectManagementSystemUri));
 
             ProjectId = projectId;
             Name = name;
@@ -35,8 +31,6 @@ namespace FrontendServices.Models
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
-            VersionControlSystemUri = versionControlSystemUri;
-            ProjectManagementSystemUri = projectManagementSystemUri;
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<Common.Image>();
@@ -55,10 +49,6 @@ namespace FrontendServices.Models
         public ProjectStatus ProjectStatus { get; private set; }
 
         public Common.Image LandingImage { get; private set; }
-
-        public Uri VersionControlSystemUri { get; private set; }
-
-        public Uri ProjectManagementSystemUri { get; private set; }
 
         public HashSet<Issue> Issues { get; private set; }
 

@@ -17,7 +17,7 @@ namespace FrontendServices.Controllers
     {
         private readonly INotificationService _notificationService;
         private readonly EventMapper _eventMapper;
-        private readonly IPaginationWrapper<NotificationService.Delivery> _paginationWrapper; 
+        private readonly IPaginationWrapper<Delivery> _paginationWrapper; 
 
         public EventController(INotificationService notificationService, EventMapper eventMapper, IPaginationWrapper<NotificationService.Delivery> paginationWrapper)
         {

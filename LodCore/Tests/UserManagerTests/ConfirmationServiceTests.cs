@@ -18,8 +18,6 @@ namespace UserManagerTests
         private Mock<IMailer> _mailerStub;
         private Mock<IUserRepository> _userRepoStub;
         private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
-        private Mock<IRedmineUserRegistrar> _redmineRegistrar;
-        private Mock<IGitlabUserRegistrar> _gitlabRegistrar;
 
         [TestInitialize]
         public void Setup()
@@ -28,17 +26,13 @@ namespace UserManagerTests
             _mailerStub = new Mock<IMailer>();
             _validationRequesRepoStub = new Mock<IValidationRequestsRepository>();
             _eventSinkManagerStub = new Mock<IEventSink>();
-            _redmineRegistrar = new Mock<IRedmineUserRegistrar>();
-            _gitlabRegistrar = new Mock<IGitlabUserRegistrar>();
 
             _confirmationService = new ConfirmationService(
                 _userRepoStub.Object,
                 _mailerStub.Object,
                 _validationRequesRepoStub.Object,
                 _eventSinkManagerStub.Object,
-                new ConfirmationSettings(new Uri("http://lod-misis.ru/frontend"), false, false),
-                _gitlabRegistrar.Object,
-                _redmineRegistrar.Object);
+                new ConfirmationSettings(new Uri("http://lod-misis.ru/frontend")));
         }
 
         [TestMethod]

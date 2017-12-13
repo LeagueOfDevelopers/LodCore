@@ -1,10 +1,7 @@
-﻿using System;
-using FilesManagement;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
 using Ploeh.AutoFixture;
-using ProjectManagement;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Domain.Events;
@@ -17,37 +14,25 @@ namespace ProjectManagementTests
     {
         private Mock<IEventSink> _eventSinkMock;
         private Fixture _fixture;
-        private Mock<IProjectManagerGateway> _pmGateway;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _projectRepository;
         private Mock<IUserRepository> _userRepository;
-        private Mock<IVersionControlSystemGateway> _vcsGateway;
 
         [TestInitialize]
         public void Setup()
         {
             _fixture = new Fixture();
-            _pmGateway = new Mock<IProjectManagerGateway>();
             _projectRepository = new Mock<IProjectRepository>();
-            _vcsGateway = new Mock<IVersionControlSystemGateway>();
             _eventSinkMock = new Mock<IEventSink>();
             _userRepository = new Mock<IUserRepository>();
             var paginationSettings = new ProjectManagement.Domain.PaginationSettings(10);
 
-            _pmGateway
-                .Setup(pm => pm.CreateProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<RedmineProjectInfo>());
-            _vcsGateway
-                .Setup(vcs => vcs.CreateRepositoryForProject(It.IsAny<CreateProjectRequest>()))
-                .Returns(_fixture.Create<VersionControlSystemInfo>());
             _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);
             _userRepository.Setup(repo => repo.GetUserRedmineId(It.IsAny<int>())).Returns(1);
             _userRepository.Setup(repo => repo.GetUserGitlabId(It.IsAny<int>())).Returns(1);
             _projectProvider = new ProjectProvider(
-                _pmGateway.Object,
-                _vcsGateway.Object,
                 _projectRepository.Object,
                 _eventSinkMock.Object,
                 _userRepository.Object,
@@ -69,13 +54,7 @@ namespace ProjectManagementTests
                                || project.AccessLevel == createRequest.AccessLevel
                                || project.LandingImage.BigPhotoUri == createRequest.LandingImage.BigPhotoUri)),
                 Times.Once);
-            _vcsGateway.Verify(
-                vsc => vsc.CreateRepositoryForProject(It.Is<CreateProjectRequest>(
-                    request => request.Equals(createRequest))),
-                Times.Once);
-            _pmGateway.Verify(pm => pm.CreateProject(It.Is<CreateProjectRequest>(
-                request => request.Equals(createRequest))),
-                Times.Once);
+            
             _eventSinkMock.Verify(
                 sink => sink.ConsumeEvent(
                     It.Is<IEventInfo>(

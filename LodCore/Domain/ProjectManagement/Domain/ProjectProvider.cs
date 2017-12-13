@@ -14,22 +14,16 @@ namespace ProjectManagement.Domain
     public class ProjectProvider : IProjectProvider
     {
         public ProjectProvider(
-            IProjectManagerGateway projectManagerGateway,
-            IVersionControlSystemGateway versionControlSystemGateway,
             IProjectRepository projectRepository,
             IEventSink eventSink,
             IUserRepository userRepository,
             PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings)
         {
-            Require.NotNull(projectManagerGateway, nameof(projectManagerGateway));
-            Require.NotNull(versionControlSystemGateway, nameof(versionControlSystemGateway));
             Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventSink, nameof(eventSink));
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(paginationSettings, nameof(paginationSettings));
 
-            _projectManagerGateway = projectManagerGateway;
-            _versionControlSystemGateway = versionControlSystemGateway;
             _projectRepository = projectRepository;
             _eventSink = eventSink;
             _userRepository = userRepository;
@@ -67,23 +61,20 @@ namespace ProjectManagement.Domain
                 throw new ProjectNotFoundException();
             }
 
-            var issues = _projectManagerGateway.GetProjectIssues(project.RedmineProjectInfo.ProjectId,
+           /* var issues = _projectManagerGateway.GetProjectIssues(project.RedmineProjectInfo.ProjectId,
                 _issuePaginationSettings.NumberOfIssues, issueTypes, statusList);
 
             foreach (var issue in issues)
             {
                 project.Issues.Add(issue);
-            }
+            } */
 
             return project;
-        }
+        } 
 
         public int CreateProject(CreateProjectRequest request)
         {
             Require.NotNull(request, nameof(request));
-
-            var versionControlSystemInfo = _versionControlSystemGateway.CreateRepositoryForProject(request);
-            var projectManagementSystemId = _projectManagerGateway.CreateProject(request);
 
             var project = new Project(
                 request.Name,
@@ -92,8 +83,6 @@ namespace ProjectManagement.Domain
                 request.ProjectStatus,
                 request.LandingImage,
                 request.AccessLevel,
-                versionControlSystemInfo,
-                projectManagementSystemId,
                 null,
                 null,
                 request.Screenshots != null 
@@ -109,8 +98,6 @@ namespace ProjectManagement.Domain
         public void UpdateProject(Project project)
         {
             Require.NotNull(project, nameof(project));
-
-            _versionControlSystemGateway.UpdateRepositoryForProject(project);
 
             _projectRepository.UpdateProject(project);
         }
@@ -133,18 +120,6 @@ namespace ProjectManagement.Domain
                 userId, 
                 role));
 
-            if (redmineUserId != 0)
-            {
-                _projectManagerGateway.AddNewUserToProject(
-                    project.RedmineProjectInfo.ProjectId, 
-                    redmineUserId);
-            }
-
-            if (gitlabUserId != 0)
-            {
-                _versionControlSystemGateway.AddUserToRepository(project, gitlabUserId);
-            }
-
             UpdateProject(project);
 
             _eventSink.ConsumeEvent(new NewDeveloperOnProject(userId, projectId));
@@ -165,23 +140,6 @@ namespace ProjectManagement.Domain
                 .SingleOrDefault(developer => developer.DeveloperId == userId);
             project.ProjectMemberships.Remove(developerToDelete);
 
-            var redmineUserId = _userRepository.GetUserRedmineId(userId);
-            var gitlabUserId = _userRepository.GetUserGitlabId(userId);
-
-            if (redmineUserId != 0)
-            {
-                _projectManagerGateway.RemoveUserFromProject(
-                    project.RedmineProjectInfo.ProjectId, 
-                    redmineUserId);
-            }
-
-            if (gitlabUserId != 0)
-            {
-                _versionControlSystemGateway.RemoveUserFromProject(
-                    project, 
-                    gitlabUserId);
-            }
-
             UpdateProject(project);
 
             _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
@@ -192,8 +150,6 @@ namespace ProjectManagement.Domain
         private readonly PaginationSettings _paginationSettings;
         private readonly IssuePaginationSettings _issuePaginationSettings;
 
-        private readonly IProjectManagerGateway _projectManagerGateway;
         private readonly IProjectRepository _projectRepository;
-        private readonly IVersionControlSystemGateway _versionControlSystemGateway;
     }
 }

@@ -10,8 +10,6 @@ using DataAccess.Repositories;
 using FilesManagement;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
-using Gateways.Gitlab;
-using Gateways.Redmine;
 using Mailing;
 using Mailing.AsyncMailing;
 using NotificationService;
@@ -50,14 +48,6 @@ namespace FrontendServices
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
             container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
-            container.Register<ProjectManagerGateway>(Lifestyle.Singleton);
-            container.Register<IRedmineUserRegistrar>(() => container.GetInstance<ProjectManagerGateway>(),
-                Lifestyle.Singleton);
-            container.Register<IProjectManagerGateway>(() => container.GetInstance<ProjectManagerGateway>(),
-                Lifestyle.Singleton);
-            container.Register<VersionControlSystemGateway>(Lifestyle.Singleton);
-            container.Register<IGitlabUserRegistrar>(() => container.GetInstance<VersionControlSystemGateway>(),
-                Lifestyle.Singleton);
 
             //todo: replace to open-generic registration
             container.Register<IPaginableRepository<Account>>(
@@ -80,16 +70,12 @@ namespace FrontendServices
                 () => new PaginationWrapper<Project>(container.GetInstance<IPaginableRepository<Project>>()),
                 Lifestyle.Singleton);
 
-            container.Register<IVersionControlSystemGateway>(
-                () => container.GetInstance<VersionControlSystemGateway>(), Lifestyle.Singleton);
             container.Register<IConfirmationService>(() => new ConfirmationService(
                 container.GetInstance<IUserRepository>(),
                 container.GetInstance<IMailer>(),
                 container.GetInstance<IValidationRequestsRepository>(),
                 container.GetInstance<UserManagementEventSink>(),
-                container.GetInstance<ConfirmationSettings>(),
-                container.GetInstance<IGitlabUserRegistrar>(),
-                container.GetInstance<IRedmineUserRegistrar>()), Lifestyle.Singleton);
+                container.GetInstance<ConfirmationSettings>()), Lifestyle.Singleton);
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
@@ -108,8 +94,6 @@ namespace FrontendServices
                 () => new ImageResizer(500, container.GetInstance<FileStorageSettings>(), container.GetInstance<ApplicationLocationSettings>()), Lifestyle.Singleton);
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
-                    container.GetInstance<IProjectManagerGateway>(),
-                    container.GetInstance<IVersionControlSystemGateway>(),
                     container.GetInstance<IProjectRepository>(),
                     container.GetInstance<ProjectsEventSink>(),
                     container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>(),
@@ -154,9 +138,7 @@ namespace FrontendServices
         {
             var settings = ConfigurationManager.AppSettings;
             container.Register(() => SettingsReader.ReadMailerSettings(settings), Lifestyle.Singleton);
-            container.Register(() => SettingsReader.ReadRedmineSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);
-            container.Register(() => SettingsReader.ReadGitlabSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadFileStorageSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadProjectsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);

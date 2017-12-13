@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Common;
 using Journalist;
 
@@ -14,16 +13,12 @@ namespace ProjectManagement.Domain
             ProjectStatus projectStatus, 
             Image landingImage, 
             AccessLevel accessLevel,
-            VersionControlSystemInfo versionControlSystemInfo,
-            RedmineProjectInfo redmineProjectInfo, 
             ISet<Issue> issues, 
             ISet<ProjectMembership> projectDevelopers,
             ISet<Image> screenshots)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            Require.NotNull(versionControlSystemInfo, nameof(versionControlSystemInfo));
-            Require.NotNull(redmineProjectInfo, nameof(redmineProjectInfo));
             Require.NotEmpty(projectTypes, nameof(projectTypes));
 
             Name = name;
@@ -32,8 +27,6 @@ namespace ProjectManagement.Domain
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
-            VersionControlSystemInfo = versionControlSystemInfo;
-            RedmineProjectInfo = redmineProjectInfo;
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<Image>();
@@ -56,10 +49,6 @@ namespace ProjectManagement.Domain
         public virtual ProjectStatus ProjectStatus { get; set; }
 
         public virtual Image LandingImage { get; set; }
-
-        public virtual VersionControlSystemInfo VersionControlSystemInfo { get; protected set; }
-
-        public virtual RedmineProjectInfo RedmineProjectInfo { get; protected set; }
 
         public virtual ISet<Issue> Issues { get; set; } = new HashSet<Issue>();
 
