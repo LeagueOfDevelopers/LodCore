@@ -2,6 +2,7 @@
 using System.Web.Http;
 using DataAccess;
 using SimpleInjector.Integration.WebApi;
+using RabbitMQ.Client;
 
 namespace FrontendServices
 {
