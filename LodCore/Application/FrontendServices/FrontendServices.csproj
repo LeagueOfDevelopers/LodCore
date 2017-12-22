@@ -46,6 +46,9 @@
     <CodeAnalysisRuleSet>FrontendServices.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EasyNetQ, Version=1.1.4.506, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EasyNetQ.1.1.4.506\lib\net45\EasyNetQ.dll</HintPath>
+    </Reference>
     <Reference Include="Journalist.LanguageExtensions, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Journalist.LanguageExtensions.0.9.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
       <Private>True</Private>
@@ -112,8 +115,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=3.1.9.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Npgsql.3.1.9\lib\net451\Npgsql.dll</HintPath>
@@ -126,8 +128,8 @@
       <HintPath>..\..\packages\AutoFixture.AutoMoq.3.40.0\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RabbitMQ.Client.5.0.1\lib\net451\RabbitMQ.Client.dll</HintPath>
+    <Reference Include="RabbitMQ.Client, Version=3.6.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RabbitMQ.Client.3.6.0\lib\net45\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Remotion.Linq.2.1.1\lib\net45\Remotion.Linq.dll</HintPath>
@@ -363,6 +365,10 @@
     <ProjectReference Include="..\..\OrderManager\OrderManagment.csproj">
       <Project>{590545C7-8872-4A3C-8E98-C6F0AE96C23E}</Project>
       <Name>OrderManagment</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
+      <Name>RabbitMQEventBus</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>

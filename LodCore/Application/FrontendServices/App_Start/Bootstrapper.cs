@@ -28,6 +28,8 @@ using UserManagement.Domain;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using UserPresentaton;
+using RabbitMQEventBus;
+using EasyNetQ;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 using PaginationSettings = NotificationService.PaginationSettings;
@@ -48,6 +50,12 @@ namespace FrontendServices
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
             container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
+
+           /* container.Register<IBus>(() => RabbitHutch.CreateBus(
+                "username=guest;password=guest;virtualHost=chidemo;host=localhost"),
+                Lifestyle.Singleton); */
+            container.Register<RabbitMQEventBus.EventBus>(
+                () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()),Lifestyle.Singleton);
 
             //todo: replace to open-generic registration
             container.Register<IPaginableRepository<Account>>(
@@ -137,6 +145,7 @@ namespace FrontendServices
         private static void RegisterSettings(Container container)
         {
             var settings = ConfigurationManager.AppSettings;
+            container.Register(() => SettingsReader.ReadEventBusSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadMailerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadFileStorageSettings(settings), Lifestyle.Singleton);

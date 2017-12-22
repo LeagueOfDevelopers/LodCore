@@ -5,11 +5,21 @@ using FilesManagement;
 using Mailing;
 using ProjectManagement.Domain;
 using UserManagement.Application;
+using RabbitMQEventBus;
 
 namespace FrontendServices.App_Data
 {
     public static class SettingsReader
     {
+        public static EventBusSettings ReadEventBusSettings(NameValueCollection settings)
+        {
+            return new EventBusSettings(
+                settings["EventBusSettings.HostName"],
+                settings["EventBusSettings.VirtualHost"],
+                settings["EventBusSettings.UserName"],
+                settings["EventBusSettings.Password"]);
+        }
+
         public static MailerSettings ReadMailerSettings(NameValueCollection settings)
         {
             return new MailerSettings(
