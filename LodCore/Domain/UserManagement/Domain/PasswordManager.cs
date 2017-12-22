@@ -1,6 +1,7 @@
 ﻿using Journalist;
 using UserManagement.Application;
 using UserManagement.Infrastructure;
+using RabbitMQEventBus;
 
 namespace UserManagement.Domain
 {
@@ -28,15 +29,18 @@ namespace UserManagement.Domain
         {
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(newPassword, nameof(newPassword));
-
             var account = _userRepository.GetAccount(userId);
         }
 
         public void SavePasswordChangeRequest(PasswordChangeRequest request)
         {
             Require.NotNull(request, nameof(request));
-
-            _passwordChangeRequestRepository.SavePasswordChangeRequest(request);
+            EventBus.GetBusConnection().Publish(
+                EventBus.GetExchange("PasswordChangeRequest"), 
+                "change_password", 
+                false, 
+                EventBus.WrapInMessage(request));
+            //_passwordChangeRequestRepository.SavePasswordChangeRequest(request);
         }
 
         public PasswordChangeRequest GetPasswordChangeRequest(string token)

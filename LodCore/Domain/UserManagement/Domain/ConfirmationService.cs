@@ -6,6 +6,7 @@ using UserManagement.Application;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using IMailer = UserManagement.Application.IMailer;
+using RabbitMQEventBus;
 
 namespace UserManagement.Domain
 {
@@ -37,7 +38,14 @@ namespace UserManagement.Domain
 
             var token = TokenGenerator.GenerateToken();
             var request = new MailValidationRequest(userId, token);
-            _validationRequestsRepository.SaveValidationRequest(request);
+
+            EventBus.GetBusConnection().Publish(
+                EventBus.GetExchange("MailValidationRequest"),
+                "validate_mail",
+                false,
+                EventBus.WrapInMessage(request));
+
+            //_validationRequestsRepository.SaveValidationRequest(request);
 
             var confirmationLink = new Uri(
                 _confirmationSettings.FrontendMailConfirmationUri,
