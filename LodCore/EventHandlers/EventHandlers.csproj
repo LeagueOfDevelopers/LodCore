@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C55C196D-D726-4B14-8F4C-981C013A1C81}</ProjectGuid>
+    <ProjectGuid>{ADBB25D5-9C06-4CD7-AD54-DA944F120872}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RabbitMQEventBus</RootNamespace>
-    <AssemblyName>RabbitMQEventBus</AssemblyName>
+    <RootNamespace>EventHandlers</RootNamespace>
+    <AssemblyName>EventHandlers</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,25 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyNetQ, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyNetQ.2.2.0\lib\net451\EasyNetQ.dll</HintPath>
-    </Reference>
-    <Reference Include="Journalist.LanguageExtensions, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Journalist.LanguageExtensions.0.9.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net46\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
-      <HintPath>..\packages\RabbitMQ.Client.5.0.1\lib\net451\RabbitMQ.Client.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,13 +40,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventBus.cs" />
-    <Compile Include="EventBusSettings.cs" />
-    <Compile Include="IEventBus.cs" />
+    <Compile Include="MailValidationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Domain\UserManagement\UserManagement.csproj">
+      <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
+      <Name>UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\DataAccess\DataAccess.csproj">
+      <Project>{6E6BCA8C-2B4D-4867-AE47-64565E64357C}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
+      <Name>RabbitMQEventBus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,8 @@ using EasyNetQ.Topology;
 using EasyNetQ.Consumer;
 using Journalist;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace RabbitMQEventBus
 {
@@ -100,6 +102,17 @@ namespace RabbitMQEventBus
             _bus.Bind(_exchanges["AdminNotificationInfo"], _queues["AdminNotificationInfoNotify"], "admin_notification_info_notify");
             _bus.Bind(_exchanges["MailValidationRequest"], _queues["ValidateMail"], "validate_mail");
         }
+
+        public static void SetConsumer(string queueName, dynamic handlerFunction)
+        {
+            _bus.Consume<dynamic>(EventBus.GetQueue(queueName),
+                (msg, info) => Task.Factory.StartNew(() =>
+                {
+                    handlerFunction.DynamicInvoke(msg.Body);
+                }));
+        } 
+
+        
 
         private readonly EventBusSettings _eventBusSettings;
         private static IAdvancedBus _bus;

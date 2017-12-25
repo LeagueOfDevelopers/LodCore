@@ -40,7 +40,7 @@ namespace UserManagement.Domain
                 "change_password", 
                 false, 
                 EventBus.WrapInMessage(request));
-            //_passwordChangeRequestRepository.SavePasswordChangeRequest(request);
+            _passwordChangeRequestRepository.SavePasswordChangeRequest(request);
         }
 
         public PasswordChangeRequest GetPasswordChangeRequest(string token)

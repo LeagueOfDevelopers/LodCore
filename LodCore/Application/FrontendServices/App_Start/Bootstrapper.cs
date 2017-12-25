@@ -29,7 +29,7 @@ using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using UserPresentaton;
 using RabbitMQEventBus;
-using EasyNetQ;
+using EventHandlers;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 using PaginationSettings = NotificationService.PaginationSettings;
@@ -50,12 +50,6 @@ namespace FrontendServices
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
             container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
-
-           /* container.Register<IBus>(() => RabbitHutch.CreateBus(
-                "username=guest;password=guest;virtualHost=chidemo;host=localhost"),
-                Lifestyle.Singleton); */
-            container.Register<RabbitMQEventBus.EventBus>(
-                () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()),Lifestyle.Singleton);
 
             //todo: replace to open-generic registration
             container.Register<IPaginableRepository<Account>>(
@@ -137,6 +131,16 @@ namespace FrontendServices
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
+
+            container.Register<RabbitMQEventBus.EventBus>(
+                () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), Lifestyle.Singleton);
+            container.Register<MailValidationHandler>(
+                () => new MailValidationHandler(container.GetInstance<IMailer>(),
+                container.GetInstance<ValidationRequestsRepository>(),
+                container.GetInstance<ConfirmationSettings>(),
+                container.GetInstance<UserRepository>()),
+                Lifestyle.Singleton);
+
             RegisterMailing(container);
             container.Verify();
             return container;

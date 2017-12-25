@@ -45,12 +45,12 @@ namespace UserManagement.Domain
                 false,
                 EventBus.WrapInMessage(request));
 
-            //_validationRequestsRepository.SaveValidationRequest(request);
+           /* _validationRequestsRepository.SaveValidationRequest(request);
 
             var confirmationLink = new Uri(
                 _confirmationSettings.FrontendMailConfirmationUri,
                 token);
-            _mailer.SendConfirmationMail(confirmationLink.AbsoluteUri, _userRepository.GetAccount(userId).Email);
+            _mailer.SendConfirmationMail(confirmationLink.AbsoluteUri, _userRepository.GetAccount(userId).Email); */
         }
 
         public void ConfirmEmail(string confirmationToken)

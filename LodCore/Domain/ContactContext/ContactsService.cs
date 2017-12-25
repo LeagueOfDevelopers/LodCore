@@ -1,6 +1,7 @@
 ﻿using ContactContext.Events;
 using Journalist;
 using NotificationService;
+using RabbitMQEventBus;
 
 namespace ContactContext
 {
@@ -14,6 +15,11 @@ namespace ContactContext
 
         public void SendContactMessage(NewContactMessage contactMessage)
         {
+            EventBus.GetBusConnection().Publish(
+                EventBus.GetExchange("Notification"),
+                "admin_notification_info",
+                false,
+                EventBus.WrapInMessage(contactMessage));
             Require.NotNull(contactMessage, nameof(contactMessage));
             _contactsEventSink.ConsumeEvent(contactMessage);
         }

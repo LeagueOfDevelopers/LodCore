@@ -23,7 +23,7 @@ namespace DataAccess.Repositories
 
             session.Save(request);
         }
-
+//    No needness in the function because of queue
         public PasswordChangeRequest GetPasswordChangeRequest(string token)
         {
             Require.NotNull(token, nameof(token));
@@ -50,5 +50,6 @@ namespace DataAccess.Repositories
 
             session.Delete(request);
         }
+
     }
 }

@@ -31,9 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EasyNetQ, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EasyNetQ.2.0.4\lib\net451\EasyNetQ.dll</HintPath>
+    </Reference>
     <Reference Include="Journalist.LanguageExtensions, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Journalist.LanguageExtensions.0.9.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RabbitMQ.Client.4.1.3\lib\net451\RabbitMQ.Client.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,6 +61,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
+      <Name>RabbitMQEventBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184ff097-9b8c-4236-8538-444f9dccb564}</Project>
       <Name>UserPresentaton</Name>
