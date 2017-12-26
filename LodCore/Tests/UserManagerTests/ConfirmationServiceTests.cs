@@ -7,6 +7,7 @@ using UserManagement.Domain;
 using UserManagement.Infrastructure;
 using IMailer = UserManagement.Application.IMailer;
 using Common;
+using RabbitMQEventBus;
 
 namespace UserManagerTests
 {
@@ -18,6 +19,7 @@ namespace UserManagerTests
         private Mock<IMailer> _mailerStub;
         private Mock<IUserRepository> _userRepoStub;
         private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
+        private Mock<IEventBus> _eventBus;
 
         [TestInitialize]
         public void Setup()
@@ -32,7 +34,8 @@ namespace UserManagerTests
                 _mailerStub.Object,
                 _validationRequesRepoStub.Object,
                 _eventSinkManagerStub.Object,
-                new ConfirmationSettings(new Uri("http://lod-misis.ru/frontend")));
+                new ConfirmationSettings(new Uri("http://lod-misis.ru/frontend")),
+                _eventBus.Object);
         }
 
         [TestMethod]

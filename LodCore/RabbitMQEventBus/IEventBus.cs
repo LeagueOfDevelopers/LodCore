@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EasyNetQ;
+using EasyNetQ.Topology;
 
 namespace RabbitMQEventBus
 {
-    interface IEventBus
+    public interface IEventBus
     {
+        IAdvancedBus GetBusConnection();
+
+        IMessage<T> WrapInMessage<T>(T @event)
+            where T:class;
+
+        IExchange GetExchange(string exchangeName);
+
+        IQueue GetQueue(string queueName);
+
+        void SetConsumer(string queueName, dynamic handlerFunction);
     }
 }

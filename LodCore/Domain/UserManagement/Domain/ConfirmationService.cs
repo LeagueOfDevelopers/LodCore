@@ -17,7 +17,8 @@ namespace UserManagement.Domain
             IMailer mailer,
             IValidationRequestsRepository validationRequestsRepository, 
             IEventSink userManagementEventSink, 
-            ConfirmationSettings confirmationSettings)
+            ConfirmationSettings confirmationSettings,
+            IEventBus eventBus)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(mailer, nameof(mailer));
@@ -30,6 +31,7 @@ namespace UserManagement.Domain
             _validationRequestsRepository = validationRequestsRepository;
             _userManagementEventSink = userManagementEventSink;
             _confirmationSettings = confirmationSettings;
+            _eventBus = eventBus;
         }
 
         public void SetupEmailConfirmation(int userId)
@@ -39,11 +41,11 @@ namespace UserManagement.Domain
             var token = TokenGenerator.GenerateToken();
             var request = new MailValidationRequest(userId, token);
 
-            EventBus.GetBusConnection().Publish(
-                EventBus.GetExchange("MailValidationRequest"),
+            _eventBus.GetBusConnection().Publish(
+                _eventBus.GetExchange("MailValidationRequest"),
                 "validate_mail",
                 false,
-                EventBus.WrapInMessage(request));
+                _eventBus.WrapInMessage(request));
 
            /* _validationRequestsRepository.SaveValidationRequest(request);
 
@@ -108,5 +110,6 @@ namespace UserManagement.Domain
         private readonly IUserRepository _userRepository;
         private readonly IValidationRequestsRepository _validationRequestsRepository;
         private readonly ConfirmationSettings _confirmationSettings;
+        private readonly IEventBus _eventBus;
     }
 }

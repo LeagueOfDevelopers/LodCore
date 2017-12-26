@@ -7,23 +7,25 @@ namespace ContactContext
 {
     public class ContactsService : IContactsService
     {
-        public ContactsService(IEventSink contactsEventSink)
+        public ContactsService(IEventSink contactsEventSink, IEventBus eventBus)
         {
             Require.NotNull(contactsEventSink, nameof(contactsEventSink));
             _contactsEventSink = contactsEventSink;
+            _eventBus = eventBus;
         }
 
         public void SendContactMessage(NewContactMessage contactMessage)
         {
-            EventBus.GetBusConnection().Publish(
-                EventBus.GetExchange("Notification"),
+            _eventBus.GetBusConnection().Publish(
+                _eventBus.GetExchange("Notification"),
                 "admin_notification_info",
                 false,
-                EventBus.WrapInMessage(contactMessage));
+                _eventBus.WrapInMessage(contactMessage));
             Require.NotNull(contactMessage, nameof(contactMessage));
             _contactsEventSink.ConsumeEvent(contactMessage);
         }
 
         private readonly IEventSink _contactsEventSink;
+        private readonly IEventBus _eventBus;
     }
 }

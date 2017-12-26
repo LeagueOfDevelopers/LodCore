@@ -9,11 +9,15 @@ namespace UserManagement.Domain
     {
         private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IEventBus _eventBus;
 
-        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, IUserRepository userRepository)
+        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, 
+                               IUserRepository userRepository,
+                               IEventBus eventBus)
         {
             _passwordChangeRequestRepository = passwordChangeRequestRepository;
             _userRepository = userRepository;
+            _eventBus = eventBus;
         }
 
         public Account GetUserByPasswordRecoveryToken(string token)
@@ -35,11 +39,11 @@ namespace UserManagement.Domain
         public void SavePasswordChangeRequest(PasswordChangeRequest request)
         {
             Require.NotNull(request, nameof(request));
-            EventBus.GetBusConnection().Publish(
-                EventBus.GetExchange("PasswordChangeRequest"), 
+            _eventBus.GetBusConnection().Publish(
+                _eventBus.GetExchange("PasswordChangeRequest"), 
                 "change_password", 
                 false, 
-                EventBus.WrapInMessage(request));
+                _eventBus.WrapInMessage(request));
             _passwordChangeRequestRepository.SavePasswordChangeRequest(request);
         }
 

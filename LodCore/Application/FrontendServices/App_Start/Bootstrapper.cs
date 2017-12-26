@@ -78,7 +78,9 @@ namespace FrontendServices
                 container.GetInstance<IMailer>(),
                 container.GetInstance<IValidationRequestsRepository>(),
                 container.GetInstance<UserManagementEventSink>(),
-                container.GetInstance<ConfirmationSettings>()), Lifestyle.Singleton);
+                container.GetInstance<ConfirmationSettings>(),
+                container.GetInstance<IEventBus>()), 
+                Lifestyle.Singleton);
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
@@ -108,7 +110,8 @@ namespace FrontendServices
             container.Register<ContactsEventSink>(Lifestyle.Singleton);
             container.Register<IContactsService>(
                 () => new ContactsService(
-                    container.GetInstance<ContactsEventSink>()),
+                    container.GetInstance<ContactsEventSink>(),
+                    container.GetInstance<IEventBus>()),
                 Lifestyle.Singleton);
             container.Register<OrderMapper>(Lifestyle.Singleton);
             container.Register<EventMapper>(Lifestyle.Singleton);
@@ -130,14 +133,9 @@ namespace FrontendServices
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
 
-            container.Register<RabbitMQEventBus.EventBus>(
-                () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), Lifestyle.Singleton);
-            /*  container.Register<MailValidationHandler>(
-                  () => new MailValidationHandler(container.GetInstance<IMailer>(),
-                  container.GetInstance<IValidationRequestsRepository>(),
-                  container.GetInstance<ConfirmationSettings>(),
-                  container.GetInstance<IUserRepository>()),
-                  Lifestyle.Singleton); */
+            container.Register<IEventBus>(
+                () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), 
+                                                    Lifestyle.Singleton);
             container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
 
             RegisterMailing(container);

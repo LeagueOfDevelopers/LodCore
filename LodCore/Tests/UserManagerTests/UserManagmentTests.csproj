@@ -101,6 +101,10 @@
       <Project>{b2881ad8-9b31-4741-a0b0-36cc210fdbdb}</Project>
       <Name>Mailing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
+      <Name>RabbitMQEventBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

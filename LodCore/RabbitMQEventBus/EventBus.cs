@@ -1,6 +1,5 @@
 ﻿using EasyNetQ;
 using EasyNetQ.Topology;
-using EasyNetQ.Consumer;
 using Journalist;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,30 +7,34 @@ using System.Threading.Tasks;
 
 namespace RabbitMQEventBus
 {
-    public class EventBus
+    public class EventBus : IEventBus
     {
+        static EventBus()
+        {
+            _bus = InitializeBusConnection();
+        }
+
         public EventBus(EventBusSettings eventBusSettings)
         {
             Require.NotNull(eventBusSettings, nameof(eventBusSettings));
             _eventBusSettings = eventBusSettings;
-            _bus = InitializeBusConnection();
             DeclareExchanges();
             DeclareQueues();
             DeclareBindings();
         }
 
-        public static IAdvancedBus GetBusConnection()
+        public IAdvancedBus GetBusConnection()
         {
             return _bus;
         }
 
-        public static IMessage<T> WrapInMessage<T>(T @event)
+        public IMessage<T> WrapInMessage<T>(T @event)
             where T:class
         {
             return new Message<T>(@event);
         }
 
-        public static IExchange GetExchange(string exchangeName)
+        public IExchange GetExchange(string exchangeName)
         {
             if (_exchanges.ContainsKey(exchangeName))
                 return _exchanges[exchangeName];
@@ -39,7 +42,7 @@ namespace RabbitMQEventBus
                 throw new KeyNotFoundException("Exchange doesn't exist");
         }
 
-        public static IQueue GetQueue(string queueName)
+        public IQueue GetQueue(string queueName)
         {
             if (_queues.ContainsKey(queueName))
                 return _queues[queueName];
@@ -47,7 +50,7 @@ namespace RabbitMQEventBus
                 throw new KeyNotFoundException("Queue doesn't exist");
         }
 
-        private IAdvancedBus InitializeBusConnection()
+        private static IAdvancedBus InitializeBusConnection()
         {
             /*var connectionString = $"host = {_eventBusSettings.HostName}; " +
                 $"virtualHost = {_eventBusSettings.VirtualHost}; " +
@@ -103,9 +106,9 @@ namespace RabbitMQEventBus
             _bus.Bind(_exchanges["MailValidationRequest"], _queues["ValidateMail"], "validate_mail");
         }
 
-        public static void SetConsumer(string queueName, dynamic handlerFunction)
+        public void SetConsumer(string queueName, dynamic handlerFunction)
         {
-            _bus.Consume<dynamic>(EventBus.GetQueue(queueName),
+            _bus.Consume<dynamic>(GetQueue(queueName),
                 (msg, info) => Task.Factory.StartNew(() =>
                 {
                     handlerFunction.DynamicInvoke(msg.Body);
@@ -116,7 +119,7 @@ namespace RabbitMQEventBus
 
         private readonly EventBusSettings _eventBusSettings;
         private static IAdvancedBus _bus;
-        private static Dictionary<string, IExchange> _exchanges;
-        private static Dictionary<string, IQueue> _queues;
+        private Dictionary<string, IExchange> _exchanges;
+        private Dictionary<string, IQueue> _queues;
     }
 }

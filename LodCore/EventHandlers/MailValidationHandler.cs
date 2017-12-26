@@ -13,16 +13,18 @@ namespace EventHandlers
             IValidationRequestsRepository validationRequestsRepository,
             ConfirmationSettings confirmationSettings,
             IUserRepository userRepository,
-            DatabaseSessionProvider databaseSessionProvider)
+            DatabaseSessionProvider databaseSessionProvider,
+            IEventBus eventBus)
         {
             _mailer = mailer;
             _validationRequestsRepository = validationRequestsRepository;
             _confirmationSettings = confirmationSettings;
             _userRepository = userRepository;
             _databaseSessionProvider = databaseSessionProvider;
+            _eventBus = eventBus;
 
             _validateMail validateMail = ValidateMail;
-            EventBus.SetConsumer("ValidateMail", validateMail);
+            _eventBus.SetConsumer("ValidateMail", validateMail);
         }
         
         public void ValidateMail(MailValidationRequest request)
@@ -44,5 +46,6 @@ namespace EventHandlers
         private readonly ConfirmationSettings _confirmationSettings;
         private readonly IUserRepository _userRepository;
         private readonly DatabaseSessionProvider _databaseSessionProvider;
+        private readonly IEventBus _eventBus;
     }
 }
