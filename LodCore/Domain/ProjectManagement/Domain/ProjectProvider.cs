@@ -16,17 +16,14 @@ namespace ProjectManagement.Domain
         public ProjectProvider(
             IProjectRepository projectRepository,
             IEventSink eventSink,
-            IUserRepository userRepository,
             PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings)
         {
             Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventSink, nameof(eventSink));
-            Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(paginationSettings, nameof(paginationSettings));
 
             _projectRepository = projectRepository;
             _eventSink = eventSink;
-            _userRepository = userRepository;
             _paginationSettings = paginationSettings;
             _issuePaginationSettings = issuePaginationSettings;
         }
@@ -113,9 +110,6 @@ namespace ProjectManagement.Domain
                 throw new InvalidOperationException("Attempt to add developer who is already on project");
             }
 
-            var redmineUserId = _userRepository.GetUserRedmineId(userId);
-            var gitlabUserId = _userRepository.GetUserGitlabId(userId);
-
             project.ProjectMemberships.Add(new ProjectMembership(
                 userId, 
                 role));
@@ -146,7 +140,6 @@ namespace ProjectManagement.Domain
         }
 
         private readonly IEventSink _eventSink;
-        private readonly IUserRepository _userRepository;
         private readonly PaginationSettings _paginationSettings;
         private readonly IssuePaginationSettings _issuePaginationSettings;
 

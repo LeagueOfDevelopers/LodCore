@@ -7,12 +7,12 @@ using RabbitMQEventBus;
 
 namespace EventHandlers
 {
-    public class MailValidationHandler
+    public class MailValidationHandler : IMailValidationHandler
     {
         public MailValidationHandler(IMailer mailer, 
             IValidationRequestsRepository validationRequestsRepository,
             ConfirmationSettings confirmationSettings,
-            UserRepository userRepository)
+            IUserRepository userRepository)
         {
             _mailer = mailer;
             _validationRequestsRepository = validationRequestsRepository;
@@ -22,9 +22,9 @@ namespace EventHandlers
             EventBus.SetConsumer("ValidateMail", validateMail);
         }
         
-        private void ValidateMail(MailValidationRequest request)
+        public void ValidateMail(MailValidationRequest request)
         {
-            _validationRequestsRepository.SaveValidationRequest(request);
+          //  _validationRequestsRepository.SaveValidationRequest(request);
 
             var confirmationLink = new Uri(
                 _confirmationSettings.FrontendMailConfirmationUri,
@@ -37,6 +37,6 @@ namespace EventHandlers
         private readonly IMailer _mailer;
         private readonly IValidationRequestsRepository _validationRequestsRepository;
         private readonly ConfirmationSettings _confirmationSettings;
-        private readonly UserRepository _userRepository;  
+        private readonly IUserRepository _userRepository;  
     }
 }

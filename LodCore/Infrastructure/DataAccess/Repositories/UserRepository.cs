@@ -11,7 +11,7 @@ using UserManagement.Infrastructure;
 
 namespace DataAccess.Repositories
 {
-    public class UserRepository : IUserRepository, IUsersRepository, ProjectManagement.Infrastructure.IUserRepository
+    public class UserRepository : IUserRepository, IUsersRepository
     {
         private readonly DatabaseSessionProvider _sessionProvider;
 

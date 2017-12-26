@@ -98,12 +98,9 @@ namespace FrontendServices
                 new ProjectProvider(
                     container.GetInstance<IProjectRepository>(),
                     container.GetInstance<ProjectsEventSink>(),
-                    container.GetInstance<ProjectManagement.Infrastructure.IUserRepository>(),
                     container.GetInstance<ProjectManagement.Domain.PaginationSettings>(),
                     container.GetInstance<IssuePaginationSettings>()),
                 Lifestyle.Singleton);
-            container.Register<ProjectManagement.Infrastructure.IUserRepository>(
-                () => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
             container.Register<IProjectRepository>(
                 () => container.GetInstance<ProjectRepository>(),
                 Lifestyle.Singleton);
@@ -134,12 +131,13 @@ namespace FrontendServices
 
             container.Register<RabbitMQEventBus.EventBus>(
                 () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), Lifestyle.Singleton);
-            container.Register<MailValidationHandler>(
-                () => new MailValidationHandler(container.GetInstance<IMailer>(),
-                container.GetInstance<ValidationRequestsRepository>(),
-                container.GetInstance<ConfirmationSettings>(),
-                container.GetInstance<UserRepository>()),
-                Lifestyle.Singleton);
+            /*  container.Register<MailValidationHandler>(
+                  () => new MailValidationHandler(container.GetInstance<IMailer>(),
+                  container.GetInstance<IValidationRequestsRepository>(),
+                  container.GetInstance<ConfirmationSettings>(),
+                  container.GetInstance<IUserRepository>()),
+                  Lifestyle.Singleton); */
+            container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
 
             RegisterMailing(container);
             container.Verify();
