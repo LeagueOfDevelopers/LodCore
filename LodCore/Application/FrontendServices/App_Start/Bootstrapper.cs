@@ -137,6 +137,7 @@ namespace FrontendServices
                 () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), 
                                                     Lifestyle.Singleton);
             container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
+            container.Register<IPasswordChangeHandler, PasswordChangeHandler>(Lifestyle.Singleton);
 
             RegisterMailing(container);
             container.Verify();

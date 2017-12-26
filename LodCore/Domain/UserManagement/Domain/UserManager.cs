@@ -165,12 +165,6 @@ namespace UserManagement.Domain
                 "change_password",
                 false,
                 _eventBus.WrapInMessage(request));
-
-            var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{request.Token}";
-
-            _passwordManager.SavePasswordChangeRequest(request);
-
-            _mailer.SendPasswordResetMail(link, userToInitiateProcedure.Email);
         }
 
         public List<Account> GetUserList(string searchString)

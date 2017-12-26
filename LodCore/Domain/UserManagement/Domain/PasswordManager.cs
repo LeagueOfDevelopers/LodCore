@@ -1,7 +1,6 @@
 ﻿using Journalist;
 using UserManagement.Application;
 using UserManagement.Infrastructure;
-using RabbitMQEventBus;
 
 namespace UserManagement.Domain
 {
@@ -9,15 +8,12 @@ namespace UserManagement.Domain
     {
         private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IEventBus _eventBus;
 
         public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, 
-                               IUserRepository userRepository,
-                               IEventBus eventBus)
+                               IUserRepository userRepository)
         {
             _passwordChangeRequestRepository = passwordChangeRequestRepository;
             _userRepository = userRepository;
-            _eventBus = eventBus;
         }
 
         public Account GetUserByPasswordRecoveryToken(string token)
