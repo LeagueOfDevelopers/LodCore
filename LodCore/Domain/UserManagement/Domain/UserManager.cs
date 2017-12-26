@@ -146,16 +146,10 @@ namespace UserManagement.Domain
 
             var userToInitiateProcedure = GetUser(userId);
 
-            var request = _passwordManager.GetPasswordChangeRequest(userId);
+            var request = _passwordManager.GetPasswordChangeRequest(userId) ??
+                new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
 
-            if (_passwordManager.GetPasswordChangeRequest(userId) == null)
-            {
-                request = new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
-            }
-
-            var passwordChangeRequest = request;
-
-            var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{passwordChangeRequest.Token}";
+            var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{request.Token}";
 
             _passwordManager.SavePasswordChangeRequest(request);
 
