@@ -4,14 +4,13 @@ using System.Linq;
 using System.Net.Mail;
 using Common;
 using Journalist;
-using Journalist.Extensions;
-using NHibernate.Linq;
 using NHibernate.Util;
 using NotificationService;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
 using IMailer = UserManagement.Application.IMailer;
-using IUserRepository = UserManagement.Infrastructure.IUserRepository;
+using UserManagement.Infrastructure;
+using RabbitMQEventBus;
 
 namespace UserManagement.Domain
 {
@@ -24,14 +23,26 @@ namespace UserManagement.Domain
         private readonly IMailer _mailer;
         private readonly IPasswordManager _passwordManager;
         private readonly ApplicationLocationSettings _applicationLocationSettings;
-
+        private readonly IEventBus _eventBus;
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, PaginationSettings paginationSettings, IProjectMembershipRepostiory projectMembershipRepostiory, IMailer mailer, ApplicationLocationSettings applicationLocationSettings, IPasswordManager passwordManager)
+            IConfirmationService confirmationService, 
+            PaginationSettings paginationSettings, 
+            IProjectMembershipRepostiory projectMembershipRepostiory, 
+            IMailer mailer, 
+            ApplicationLocationSettings applicationLocationSettings, 
+            IPasswordManager passwordManager,
+            IEventBus eventBus)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
+            Require.NotNull(paginationSettings, nameof(paginationSettings));
+            Require.NotNull(projectMembershipRepostiory, nameof(projectMembershipRepostiory));
+            Require.NotNull(mailer, nameof(mailer));
+            Require.NotNull(applicationLocationSettings, nameof(applicationLocationSettings));
+            Require.NotNull(passwordManager, nameof(passwordManager));
+            Require.NotNull(eventBus, nameof(eventBus));
 
             _userRepository = userRepository;
             _confirmationService = confirmationService;
@@ -40,6 +51,7 @@ namespace UserManagement.Domain
             _mailer = mailer;
             _applicationLocationSettings = applicationLocationSettings;
             _passwordManager = passwordManager;
+            _eventBus = eventBus;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -86,7 +98,6 @@ namespace UserManagement.Domain
                 request.Firstname,
                 request.Lastname,
                 new MailAddress(request.Email),
-                //Password.FromPlainString(request.Password),
                 new Password(request.Password),
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
@@ -149,6 +160,12 @@ namespace UserManagement.Domain
             var request = _passwordManager.GetPasswordChangeRequest(userId) ??
                 new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
 
+            _eventBus.GetBusConnection().Publish(
+                _eventBus.GetExchange("PasswordChangeRequest"),
+                "change_password",
+                false,
+                _eventBus.WrapInMessage(request));
+
             var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{request.Token}";
 
             _passwordManager.SavePasswordChangeRequest(request);
@@ -166,7 +183,8 @@ namespace UserManagement.Domain
 
             var allUsersToSearchByRole =
                 new HashSet<Account>(
-                    allProjectMemberships.Select(membership => allUsers.Single(account => account.UserId == membership.DeveloperId)));
+                    allProjectMemberships.Select(membership => allUsers.Single(account => 
+                        account.UserId == membership.DeveloperId)));
 
             var userRolesDictionary = allUsersToSearchByRole.ToDictionary(user => user,
                 user =>

@@ -39,11 +39,6 @@ namespace UserManagement.Domain
         public void SavePasswordChangeRequest(PasswordChangeRequest request)
         {
             Require.NotNull(request, nameof(request));
-            _eventBus.GetBusConnection().Publish(
-                _eventBus.GetExchange("PasswordChangeRequest"), 
-                "change_password", 
-                false, 
-                _eventBus.WrapInMessage(request));
             _passwordChangeRequestRepository.SavePasswordChangeRequest(request);
         }
 
