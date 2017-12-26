@@ -46,10 +46,11 @@ namespace FrontendServices
             RegisterSettings(container);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
-            container.Register<UserRepository>(Lifestyle.Singleton);
+            container.Register<IUserRepository>(
+                () => new UserRepository(container.GetInstance<DatabaseSessionProvider>()),(Lifestyle.Singleton));
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
-            container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
+           // container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
 
             //todo: replace to open-generic registration
             container.Register<IPaginableRepository<Account>>(

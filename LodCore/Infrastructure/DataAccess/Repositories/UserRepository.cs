@@ -71,22 +71,6 @@ namespace DataAccess.Repositories
             return customizedQuery.OrderBy(orderer).Skip(skipCount).Take(takeCount).ToList();
         }
 
-        public int GetUserRedmineId(int userId)
-        {
-            Require.Positive(userId, nameof(userId));
-
-            var account = GetAccount(userId);
-            return account.RedmineUserId;
-        }
-
-        public int GetUserGitlabId(int userId)
-        {
-            Require.Positive(userId, nameof(userId));
-
-            var account = GetAccount(userId);
-            return account.GitlabUserId;
-        }
-
         public int[] GetAllUsersIds()
         {
             var session = _sessionProvider.GetCurrentSession();

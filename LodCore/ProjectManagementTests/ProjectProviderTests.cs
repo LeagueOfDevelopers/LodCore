@@ -16,7 +16,6 @@ namespace ProjectManagementTests
         private Fixture _fixture;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _projectRepository;
-        private Mock<IUserRepository> _userRepository;
 
         [TestInitialize]
         public void Setup()
@@ -24,18 +23,14 @@ namespace ProjectManagementTests
             _fixture = new Fixture();
             _projectRepository = new Mock<IProjectRepository>();
             _eventSinkMock = new Mock<IEventSink>();
-            _userRepository = new Mock<IUserRepository>();
             var paginationSettings = new ProjectManagement.Domain.PaginationSettings(10);
 
             _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);
-            _userRepository.Setup(repo => repo.GetUserRedmineId(It.IsAny<int>())).Returns(1);
-            _userRepository.Setup(repo => repo.GetUserGitlabId(It.IsAny<int>())).Returns(1);
             _projectProvider = new ProjectProvider(
                 _projectRepository.Object,
                 _eventSinkMock.Object,
-                _userRepository.Object,
                 paginationSettings,
                 new IssuePaginationSettings(25));
         }
