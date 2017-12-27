@@ -18,8 +18,6 @@ namespace ContactContext
         {
             Require.NotNull(contactMessage, nameof(contactMessage));
             _eventBus.PublishEvent("Notification", "new_contact_message", contactMessage);
-
-            _contactsEventSink.ConsumeEvent(contactMessage);
         }
 
         private readonly IEventSink _contactsEventSink;

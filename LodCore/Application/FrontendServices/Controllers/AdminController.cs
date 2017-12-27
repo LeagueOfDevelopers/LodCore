@@ -66,8 +66,6 @@ namespace FrontendServices.Controllers
 
             _eventBus.PublishEvent("Notification", "admin_notification_info", @event);
 
-            _notificationEventSink.ConsumeEvent(@event);
-
             return Ok();
         }
 

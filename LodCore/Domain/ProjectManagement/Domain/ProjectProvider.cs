@@ -89,8 +89,6 @@ namespace ProjectManagement.Domain
 
             _eventBus.PublishEvent("Notification", "new_project_created", @event);
 
-            _eventSink.ConsumeEvent(@event);
-
             return projectId;
         }
 
@@ -145,8 +143,6 @@ namespace ProjectManagement.Domain
             var @event = new DeveloperHasLeftProject(userId, projectId);
 
             _eventBus.PublishEvent("Notification", "developer_has_left_project", @event);
-
-            _eventSink.ConsumeEvent(@event);
         }
 
         private readonly IEventSink _eventSink;
