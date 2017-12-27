@@ -2,6 +2,6 @@
 {
     public interface IEventSink
     {
-        void ConsumeEvent(IEventInfo eventInfo);
+         void ConsumeEvent(IEventInfo eventInfo);
     }
 }

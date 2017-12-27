@@ -4,14 +4,17 @@ using UserPresentaton;
 
 namespace NotificationService
 {
-    public abstract class EventSinkBase : IEventSink
+    public class EventSinkBase : IEventSink
     {
-        protected EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory, IEventRepository eventRepository,
-            IMailer mailer, IUserPresentationProvider userPresentationProvider)
+        public EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory, 
+            IEventRepository eventRepository,
+            IMailer mailer, 
+            IUserPresentationProvider userPresentationProvider)
         {
             Require.NotNull(distributionPolicyFactory, nameof(distributionPolicyFactory));
             Require.NotNull(eventRepository, nameof(eventRepository));
             Require.NotNull(mailer, nameof(mailer));
+            Require.NotNull(userPresentationProvider, nameof(userPresentationProvider));
 
             DistributionPolicyFactory = distributionPolicyFactory;
             EventRepository = eventRepository;
@@ -27,7 +30,18 @@ namespace NotificationService
 
         private readonly IUserPresentationProvider _userPresentationProvider;
 
-        public abstract void ConsumeEvent(IEventInfo eventInfo);
+        public virtual void ConsumeEvent(IEventInfo eventInfo)
+        {
+            Require.NotNull(eventInfo, nameof(eventInfo));
+
+            var @event = new Event(eventInfo);
+
+            var distributionPolicy = DistributionPolicyFactory.GetAdminRelatedPolicy();
+
+            EventRepository.DistrubuteEvent(@event, distributionPolicy);
+
+            Mailer.SendNotificationEmail(distributionPolicy.ReceiverIds, eventInfo);
+        }
 
         protected void SendOutEmailsAboutEvent(int[] userIds, IEventInfo eventInfo)
         {

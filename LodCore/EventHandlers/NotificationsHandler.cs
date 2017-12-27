@@ -3,18 +3,19 @@ using UserManagement.Domain.Events;
 using NotificationService;
 using ProjectManagement.Domain.Events;
 using ContactContext.Events;
+using DataAccess;
 
 namespace EventHandlers
 {
     public class NotificationsHandler : INotificationsHandler
     {
         public NotificationsHandler(
-            IEventSink userManagementEventSink,
-            NotificationEventSink notificationEventSink,
+            EventSinkBase eventSink,
+            DatabaseSessionProvider databaseSessionProvider,
             IEventBus eventBus)
         {
-            _userManagementEventSink = userManagementEventSink;
-            _notificationEventSink = notificationEventSink;
+            _eventSink = eventSink;
+            _databaseSessionProvider = databaseSessionProvider;
             _eventBus = eventBus;
 
             BindToConsumer();
@@ -22,37 +23,45 @@ namespace EventHandlers
 
         public void NotifyAboutNewEmailConfirmedDeveloper(NewEmailConfirmedDeveloper @event)
         {
-            _userManagementEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
         }
 
         public void NotifyAboutNewFullConfirmedDeveloper(NewFullConfirmedDeveloper @event)
         {
-            _userManagementEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
         }
 
         public void NotifyAboutAdminNotificationInfo(AdminNotificationInfo @event)
         {
-            _notificationEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
         }
 
         public void NotifyAboutDeveloperHasLeftProject(DeveloperHasLeftProject @event)
         {
-            _userManagementEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
         }
 
         public void NotifyAboutNewDeveloperOnProject(NewDeveloperOnProject @event)
         {
-            _userManagementEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
         }
 
         public void NotifyAboutNewProjectCreated(NewProjectCreated @event)
         {
-            _userManagementEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
         }
 
         public void NotifyAboutNewContactMessage(NewContactMessage @event)
         {
-            _userManagementEventSink.ConsumeEvent(@event);
+            NotifyAboutNewEvent(@event);
+        }
+
+        public void NotifyAboutNewEvent<T>(T @event)
+            where T : class
+        {
+            _databaseSessionProvider.OpenSession();
+            _eventSink.ConsumeEvent((IEventInfo)@event);
+            _databaseSessionProvider.CloseSession();
         }
 
         private void BindToConsumer()
@@ -94,8 +103,8 @@ namespace EventHandlers
         private delegate void _notifyAboutNewProjectCreated(NewProjectCreated @event);
         private delegate void _notifyAboutNewContactMessage(NewContactMessage @event);
 
-        private readonly IEventSink _userManagementEventSink;
-        private readonly NotificationEventSink _notificationEventSink;
+        private readonly EventSinkBase _eventSink;
+        private readonly DatabaseSessionProvider _databaseSessionProvider;
         private readonly IEventBus _eventBus;
     }
 }

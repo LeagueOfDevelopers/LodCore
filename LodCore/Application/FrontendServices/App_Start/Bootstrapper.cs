@@ -46,11 +46,9 @@ namespace FrontendServices
             RegisterSettings(container);
             container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
-            container.Register<IUserRepository>(
-                () => new UserRepository(container.GetInstance<DatabaseSessionProvider>()),(Lifestyle.Singleton));
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
-           // container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
+            container.Register<IUserRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
 
             //todo: replace to open-generic registration
             container.Register<IPaginableRepository<Account>>(
@@ -96,7 +94,8 @@ namespace FrontendServices
                     container.GetInstance<IEventRepository>(),
                     container.GetInstance<PaginationSettings>()), Lifestyle.Singleton);
             container.Register<IImageResizer>(
-                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>(), container.GetInstance<ApplicationLocationSettings>()), Lifestyle.Singleton);
+                () => new ImageResizer(500, container.GetInstance<FileStorageSettings>(), 
+                container.GetInstance<ApplicationLocationSettings>()), Lifestyle.Singleton);
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectRepository>(),
@@ -133,13 +132,10 @@ namespace FrontendServices
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
-            container.Register<IEventSink>(
-                () => container.GetInstance<UserManagementEventSink>(),
-                (Lifestyle.Singleton));
+            container.Register<EventSinkBase>(Lifestyle.Singleton);
 
-            container.Register<IEventBus>(
-                () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), 
-                                                    Lifestyle.Singleton);
+            container.Register<IEventBus>(() => new EventBus(container
+                     .GetInstance<EventBusSettings>()), Lifestyle.Singleton);
             container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
             container.Register<IPasswordChangeHandler, PasswordChangeHandler>(Lifestyle.Singleton);
             container.Register<INotificationsHandler, NotificationsHandler>(Lifestyle.Singleton);
