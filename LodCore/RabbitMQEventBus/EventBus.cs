@@ -4,6 +4,7 @@ using Journalist;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+// EventType NewContactMessage for queue doesn't exist
 
 namespace RabbitMQEventBus
 {
@@ -23,18 +24,32 @@ namespace RabbitMQEventBus
             DeclareBindings();
         }
 
-        public IAdvancedBus GetBusConnection()
+        public void PublishEvent<T>(string exchangeName, string routeName, T @event)
+            where T:class
         {
-            return _bus;
+            _bus.Publish(
+                GetExchange(exchangeName),
+                routeName,
+                false,
+                WrapInMessage(@event));
         }
 
-        public IMessage<T> WrapInMessage<T>(T @event)
-            where T:class
+        public void SetConsumer(string queueName, dynamic handlerFunction)
+        {
+            _bus.Consume<dynamic>(GetQueue(queueName),
+                (msg, info) => Task.Factory.StartNew(() =>
+                {
+                    handlerFunction.DynamicInvoke(msg.Body);
+                }));
+        }
+
+        private IMessage<T> WrapInMessage<T>(T @event)
+            where T : class
         {
             return new Message<T>(@event);
         }
 
-        public IExchange GetExchange(string exchangeName)
+        private IExchange GetExchange(string exchangeName)
         {
             if (_exchanges.ContainsKey(exchangeName))
                 return _exchanges[exchangeName];
@@ -42,7 +57,7 @@ namespace RabbitMQEventBus
                 throw new KeyNotFoundException("Exchange doesn't exist");
         }
 
-        public IQueue GetQueue(string queueName)
+        private IQueue GetQueue(string queueName)
         {
             if (_queues.ContainsKey(queueName))
                 return _queues[queueName];
@@ -68,18 +83,20 @@ namespace RabbitMQEventBus
                            "mail_validation_request_events", ExchangeType.Direct));
             _exchanges.Add("Notification", _bus.ExchangeDeclare(
                            "notification_events", ExchangeType.Direct));
+            _exchanges.Add("NewContactMessage", _bus.ExchangeDeclare(
+                "new_contact_message_events", ExchangeType.Fanout));
             _exchanges.Add("DeveloperHasLeftProject", _bus.ExchangeDeclare(
-                           "developer_has_left_project_event", ExchangeType.Fanout));
+                           "developer_has_left_project_events", ExchangeType.Fanout));
             _exchanges.Add("NewDeveloperOnProject", _bus.ExchangeDeclare(
-                           "new_developer_on_project", ExchangeType.Fanout));
+                           "new_developer_on_project_events", ExchangeType.Fanout));
             _exchanges.Add("NewEmailConfirmedDeveloper", _bus.ExchangeDeclare(
-                           "new_email_confirmed_developer", ExchangeType.Fanout));
+                           "new_email_confirmed_developer_events", ExchangeType.Fanout));
             _exchanges.Add("NewFullConfirmedDeveloper", _bus.ExchangeDeclare(
-                           "new_full_confirmed_developer", ExchangeType.Fanout));
+                           "new_full_confirmed_developer_events", ExchangeType.Fanout));
             _exchanges.Add("NewProjectCreated", _bus.ExchangeDeclare(
-                           "new_project_created", ExchangeType.Fanout));
+                           "new_project_created_events", ExchangeType.Fanout));
             _exchanges.Add("AdminNotificationInfo", _bus.ExchangeDeclare(
-                           "admin_notification_info", ExchangeType.Fanout));
+                           "admin_notification_info_events", ExchangeType.Fanout));
             _exchanges.Add("PasswordChangeRequest", _bus.ExchangeDeclare(
                            "password_change_request_events", ExchangeType.Direct));
         }
@@ -89,6 +106,8 @@ namespace RabbitMQEventBus
             _queues = new Dictionary<string, IQueue>();
             _queues.Add("ChangePassword", _bus.QueueDeclare(
                         "change_password_queue"));
+            _queues.Add("NewContactMessageNotify", _bus.QueueDeclare(
+                "new_contact_message_notify_queue"));
             _queues.Add("DeveloperHasLeftProjectNotify", _bus.QueueDeclare(
                         "developer_has_left_project_notify_queue"));
             _queues.Add("NewDeveloperOnProjectNotify", _bus.QueueDeclare(
@@ -110,6 +129,9 @@ namespace RabbitMQEventBus
             _bus.Bind(_exchanges["PasswordChangeRequest"], 
                       _queues["ChangePassword"], 
                                 "change_password");
+            _bus.Bind(_exchanges["Notification"],
+                      _exchanges["NewContactMessage"],
+                      "new_contact_message");
             _bus.Bind(_exchanges["Notification"], 
                       _exchanges["DeveloperHasLeftProject"], 
                                 "developer_has_left_project");
@@ -128,6 +150,9 @@ namespace RabbitMQEventBus
             _bus.Bind(_exchanges["Notification"], 
                       _exchanges["AdminNotificationInfo"], 
                                 "admin_notification_info");
+            _bus.Bind(_exchanges["NewContactMessage"],
+                      _queues["NewContactMessageNotify"],
+                                "new_contact_message_notify");
             _bus.Bind(_exchanges["DeveloperHasLeftProject"], 
                       _queues["DeveloperHasLeftProjectNotify"], 
                                 "developer_has_left_project_notify");
@@ -150,15 +175,6 @@ namespace RabbitMQEventBus
                       _queues["ValidateMail"], 
                                 "validate_mail");
         }
-
-        public void SetConsumer(string queueName, dynamic handlerFunction)
-        {
-            _bus.Consume<dynamic>(GetQueue(queueName),
-                (msg, info) => Task.Factory.StartNew(() =>
-                {
-                    handlerFunction.DynamicInvoke(msg.Body);
-                }));
-        } 
 
         private readonly EventBusSettings _eventBusSettings;
         private static IAdvancedBus _bus;

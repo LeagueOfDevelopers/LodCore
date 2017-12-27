@@ -8,6 +8,7 @@ using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
+using RabbitMQEventBus;
 
 namespace ProjectManagement.Domain
 {
@@ -16,16 +17,21 @@ namespace ProjectManagement.Domain
         public ProjectProvider(
             IProjectRepository projectRepository,
             IEventSink eventSink,
-            PaginationSettings paginationSettings, IssuePaginationSettings issuePaginationSettings)
+            PaginationSettings paginationSettings, 
+            IssuePaginationSettings issuePaginationSettings,
+            IEventBus eventBus)
         {
             Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventSink, nameof(eventSink));
             Require.NotNull(paginationSettings, nameof(paginationSettings));
+            Require.NotNull(issuePaginationSettings, nameof(issuePaginationSettings));
+            Require.NotNull(eventBus, nameof(eventBus));
 
             _projectRepository = projectRepository;
             _eventSink = eventSink;
             _paginationSettings = paginationSettings;
             _issuePaginationSettings = issuePaginationSettings;
+            _eventBus = eventBus;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
@@ -58,14 +64,6 @@ namespace ProjectManagement.Domain
                 throw new ProjectNotFoundException();
             }
 
-           /* var issues = _projectManagerGateway.GetProjectIssues(project.RedmineProjectInfo.ProjectId,
-                _issuePaginationSettings.NumberOfIssues, issueTypes, statusList);
-
-            foreach (var issue in issues)
-            {
-                project.Issues.Add(issue);
-            } */
-
             return project;
         } 
 
@@ -87,7 +85,11 @@ namespace ProjectManagement.Domain
                 : null );
             var projectId = _projectRepository.SaveProject(project);
 
-            _eventSink.ConsumeEvent(new NewProjectCreated(projectId));
+            var @event = new NewProjectCreated(projectId);
+
+            _eventBus.PublishEvent("Notification", "new_project_created", @event);
+
+            _eventSink.ConsumeEvent(@event);
 
             return projectId;
         }
@@ -116,7 +118,11 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            _eventSink.ConsumeEvent(new NewDeveloperOnProject(userId, projectId));
+            var @event = new NewDeveloperOnProject(userId, projectId);
+
+            _eventBus.PublishEvent("Notification", "new_developer_on_project", @event);
+
+            _eventSink.ConsumeEvent(@event);
         }
 
         public void RemoveUserFromProject(int projectId, int userId)
@@ -136,13 +142,17 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            _eventSink.ConsumeEvent(new DeveloperHasLeftProject(userId, projectId));
+            var @event = new DeveloperHasLeftProject(userId, projectId);
+
+            _eventBus.PublishEvent("Notification", "developer_has_left_project", @event);
+
+            _eventSink.ConsumeEvent(@event);
         }
 
         private readonly IEventSink _eventSink;
         private readonly PaginationSettings _paginationSettings;
         private readonly IssuePaginationSettings _issuePaginationSettings;
-
         private readonly IProjectRepository _projectRepository;
+        private readonly IEventBus _eventBus;
     }
 }

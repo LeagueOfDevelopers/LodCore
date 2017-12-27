@@ -1,18 +1,9 @@
-﻿using EasyNetQ;
-using EasyNetQ.Topology;
-
-namespace RabbitMQEventBus
+﻿namespace RabbitMQEventBus
 {
     public interface IEventBus
     {
-        IAdvancedBus GetBusConnection();
-
-        IMessage<T> WrapInMessage<T>(T @event)
-            where T:class;
-
-        IExchange GetExchange(string exchangeName);
-
-        IQueue GetQueue(string queueName);
+        void PublishEvent<T>(string exchangeName, string routeName, T @event)
+            where T : class;
 
         void SetConsumer(string queueName, dynamic handlerFunction);
     }

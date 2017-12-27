@@ -6,6 +6,8 @@ using OrderManagement.Application;
 using OrderManagement.Domain.Events;
 using OrderManagement.Infrastructure;
 
+// TO BE DESTROYED AT ALL
+
 namespace OrderManagement.Domain
 {
     public class OrderManagment : IOrderManager

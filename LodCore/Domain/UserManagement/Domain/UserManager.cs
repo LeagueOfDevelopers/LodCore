@@ -157,14 +157,10 @@ namespace UserManagement.Domain
 
             var userToInitiateProcedure = GetUser(userId);
 
-            var request = _passwordManager.GetPasswordChangeRequest(userId) ??
+            var @event = _passwordManager.GetPasswordChangeRequest(userId) ??
                 new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
 
-            _eventBus.GetBusConnection().Publish(
-                _eventBus.GetExchange("PasswordChangeRequest"),
-                "change_password",
-                false,
-                _eventBus.WrapInMessage(request));
+            _eventBus.PublishEvent("PasswordChangeRequest", "change_password", @event);
         }
 
         public List<Account> GetUserList(string searchString)

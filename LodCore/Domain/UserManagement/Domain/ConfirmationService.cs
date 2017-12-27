@@ -39,20 +39,9 @@ namespace UserManagement.Domain
             Require.Positive(userId, nameof(userId));
 
             var token = TokenGenerator.GenerateToken();
-            var request = new MailValidationRequest(userId, token);
+            var @event = new MailValidationRequest(userId, token);
 
-            _eventBus.GetBusConnection().Publish(
-                _eventBus.GetExchange("MailValidationRequest"),
-                "validate_mail",
-                false,
-                _eventBus.WrapInMessage(request));
-
-           /* _validationRequestsRepository.SaveValidationRequest(request);
-
-            var confirmationLink = new Uri(
-                _confirmationSettings.FrontendMailConfirmationUri,
-                token);
-            _mailer.SendConfirmationMail(confirmationLink.AbsoluteUri, _userRepository.GetAccount(userId).Email); */
+            _eventBus.PublishEvent("MailValidationRequest", "validate_mail", @event);
         }
 
         public void ConfirmEmail(string confirmationToken)
@@ -78,7 +67,11 @@ namespace UserManagement.Domain
 
             _validationRequestsRepository.DeleteValidationToken(validationRequest);
 
-            _userManagementEventSink.ConsumeEvent(new NewEmailConfirmedDeveloper(userAccount.UserId));
+            var @event = new NewEmailConfirmedDeveloper(userAccount.UserId);
+
+            _eventBus.PublishEvent("Notification", "new_email_confirmed_developer", @event);
+
+            _userManagementEventSink.ConsumeEvent(@event);
         }
 
         public void ConfirmProfile(int userId)
@@ -102,7 +95,11 @@ namespace UserManagement.Domain
             userAccount.Password = userAccount.Password.GetHashed();
             _userRepository.UpdateAccount(userAccount);
 
-            _userManagementEventSink.ConsumeEvent(new NewFullConfirmedDeveloper(userId));
+            var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
+
+            _eventBus.PublishEvent("Notification", "new_full_confirmed_developer", @event);
+
+            _userManagementEventSink.ConsumeEvent(@event);
         }
 
         private readonly IMailer _mailer;

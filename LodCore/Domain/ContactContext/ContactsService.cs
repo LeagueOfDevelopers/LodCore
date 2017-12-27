@@ -16,12 +16,9 @@ namespace ContactContext
 
         public void SendContactMessage(NewContactMessage contactMessage)
         {
-            _eventBus.GetBusConnection().Publish(
-                _eventBus.GetExchange("Notification"),
-                "admin_notification_info",
-                false,
-                _eventBus.WrapInMessage(contactMessage));
             Require.NotNull(contactMessage, nameof(contactMessage));
+            _eventBus.PublishEvent("Notification", "new_contact_message", contactMessage);
+
             _contactsEventSink.ConsumeEvent(contactMessage);
         }
 
