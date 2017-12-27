@@ -97,6 +97,10 @@
       <Project>{40415DF3-C945-4695-81DF-0E1670E1787A}</Project>
       <Name>FilesManagement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
+      <Name>RabbitMQEventBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

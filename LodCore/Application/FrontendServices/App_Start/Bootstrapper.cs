@@ -102,7 +102,8 @@ namespace FrontendServices
                     container.GetInstance<IProjectRepository>(),
                     container.GetInstance<ProjectsEventSink>(),
                     container.GetInstance<ProjectManagement.Domain.PaginationSettings>(),
-                    container.GetInstance<IssuePaginationSettings>()),
+                    container.GetInstance<IssuePaginationSettings>(),
+                    container.GetInstance<IEventBus>()),
                 Lifestyle.Singleton);
             container.Register<IProjectRepository>(
                 () => container.GetInstance<ProjectRepository>(),

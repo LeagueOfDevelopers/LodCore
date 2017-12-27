@@ -6,6 +6,7 @@ using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
+using RabbitMQEventBus;
 
 namespace ProjectManagementTests
 {
@@ -16,6 +17,7 @@ namespace ProjectManagementTests
         private Fixture _fixture;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _projectRepository;
+        private Mock<IEventBus> _eventBus;
 
         [TestInitialize]
         public void Setup()
@@ -23,6 +25,7 @@ namespace ProjectManagementTests
             _fixture = new Fixture();
             _projectRepository = new Mock<IProjectRepository>();
             _eventSinkMock = new Mock<IEventSink>();
+            _eventBus = new Mock<IEventBus>();
             var paginationSettings = new ProjectManagement.Domain.PaginationSettings(10);
 
             _projectRepository
@@ -32,7 +35,8 @@ namespace ProjectManagementTests
                 _projectRepository.Object,
                 _eventSinkMock.Object,
                 paginationSettings,
-                new IssuePaginationSettings(25));
+                new IssuePaginationSettings(25),
+                _eventBus.Object);
         }
 
         [TestMethod]

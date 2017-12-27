@@ -119,8 +119,6 @@ namespace ProjectManagement.Domain
             var @event = new NewDeveloperOnProject(userId, projectId);
 
             _eventBus.PublishEvent("Notification", "new_developer_on_project", @event);
-
-            _eventSink.ConsumeEvent(@event);
         }
 
         public void RemoveUserFromProject(int projectId, int userId)

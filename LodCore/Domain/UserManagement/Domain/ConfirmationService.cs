@@ -70,8 +70,6 @@ namespace UserManagement.Domain
             var @event = new NewEmailConfirmedDeveloper(userAccount.UserId);
 
             _eventBus.PublishEvent("Notification", "new_email_confirmed_developer", @event);
-
-            _userManagementEventSink.ConsumeEvent(@event);
         }
 
         public void ConfirmProfile(int userId)
@@ -98,8 +96,6 @@ namespace UserManagement.Domain
             var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
 
             _eventBus.PublishEvent("Notification", "new_full_confirmed_developer", @event);
-
-            _userManagementEventSink.ConsumeEvent(@event);
         }
 
         private readonly IMailer _mailer;

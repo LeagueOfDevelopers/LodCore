@@ -47,8 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMailValidationHandler.cs" />
+    <Compile Include="INotificationsHandler.cs" />
     <Compile Include="IPasswordChangeHandler.cs" />
     <Compile Include="MailValidationHandler.cs" />
+    <Compile Include="NotificationsHandler.cs" />
     <Compile Include="PasswordChangeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,6 +58,18 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\ContactContext\ContactContext.csproj">
+      <Project>{3c995e20-5c8d-4091-8b11-c752aa06300f}</Project>
+      <Name>ContactContext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\NotificationService\NotificationService.csproj">
+      <Project>{11a53a10-354f-4951-aa63-9e217aa0fbdd}</Project>
+      <Name>NotificationService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\ProjectManagement\ProjectManagement.csproj">
+      <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>
+      <Name>ProjectManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\UserManagement\UserManagement.csproj">
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
