@@ -15,6 +15,7 @@ namespace EventHandlers
         {
             _userManagementEventSink = userManagementEventSink;
             _notificationEventSink = notificationEventSink;
+            _eventBus = eventBus;
 
             BindToConsumer();
         }

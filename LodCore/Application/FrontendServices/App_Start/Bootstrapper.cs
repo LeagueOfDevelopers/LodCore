@@ -133,12 +133,16 @@ namespace FrontendServices
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
+            container.Register<IEventSink>(
+                () => container.GetInstance<UserManagementEventSink>(),
+                (Lifestyle.Singleton));
 
             container.Register<IEventBus>(
                 () => new RabbitMQEventBus.EventBus(container.GetInstance<EventBusSettings>()), 
                                                     Lifestyle.Singleton);
             container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
             container.Register<IPasswordChangeHandler, PasswordChangeHandler>(Lifestyle.Singleton);
+            container.Register<INotificationsHandler, NotificationsHandler>(Lifestyle.Singleton);
 
             RegisterMailing(container);
             container.Verify();

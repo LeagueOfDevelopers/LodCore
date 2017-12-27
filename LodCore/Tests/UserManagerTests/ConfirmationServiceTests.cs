@@ -28,6 +28,7 @@ namespace UserManagerTests
             _mailerStub = new Mock<IMailer>();
             _validationRequesRepoStub = new Mock<IValidationRequestsRepository>();
             _eventSinkManagerStub = new Mock<IEventSink>();
+            _eventBus = new Mock<IEventBus>();
 
             _confirmationService = new ConfirmationService(
                 _userRepoStub.Object,
