@@ -58,13 +58,11 @@ namespace FrontendServices.Controllers
         [HttpPost]
         [Route("admin/notification")]
         [Authorization(AccountRole.Administrator)]
-        public IHttpActionResult SendAdminNotification([FromBody] string textInfo)
+        public IHttpActionResult SendAdminNotification([FromBody] AdminNotificationInfo adminNotificationInfo)
         {
-            Require.NotEmpty(textInfo, nameof(textInfo));
+            Require.NotNull(adminNotificationInfo, nameof(adminNotificationInfo));
 
-            var @event = new AdminNotificationInfo(textInfo);
-
-            _eventBus.PublishEvent("Notification", "admin_notification_info", @event);
+            _eventBus.PublishEvent("Notification", "admin_notification_info", adminNotificationInfo);
 
             return Ok();
         }
