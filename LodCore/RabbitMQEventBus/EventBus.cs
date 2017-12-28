@@ -10,15 +10,11 @@ namespace RabbitMQEventBus
 {
     public class EventBus : IEventBus
     {
-        static EventBus()
-        {
-            _bus = InitializeBusConnection();
-        }
-
         public EventBus(EventBusSettings eventBusSettings)
         {
             Require.NotNull(eventBusSettings, nameof(eventBusSettings));
             _eventBusSettings = eventBusSettings;
+            _bus = InitializeBusConnection();
             DeclareExchanges();
             DeclareQueues();
             DeclareBindings();
@@ -65,13 +61,12 @@ namespace RabbitMQEventBus
                 throw new KeyNotFoundException("Queue doesn't exist");
         }
 
-        private static IAdvancedBus InitializeBusConnection()
+        private IAdvancedBus InitializeBusConnection()
         {
-            /*var connectionString = $"host = {_eventBusSettings.HostName}; " +
+            var connectionString = $"host = {_eventBusSettings.HostName}; " +
                 $"virtualHost = {_eventBusSettings.VirtualHost}; " +
                 $"username = {_eventBusSettings.UserName}; " +
-                $"password = {_eventBusSettings.Password}";*/
-            var connectionString = "host=localhost";
+                $"password = {_eventBusSettings.Password}";
             var bus = RabbitHutch.CreateBus(connectionString).Advanced;
             return bus;
         }
