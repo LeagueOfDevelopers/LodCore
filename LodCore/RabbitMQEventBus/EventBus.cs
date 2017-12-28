@@ -9,12 +9,7 @@ using System.Threading.Tasks;
 namespace RabbitMQEventBus
 {
     public class EventBus : IEventBus
-    {/*
-        static EventBus()
-        {
-            _bus = InitializeBusConnection();
-        }
-        */
+    {
         public EventBus(EventBusSettings eventBusSettings)
         {
             Require.NotNull(eventBusSettings, nameof(eventBusSettings));
