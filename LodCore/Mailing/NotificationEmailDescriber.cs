@@ -1,8 +1,6 @@
 ﻿using ContactContext.Events;
 using Journalist;
 using NotificationService;
-using OrderManagement.Domain.Events;
-using OrderManagement.Infrastructure;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
 using UserManagement.Domain.Events;
@@ -12,18 +10,14 @@ namespace Mailing
 {
     public class NotificationEmailDescriber : INotificationEmailDescriber
     {
-        private readonly IOrderRepository _orderRepository;
-
         private readonly IProjectRepository _projectRepository;
 
         private readonly IUserRepository _userRepository;
 
         public NotificationEmailDescriber(
-            IOrderRepository orderRepository, 
             IProjectRepository projectRepository,
             IUserRepository userRepository)
         {
-            _orderRepository = orderRepository;
             _projectRepository = projectRepository;
             _userRepository = userRepository;
         }
@@ -95,14 +89,6 @@ namespace Mailing
             var project = _projectRepository.GetProject(@event.ProjectId);
 
             return string.Format(EventDescriptionResources.NewProjectCreated, project.Name, project.Info);
-        }
-
-        private string Describe(OrderPlaced @event)
-        {
-            var order = _orderRepository.GetOrder(@event.OrderId);
-
-            return string.Format(EventDescriptionResources.OrderPlaced, order.CreatedOnDateTime.Date, order.Header,
-                order.Email, order.Description);
         }
 
         private string Describe(AdminNotificationInfo @event)

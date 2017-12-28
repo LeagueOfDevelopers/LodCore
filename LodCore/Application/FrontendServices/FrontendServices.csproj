@@ -268,7 +268,6 @@
     <Compile Include="App_Data\ExceptionLogger.cs" />
     <Compile Include="App_Data\IPaginationWrapper.cs" />
     <Compile Include="App_Data\Mappers\EventMapper.cs" />
-    <Compile Include="App_Data\Mappers\OrderMapper.cs" />
     <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />
     <Compile Include="App_Data\PaginationWrapper.cs" />
     <Compile Include="App_Data\SettingsReader.cs" />
@@ -285,7 +284,6 @@
     <Compile Include="Controllers\DevelopersController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\FileController.cs" />
-    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\TestAssignmentController.cs" />
     <Compile Include="Global.asax.cs">
@@ -313,7 +311,6 @@
     <Compile Include="Models\ProjectMembership.cs" />
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Models\RegisterDeveloperRequest.cs" />
-    <Compile Include="Models\Order.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -365,10 +362,6 @@
     <ProjectReference Include="..\..\Mailing\Mailing.csproj">
       <Project>{B2881AD8-9B31-4741-A0B0-36CC210FDBDB}</Project>
       <Name>Mailing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OrderManager\OrderManagment.csproj">
-      <Project>{590545C7-8872-4A3C-8E98-C6F0AE96C23E}</Project>
-      <Name>OrderManagment</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
       <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>

@@ -106,10 +106,6 @@
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
       <Name>UserManagement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OrderManager\OrderManagment.csproj">
-      <Project>{590545c7-8872-4a3c-8e98-c6f0ae96c23e}</Project>
-      <Name>OrderManagment</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

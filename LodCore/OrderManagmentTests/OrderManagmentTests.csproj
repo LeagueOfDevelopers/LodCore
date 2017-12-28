@@ -68,10 +68,6 @@
       <Project>{11a53a10-354f-4951-aa63-9e217aa0fbdd}</Project>
       <Name>NotificationService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OrderManager\OrderManagment.csproj">
-      <Project>{590545c7-8872-4a3c-8e98-c6f0ae96c23e}</Project>
-      <Name>OrderManagment</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

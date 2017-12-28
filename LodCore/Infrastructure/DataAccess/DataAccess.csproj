@@ -78,7 +78,6 @@
     <Compile Include="Mappings\MailValidationRequestMap.cs" />
     <Compile Include="Mappings\NotificationEmailMapping.cs" />
     <Compile Include="Mappings\NotificationSettingMap.cs" />
-    <Compile Include="Mappings\OrderMap.cs" />
     <Compile Include="Mappings\PasswordChangeRequestMap.cs" />
     <Compile Include="Mappings\ProjectMembershipMap.cs" />
     <Compile Include="Mappings\ProjectMap.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="Repositories\EventRepository.cs" />
     <Compile Include="Repositories\NotificationMailRepository.cs" />
     <Compile Include="Repositories\NotificationSettingsRepository.cs" />
-    <Compile Include="Repositories\OrderRepository.cs" />
     <Compile Include="Repositories\PaginableRepository.cs" />
     <Compile Include="Repositories\PasswordChangeRequestRepository.cs" />
     <Compile Include="Repositories\ProjectMembershipRepository.cs" />
@@ -123,10 +121,6 @@
     <ProjectReference Include="..\..\Mailing\Mailing.csproj">
       <Project>{B2881AD8-9B31-4741-A0B0-36CC210FDBDB}</Project>
       <Name>Mailing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\OrderManager\OrderManagment.csproj">
-      <Project>{590545c7-8872-4a3c-8e98-c6f0ae96c23e}</Project>
-      <Name>OrderManagment</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184ff097-9b8c-4236-8538-444f9dccb564}</Project>

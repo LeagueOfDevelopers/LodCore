@@ -13,10 +13,6 @@ using FrontendServices.App_Data.Mappers;
 using Mailing;
 using Mailing.AsyncMailing;
 using NotificationService;
-using OrderManagement.Application;
-using OrderManagement.Domain;
-using OrderManagement.Domain.Events;
-using OrderManagement.Infrastructure;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Domain.Events;
@@ -88,7 +84,6 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.Register<IUserRoleAnalyzer, UserRoleAnalyzer>(Lifestyle.Singleton);
             container.Register<INotificationEmailDescriber, NotificationEmailDescriber>(Lifestyle.Singleton);
-            container.Register<IOrderRepository, OrderRepository>(Lifestyle.Singleton);
             container.Register<INotificationService>(() =>
                 new global::NotificationService.NotificationService(
                     container.GetInstance<IEventRepository>(),
@@ -113,7 +108,6 @@ namespace FrontendServices
                     container.GetInstance<ContactsEventSink>(),
                     container.GetInstance<IEventBus>()),
                 Lifestyle.Singleton);
-            container.Register<OrderMapper>(Lifestyle.Singleton);
             container.Register<EventMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<INotificationMailRepository, NotificationMailRepository>(Lifestyle.Singleton);
@@ -124,11 +118,6 @@ namespace FrontendServices
                 TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["Authorizer.TokenLifeTimeInSeconds"])),
                 container.GetInstance<IUserRepository>()),
                 Lifestyle.Singleton);
-            container.Register<IOrderManager>(() => new OrderManagment(
-                container.GetInstance<IOrderRepository>(),
-                container.GetInstance<OrderManagmentEventSink>()
-                ), Lifestyle.Singleton);
-            container.Register<OrderManagmentEventSink>(Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
