@@ -53,12 +53,10 @@ namespace ProjectManagementTests
                                || project.AccessLevel == createRequest.AccessLevel
                                || project.LandingImage.BigPhotoUri == createRequest.LandingImage.BigPhotoUri)),
                 Times.Once);
-            
-            _eventSinkMock.Verify(
-                sink => sink.ConsumeEvent(
-                    It.Is<IEventInfo>(
-                        eventInfo => eventInfo.GetEventType() == typeof (NewProjectCreated).Name)),
-                Times.Once);
+
+            _eventBus.Verify(mock => mock.PublishEvent(
+                "Notification", "new_project_created",
+                It.IsAny<NewProjectCreated>()), Times.Once);
         }
     }
 }

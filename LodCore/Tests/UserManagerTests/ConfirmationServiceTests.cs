@@ -44,14 +44,16 @@ namespace UserManagerTests
         {
             //arrange
             var userId = 42;
-            _userRepoStub.Setup(rep => rep.GetAccount(42)).Returns((new Mock<Account>()).Object);
+            _userRepoStub.Setup(rep => rep.GetAccount(42))
+                .Returns((new Mock<Account>()).Object);
 
             //act
             _confirmationService.SetupEmailConfirmation(userId);
 
             //assert
-            _validationRequesRepoStub.Verify(mock => mock.SaveValidationRequest(It.IsAny<MailValidationRequest>()),
-                Times.Once);
+            _eventBus.Verify(mock => mock.PublishEvent(
+                "MailValidationRequest", "validate_mail",
+                It.IsAny<MailValidationRequest>()), Times.Once);
         }
 
         [TestMethod]
