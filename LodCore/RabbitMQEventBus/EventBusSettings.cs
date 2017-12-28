@@ -14,6 +14,11 @@ namespace RabbitMQEventBus
             Require.NotEmpty(virtualHost, nameof(virtualHost));
             Require.NotEmpty(userName, nameof(userName));
             Require.NotEmpty(password, nameof(password));
+
+            HostName = hostName;
+            VirtualHost = virtualHost;
+            UserName = userName;
+            Password = password;
         }
 
         public string HostName;

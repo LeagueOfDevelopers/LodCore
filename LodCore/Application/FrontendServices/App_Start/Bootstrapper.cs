@@ -134,8 +134,7 @@ namespace FrontendServices
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
             container.Register<EventSinkBase>(Lifestyle.Singleton);
 
-            container.Register<IEventBus>(() => new EventBus(container
-                     .GetInstance<EventBusSettings>()), Lifestyle.Singleton);
+            container.Register<IEventBus, EventBus>(Lifestyle.Singleton);
             container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
             container.Register<IPasswordChangeHandler, PasswordChangeHandler>(Lifestyle.Singleton);
             container.Register<INotificationsHandler, NotificationsHandler>(Lifestyle.Singleton);

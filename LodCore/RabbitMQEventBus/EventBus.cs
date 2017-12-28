@@ -9,7 +9,12 @@ using System.Threading.Tasks;
 namespace RabbitMQEventBus
 {
     public class EventBus : IEventBus
-    {
+    {/*
+        static EventBus()
+        {
+            _bus = InitializeBusConnection();
+        }
+        */
         public EventBus(EventBusSettings eventBusSettings)
         {
             Require.NotNull(eventBusSettings, nameof(eventBusSettings));
@@ -63,10 +68,10 @@ namespace RabbitMQEventBus
 
         private IAdvancedBus InitializeBusConnection()
         {
-            var connectionString = $"host = {_eventBusSettings.HostName}; " +
-                $"virtualHost = {_eventBusSettings.VirtualHost}; " +
-                $"username = {_eventBusSettings.UserName}; " +
-                $"password = {_eventBusSettings.Password}";
+            var connectionString = $"host={_eventBusSettings.HostName}; " +
+                $"virtualHost={_eventBusSettings.VirtualHost}; " +
+                $"username={_eventBusSettings.UserName}; " +
+                $"password={_eventBusSettings.Password}";
             var bus = RabbitHutch.CreateBus(connectionString).Advanced;
             return bus;
         }
@@ -172,7 +177,7 @@ namespace RabbitMQEventBus
         }
 
         private readonly EventBusSettings _eventBusSettings;
-        private static IAdvancedBus _bus;
+        private IAdvancedBus _bus;
         private Dictionary<string, IExchange> _exchanges;
         private Dictionary<string, IQueue> _queues;
     }
