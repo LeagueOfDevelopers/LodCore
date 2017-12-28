@@ -41,7 +41,7 @@ namespace Mailing
             Require.NotNull(@event, nameof(@event));
 
             return string.Format(EventDescriptionResources.NewContactMessage, @event.ClientName, @event.MessageTopic,
-                @event.MessageBody, @event.ClientEmalAddress);
+                @event.MessageBody, @event.ClientEmailAddress);
         }
         private string Describe(DeveloperHasLeftProject @event)
         {

@@ -8,24 +8,24 @@ namespace ContactContext.Events
     {
         public NewContactMessage(
             string clientName, 
-            MailAddress clientEmalAddress, 
+            MailAddress clientEmailAddress, 
             string messageTopic,
             string messageBody)
         {
             Require.NotEmpty(clientName, nameof(clientName));
-            Require.NotNull(clientEmalAddress, nameof(clientEmalAddress));
+            Require.NotNull(clientEmailAddress, nameof(clientEmailAddress));
             Require.NotEmpty(messageTopic, nameof(messageTopic));
             Require.NotNull(messageBody, nameof(messageBody));
 
             ClientName = clientName;
-            ClientEmalAddress = clientEmalAddress;
+            ClientEmailAddress = clientEmailAddress;
             MessageTopic = messageTopic;
             MessageBody = messageBody;
         }
 
         public string ClientName { get; private set; }
 
-        public MailAddress ClientEmalAddress { get; private set; }
+        public MailAddress ClientEmailAddress { get; private set; }
 
         public string MessageTopic { get; private set; }
 
