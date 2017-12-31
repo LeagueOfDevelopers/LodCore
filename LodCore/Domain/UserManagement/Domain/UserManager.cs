@@ -102,9 +102,7 @@ namespace UserManagement.Domain
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
                 DateTime.Now,
-                request.Profile,
-                0,
-                0);
+                request.Profile);
 
             var userId = _userRepository.CreateAccount(newAccount);
 

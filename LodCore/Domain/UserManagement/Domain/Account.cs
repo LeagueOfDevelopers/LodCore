@@ -15,16 +15,12 @@ namespace UserManagement.Domain
             AccountRole role,
             ConfirmationStatus confirmationStatus,
             DateTime registrationTime,
-            Profile profile,
-            int redmineUserId,
-            int gitlabUserId)
+            Profile profile)
         {
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotNull(email, nameof(email));
             Require.NotNull(password, nameof(password));
-            Require.ZeroOrGreater(redmineUserId, nameof(redmineUserId));
-            Require.ZeroOrGreater(gitlabUserId, nameof(gitlabUserId));
             Require.NotNull(email, nameof(email));
             Require.NotNull(password, nameof(password));
 
@@ -36,8 +32,6 @@ namespace UserManagement.Domain
             ConfirmationStatus = confirmationStatus;
             RegistrationTime = registrationTime;
             Profile = profile;
-            RedmineUserId = redmineUserId;
-            GitlabUserId = gitlabUserId;
         }
 
         protected Account()
@@ -53,10 +47,6 @@ namespace UserManagement.Domain
         public virtual MailAddress Email { get; protected set; }
 
         public virtual Password Password { get; set; }
-
-        public virtual int RedmineUserId { get; set; }
-
-        public virtual int GitlabUserId { get; set; }
 
         public virtual bool IsHidden { get; set; }
 

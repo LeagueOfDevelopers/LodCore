@@ -12,8 +12,6 @@ namespace FrontendServices.Models
             string firstName,
             string lastName,
             string email,
-            int redmineUserId,
-            int gitlabUserId,
             ConfirmationStatus confirmationStatus,
             Uri photoUri,
             DateTime registrationDate,
@@ -35,8 +33,6 @@ namespace FrontendServices.Models
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            RedmineUserId = redmineUserId;
-            GitlabUserId = gitlabUserId;
             ConfirmationStatus = confirmationStatus;
             PhotoUri = photoUri;
             RegistrationDate = registrationDate;
@@ -57,10 +53,6 @@ namespace FrontendServices.Models
         public string LastName { get; private set; }
 
         public string Email { get; private set; }
-
-        public int RedmineUserId { get; private set; }
-
-        public int GitlabUserId { get; private set; }
 
         public ConfirmationStatus ConfirmationStatus { get; private set; }
 

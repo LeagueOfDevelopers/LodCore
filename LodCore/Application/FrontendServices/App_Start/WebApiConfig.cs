@@ -23,6 +23,10 @@ namespace FrontendServices
             var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
             config.Filters.Add(new AuthenticateAttribute(authorizer));
             config.Filters.Add(new ExceptionLogger());
+
+            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
+                Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
 
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)

@@ -53,6 +53,7 @@ namespace FrontendServices.Controllers
             _passwordManager = passwordManager;
         }
 
+        [HttpGet]
         [Route("developers/random/{count}")]
         public IEnumerable<IndexPageDeveloper> GetRandomIndexPageDevelopers(int count)
         {

@@ -46,8 +46,6 @@ namespace DataAccess.Mappings
                 m.Property(profile => profile.StudyingDirection, mapper => mapper.Column("StudyingDirection"));
                 m.Property(profile => profile.VkProfileUri, mapper => mapper.Column("VkProfileUri"));
             });
-            Property(user => user.RedmineUserId, mapper => mapper.Column("RedmineUserId"));
-            Property(user => user.GitlabUserId, mapper => mapper.Column("GitlabUserId"));
         }
     }
 }

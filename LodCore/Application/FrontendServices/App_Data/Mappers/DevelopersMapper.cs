@@ -79,8 +79,6 @@ namespace FrontendServices.App_Data.Mappers
                 account.Firstname,
                 account.Lastname,
                 account.Email.Address,
-                account.RedmineUserId,
-                account.GitlabUserId,
                 account.ConfirmationStatus,
                 account.Profile.Image?.BigPhotoUri,
                 account.RegistrationTime,
