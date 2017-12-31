@@ -30,6 +30,8 @@ namespace UserManagement.Domain
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(newPassword, nameof(newPassword));
             var account = _userRepository.GetAccount(userId);
+            account.Password = new Common.Password(newPassword);
+            _userRepository.UpdateAccount(account);
         }
 
         public void SavePasswordChangeRequest(PasswordChangeRequest request)

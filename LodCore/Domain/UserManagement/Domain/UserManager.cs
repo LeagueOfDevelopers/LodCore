@@ -137,10 +137,6 @@ namespace UserManagement.Domain
 
             _passwordManager.UpdateUserPassword(userId, newPassword);
 
-            user.Password = new Password(newPassword);
-
-            _userRepository.UpdateAccount(user);
-
             var requestToDelete = _passwordManager.GetPasswordChangeRequest(userId);
 
             if (requestToDelete != null)

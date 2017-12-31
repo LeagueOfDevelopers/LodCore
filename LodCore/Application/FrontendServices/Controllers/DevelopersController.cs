@@ -361,7 +361,7 @@ namespace FrontendServices.Controllers
 
         [HttpPost]
         [Route("password/recovery")]
-        public IHttpActionResult InitiateProcedureOfPasswordRecovery(Credentials credentials)
+        public IHttpActionResult InitiateProcedureOfPasswordRecovery([FromBody] Credentials credentials)
         {
             var accountToRecover = _userManager.GetUserList(user => user.Email.Address == credentials.Email).SingleOrDefault();
 
