@@ -36,9 +36,7 @@ namespace UserManagerTests
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
                 DateTime.Now,
-                _profileMock.Object,
-                42,
-                42);
+                _profileMock.Object);
 
             //assert
             Assert.IsTrue(account.Email.Address == "itis@validmail.ru");
