@@ -33,7 +33,7 @@ namespace FrontendServices
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
             //todo: убрать звёздочку
-            var cors = new EnableCorsAttribute("*", "*", "*");
+            var cors = new EnableCorsAttribute($"{frontendDomain}", "*", "*");
             config.EnableCors(cors);
         }
     }
