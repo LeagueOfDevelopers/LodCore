@@ -4,8 +4,6 @@ using Journalist;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-// EventType NewContactMessage for queue doesn't exist
-
 namespace RabbitMQEventBus
 {
     public class EventBus : IEventBus
