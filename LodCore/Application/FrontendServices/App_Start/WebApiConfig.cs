@@ -12,7 +12,7 @@ namespace FrontendServices
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            ConfigureCrossDomainRequestsSupport(config);
+            //ConfigureCrossDomainRequestsSupport(config);
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -29,12 +29,12 @@ namespace FrontendServices
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
 
-        private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
+       /* private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
             //todo: убрать звёздочку
             var cors = new EnableCorsAttribute($"{frontendDomain}", "*", "*");
             config.EnableCors(cors);
-        }
+        }*/
     }
 }
