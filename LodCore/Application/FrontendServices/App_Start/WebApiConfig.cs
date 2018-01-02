@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Web.Http;
-using System.Web.Http.Cors;
+﻿using System.Web.Http;
 using FrontendServices.App_Data;
 using FrontendServices.Authorization;
 using UserManagement.Application;
@@ -11,9 +9,6 @@ namespace FrontendServices
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            //ConfigureCrossDomainRequestsSupport(config);
-            // Web API routes
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
@@ -28,13 +23,5 @@ namespace FrontendServices
                 Newtonsoft.Json.PreserveReferencesHandling.Objects;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
-
-       /* private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
-        {
-            var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
-            //todo: убрать звёздочку
-            var cors = new EnableCorsAttribute($"{frontendDomain}", "*", "*");
-            config.EnableCors(cors);
-        }*/
     }
 }
