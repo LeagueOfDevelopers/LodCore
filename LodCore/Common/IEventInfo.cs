@@ -1,4 +1,4 @@
-﻿namespace NotificationService
+﻿namespace Common
 {
     public interface IEventInfo
     {

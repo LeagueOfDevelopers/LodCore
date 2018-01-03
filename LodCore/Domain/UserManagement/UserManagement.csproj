@@ -97,7 +97,6 @@
     <Compile Include="Domain\ConfirmationStatus.cs" />
     <Compile Include="Domain\Events\NewFullConfirmedDeveloper.cs" />
     <Compile Include="Domain\Events\NewEmailConfirmedDeveloper.cs" />
-    <Compile Include="Domain\Events\UserManagementEventSink.cs" />
     <Compile Include="Domain\MailValidationRequest.cs" />
     <Compile Include="Domain\PasswordChangeRequest.cs" />
     <Compile Include="Domain\PasswordManager.cs" />
@@ -125,10 +124,6 @@
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>
       <Name>UserPresentaton</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
-      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
-      <Name>NotificationService</Name>
     </ProjectReference>
     <ProjectReference Include="..\ProjectManagement\ProjectManagement.csproj">
       <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>

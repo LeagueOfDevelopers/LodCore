@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{1D70EC78-CF24-4E1B-BDDF-619F49119C9F}"
 EndProject
@@ -62,8 +62,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{855CEEF8-3846-455A-9B1A-B1DF0A2F0AD0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQEventBus", "RabbitMQEventBus\RabbitMQEventBus.csproj", "{C55C196D-D726-4B14-8F4C-981C013A1C81}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventHandlers", "EventHandlers\EventHandlers.csproj", "{ADBB25D5-9C06-4CD7-AD54-DA944F120872}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,10 +141,6 @@ Global
 		{C55C196D-D726-4B14-8F4C-981C013A1C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C55C196D-D726-4B14-8F4C-981C013A1C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C55C196D-D726-4B14-8F4C-981C013A1C81}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADBB25D5-9C06-4CD7-AD54-DA944F120872}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADBB25D5-9C06-4CD7-AD54-DA944F120872}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADBB25D5-9C06-4CD7-AD54-DA944F120872}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADBB25D5-9C06-4CD7-AD54-DA944F120872}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -169,7 +163,6 @@ Global
 		{24B23A7B-5FBC-4472-9A1A-428B52DE8006} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
 		{2DA0A234-D982-464F-8FB5-D0A520E36E26} = {00ECD7BB-E4F1-4A5A-B765-3999B0133CBF}
 		{C55C196D-D726-4B14-8F4C-981C013A1C81} = {855CEEF8-3846-455A-9B1A-B1DF0A2F0AD0}
-		{ADBB25D5-9C06-4CD7-AD54-DA944F120872} = {855CEEF8-3846-455A-9B1A-B1DF0A2F0AD0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6A2D8078-4E3C-485B-86AC-84567C94B7C8}

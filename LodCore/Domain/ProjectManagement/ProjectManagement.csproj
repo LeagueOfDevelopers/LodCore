@@ -63,13 +63,11 @@
     <Compile Include="Application\IProjectProvider.cs" />
     <Compile Include="Domain\Events\DeveloperHasLeftProject.cs" />
     <Compile Include="Domain\Events\NewProjectCreated.cs" />
-    <Compile Include="Domain\Events\ProjectsEventSink.cs" />
     <Compile Include="Domain\Events\NewDeveloperOnProject.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueCompletionStatus.cs" />
     <Compile Include="Domain\IssuePaginationSettings.cs" />
     <Compile Include="Domain\IssueType.cs" />
-    <Compile Include="Domain\PaginationSettings.cs" />
     <Compile Include="Domain\Project.cs" />
     <Compile Include="Domain\ProjectMembership.cs" />
     <Compile Include="Domain\ProjectNotFoundException.cs" />
@@ -100,10 +98,6 @@
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>
       <Name>UserPresentaton</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
-      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
-      <Name>NotificationService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

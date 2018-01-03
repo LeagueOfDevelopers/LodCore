@@ -47,10 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMailValidationHandler.cs" />
-    <Compile Include="INotificationsHandler.cs" />
     <Compile Include="IPasswordChangeHandler.cs" />
     <Compile Include="MailValidationHandler.cs" />
-    <Compile Include="NotificationsHandler.cs" />
     <Compile Include="PasswordChangeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

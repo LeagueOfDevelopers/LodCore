@@ -93,6 +93,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\NotificationService\NotificationService.csproj">
       <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
       <Name>NotificationService</Name>
@@ -104,6 +108,10 @@
     <ProjectReference Include="..\Infrastructure\DataAccess\DataAccess.csproj">
       <Project>{6E6BCA8C-2B4D-4867-AE47-64565E64357C}</Project>
       <Name>DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
+      <Name>RabbitMQEventBus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
-﻿using Journalist;
-using NotificationService;
+﻿using Common;
+using Journalist;
+using RabbitMQEventBus;
 
 namespace ProjectManagement.Domain.Events
 {

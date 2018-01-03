@@ -73,33 +73,56 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminNotificationInfo.cs" />
+    <Compile Include="ContactsEventSink.cs" />
     <Compile Include="Delivery.cs" />
     <Compile Include="DistributionPolicy.cs" />
     <Compile Include="DistributionPolicyFactory.cs" />
     <Compile Include="Event.cs" />
-    <Compile Include="EventInfoBase.cs" />
     <Compile Include="EventSinkBase.cs" />
     <Compile Include="IDistributionPolicyFactory.cs" />
-    <Compile Include="IEventInfo.cs" />
     <Compile Include="IEventRepository.cs" />
     <Compile Include="IEventSink.cs" />
     <Compile Include="IMailer.cs" />
     <Compile Include="INotificationService.cs" />
     <Compile Include="IProjectRelativesRepository.cs" />
     <Compile Include="IUsersRepository.cs" />
+    <Compile Include="MailValidationHandler.cs" />
     <Compile Include="NotificationEventSink.cs" />
     <Compile Include="NotificationService.cs" />
-    <Compile Include="PaginationSettings.cs" />
+    <Compile Include="NotificationsHandler.cs" />
+    <Compile Include="PasswordChangeHandler.cs" />
+    <Compile Include="ProjectsEventSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserManagementEventSink.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{C55C196D-D726-4B14-8F4C-981C013A1C81}</Project>
+      <Name>RabbitMQEventBus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184ff097-9b8c-4236-8538-444f9dccb564}</Project>
       <Name>UserPresentaton</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ContactContext\ContactContext.csproj">
+      <Project>{3C995E20-5C8D-4091-8B11-C752AA06300F}</Project>
+      <Name>ContactContext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProjectManagement\ProjectManagement.csproj">
+      <Project>{C3F94FDD-F4C4-45D5-B6B1-A91D3520CD1D}</Project>
+      <Name>ProjectManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserManagement\UserManagement.csproj">
+      <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
+      <Name>UserManagement</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

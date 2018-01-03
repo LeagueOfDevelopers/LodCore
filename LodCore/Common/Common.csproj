@@ -66,10 +66,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationLocationSettings.cs" />
+    <Compile Include="EventInfoBase.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IEventInfo.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="JsonEmailConverter.cs" />
     <Compile Include="JsonPasswordConverter.cs" />
+    <Compile Include="PaginationSettings.cs" />
     <Compile Include="Password.cs" />
     <Compile Include="ProjectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

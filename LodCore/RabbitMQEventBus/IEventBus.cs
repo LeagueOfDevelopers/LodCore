@@ -1,9 +1,10 @@
-﻿namespace RabbitMQEventBus
+﻿using Common;
+
+namespace RabbitMQEventBus
 {
     public interface IEventBus
     {
-        void PublishEvent<T>(string exchangeName, string routeName, T @event)
-            where T : class;
+        void PublishEvent<T>(T @event) where T : EventInfoBase;
 
         void SetConsumer(string queueName, dynamic handlerFunction);
     }

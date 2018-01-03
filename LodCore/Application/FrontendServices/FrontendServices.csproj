@@ -347,10 +347,6 @@
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
       <Name>UserManagement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\EventHandlers\EventHandlers.csproj">
-      <Project>{adbb25d5-9c06-4cd7-ad54-da944f120872}</Project>
-      <Name>EventHandlers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\DataAccess\DataAccess.csproj">
       <Project>{6e6bca8c-2b4d-4867-ae47-64565e64357c}</Project>
       <Name>DataAccess</Name>

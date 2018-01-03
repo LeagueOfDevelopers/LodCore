@@ -1,4 +1,5 @@
-﻿using Journalist;
+﻿using Common;
+using Journalist;
 
 namespace NotificationService
 {
@@ -6,9 +7,9 @@ namespace NotificationService
     {
         public Event[] GetEventsForUser(int userId, int pageNumber = 0)
         {
-            var projectsToSkip = pageNumber * _paginationSettings.PageSize;
+            var projectsToSkip = pageNumber * _notificationsPaginationSettings.PageSize;
 
-            var takeCount = _paginationSettings.PageSize;
+            var takeCount = _notificationsPaginationSettings.PageSize;
 
             return _eventRepository.GetSomeEvents(userId, projectsToSkip, takeCount);
         }
@@ -32,12 +33,12 @@ namespace NotificationService
 
         private readonly IEventRepository _eventRepository;
 
-        private readonly PaginationSettings _paginationSettings;
+        private readonly PaginationSettings _notificationsPaginationSettings;
 
-        public NotificationService(IEventRepository eventRepository, PaginationSettings paginationSettings)
+        public NotificationService(IEventRepository eventRepository, PaginationSettings notificationsPaginationSettings)
         {
             _eventRepository = eventRepository;
-            _paginationSettings = paginationSettings;
+            _notificationsPaginationSettings = notificationsPaginationSettings;
         }
     }
 }

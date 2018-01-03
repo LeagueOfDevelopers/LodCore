@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NotificationService;
 using Ploeh.AutoFixture;
@@ -13,29 +14,25 @@ namespace ProjectManagementTests
     [TestClass]
     public class ProjectProviderTests
     {
-        private Mock<IEventSink> _eventSinkMock;
         private Fixture _fixture;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _projectRepository;
-        private Mock<IEventBus> _eventBus;
+        private Mock<IEventPublisher> _eventBus;
 
         [TestInitialize]
         public void Setup()
         {
             _fixture = new Fixture();
             _projectRepository = new Mock<IProjectRepository>();
-            _eventSinkMock = new Mock<IEventSink>();
-            _eventBus = new Mock<IEventBus>();
-            var paginationSettings = new ProjectManagement.Domain.PaginationSettings(10);
+            _eventBus = new Mock<IEventPublisher>();
+            var paginationSettings = new PaginationSettings(10);
 
             _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);
             _projectProvider = new ProjectProvider(
                 _projectRepository.Object,
-                _eventSinkMock.Object,
                 paginationSettings,
-                new IssuePaginationSettings(25),
                 _eventBus.Object);
         }
 
@@ -54,9 +51,7 @@ namespace ProjectManagementTests
                                || project.LandingImage.BigPhotoUri == createRequest.LandingImage.BigPhotoUri)),
                 Times.Once);
 
-            _eventBus.Verify(mock => mock.PublishEvent(
-                "Notification", "new_project_created",
-                It.IsAny<NewProjectCreated>()), Times.Once);
+            _eventBus.Verify(mock => mock.PublishEvent(It.IsAny<NewProjectCreated>()), Times.Once);
         }
     }
 }

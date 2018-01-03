@@ -1,6 +1,9 @@
-﻿namespace UserManagement.Domain
+﻿using Common;
+using RabbitMQEventBus;
+
+namespace UserManagement.Domain
 {
-    public class PasswordChangeRequest
+    public class PasswordChangeRequest : EventInfoBase
     {
         public PasswordChangeRequest(int userId, string token)
         {

@@ -1,8 +1,8 @@
-﻿using Journalist;
-using NotificationService;
+﻿using Common;
+using Journalist;
 using UserPresentaton;
 
-namespace ContactContext.Events
+namespace NotificationService
 {
     public class ContactsEventSink : EventSinkBase
     {

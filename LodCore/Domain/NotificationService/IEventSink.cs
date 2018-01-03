@@ -1,4 +1,7 @@
-﻿namespace NotificationService
+﻿using Common;
+using RabbitMQEventBus;
+
+namespace NotificationService
 {
     public interface IEventSink
     {

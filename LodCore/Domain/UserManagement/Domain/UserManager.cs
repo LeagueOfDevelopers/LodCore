@@ -5,7 +5,6 @@ using System.Net.Mail;
 using Common;
 using Journalist;
 using NHibernate.Util;
-using NotificationService;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
 using IMailer = UserManagement.Application.IMailer;
@@ -20,10 +19,8 @@ namespace UserManagement.Domain
         private readonly IUserRepository _userRepository;
         private readonly PaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
-        private readonly IMailer _mailer;
         private readonly IPasswordManager _passwordManager;
-        private readonly ApplicationLocationSettings _applicationLocationSettings;
-        private readonly IEventBus _eventBus;
+        private readonly IEventPublisher _eventPublisher;
 
         public UserManager(
             IUserRepository userRepository,
@@ -33,7 +30,7 @@ namespace UserManagement.Domain
             IMailer mailer, 
             ApplicationLocationSettings applicationLocationSettings, 
             IPasswordManager passwordManager,
-            IEventBus eventBus)
+            IEventPublisher eventPublisher)
         {
             Require.NotNull(userRepository, nameof(userRepository));
             Require.NotNull(confirmationService, nameof(confirmationService));
@@ -42,16 +39,14 @@ namespace UserManagement.Domain
             Require.NotNull(mailer, nameof(mailer));
             Require.NotNull(applicationLocationSettings, nameof(applicationLocationSettings));
             Require.NotNull(passwordManager, nameof(passwordManager));
-            Require.NotNull(eventBus, nameof(eventBus));
+            Require.NotNull(eventPublisher, nameof(eventPublisher));
 
             _userRepository = userRepository;
             _confirmationService = confirmationService;
             _paginationSettings = paginationSettings;
             _projectMembershipRepostiory = projectMembershipRepostiory;
-            _mailer = mailer;
-            _applicationLocationSettings = applicationLocationSettings;
             _passwordManager = passwordManager;
-            _eventBus = eventBus;
+            _eventPublisher = eventPublisher;
         }
 
         public List<Account> GetUserList(Func<Account, bool> criteria = null)
@@ -154,7 +149,7 @@ namespace UserManagement.Domain
             var @event = _passwordManager.GetPasswordChangeRequest(userId) ??
                 new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
 
-            _eventBus.PublishEvent("PasswordChangeRequest", "change_password", @event);
+            _eventPublisher.PublishEvent(@event);
         }
 
         public List<Account> GetUserList(string searchString)

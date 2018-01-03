@@ -1,8 +1,10 @@
-﻿using Journalist;
-using NotificationService;
+﻿using Common;
+using Journalist;
+using ProjectManagement.Domain.Events;
+using RabbitMQEventBus;
 using UserPresentaton;
 
-namespace ProjectManagement.Domain.Events
+namespace NotificationService
 {
     public class ProjectsEventSink : EventSinkBase
     {

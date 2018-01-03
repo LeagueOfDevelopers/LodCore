@@ -70,10 +70,10 @@ namespace FrontendServices.App_Data
             return new PaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
         }
 
-        public static NotificationService.PaginationSettings ReadNotificationsPaginationSettings(
+        public static PaginationSettings ReadNotificationsPaginationSettings(
             NameValueCollection settings)
         {
-            return new NotificationService.PaginationSettings(int.Parse(settings["Notifications.Pagination.PageSize"]));
+            return new PaginationSettings(int.Parse(settings["Notifications.Pagination.PageSize"]));
         }
 
         public static ConfirmationSettings ReadConfirmationSettings(NameValueCollection settings)

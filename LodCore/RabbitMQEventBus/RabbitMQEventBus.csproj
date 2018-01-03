@@ -59,11 +59,22 @@
   <ItemGroup>
     <Compile Include="EventBus.cs" />
     <Compile Include="EventBusSettings.cs" />
+    <Compile Include="EventConsumersContainer.cs" />
+    <Compile Include="EventPublisher.cs" />
     <Compile Include="IEventBus.cs" />
+    <Compile Include="IEventConsumer.cs" />
+    <Compile Include="IEventConsumersContainer.cs" />
+    <Compile Include="IEventPublisher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

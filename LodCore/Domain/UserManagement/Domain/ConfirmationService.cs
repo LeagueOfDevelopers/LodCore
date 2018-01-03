@@ -1,11 +1,9 @@
 ﻿using System;
 using Common;
 using Journalist;
-using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
-using IMailer = UserManagement.Application.IMailer;
 using RabbitMQEventBus;
 
 namespace UserManagement.Domain
@@ -14,24 +12,15 @@ namespace UserManagement.Domain
     {
         public ConfirmationService(
             IUserRepository userRepository,
-            IMailer mailer,
-            IValidationRequestsRepository validationRequestsRepository, 
-            IEventSink userManagementEventSink, 
-            ConfirmationSettings confirmationSettings,
-            IEventBus eventBus)
+            IValidationRequestsRepository validationRequestsRepository,
+            IEventPublisher eventPublisher)
         {
             Require.NotNull(userRepository, nameof(userRepository));
-            Require.NotNull(mailer, nameof(mailer));
             Require.NotNull(validationRequestsRepository, nameof(validationRequestsRepository));
-            Require.NotNull(userManagementEventSink, nameof(userManagementEventSink));
-            Require.NotNull(confirmationSettings, nameof(confirmationSettings));
 
             _userRepository = userRepository;
-            _mailer = mailer;
             _validationRequestsRepository = validationRequestsRepository;
-            _userManagementEventSink = userManagementEventSink;
-            _confirmationSettings = confirmationSettings;
-            _eventBus = eventBus;
+            _eventPublisher = eventPublisher;
         }
 
         public void SetupEmailConfirmation(int userId)
@@ -41,7 +30,7 @@ namespace UserManagement.Domain
             var token = TokenGenerator.GenerateToken();
             var @event = new MailValidationRequest(userId, token);
 
-            _eventBus.PublishEvent("MailValidationRequest", "validate_mail", @event);
+            _eventPublisher.PublishEvent(@event);
         }
 
         public void ConfirmEmail(string confirmationToken)
@@ -69,7 +58,7 @@ namespace UserManagement.Domain
 
             var @event = new NewEmailConfirmedDeveloper(userAccount.UserId);
 
-            _eventBus.PublishEvent("Notification", "new_email_confirmed_developer", @event);
+            _eventPublisher.PublishEvent(@event);
         }
 
         public void ConfirmProfile(int userId)
@@ -95,14 +84,11 @@ namespace UserManagement.Domain
 
             var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
 
-            _eventBus.PublishEvent("Notification", "new_full_confirmed_developer", @event);
+            _eventPublisher.PublishEvent(@event);
         }
-
-        private readonly IMailer _mailer;
-        private readonly IEventSink _userManagementEventSink;
+		
         private readonly IUserRepository _userRepository;
         private readonly IValidationRequestsRepository _validationRequestsRepository;
-        private readonly ConfirmationSettings _confirmationSettings;
-        private readonly IEventBus _eventBus;
+        private readonly IEventPublisher _eventPublisher;
     }
 }

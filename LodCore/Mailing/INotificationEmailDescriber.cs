@@ -1,4 +1,5 @@
-﻿using NotificationService;
+﻿using Common;
+using RabbitMQEventBus;
 
 namespace Mailing
 {

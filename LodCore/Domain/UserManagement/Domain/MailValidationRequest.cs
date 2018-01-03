@@ -1,6 +1,9 @@
-﻿namespace UserManagement.Domain
+﻿using Common;
+using RabbitMQEventBus;
+
+namespace UserManagement.Domain
 {
-    public class MailValidationRequest
+    public class MailValidationRequest : EventInfoBase
     {
         public MailValidationRequest(int userId, string token)
         {

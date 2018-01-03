@@ -3,6 +3,7 @@ using EasyNetQ.Topology;
 using Journalist;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common;
 
 namespace RabbitMQEventBus
 {
@@ -28,7 +29,12 @@ namespace RabbitMQEventBus
                 WrapInMessage(@event));
         }
 
-        public void SetConsumer(string queueName, dynamic handlerFunction)
+	    public void PublishEvent<T>(T @event) where T : EventInfoBase
+	    {
+		    throw new System.NotImplementedException();
+	    }
+
+	    public void SetConsumer(string queueName, dynamic handlerFunction)
         {
             _bus.Consume<dynamic>(GetQueue(queueName),
                 (msg, info) => Task.Factory.StartNew(() =>

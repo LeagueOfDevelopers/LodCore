@@ -25,10 +25,8 @@ using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using UserPresentaton;
 using RabbitMQEventBus;
-using EventHandlers;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
-using PaginationSettings = NotificationService.PaginationSettings;
 
 namespace FrontendServices
 {
@@ -69,11 +67,8 @@ namespace FrontendServices
 
             container.Register<IConfirmationService>(() => new ConfirmationService(
                 container.GetInstance<IUserRepository>(),
-                container.GetInstance<IMailer>(),
                 container.GetInstance<IValidationRequestsRepository>(),
-                container.GetInstance<UserManagementEventSink>(),
-                container.GetInstance<ConfirmationSettings>(),
-                container.GetInstance<IEventBus>()), 
+                container.GetInstance<IEventPublisher>()), 
                 Lifestyle.Singleton);
             container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
@@ -85,7 +80,7 @@ namespace FrontendServices
             container.Register<IUserRoleAnalyzer, UserRoleAnalyzer>(Lifestyle.Singleton);
             container.Register<INotificationEmailDescriber, NotificationEmailDescriber>(Lifestyle.Singleton);
             container.Register<INotificationService>(() =>
-                new global::NotificationService.NotificationService(
+                new NotificationService.NotificationService(
                     container.GetInstance<IEventRepository>(),
                     container.GetInstance<PaginationSettings>()), Lifestyle.Singleton);
             container.Register<IImageResizer>(
@@ -94,20 +89,14 @@ namespace FrontendServices
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectRepository>(),
-                    container.GetInstance<ProjectsEventSink>(),
-                    container.GetInstance<ProjectManagement.Domain.PaginationSettings>(),
-                    container.GetInstance<IssuePaginationSettings>(),
-                    container.GetInstance<IEventBus>()),
+                    container.GetInstance<PaginationSettings>(),
+                    container.GetInstance<IEventPublisher>()),
                 Lifestyle.Singleton);
             container.Register<IProjectRepository>(
                 () => container.GetInstance<ProjectRepository>(),
                 Lifestyle.Singleton);
             container.Register<ContactsEventSink>(Lifestyle.Singleton);
-            container.Register<IContactsService>(
-                () => new ContactsService(
-                    container.GetInstance<ContactsEventSink>(),
-                    container.GetInstance<IEventBus>()),
-                Lifestyle.Singleton);
+            container.Register<IContactsService>(() => new ContactsService(container.GetInstance<IEventPublisher>()), Lifestyle.Singleton);
             container.Register<EventMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
             container.Register<INotificationMailRepository, NotificationMailRepository>(Lifestyle.Singleton);
@@ -122,14 +111,11 @@ namespace FrontendServices
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
             container.Register<EventSinkBase>(Lifestyle.Singleton);
-
-            container.Register<IEventBus, EventBus>(Lifestyle.Singleton);
-            container.Register<IMailValidationHandler, MailValidationHandler>(Lifestyle.Singleton);
-            container.Register<IPasswordChangeHandler, PasswordChangeHandler>(Lifestyle.Singleton);
-            container.Register<INotificationsHandler, NotificationsHandler>(Lifestyle.Singleton);
-
+			
             RegisterMailing(container);
-            container.Verify();
+	        var eventConsumersContainer = RegisterEventConsumers(container);
+			container.Verify();
+			eventConsumersContainer.StartListening();
             return container;
         }
 
@@ -152,11 +138,36 @@ namespace FrontendServices
         {
             container.Register<Mailer>(Lifestyle.Singleton);
             container.Register<MailerAsyncProxy>(Lifestyle.Singleton);
-            container.Register<global::NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
+            container.Register<NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
             container.Register<IMailer>(container.GetInstance<Mailer>, Lifestyle.Singleton);
             container.Register<NotificationMailSender>();
             var sender = container.GetInstance<NotificationMailSender>();
             sender.StartSending();
         }
+
+	    private static IEventConsumersContainer RegisterEventConsumers(Container container)
+	    {
+		    var consumersContainer = new EventConsumersContainer(container.GetInstance<EventBusSettings>());
+
+			var notificationHandler = new NotificationsHandler(container.GetInstance<EventSinkBase>());
+			
+			consumersContainer.RegisterConsumer<NewDeveloperOnProject>(notificationHandler);
+		    consumersContainer.RegisterConsumer<NewEmailConfirmedDeveloper>(notificationHandler);
+		    consumersContainer.RegisterConsumer<NewFullConfirmedDeveloper>(notificationHandler);
+		    consumersContainer.RegisterConsumer<AdminNotificationInfo>(notificationHandler);
+		    consumersContainer.RegisterConsumer<DeveloperHasLeftProject>(notificationHandler);
+		    consumersContainer.RegisterConsumer<NewProjectCreated>(notificationHandler);
+		    consumersContainer.RegisterConsumer<NewContactMessage>(notificationHandler);
+
+		    var passwordChangeHandler = container.GetInstance<PasswordChangeHandler>();
+			consumersContainer.RegisterConsumer(passwordChangeHandler);
+
+		    var mailValidationHandler = container.GetInstance<MailValidationHandler>();
+			consumersContainer.RegisterConsumer(mailValidationHandler);
+
+		    container.Register(() => consumersContainer.GetEventPublisher(), Lifestyle.Singleton);
+
+			return consumersContainer;
+	    }
     }
 }
