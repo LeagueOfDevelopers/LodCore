@@ -90,9 +90,6 @@ namespace UserManagement.Domain
 
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
-            userAccount.Password = userAccount.Password.GetHashed();
-            _userRepository.UpdateAccount(userAccount);
-
             var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
 
             _eventBus.PublishEvent("Notification", "new_full_confirmed_developer", @event);
