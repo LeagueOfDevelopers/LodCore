@@ -26,6 +26,7 @@ using UserManagement.Infrastructure;
 using UserPresentaton;
 using RabbitMQEventBus;
 using EventHandlers;
+using Gateway;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 using PaginationSettings = NotificationService.PaginationSettings;
@@ -128,6 +129,8 @@ namespace FrontendServices
             container.Register<IPasswordChangeHandler, PasswordChangeHandler>(Lifestyle.Singleton);
             container.Register<INotificationsHandler, NotificationsHandler>(Lifestyle.Singleton);
 
+            container.Register<IGithubGateway, GithubGateway>(Lifestyle.Singleton);
+
             RegisterMailing(container);
             container.Verify();
             return container;
@@ -136,6 +139,7 @@ namespace FrontendServices
         private static void RegisterSettings(Container container)
         {
             var settings = ConfigurationManager.AppSettings;
+            container.Register(() => SettingsReader.ReadGithubGatewaySettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadEventBusSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadMailerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);

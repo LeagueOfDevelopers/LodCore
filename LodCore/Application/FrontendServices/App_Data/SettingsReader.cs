@@ -6,11 +6,19 @@ using Mailing;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using RabbitMQEventBus;
+using Gateway;
 
 namespace FrontendServices.App_Data
 {
     public static class SettingsReader
     {
+        public static GithubGatewaySettings ReadGithubGatewaySettings(NameValueCollection settings)
+        {
+            return new GithubGatewaySettings(
+                settings["clientId"],
+                settings["clientSecret"]);
+        }
+
         public static EventBusSettings ReadEventBusSettings(NameValueCollection settings)
         {
             return new EventBusSettings(

@@ -279,6 +279,7 @@
     <Compile Include="Authorization\LodIdentity.cs" />
     <Compile Include="Authorization\LodPrincipal.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\AuthorizationController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DevelopersController.cs" />
