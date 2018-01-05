@@ -65,11 +65,6 @@ namespace FrontendServices.App_Data
                 settings["FileStorage.ImageExtensions"].Split(','));
         }
 
-        public static PaginationSettings ReadProjectsPaginationSettings(NameValueCollection settings)
-        {
-            return new PaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
-        }
-
         public static PaginationSettings ReadNotificationsPaginationSettings(
             NameValueCollection settings)
         {
