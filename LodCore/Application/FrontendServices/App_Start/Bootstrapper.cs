@@ -70,7 +70,7 @@ namespace FrontendServices
                 container.GetInstance<IValidationRequestsRepository>(),
                 container.GetInstance<IEventPublisher>()), 
                 Lifestyle.Singleton);
-            container.Register<UserManagementEventSink>(Lifestyle.Singleton);
+            //container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
             container.Register<IPasswordChangeRequestRepository, PasswordChangeRequestRepository>(Lifestyle.Singleton);
@@ -95,7 +95,7 @@ namespace FrontendServices
             container.Register<IProjectRepository>(
                 () => container.GetInstance<ProjectRepository>(),
                 Lifestyle.Singleton);
-            container.Register<ContactsEventSink>(Lifestyle.Singleton);
+            //container.Register<ContactsEventSink>(Lifestyle.Singleton);
             container.Register<IContactsService>(() => new ContactsService(container.GetInstance<IEventPublisher>()), Lifestyle.Singleton);
             container.Register<EventMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
@@ -149,15 +149,15 @@ namespace FrontendServices
 	    {
 		    var consumersContainer = new EventConsumersContainer(container.GetInstance<EventBusSettings>());
 
-			var notificationHandler = new NotificationsHandler(container.GetInstance<EventSinkBase>());
+			var notificationsHandler = new NotificationsHandler(container.GetInstance<EventSinkBase>());
 			
-			consumersContainer.RegisterConsumer<NewDeveloperOnProject>(notificationHandler);
-		    consumersContainer.RegisterConsumer<NewEmailConfirmedDeveloper>(notificationHandler);
-		    consumersContainer.RegisterConsumer<NewFullConfirmedDeveloper>(notificationHandler);
-		    consumersContainer.RegisterConsumer<AdminNotificationInfo>(notificationHandler);
-		    consumersContainer.RegisterConsumer<DeveloperHasLeftProject>(notificationHandler);
-		    consumersContainer.RegisterConsumer<NewProjectCreated>(notificationHandler);
-		    consumersContainer.RegisterConsumer<NewContactMessage>(notificationHandler);
+			consumersContainer.RegisterConsumer<NewDeveloperOnProject>(notificationsHandler);
+		    consumersContainer.RegisterConsumer<NewEmailConfirmedDeveloper>(notificationsHandler);
+		    consumersContainer.RegisterConsumer<NewFullConfirmedDeveloper>(notificationsHandler);
+		    consumersContainer.RegisterConsumer<AdminNotificationInfo>(notificationsHandler);
+		    consumersContainer.RegisterConsumer<DeveloperHasLeftProject>(notificationsHandler);
+		    consumersContainer.RegisterConsumer<NewProjectCreated>(notificationsHandler);
+		    consumersContainer.RegisterConsumer<NewContactMessage>(notificationsHandler);
 
 		    var passwordChangeHandler = container.GetInstance<PasswordChangeHandler>();
 			consumersContainer.RegisterConsumer(passwordChangeHandler);

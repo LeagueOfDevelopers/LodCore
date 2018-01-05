@@ -1,5 +1,5 @@
 ﻿using Common;
-using RabbitMQEventBus;
+using Journalist;
 
 namespace UserManagement.Domain
 {
@@ -7,6 +7,9 @@ namespace UserManagement.Domain
     {
         public PasswordChangeRequest(int userId, string token)
         {
+            Require.Positive(userId, nameof(userId));
+            Require.NotEmpty(token, nameof(token));
+
             UserId = userId;
             Token = token;
         }

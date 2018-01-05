@@ -68,6 +68,7 @@
     <Compile Include="ApplicationLocationSettings.cs" />
     <Compile Include="EventInfoBase.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IEventConsumer.cs" />
     <Compile Include="IEventInfo.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="JsonEmailConverter.cs" />

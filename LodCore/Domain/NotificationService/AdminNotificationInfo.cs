@@ -1,6 +1,5 @@
 ﻿using Common;
 using Journalist;
-using RabbitMQEventBus;
 
 namespace NotificationService
 {

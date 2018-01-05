@@ -117,10 +117,6 @@
       <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
-      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
-      <Name>RabbitMQEventBus</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>
       <Name>UserPresentaton</Name>

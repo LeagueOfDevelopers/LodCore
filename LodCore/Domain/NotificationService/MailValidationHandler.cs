@@ -1,8 +1,8 @@
 ﻿using System;
-using RabbitMQEventBus;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
+using Common;
 
 namespace NotificationService
 {

@@ -1,7 +1,6 @@
 ﻿using Common;
 using ContactContext.Events;
 using ProjectManagement.Domain.Events;
-using RabbitMQEventBus;
 using UserManagement.Domain.Events;
 
 namespace NotificationService

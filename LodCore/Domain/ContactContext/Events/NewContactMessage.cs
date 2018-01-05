@@ -1,7 +1,6 @@
 ﻿using System.Net.Mail;
 using Common;
 using Journalist;
-using RabbitMQEventBus;
 
 namespace ContactContext.Events
 {

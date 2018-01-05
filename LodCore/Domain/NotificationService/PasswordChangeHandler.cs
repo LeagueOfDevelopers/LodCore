@@ -1,5 +1,4 @@
 ﻿using Common;
-using RabbitMQEventBus;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;

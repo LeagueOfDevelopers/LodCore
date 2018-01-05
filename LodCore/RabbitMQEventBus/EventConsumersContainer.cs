@@ -10,20 +10,20 @@ namespace RabbitMQEventBus
 		{
 			_eventBusSettings = eventBusSettings;
 			_bus = InitializeBusConnection();
-			_exchange = _bus.ExchangeDeclare(exchangeName, ExchangeType.Fanout);
+			_mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
 		}
 
 		public void RegisterConsumer<T>(IEventConsumer<T> consumer) where T : EventInfoBase
 		{
 			var queue = _bus.QueueDeclare(GetQueueNameForConsumer(consumer));
 			var routingKey = GetRoutingKeyForEvent<T>();
-			_bus.Bind(_exchange, queue, routingKey);
+			_bus.Bind(_mainExchange, queue, routingKey);
 			_bus.Consume<T>(queue, (message, info) => consumer.Consume(message.Body));
 		}
 
 		public IEventPublisher GetEventPublisher()
 		{
-			return new EventPublisher(_bus, _exchange);	
+			return new EventPublisher(_bus, _mainExchange);	
 		}
 
 		public void StartListening()
@@ -33,7 +33,7 @@ namespace RabbitMQEventBus
 
 		public void StopListening()
 		{
-			
+            _bus.Dispose();
 		}
 
 		private static string GetQueueNameForConsumer<T>(IEventConsumer<T> consumer)
@@ -58,7 +58,7 @@ namespace RabbitMQEventBus
 
 		private readonly EventBusSettings _eventBusSettings;
 		private readonly IAdvancedBus _bus;
-		private readonly IExchange _exchange;
-		const string exchangeName = "all-events";
+		private readonly IExchange _mainExchange;
+		const string mainExchangeName = "all-events";
 	}
 }
