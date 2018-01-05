@@ -1,6 +1,6 @@
 ﻿using ContactContext.Events;
 using Journalist;
-using RabbitMQEventBus;
+using Common;
 
 namespace ContactContext
 {

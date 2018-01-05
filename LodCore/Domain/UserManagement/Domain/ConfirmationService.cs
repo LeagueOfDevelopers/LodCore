@@ -4,7 +4,6 @@ using Journalist;
 using UserManagement.Application;
 using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
-using RabbitMQEventBus;
 
 namespace UserManagement.Domain
 {

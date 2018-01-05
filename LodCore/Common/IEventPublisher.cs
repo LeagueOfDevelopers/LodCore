@@ -1,9 +1,7 @@
-﻿using Common;
-
-namespace RabbitMQEventBus
+﻿namespace Common
 {
-	public interface IEventPublisher
-	{
-		void PublishEvent<T>(T @event) where T : EventInfoBase;
-	}
+    public interface IEventPublisher
+    {
+        void PublishEvent<T>(T @event) where T : EventInfoBase;
+    }
 }

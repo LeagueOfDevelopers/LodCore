@@ -9,7 +9,6 @@ using ProjectManagement.Infrastructure;
 using UserManagement.Application;
 using IMailer = UserManagement.Application.IMailer;
 using UserManagement.Infrastructure;
-using RabbitMQEventBus;
 
 namespace UserManagement.Domain
 {

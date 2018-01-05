@@ -1,6 +1,5 @@
 ﻿using Common;
 using Journalist;
-using RabbitMQEventBus;
 using UserManagement.Domain.Events;
 using UserPresentaton;
 

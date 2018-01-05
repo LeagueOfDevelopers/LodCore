@@ -64,7 +64,7 @@ namespace FrontendServices.App_Data
                 settings["FileStorage.ImageFolder"],
                 settings["FileStorage.ImageExtensions"].Split(','));
         }
-
+        
         public static PaginationSettings ReadNotificationsPaginationSettings(
             NameValueCollection settings)
         {

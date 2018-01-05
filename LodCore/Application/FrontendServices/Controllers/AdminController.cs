@@ -5,7 +5,7 @@ using Journalist;
 using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
-using RabbitMQEventBus;
+using Common;
 
 namespace FrontendServices.Controllers
 {

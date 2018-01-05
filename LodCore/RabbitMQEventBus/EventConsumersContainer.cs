@@ -1,6 +1,7 @@
 ﻿using Common;
 using EasyNetQ;
 using EasyNetQ.Topology;
+using System.Threading.Tasks;
 
 namespace RabbitMQEventBus
 {
@@ -18,7 +19,9 @@ namespace RabbitMQEventBus
 			var queue = _bus.QueueDeclare(GetQueueNameForConsumer(consumer));
 			var routingKey = GetRoutingKeyForEvent<T>();
 			_bus.Bind(_mainExchange, queue, routingKey);
-			_bus.Consume<T>(queue, (message, info) => consumer.Consume(message.Body));
+			_bus.Consume<T>(queue, (message, info) => 
+                Task.Factory.StartNew(() =>
+                consumer.Consume(message.Body)));
 		}
 
 		public IEventPublisher GetEventPublisher()
@@ -28,12 +31,13 @@ namespace RabbitMQEventBus
 
 		public void StartListening()
 		{
-			
+            if (!_bus.IsConnected)
+                _bus = InitializeBusConnection();
 		}
 
 		public void StopListening()
 		{
-            _bus.Dispose();
+            _bus.SafeDispose();
 		}
 
 		private static string GetQueueNameForConsumer<T>(IEventConsumer<T> consumer)
@@ -57,7 +61,7 @@ namespace RabbitMQEventBus
 		}
 
 		private readonly EventBusSettings _eventBusSettings;
-		private readonly IAdvancedBus _bus;
+		private IAdvancedBus _bus;
 		private readonly IExchange _mainExchange;
 		const string mainExchangeName = "all-events";
 	}
