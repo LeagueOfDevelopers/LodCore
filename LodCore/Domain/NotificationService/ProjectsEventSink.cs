@@ -1,7 +1,6 @@
 ﻿using Common;
 using Journalist;
 using ProjectManagement.Domain.Events;
-using RabbitMQEventBus;
 using UserPresentaton;
 
 namespace NotificationService

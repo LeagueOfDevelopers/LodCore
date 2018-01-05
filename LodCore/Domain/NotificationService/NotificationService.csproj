@@ -104,9 +104,17 @@
       <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
+      <Project>{184ff097-9b8c-4236-8538-444f9dccb564}</Project>
+      <Name>UserPresentaton</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ContactContext\ContactContext.csproj">
       <Project>{3C995E20-5C8D-4091-8B11-C752AA06300F}</Project>
       <Name>ContactContext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProjectManagement\ProjectManagement.csproj">
+      <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>
+      <Name>ProjectManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\UserManagement\UserManagement.csproj">
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>

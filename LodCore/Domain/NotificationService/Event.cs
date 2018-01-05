@@ -2,7 +2,6 @@
 using Common;
 using Journalist;
 using Newtonsoft.Json;
-using RabbitMQEventBus;
 
 namespace NotificationService
 {

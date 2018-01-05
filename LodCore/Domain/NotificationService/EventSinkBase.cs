@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Common;
 using Journalist;
-using RabbitMQEventBus;
 using UserPresentaton;
 
 namespace NotificationService

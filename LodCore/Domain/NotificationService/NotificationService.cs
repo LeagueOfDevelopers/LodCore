@@ -5,6 +5,12 @@ namespace NotificationService
 {
     public class NotificationService : INotificationService
     {
+        public NotificationService(IEventRepository eventRepository, PaginationSettings notificationsPaginationSettings)
+        {
+            _eventRepository = eventRepository;
+            _notificationsPaginationSettings = notificationsPaginationSettings;
+        }
+
         public Event[] GetEventsForUser(int userId, int pageNumber = 0)
         {
             var projectsToSkip = pageNumber * _notificationsPaginationSettings.PageSize;
@@ -34,11 +40,5 @@ namespace NotificationService
         private readonly IEventRepository _eventRepository;
 
         private readonly PaginationSettings _notificationsPaginationSettings;
-
-        public NotificationService(IEventRepository eventRepository, PaginationSettings notificationsPaginationSettings)
-        {
-            _eventRepository = eventRepository;
-            _notificationsPaginationSettings = notificationsPaginationSettings;
-        }
     }
 }
