@@ -21,8 +21,6 @@ namespace UserManagement.Domain
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotNull(email, nameof(email));
             Require.NotNull(password, nameof(password));
-            Require.NotNull(email, nameof(email));
-            Require.NotNull(password, nameof(password));
 
             Firstname = firstname;
             Lastname = lastname;
@@ -57,5 +55,7 @@ namespace UserManagement.Domain
         public virtual DateTime RegistrationTime { get; protected set; }
 
         public virtual Profile Profile { get; set; }
+
+        public virtual string GithubAccessToken { get; set; }
     }
 }

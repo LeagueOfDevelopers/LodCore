@@ -11,11 +11,11 @@ namespace Gateway
             Require.NotEmpty(clientId, nameof(clientId));
             Require.NotEmpty(clientSecret, nameof(clientSecret));
 
-            _clientId = clientId;
-            _clientSecret = clientSecret;
+            ClientId = clientId;
+            ClientSecret = clientSecret;
         }
 
-        private readonly string _clientId;
-        private readonly string _clientSecret;
+        public readonly string ClientId;
+        public readonly string ClientSecret;
     }
 }

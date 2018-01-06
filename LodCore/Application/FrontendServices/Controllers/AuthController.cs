@@ -8,34 +8,52 @@ using Gateway;
 using UserManagement.Domain;
 using Journalist;
 using FrontendServices.Authorization;
+using UserManagement.Application;
 
 namespace FrontendServices.Controllers
 {
     public class AuthController : ApiController
     {
-        public AuthController(GithubGateway githubGateway)
+        public AuthController(IGithubGateway githubGateway, IUserManager userManager)
         {
             Require.NotNull(githubGateway, nameof(githubGateway));
+            Require.NotNull(userManager, nameof(userManager));
 
             _githubGateway = githubGateway;
+            _userManager = userManager;
         }
 
         [HttpGet]
         [Authorization(AccountRole.User)]
         [Route("auth/github")]
-        public void GetRedirectionToAuthenticationGitHubForm()
+        public IHttpActionResult GetRedirectionToAuthenticationGitHubForm()
         {
-
+            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage();
+            return Redirect(githubLoginUrl);
         }
 
         [HttpGet]
         [Authorization(AccountRole.User)]
-        [Route("auth/github/callback/{code}")]
-        public void GetAuthenticationTokenByCode()
+        [Route("auth/github/callback")]
+        public IHttpActionResult GetAuthenticationTokenByCode(string code, string state)
         {
-
+            if (!_githubGateway.StateIsValid(state))
+                throw new InvalidOperationException("Security fail: the received state value doesn't correspond to the expected");
+            if (String.IsNullOrEmpty(code))
+                throw new HttpResponseException(HttpStatusCode.BadGateway);
+            var token = _githubGateway.GetTokenByCode(code).Result;
+            SaveGithubAccessToken(token);
+            return Ok();
         }
 
-        private readonly GithubGateway _githubGateway;
+        private void SaveGithubAccessToken(string token)
+        {
+            var user = _userManager.GetUser(User.Identity.GetId());
+            user.GithubAccessToken = token;
+            _userManager.UpdateUser(user);
+        }
+
+        private readonly IGithubGateway _githubGateway;
+        private readonly IUserManager _userManager;
     }
 }

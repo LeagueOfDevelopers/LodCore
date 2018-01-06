@@ -28,6 +28,7 @@ namespace DataAccess.Mappings
                 mapper.Column("Password");
                 mapper.Type<PasswordType>();
             });
+            Property(user => user.GithubAccessToken, mapper => mapper.Column("GithubAccessToken"));
 
             Component(x => x.Profile, m =>
             {
