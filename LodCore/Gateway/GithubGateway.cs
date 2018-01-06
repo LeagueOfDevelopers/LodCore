@@ -44,15 +44,12 @@ namespace Gateway
 
         private string SetCsrfState()
         {
-            //_session["CSRF:state"] = Membership.GeneratePassword(24, 1);
-            //return _session["CSRF:state"].ToString();
             _csrf = Membership.GeneratePassword(24, 1);
             return _csrf;
         }
 
         const string applicationName = "LodCore";
         private readonly GitHubClient _gitHubClient;
-        //private HttpSessionState _session { get; set; }
         private string _csrf;
         private readonly GithubGatewaySettings _githubGatewaySettings;
     }
