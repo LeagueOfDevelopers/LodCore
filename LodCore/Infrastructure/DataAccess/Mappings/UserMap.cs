@@ -28,7 +28,6 @@ namespace DataAccess.Mappings
                 mapper.Column("Password");
                 mapper.Type<PasswordType>();
             });
-            Property(user => user.LinkToGithubProfile, mapper => mapper.Column("LinkToGithubProfile"));
 
             Component(x => x.Profile, m =>
             {
@@ -46,6 +45,7 @@ namespace DataAccess.Mappings
                 m.Property(profile => profile.StudentAccessionYear, mapper => mapper.Column("StudentAccessionYear"));
                 m.Property(profile => profile.StudyingDirection, mapper => mapper.Column("StudyingDirection"));
                 m.Property(profile => profile.VkProfileUri, mapper => mapper.Column("VkProfileUri"));
+                m.Property(profile => profile.LinkToGithubProfile, mapper => mapper.Column("GitHubProfileUri"));
             });
         }
     }

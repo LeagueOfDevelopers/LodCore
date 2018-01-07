@@ -39,15 +39,15 @@ namespace FrontendServices.Controllers
             if (String.IsNullOrEmpty(code))
                 throw new HttpResponseException(HttpStatusCode.BadGateway);
             var token = _githubGateway.GetTokenByCode(code).Result;
-            var link = _githubGateway.GetLinkToUserGithubProfile(token).Result;
+            var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(token).Result);
             SaveLinkToGithubProfile(link);
             return Ok(link);
         }
 
-        private void SaveLinkToGithubProfile(string link)
+        private void SaveLinkToGithubProfile(Uri link)
         {
             var user = _userManager.GetUser(User.Identity.GetId());
-            user.LinkToGithubProfile = link;
+            user.Profile.LinkToGithubProfile = link;
             _userManager.UpdateUser(user);
         }
 

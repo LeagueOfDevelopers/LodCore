@@ -55,7 +55,5 @@ namespace UserManagement.Domain
         public virtual DateTime RegistrationTime { get; protected set; }
 
         public virtual Profile Profile { get; set; }
-
-        public virtual string LinkToGithubProfile { get; set; }
     }
 }

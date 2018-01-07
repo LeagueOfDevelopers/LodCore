@@ -82,6 +82,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.ConfirmationStatus,
                 account.Profile.Image?.BigPhotoUri,
                 account.RegistrationTime,
+                account.Profile.LinkToGithubProfile,
                 account.Profile.VkProfileUri,
                 account.Profile.PhoneNumber,
                 account.Profile.StudentAccessionYear,
