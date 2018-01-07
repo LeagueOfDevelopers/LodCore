@@ -56,6 +56,6 @@ namespace UserManagement.Domain
 
         public virtual Profile Profile { get; set; }
 
-        public virtual string GithubAccessToken { get; set; }
+        public virtual string LinkToGithubProfile { get; set; }
     }
 }

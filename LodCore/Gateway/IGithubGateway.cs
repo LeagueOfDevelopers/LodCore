@@ -8,6 +8,8 @@ namespace Gateway
 
         Task<string> GetTokenByCode(string code);
 
+        Task<string> GetLinkToUserGithubProfile(string token);
+
         bool StateIsValid(string state);
     }
 }

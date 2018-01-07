@@ -1,4 +1,6 @@
 ﻿using System.Web.Http;
+using System.Web.Http.Cors;
+using System.Configuration;
 using FrontendServices.App_Data;
 using FrontendServices.Authorization;
 using UserManagement.Application;
@@ -11,6 +13,8 @@ namespace FrontendServices
         {
             config.MapHttpAttributeRoutes();
 
+            ConfigureCrossDomainRequestsSupport(config);
+
             config.Routes.MapHttpRoute(
                 "DefaultApi", "{controller}/{id}", new {id = RouteParameter.Optional}
                 );
@@ -22,6 +26,14 @@ namespace FrontendServices
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
                 Newtonsoft.Json.PreserveReferencesHandling.Objects;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+        }
+
+        private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
+        {
+            var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
+            var cors = new EnableCorsAttribute("*", "*", "*")
+            { SupportsCredentials = true };
+            config.EnableCors(cors);
         }
     }
 }

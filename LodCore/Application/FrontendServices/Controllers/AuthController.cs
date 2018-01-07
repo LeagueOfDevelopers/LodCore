@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Gateway;
 using UserManagement.Domain;
@@ -42,14 +39,15 @@ namespace FrontendServices.Controllers
             if (String.IsNullOrEmpty(code))
                 throw new HttpResponseException(HttpStatusCode.BadGateway);
             var token = _githubGateway.GetTokenByCode(code).Result;
-            SaveGithubAccessToken(token);
-            return Ok();
+            var link = _githubGateway.GetLinkToUserGithubProfile(token).Result;
+            SaveLinkToGithubProfile(link);
+            return Ok(link);
         }
 
-        private void SaveGithubAccessToken(string token)
+        private void SaveLinkToGithubProfile(string link)
         {
             var user = _userManager.GetUser(User.Identity.GetId());
-            user.GithubAccessToken = token;
+            user.LinkToGithubProfile = link;
             _userManager.UpdateUser(user);
         }
 

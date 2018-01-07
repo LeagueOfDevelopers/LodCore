@@ -1,7 +1,5 @@
-﻿using System.Web.SessionState;
-using System.Web.Security;
+﻿using System.Web.Security;
 using System.Threading.Tasks;
-using System;
 using Journalist;
 using Octokit;
 
@@ -37,14 +35,26 @@ namespace Gateway
             return token.AccessToken;
         }
 
+        public async Task<string> GetLinkToUserGithubProfile(string token)
+        {
+            Require.NotEmpty(token, nameof(token));
+
+            _gitHubClient.Credentials = new Credentials(token);
+            var userInfo = await _gitHubClient.User.Current();
+            return userInfo.HtmlUrl;
+        }
+
         public bool StateIsValid(string state)
         {
-            return !String.IsNullOrEmpty(state) && state == _csrf;
+            Require.NotEmpty(state, nameof(state));
+            Require.NotNull(state, nameof(state));
+
+            return state == _csrf;
         }
 
         private string SetCsrfState()
         {
-            _csrf = Membership.GeneratePassword(24, 1);
+            _csrf = Membership.GeneratePassword(24, 0);
             return _csrf;
         }
 
