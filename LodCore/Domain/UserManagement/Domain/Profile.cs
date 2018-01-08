@@ -9,6 +9,8 @@ namespace UserManagement.Domain
 
         public virtual Uri VkProfileUri { get; set; }
 
+        public virtual Uri LinkToGithubProfile { get; set; }
+
         public virtual string PhoneNumber { get; set; }
 
         public virtual int? StudentAccessionYear { get; set; }

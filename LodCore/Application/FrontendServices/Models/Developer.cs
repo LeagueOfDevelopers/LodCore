@@ -15,6 +15,7 @@ namespace FrontendServices.Models
             ConfirmationStatus confirmationStatus,
             Uri photoUri,
             DateTime registrationDate,
+            Uri linkToGithubProfile,
             Uri vkProfileUri,
             string phoneNumber,
             int? studentAccessionYear,
@@ -36,6 +37,7 @@ namespace FrontendServices.Models
             ConfirmationStatus = confirmationStatus;
             PhotoUri = photoUri;
             RegistrationDate = registrationDate;
+            LinkToGithubProfile = linkToGithubProfile;
             VkProfileUri = vkProfileUri;
             PhoneNumber = phoneNumber;
             StudentAccessionYear = studentAccessionYear;
@@ -59,6 +61,8 @@ namespace FrontendServices.Models
         public Uri PhotoUri { get; private set; }
 
         public DateTime RegistrationDate { get; private set; }
+
+        public Uri LinkToGithubProfile { get; set; }
 
         public Uri VkProfileUri { get; private set; }
 

@@ -6,11 +6,25 @@ using Mailing;
 using ProjectManagement.Domain;
 using UserManagement.Application;
 using RabbitMQEventBus;
+using Gateway;
 
 namespace FrontendServices.App_Data
 {
     public static class SettingsReader
     {
+        public static GithubGatewaySettings ReadGithubGatewaySettings(NameValueCollection settings)
+        {
+            return new GithubGatewaySettings(
+                settings["GithubGateway.ClientId"],
+                settings["GithubGateway.ClientSecret"],
+                settings["GithubGateway.GithubApiDefaultCallbackUri"]);
+        }
+
+        public static ProfileSettings ReadProfileSettings(NameValueCollection settings)
+        {
+            return new ProfileSettings(settings["Profile.FrontendProfileUri"]);
+        }
+
         public static EventBusSettings ReadEventBusSettings(NameValueCollection settings)
         {
             return new EventBusSettings(

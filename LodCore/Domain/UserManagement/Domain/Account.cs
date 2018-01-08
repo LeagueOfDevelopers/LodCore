@@ -21,8 +21,6 @@ namespace UserManagement.Domain
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotNull(email, nameof(email));
             Require.NotNull(password, nameof(password));
-            Require.NotNull(email, nameof(email));
-            Require.NotNull(password, nameof(password));
 
             Firstname = firstname;
             Lastname = lastname;

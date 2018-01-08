@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Application\ConfirmationSettings.cs" />
     <Compile Include="Application\IPasswordManager.cs" />
+    <Compile Include="Application\ProfileSettings.cs" />
     <Compile Include="Domain\AuthorizationTokenInfo.cs" />
     <Compile Include="Domain\Authorizer.cs" />
     <Compile Include="Application\CreateAccountRequest.cs" />

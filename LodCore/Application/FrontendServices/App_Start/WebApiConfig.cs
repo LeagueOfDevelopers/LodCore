@@ -1,6 +1,6 @@
-﻿using System.Configuration;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Configuration;
 using FrontendServices.App_Data;
 using FrontendServices.Authorization;
 using UserManagement.Application;
@@ -11,10 +11,9 @@ namespace FrontendServices
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            ConfigureCrossDomainRequestsSupport(config);
-            // Web API routes
             config.MapHttpAttributeRoutes();
+
+            ConfigureCrossDomainRequestsSupport(config);
 
             config.Routes.MapHttpRoute(
                 "DefaultApi", "{controller}/{id}", new {id = RouteParameter.Optional}
@@ -32,8 +31,8 @@ namespace FrontendServices
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
-            var cors = new EnableCorsAttribute($"{frontendDomain}", "*", "*")
-                { SupportsCredentials = true};
+            var cors = new EnableCorsAttribute("*", "*", "*")
+            { SupportsCredentials = true };
             config.EnableCors(cors);
         }
     }
