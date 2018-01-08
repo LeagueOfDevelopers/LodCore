@@ -140,6 +140,7 @@ namespace FrontendServices
         {
             var settings = ConfigurationManager.AppSettings;
             container.Register(() => SettingsReader.ReadGithubGatewaySettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadProfileSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadEventBusSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadMailerSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadUserRoleAnalyzerSettings(settings), Lifestyle.Singleton);

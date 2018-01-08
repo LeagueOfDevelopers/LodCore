@@ -1,5 +1,5 @@
 ﻿using System.Web.Security;
-using System.Threading.Tasks;
+using System;
 using Journalist;
 using Octokit;
 
@@ -15,32 +15,33 @@ namespace Gateway
             _gitHubClient = new GitHubClient(new ProductHeaderValue(applicationName));
         }
 
-        public string GetLinkToGithubLoginPage()
+        public string GetLinkToGithubLoginPage(int id)
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
                 Scopes = { "read:user" },
-                State = SetCsrfState()
+                State = SetCsrfState(),
+                RedirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}/{id}")
             };
             var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
             return githubLoginUrl.ToString();
         }
 
-        public async Task<string> GetTokenByCode(string code)
+        public string GetTokenByCode(string code)
         {
-            var token = await _gitHubClient.Oauth.CreateAccessToken(new OauthTokenRequest(
+            var token = _gitHubClient.Oauth.CreateAccessToken(new OauthTokenRequest(
                 _githubGatewaySettings.ClientId,
                 _githubGatewaySettings.ClientSecret,
-                code));
+                code)).Result;
             return token.AccessToken;
         }
 
-        public async Task<string> GetLinkToUserGithubProfile(string token)
+        public string GetLinkToUserGithubProfile(string token)
         {
             Require.NotEmpty(token, nameof(token));
 
             _gitHubClient.Credentials = new Credentials(token);
-            var userInfo = await _gitHubClient.User.Current();
+            var userInfo = _gitHubClient.User.Current().Result;
             return userInfo.HtmlUrl;
         }
 
@@ -58,7 +59,7 @@ namespace Gateway
             return _csrf;
         }
 
-        const string applicationName = "LodCore";
+        const string applicationName = "LodSite";
         private readonly GitHubClient _gitHubClient;
         private string _csrf;
         private readonly GithubGatewaySettings _githubGatewaySettings;

@@ -11,47 +11,54 @@ namespace FrontendServices.Controllers
 {
     public class AuthController : ApiController
     {
-        public AuthController(IGithubGateway githubGateway, IUserManager userManager)
+        public AuthController(
+            IGithubGateway githubGateway, 
+            IUserManager userManager,
+            ProfileSettings profileSettings)
         {
             Require.NotNull(githubGateway, nameof(githubGateway));
             Require.NotNull(userManager, nameof(userManager));
+            Require.NotNull(profileSettings, nameof(profileSettings));
 
             _githubGateway = githubGateway;
             _userManager = userManager;
+            _profileSettings = profileSettings;
         }
 
         [HttpGet]
         [Authorization(AccountRole.User)]
         [Route("auth/github")]
-        public IHttpActionResult GetRedirectionToAuthenticationGitHubForm()
+        public string GetRedirectionToAuthenticationGitHubForm()
         {
-            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage();
-            return Redirect(githubLoginUrl);
+            var currentUserId = User.Identity.GetId();
+            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage(currentUserId);
+            return githubLoginUrl;
         }
 
         [HttpGet]
-        [Authorization(AccountRole.User)]
-        [Route("auth/github/callback")]
-        public IHttpActionResult GetAuthenticationTokenByCode(string code, string state)
+        [Route("auth/github/callback/{userId}")]
+        public IHttpActionResult GetAuthenticationTokenByCode(int userId, string code, string state)
         {
             if (!_githubGateway.StateIsValid(state))
-                throw new InvalidOperationException("Security fail: the received state value doesn't correspond to the expected");
+                throw new InvalidOperationException(
+                    "Security fail: the received state value doesn't correspond to the expected");
             if (String.IsNullOrEmpty(code))
                 throw new HttpResponseException(HttpStatusCode.BadGateway);
-            var token = _githubGateway.GetTokenByCode(code).Result;
-            var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(token).Result);
-            SaveLinkToGithubProfile(link);
-            return Ok(link);
+            var token = _githubGateway.GetTokenByCode(code);
+            var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(token));
+            SaveLinkToGithubProfile(link, userId);
+            return Redirect(_profileSettings.FrontendProfileUri);
         }
 
-        private void SaveLinkToGithubProfile(Uri link)
+        private void SaveLinkToGithubProfile(Uri link, int userId)
         {
-            var user = _userManager.GetUser(User.Identity.GetId());
+            var user = _userManager.GetUser(userId);
             user.Profile.LinkToGithubProfile = link;
             _userManager.UpdateUser(user);
         }
 
         private readonly IGithubGateway _githubGateway;
         private readonly IUserManager _userManager;
+        private readonly ProfileSettings _profileSettings;
     }
 }

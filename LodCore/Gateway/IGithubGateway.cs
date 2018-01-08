@@ -1,14 +1,12 @@
-﻿using System.Threading.Tasks;
-
-namespace Gateway
+﻿namespace Gateway
 {
     public interface IGithubGateway
     {
-        string GetLinkToGithubLoginPage();
+        string GetLinkToGithubLoginPage(int currentUserId);
 
-        Task<string> GetTokenByCode(string code);
+        string GetTokenByCode(string code);
 
-        Task<string> GetLinkToUserGithubProfile(string token);
+        string GetLinkToUserGithubProfile(string token);
 
         bool StateIsValid(string state);
     }
