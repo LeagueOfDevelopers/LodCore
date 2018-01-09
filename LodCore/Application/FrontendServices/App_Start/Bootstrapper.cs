@@ -112,12 +112,24 @@ namespace FrontendServices
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<NotificationEventSink>(Lifestyle.Singleton);
             container.Register<EventSinkBase>(Lifestyle.Singleton);
-			
+
+            container.Register<EventConsumersContainer>(Lifestyle.Singleton);
+
+            container.Register<IEventConsumersContainer>(() => container.GetInstance<EventConsumersContainer>(),
+                                                                                    Lifestyle.Singleton);
+            container.Register<IEventPublisherProvider>(() => container.GetInstance<EventConsumersContainer>(),
+                                                                                    Lifestyle.Singleton);
+            container.Register<IEventPublisher>(() => container.GetInstance<IEventPublisherProvider>()
+                                                      .GetEventPublisher(), Lifestyle.Singleton);
+
             RegisterMailing(container);
-	        RegisterEventConsumers(container);
-            //eventConsumersContainer.StartListening();
-            container.GetInstance<NotificationMailSender>().StartSending();
-            
+            var sender = container.GetInstance<NotificationMailSender>();
+            sender.StartSending();
+
+            var consumersContainer = container.GetInstance<EventConsumersContainer>();
+            consumersContainer.StartListening();
+            RegisterEventConsumers(container);
+
             container.Verify();
             return container;
         }
@@ -142,18 +154,12 @@ namespace FrontendServices
             container.Register<MailerAsyncProxy>(Lifestyle.Singleton);
             container.Register<NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
             container.Register<IMailer>(container.GetInstance<Mailer>, Lifestyle.Singleton);
-            container.Register<NotificationMailSender>();
-            //var sender = container.GetInstance<NotificationMailSender>();
-            //sender.StartSending();
+            container.Register<NotificationMailSender>();   
         }
 
 	    private static void RegisterEventConsumers(Container container)
 	    {
-            container.Register<IEventConsumersContainer, EventConsumersContainer>(Lifestyle.Singleton);
-            //container.Register<IEventPublisher, EventPublisher>(Lifestyle.Singleton);
             var consumersContainer = container.GetInstance<EventConsumersContainer>();
-		    //var consumersContainer = new EventConsumersContainer(container.GetInstance<EventBusSettings>());
-
 			var notificationsHandler = new NotificationsHandler(container.GetInstance<EventSinkBase>());
 			
 			consumersContainer.RegisterConsumer<NewDeveloperOnProject>(notificationsHandler);
@@ -169,9 +175,6 @@ namespace FrontendServices
 
 		    var mailValidationHandler = container.GetInstance<MailValidationHandler>();
 			consumersContainer.RegisterConsumer(mailValidationHandler);
-
-            //container.Register(() => consumersContainer, Lifestyle.Singleton);
-		    //container.Register(() => consumersContainer.GetEventPublisher(), Lifestyle.Singleton);
 	    }
     }
 }

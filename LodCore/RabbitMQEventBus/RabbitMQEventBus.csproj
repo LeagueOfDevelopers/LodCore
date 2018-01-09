@@ -63,6 +63,7 @@
     <Compile Include="EventPublisher.cs" />
     <Compile Include="IEventBus.cs" />
     <Compile Include="IEventConsumersContainer.cs" />
+    <Compile Include="IEventPublisherProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

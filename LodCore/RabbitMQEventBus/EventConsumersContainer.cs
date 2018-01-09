@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 
 namespace RabbitMQEventBus
 {
-	public class EventConsumersContainer : IEventConsumersContainer
+	public class EventConsumersContainer : IEventConsumersContainer, IEventPublisherProvider
 	{
 		public EventConsumersContainer(EventBusSettings eventBusSettings)
 		{
 			_eventBusSettings = eventBusSettings;
-			_bus = InitializeBusConnection();
-			_mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
 		}
 
 		public void RegisterConsumer<T>(IEventConsumer<T> consumer) where T : EventInfoBase
@@ -31,8 +29,7 @@ namespace RabbitMQEventBus
 
 		public void StartListening()
 		{
-            if (!_bus.IsConnected)
-                _bus = InitializeBusConnection();
+            InitializeBusConnection();
 		}
 
 		public void StopListening()
@@ -50,19 +47,19 @@ namespace RabbitMQEventBus
 			return typeof(T).FullName;
 		}
 
-		private IAdvancedBus InitializeBusConnection()
+		private void InitializeBusConnection()
 		{
-			var connectionString = $"host={_eventBusSettings.HostName}; " +
+            var connectionString = $"host={_eventBusSettings.HostName}; " +
 			                       $"virtualHost={_eventBusSettings.VirtualHost}; " +
 			                       $"username={_eventBusSettings.UserName}; " +
 			                       $"password={_eventBusSettings.Password}";
-			var bus = RabbitHutch.CreateBus(connectionString).Advanced;
-			return bus;
-		}
+			_bus = RabbitHutch.CreateBus(connectionString).Advanced;
+            _mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
+        }
 
 		private readonly EventBusSettings _eventBusSettings;
 		private IAdvancedBus _bus;
-		private readonly IExchange _mainExchange;
+		private IExchange _mainExchange;
 		const string mainExchangeName = "all-events";
 	}
 }
