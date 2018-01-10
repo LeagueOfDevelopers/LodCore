@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common;
 using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
 using NotificationService;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class UserRepository : IUserRepository, IUsersRepository
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public UserRepository(DatabaseSessionProvider sessionProvider)
+        public UserRepository(IDatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 

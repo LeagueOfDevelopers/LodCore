@@ -1,13 +1,11 @@
 ﻿using Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using NotificationService;
 using Ploeh.AutoFixture;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
-using RabbitMQEventBus;
 
 namespace ProjectManagementTests
 {

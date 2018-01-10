@@ -2,7 +2,6 @@
 using System.Net.Mail;
 using Common;
 using Journalist;
-using RabbitMQEventBus;
 using UserManagement.Infrastructure;
 using IMailer = UserManagement.Application.IMailer;
 

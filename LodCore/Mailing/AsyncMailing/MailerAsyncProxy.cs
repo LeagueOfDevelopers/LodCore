@@ -1,9 +1,6 @@
-﻿using System.Net.Mail;
-using System.Xml;
-using Common;
+﻿using Common;
 using Journalist;
 using NotificationService;
-using RabbitMQEventBus;
 
 namespace Mailing.AsyncMailing
 {

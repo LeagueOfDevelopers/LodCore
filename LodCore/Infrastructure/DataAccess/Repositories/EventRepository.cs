@@ -3,14 +3,15 @@ using Journalist;
 using NHibernate.Criterion;
 using NHibernate.Linq;
 using NotificationService;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class EventRepository : IEventRepository
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public EventRepository(DatabaseSessionProvider sessionProvider)
+        public EventRepository(IDatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 

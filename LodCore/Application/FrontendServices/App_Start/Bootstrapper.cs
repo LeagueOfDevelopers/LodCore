@@ -38,7 +38,7 @@ namespace FrontendServices
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
 
             RegisterSettings(container);
-            container.Register<DatabaseSessionProvider>(Lifestyle.Singleton);
+            container.Register<IDatabaseSessionProvider, DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
@@ -46,13 +46,13 @@ namespace FrontendServices
 
             //todo: replace to open-generic registration
             container.Register<IPaginableRepository<Account>>(
-                () => new PaginableRepository<Account>(container.GetInstance<DatabaseSessionProvider>()),
+                () => new PaginableRepository<Account>(container.GetInstance<IDatabaseSessionProvider>()),
                 Lifestyle.Singleton);
             container.Register<IPaginableRepository<Delivery>>(
-               () => new PaginableRepository<Delivery>(container.GetInstance<DatabaseSessionProvider>()),
+               () => new PaginableRepository<Delivery>(container.GetInstance<IDatabaseSessionProvider>()),
                Lifestyle.Singleton);
             container.Register<IPaginableRepository<Project>>(
-               () => new PaginableRepository<Project>(container.GetInstance<DatabaseSessionProvider>()),
+               () => new PaginableRepository<Project>(container.GetInstance<IDatabaseSessionProvider>()),
                Lifestyle.Singleton);
 
             container.Register<IPaginationWrapper<Account>>(
@@ -114,7 +114,6 @@ namespace FrontendServices
             container.Register<EventSinkBase>(Lifestyle.Singleton);
 
             container.Register<EventConsumersContainer>(Lifestyle.Singleton);
-
             container.Register<IEventConsumersContainer>(() => container.GetInstance<EventConsumersContainer>(),
                                                                                     Lifestyle.Singleton);
             container.Register<IEventPublisherProvider>(() => container.GetInstance<EventConsumersContainer>(),

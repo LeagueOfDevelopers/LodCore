@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Policy;
 using System.Threading;
 using System.Web;
 using DataAccess.Mappings;
@@ -7,10 +6,11 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Tool.hbm2ddl;
+using Common;
 
 namespace DataAccess
 {
-    public class DatabaseSessionProvider
+    public class DatabaseSessionProvider : IDatabaseSessionProvider
     {
         private readonly ISessionFactory _factory;
 

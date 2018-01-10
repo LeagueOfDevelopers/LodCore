@@ -7,19 +7,26 @@ namespace RabbitMQEventBus
 {
 	public class EventConsumersContainer : IEventConsumersContainer, IEventPublisherProvider
 	{
-		public EventConsumersContainer(EventBusSettings eventBusSettings)
+		public EventConsumersContainer(EventBusSettings eventBusSettings,
+                                       IDatabaseSessionProvider databaseSessionProvider)
 		{
 			_eventBusSettings = eventBusSettings;
+            _databaseSessionProvider = databaseSessionProvider;
 		}
 
-		public void RegisterConsumer<T>(IEventConsumer<T> consumer) where T : EventInfoBase
-		{
-			var queue = _bus.QueueDeclare(GetQueueNameForConsumer(consumer));
-			var routingKey = GetRoutingKeyForEvent<T>();
-			_bus.Bind(_mainExchange, queue, routingKey);
-			_bus.Consume<T>(queue, (message, info) => 
-                Task.Factory.StartNew(() =>
-                consumer.Consume(message.Body)));
+        public void RegisterConsumer<T>(IEventConsumer<T> consumer) where T : EventInfoBase
+        {
+            var queue = _bus.QueueDeclare(GetQueueNameForConsumer(consumer));
+            var routingKey = GetRoutingKeyForEvent<T>();
+            _bus.Bind(_mainExchange, queue, routingKey);
+            _bus.Consume<T>(queue, (message, info) =>
+            Task.Factory.StartNew(() =>
+                {
+                    _databaseSessionProvider.OpenSession();
+                    consumer.Consume(message.Body);
+                    _databaseSessionProvider.CloseSession();
+                })
+            );
 		}
 
 		public IEventPublisher GetEventPublisher()
@@ -57,6 +64,10 @@ namespace RabbitMQEventBus
             _mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
         }
 
+        private void StartConsumption(string queue) { 
+}
+
+        private readonly IDatabaseSessionProvider _databaseSessionProvider;
 		private readonly EventBusSettings _eventBusSettings;
 		private IAdvancedBus _bus;
 		private IExchange _mainExchange;

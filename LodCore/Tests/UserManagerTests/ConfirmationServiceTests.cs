@@ -1,13 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using NotificationService;
-using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
-using IMailer = UserManagement.Application.IMailer;
 using Common;
-using RabbitMQEventBus;
 
 namespace UserManagerTests
 {

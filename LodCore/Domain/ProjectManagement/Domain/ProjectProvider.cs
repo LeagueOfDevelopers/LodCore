@@ -7,7 +7,6 @@ using Journalist;
 using ProjectManagement.Application;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
-using RabbitMQEventBus;
 
 namespace ProjectManagement.Domain
 {

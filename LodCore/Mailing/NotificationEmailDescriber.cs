@@ -4,7 +4,6 @@ using Journalist;
 using NotificationService;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
-using RabbitMQEventBus;
 using UserManagement.Domain.Events;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 

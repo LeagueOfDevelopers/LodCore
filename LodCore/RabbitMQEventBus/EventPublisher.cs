@@ -14,7 +14,7 @@ namespace RabbitMQEventBus
 
 		public void PublishEvent<T>(T @event) where T : EventInfoBase
 		{
-			_bus.Publish(_exchange, @event.GetEventType(), false, new Message<T>(@event));
+			_bus.Publish(_exchange, typeof(T).FullName, false, new Message<T>(@event));
 		}
 
 		private readonly IAdvancedBus _bus;

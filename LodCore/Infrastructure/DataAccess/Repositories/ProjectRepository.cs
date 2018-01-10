@@ -6,6 +6,7 @@ using Journalist;
 using Journalist.Extensions;
 using NHibernate.Linq;
 using NotificationService;
+using Common;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
 
@@ -13,9 +14,9 @@ namespace DataAccess.Repositories
 {
     public class ProjectRepository : IProjectRepository, IProjectRelativesRepository
     {
-        private readonly DatabaseSessionProvider _databaseSessionProvider;
+        private readonly IDatabaseSessionProvider _databaseSessionProvider;
 
-        public ProjectRepository(DatabaseSessionProvider databaseSessionProvider)
+        public ProjectRepository(IDatabaseSessionProvider databaseSessionProvider)
         {
             Require.NotNull(databaseSessionProvider, nameof(databaseSessionProvider));
 

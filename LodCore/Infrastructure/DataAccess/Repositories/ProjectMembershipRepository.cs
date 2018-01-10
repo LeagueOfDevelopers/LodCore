@@ -6,14 +6,15 @@ using Journalist;
 using NHibernate.Linq;
 using ProjectManagement.Domain;
 using ProjectManagement.Infrastructure;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class ProjectMembershipRepository : IProjectMembershipRepostiory
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public ProjectMembershipRepository(DatabaseSessionProvider sessionProvider)
+        public ProjectMembershipRepository(IDatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 
