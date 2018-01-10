@@ -64,9 +64,6 @@ namespace RabbitMQEventBus
             _mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
         }
 
-        private void StartConsumption(string queue) { 
-}
-
         private readonly IDatabaseSessionProvider _databaseSessionProvider;
 		private readonly EventBusSettings _eventBusSettings;
 		private IAdvancedBus _bus;
