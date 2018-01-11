@@ -5,7 +5,7 @@ using UserPresentaton;
 
 namespace NotificationService
 {
-    public class EventSinkBase : IEventSink
+    public abstract class EventSinkBase<T> : IEventConsumer<T> where T : IEventInfo
     {
         public EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory, 
             IEventRepository eventRepository,
@@ -31,18 +31,7 @@ namespace NotificationService
 
         private readonly IUserPresentationProvider _userPresentationProvider;
 
-        public virtual void ConsumeEvent(IEventInfo eventInfo)
-        {
-            Require.NotNull(eventInfo, nameof(eventInfo));
-
-            var @event = new Event(eventInfo);
-
-            var distributionPolicy = DistributionPolicyFactory.GetAdminRelatedPolicy();
-
-            EventRepository.DistrubuteEvent(@event, distributionPolicy);
-
-            Mailer.SendNotificationEmail(distributionPolicy.ReceiverIds, eventInfo);
-        }
+        public abstract void Consume(T @event);
 
         protected void SendOutEmailsAboutEvent(int[] userIds, IEventInfo eventInfo)
         {

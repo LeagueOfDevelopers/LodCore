@@ -17,12 +17,10 @@ namespace FrontendServices.Controllers
 
         public AdminController(
             IConfirmationService confirmationService, 
-            NotificationEventSink notificationEventSink, 
             IUserManager userManager,
             IEventPublisher eventPublisher)
         {
             Require.NotNull(confirmationService, nameof(confirmationService));
-            Require.NotNull(notificationEventSink, nameof(notificationEventSink));
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(eventPublisher, nameof(eventPublisher));
 

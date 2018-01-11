@@ -13,7 +13,7 @@ namespace NotificationServiceTests
         private Mock<IEventRepository> _eventRepositoryMock;
         private Mock<IMailer> _mailerMock;
 
-        private ProjectsEventSink _projectsEventSink;
+        private ProjectsEventSink<NewDeveloperOnProject> _projectsEventSink;
 
         private Mock<IUserPresentationProvider> _userPresentationProviderMock;
 
@@ -48,7 +48,7 @@ namespace NotificationServiceTests
             _distributionPolicyFactoryMock.Setup(factory => factory.GetProjectRelatedPolicy(It.IsAny<int>()))
                 .Returns(new DistributionPolicy(new[] {52, 77}));
 
-            _projectsEventSink = new ProjectsEventSink(
+            _projectsEventSink = new ProjectsEventSink<NewDeveloperOnProject>(
                 _distributionPolicyFactoryMock.Object,
                 _eventRepositoryMock.Object,
                 _mailerMock.Object,
@@ -57,7 +57,7 @@ namespace NotificationServiceTests
             var developerOnProjectEvent = new NewDeveloperOnProject(11, 10);
 
             //act
-            _projectsEventSink.ConsumeEvent(developerOnProjectEvent);
+            _projectsEventSink.Consume(developerOnProjectEvent);
 
             //assert
             _mailerMock.Verify(mailer => mailer.SendNotificationEmail(new[] {52, 42}, developerOnProjectEvent),

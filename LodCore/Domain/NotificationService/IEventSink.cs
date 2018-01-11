@@ -4,6 +4,6 @@ namespace NotificationService
 {
     public interface IEventSink
     {
-         void ConsumeEvent(IEventInfo eventInfo);
+         void Consume(IEventInfo eventInfo);
     }
 }

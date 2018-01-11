@@ -78,11 +78,11 @@ namespace UserManagement.Domain
 
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
+            //var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
+
             _userRepository.UpdateAccount(userAccount);
 
-            var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
-
-            _eventPublisher.PublishEvent(@event);
+            _eventPublisher.PublishEvent(new NewFullConfirmedDeveloper(userAccount.UserId));
         }
 		
         private readonly IUserRepository _userRepository;

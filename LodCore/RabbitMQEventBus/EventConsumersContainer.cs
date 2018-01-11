@@ -25,8 +25,8 @@ namespace RabbitMQEventBus
                     _databaseSessionProvider.OpenSession();
                     consumer.Consume(message.Body);
                     _databaseSessionProvider.CloseSession();
-                })
-            );
+                }
+            ));
 		}
 
 		public IEventPublisher GetEventPublisher()
@@ -44,12 +44,14 @@ namespace RabbitMQEventBus
             _bus.SafeDispose();
 		}
 
-		private static string GetQueueNameForConsumer<T>(IEventConsumer<T> consumer)
+		private static string GetQueueNameForConsumer<T>(IEventConsumer<T> consumer) 
+            where T : EventInfoBase
 		{
 			return $"{typeof(T).FullName}-{consumer.GetType().FullName}";
 		}
 
-		private static string GetRoutingKeyForEvent<T>() where T : EventInfoBase
+		private static string GetRoutingKeyForEvent<T>() 
+            where T : EventInfoBase
 		{
 			return typeof(T).FullName;
 		}

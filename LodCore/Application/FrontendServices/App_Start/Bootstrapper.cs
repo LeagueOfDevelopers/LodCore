@@ -70,7 +70,6 @@ namespace FrontendServices
                 container.GetInstance<IValidationRequestsRepository>(),
                 container.GetInstance<IEventPublisher>()), 
                 Lifestyle.Singleton);
-            container.Register<UserManagementEventSink>(Lifestyle.Singleton);
             container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
             container.Register<IPasswordChangeRequestRepository, PasswordChangeRequestRepository>(Lifestyle.Singleton);
@@ -95,7 +94,6 @@ namespace FrontendServices
             container.Register<IProjectRepository>(
                 () => container.GetInstance<ProjectRepository>(),
                 Lifestyle.Singleton);
-            container.Register<ContactsEventSink>(Lifestyle.Singleton);
             container.Register<IContactsService>(() => new ContactsService(container.GetInstance<IEventPublisher>()), 
                 Lifestyle.Singleton);
             container.Register<EventMapper>(Lifestyle.Singleton);
@@ -110,9 +108,10 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
-            container.Register<NotificationEventSink>(Lifestyle.Singleton);
-            container.Register<EventSinkBase>(Lifestyle.Singleton);
-
+            container.RegisterCollection<IEventSink>(new[] { typeof(UserManagementEventSink<>).Assembly,
+                                                             typeof(NotificationEventSink<>).Assembly,
+                                                             typeof(ProjectsEventSink<>).Assembly,
+                                                             typeof(ContactsEventSink<>).Assembly });
             container.Register<EventConsumersContainer>(Lifestyle.Singleton);
             container.Register<IEventConsumersContainer>(() => container.GetInstance<EventConsumersContainer>(),
                                                                                     Lifestyle.Singleton);
@@ -159,21 +158,16 @@ namespace FrontendServices
 	    private static void RegisterEventConsumers(Container container)
 	    {
             var consumersContainer = container.GetInstance<EventConsumersContainer>();
-			var notificationsHandler = new NotificationsHandler(container.GetInstance<EventSinkBase>());
-			
-			consumersContainer.RegisterConsumer<NewDeveloperOnProject>(notificationsHandler);
-		    consumersContainer.RegisterConsumer<NewEmailConfirmedDeveloper>(notificationsHandler);
-		    consumersContainer.RegisterConsumer<NewFullConfirmedDeveloper>(notificationsHandler);
-		    consumersContainer.RegisterConsumer<AdminNotificationInfo>(notificationsHandler);
-		    consumersContainer.RegisterConsumer<DeveloperHasLeftProject>(notificationsHandler);
-		    consumersContainer.RegisterConsumer<NewProjectCreated>(notificationsHandler);
-		    consumersContainer.RegisterConsumer<NewContactMessage>(notificationsHandler);
 
-		    var passwordChangeHandler = container.GetInstance<PasswordChangeHandler>();
-			consumersContainer.RegisterConsumer(passwordChangeHandler);
-
-		    var mailValidationHandler = container.GetInstance<MailValidationHandler>();
-			consumersContainer.RegisterConsumer(mailValidationHandler);
+			consumersContainer.RegisterConsumer(container.GetInstance<ProjectsEventSink<NewDeveloperOnProject>>());
+		    consumersContainer.RegisterConsumer(container.GetInstance<UserManagementEventSink<NewEmailConfirmedDeveloper>>());
+		    consumersContainer.RegisterConsumer(container.GetInstance<UserManagementEventSink<NewFullConfirmedDeveloper>>());
+		    consumersContainer.RegisterConsumer(container.GetInstance<NotificationEventSink<AdminNotificationInfo>>());
+		    consumersContainer.RegisterConsumer(container.GetInstance<ProjectsEventSink<DeveloperHasLeftProject>>());
+		    consumersContainer.RegisterConsumer(container.GetInstance<ProjectsEventSink<NewProjectCreated>>());
+		    consumersContainer.RegisterConsumer(container.GetInstance<ContactsEventSink<NewContactMessage>>());
+			consumersContainer.RegisterConsumer(container.GetInstance<PasswordChangeHandler>());
+			consumersContainer.RegisterConsumer(container.GetInstance<MailValidationHandler>());
 	    }
     }
 }

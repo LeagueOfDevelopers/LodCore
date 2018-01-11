@@ -5,15 +5,17 @@ using UserPresentaton;
 
 namespace NotificationService
 {
-    public class ProjectsEventSink : EventSinkBase
+    public class ProjectsEventSink<T> : EventSinkBase<T> where T : IEventInfo
     {
         public ProjectsEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository, IMailer mailer, IUserPresentationProvider userPresentationProvider)
+                                 IEventRepository eventRepository, 
+                                 IMailer mailer, 
+                                 IUserPresentationProvider userPresentationProvider)
             : base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }
 
-        public override void ConsumeEvent(IEventInfo eventInfo)
+        public override void Consume(T eventInfo)
         {
             Require.NotNull(eventInfo, nameof(eventInfo));
 
