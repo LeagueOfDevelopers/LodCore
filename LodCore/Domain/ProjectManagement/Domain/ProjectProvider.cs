@@ -4,11 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using Common;
 using Journalist;
-using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain.Events;
 using ProjectManagement.Infrastructure;
-using RabbitMQEventBus;
 
 namespace ProjectManagement.Domain
 {
@@ -16,22 +14,16 @@ namespace ProjectManagement.Domain
     {
         public ProjectProvider(
             IProjectRepository projectRepository,
-            IEventSink eventSink,
-            PaginationSettings paginationSettings, 
-            IssuePaginationSettings issuePaginationSettings,
-            IEventBus eventBus)
+            PaginationSettings projectPaginationSettings, 
+            IEventPublisher eventPublisher)
         {
             Require.NotNull(projectRepository, nameof(projectRepository));
-            Require.NotNull(eventSink, nameof(eventSink));
-            Require.NotNull(paginationSettings, nameof(paginationSettings));
-            Require.NotNull(issuePaginationSettings, nameof(issuePaginationSettings));
-            Require.NotNull(eventBus, nameof(eventBus));
+            Require.NotNull(projectPaginationSettings, nameof(projectPaginationSettings));
+            Require.NotNull(eventPublisher, nameof(eventPublisher));
 
             _projectRepository = projectRepository;
-            _eventSink = eventSink;
-            _paginationSettings = paginationSettings;
-            _issuePaginationSettings = issuePaginationSettings;
-            _eventBus = eventBus;
+            _projectPaginationSettings = projectPaginationSettings;
+            _eventPublisher = eventPublisher;
         }
 
         public List<Project> GetProjects(Func<Project, bool> predicate = null)
@@ -42,10 +34,10 @@ namespace ProjectManagement.Domain
 
         public List<Project> GetProjects(int pageNumber, Expression<Func<Project, bool>> predicate = null)
         {
-            var projectsToSkip = pageNumber*_paginationSettings.PageSize;
+            var projectsToSkip = pageNumber*_projectPaginationSettings.PageSize;
             var requiredProjects = _projectRepository.GetSomeProjects(
                 projectsToSkip,
-                _paginationSettings.PageSize,
+                _projectPaginationSettings.PageSize,
                 project => project.ProjectStatus == ProjectStatus.Done // well, that's a funny workaround
                     ? 1 // i can't figure out, how to sort it other way
                     : project.ProjectStatus == ProjectStatus.InProgress // even simple switch clause doesn't work here
@@ -87,7 +79,7 @@ namespace ProjectManagement.Domain
 
             var @event = new NewProjectCreated(projectId);
 
-            _eventBus.PublishEvent("Notification", "new_project_created", @event);
+            _eventPublisher.PublishEvent(@event);
 
             return projectId;
         }
@@ -118,7 +110,7 @@ namespace ProjectManagement.Domain
 
             var @event = new NewDeveloperOnProject(userId, projectId);
 
-            _eventBus.PublishEvent("Notification", "new_developer_on_project", @event);
+            _eventPublisher.PublishEvent(@event);
         }
 
         public void RemoveUserFromProject(int projectId, int userId)
@@ -140,13 +132,11 @@ namespace ProjectManagement.Domain
 
             var @event = new DeveloperHasLeftProject(userId, projectId);
 
-            _eventBus.PublishEvent("Notification", "developer_has_left_project", @event);
+            _eventPublisher.PublishEvent(@event);
         }
-
-        private readonly IEventSink _eventSink;
-        private readonly PaginationSettings _paginationSettings;
-        private readonly IssuePaginationSettings _issuePaginationSettings;
+		
+        private readonly PaginationSettings _projectPaginationSettings;
         private readonly IProjectRepository _projectRepository;
-        private readonly IEventBus _eventBus;
+        private readonly IEventPublisher _eventPublisher;
     }
 }

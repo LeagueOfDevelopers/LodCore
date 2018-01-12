@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Journalist;
 using Mailing;
 using Mailing.AsyncMailing;
 using NHibernate;
 using NHibernate.Linq;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class NotificationMailRepository : INotificationMailRepository
     {
-        public NotificationMailRepository(DatabaseSessionProvider databaseSessionProvider)
+        public NotificationMailRepository(IDatabaseSessionProvider databaseSessionProvider)
         {
             Require.NotNull(databaseSessionProvider, nameof(databaseSessionProvider));
 
@@ -49,6 +49,6 @@ namespace DataAccess.Repositories
 
         private ISession Session => _databaseSessionProvider.GetCurrentSession();
 
-        private readonly DatabaseSessionProvider _databaseSessionProvider;
+        private readonly IDatabaseSessionProvider _databaseSessionProvider;
     }
 }

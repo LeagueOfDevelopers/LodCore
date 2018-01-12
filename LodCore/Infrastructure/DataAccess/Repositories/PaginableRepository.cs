@@ -3,14 +3,15 @@ using System.Linq;
 using System.Linq.Expressions;
 using DataAccess.Pagination;
 using NHibernate.Linq;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class PaginableRepository<T> : IPaginableRepository<T> where T : class
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public PaginableRepository(DatabaseSessionProvider sessionProvider)
+        public PaginableRepository(IDatabaseSessionProvider sessionProvider)
         {
             _sessionProvider = sessionProvider;
         }

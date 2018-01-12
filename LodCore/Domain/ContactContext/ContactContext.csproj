@@ -55,23 +55,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContactsService.cs" />
-    <Compile Include="Events\ContactsEventSink.cs" />
     <Compile Include="Events\NewContactMessage.cs" />
     <Compile Include="IContactsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RabbitMQEventBus\RabbitMQEventBus.csproj">
-      <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
-      <Name>RabbitMQEventBus</Name>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\UserPresentaton\UserPresentaton.csproj">
       <Project>{184ff097-9b8c-4236-8538-444f9dccb564}</Project>
       <Name>UserPresentaton</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NotificationService\NotificationService.csproj">
-      <Project>{11A53A10-354F-4951-AA63-9E217AA0FBDD}</Project>
-      <Name>NotificationService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

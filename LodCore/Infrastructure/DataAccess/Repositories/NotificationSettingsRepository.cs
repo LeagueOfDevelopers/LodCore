@@ -3,14 +3,15 @@ using System.Linq;
 using Journalist;
 using NHibernate.Linq;
 using UserPresentaton;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class NotificationSettingsRepository : INotificationSettingsRepository
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public NotificationSettingsRepository(DatabaseSessionProvider sessionProvider)
+        public NotificationSettingsRepository(IDatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 

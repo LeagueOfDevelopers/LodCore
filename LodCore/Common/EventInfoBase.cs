@@ -1,8 +1,8 @@
-﻿namespace NotificationService
+﻿namespace Common
 {
     public abstract class EventInfoBase : IEventInfo
     {
-        public string GetEventType()
+        public virtual string GetEventType()
         {
             return GetType().Name;
         }

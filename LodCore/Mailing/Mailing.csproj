@@ -106,6 +106,10 @@
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
       <Name>UserManagement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RabbitMQEventBus\RabbitMQEventBus.csproj">
+      <Project>{C55C196D-D726-4B14-8F4C-981C013A1C81}</Project>
+      <Name>RabbitMQEventBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -1,5 +1,5 @@
-﻿using Journalist;
-using NotificationService;
+﻿using Common;
+using Journalist;
 
 namespace ProjectManagement.Domain.Events
 {

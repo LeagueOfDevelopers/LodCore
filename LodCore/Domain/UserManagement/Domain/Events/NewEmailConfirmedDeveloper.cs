@@ -1,5 +1,5 @@
-﻿using Journalist;
-using NotificationService;
+﻿using Common;
+using Journalist;
 
 namespace UserManagement.Domain.Events
 {

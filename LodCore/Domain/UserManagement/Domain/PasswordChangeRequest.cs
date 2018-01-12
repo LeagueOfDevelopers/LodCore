@@ -1,9 +1,15 @@
-﻿namespace UserManagement.Domain
+﻿using Common;
+using Journalist;
+
+namespace UserManagement.Domain
 {
-    public class PasswordChangeRequest
+    public class PasswordChangeRequest : EventInfoBase
     {
         public PasswordChangeRequest(int userId, string token)
         {
+            Require.Positive(userId, nameof(userId));
+            Require.NotEmpty(token, nameof(token));
+
             UserId = userId;
             Token = token;
         }

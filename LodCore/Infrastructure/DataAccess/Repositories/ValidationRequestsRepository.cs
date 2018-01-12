@@ -3,14 +3,15 @@ using Journalist;
 using NHibernate.Linq;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
+using Common;
 
 namespace DataAccess.Repositories
 {
     public class ValidationRequestsRepository : IValidationRequestsRepository
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public ValidationRequestsRepository(DatabaseSessionProvider sessionProvider)
+        public ValidationRequestsRepository(IDatabaseSessionProvider sessionProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
             _sessionProvider = sessionProvider;

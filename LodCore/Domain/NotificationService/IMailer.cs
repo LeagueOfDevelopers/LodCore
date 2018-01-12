@@ -1,4 +1,6 @@
-﻿namespace NotificationService
+﻿using Common;
+
+namespace NotificationService
 {
     public interface IMailer
     {

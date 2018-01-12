@@ -5,32 +5,28 @@ using Journalist;
 using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
-using RabbitMQEventBus;
+using Common;
 
 namespace FrontendServices.Controllers
 {
     public class AdminController : ApiController
     {
         private readonly IConfirmationService _confirmationService;
-        private readonly NotificationEventSink _notificationEventSink;
         private readonly IUserManager _userManager;
-        private readonly IEventBus _eventBus;
+        private readonly IEventPublisher _eventPublisher;
 
         public AdminController(
             IConfirmationService confirmationService, 
-            NotificationEventSink notificationEventSink, 
             IUserManager userManager,
-            IEventBus eventBus)
+            IEventPublisher eventPublisher)
         {
             Require.NotNull(confirmationService, nameof(confirmationService));
-            Require.NotNull(notificationEventSink, nameof(notificationEventSink));
             Require.NotNull(userManager, nameof(userManager));
-            Require.NotNull(eventBus, nameof(eventBus));
+            Require.NotNull(eventPublisher, nameof(eventPublisher));
 
             _confirmationService = confirmationService;
-            _notificationEventSink = notificationEventSink;
             _userManager = userManager;
-            _eventBus = eventBus;
+            _eventPublisher = eventPublisher;
         }
 
         [HttpPost]
@@ -62,7 +58,7 @@ namespace FrontendServices.Controllers
         {
             Require.NotNull(adminNotificationInfo, nameof(adminNotificationInfo));
 
-            _eventBus.PublishEvent("Notification", "admin_notification_info", adminNotificationInfo);
+            _eventPublisher.PublishEvent(adminNotificationInfo);
 
             return Ok();
         }

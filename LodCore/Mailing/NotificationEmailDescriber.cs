@@ -1,4 +1,5 @@
-﻿using ContactContext.Events;
+﻿using Common;
+using ContactContext.Events;
 using Journalist;
 using NotificationService;
 using ProjectManagement.Domain.Events;
@@ -29,7 +30,6 @@ namespace Mailing
             return Describe((dynamic) @eventInfo);
         }
 
-
         private string Describe(NewContactMessage @event)
         {
             Require.NotNull(@event, nameof(@event));
@@ -37,6 +37,7 @@ namespace Mailing
             return string.Format(EventDescriptionResources.NewContactMessage, @event.ClientName, @event.MessageTopic,
                 @event.MessageBody, @event.ClientEmailAddress);
         }
+
         private string Describe(DeveloperHasLeftProject @event)
         {
             Require.NotNull(@event, nameof(@event));

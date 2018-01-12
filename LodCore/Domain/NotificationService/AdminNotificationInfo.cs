@@ -1,4 +1,5 @@
-﻿using Journalist;
+﻿using Common;
+using Journalist;
 
 namespace NotificationService
 {

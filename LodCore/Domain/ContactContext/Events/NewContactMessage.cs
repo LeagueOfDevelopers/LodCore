@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
+using Common;
 using Journalist;
-using NotificationService;
 
 namespace ContactContext.Events
 {

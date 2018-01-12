@@ -1,10 +1,11 @@
-﻿using Journalist;
-using NotificationService;
+﻿using Common;
+using Journalist;
+using UserManagement.Domain.Events;
 using UserPresentaton;
 
-namespace UserManagement.Domain.Events
+namespace NotificationService
 {
-    public class UserManagementEventSink : EventSinkBase
+    public class UserManagementEventSink<T> : EventSinkBase<T> where T : IEventInfo
     {
         public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory,
             IEventRepository eventRepository, 
@@ -17,11 +18,11 @@ namespace UserManagement.Domain.Events
         {
         }
 
-        public override void ConsumeEvent(IEventInfo eventInfo)
+        public override void Consume(T eventInfo)
         {
             Require.NotNull(eventInfo, nameof(eventInfo));
 
-            var @event = new Event(eventInfo);
+            var @event = new Event((IEventInfo)eventInfo);
 
             var distributionPolicy = GetDistributionPolicyForEvent((dynamic)eventInfo);
 

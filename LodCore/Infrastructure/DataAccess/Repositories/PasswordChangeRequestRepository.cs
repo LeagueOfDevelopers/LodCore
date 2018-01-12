@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Journalist;
-using NHibernate.Linq;
+using Common;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
 
@@ -8,9 +8,9 @@ namespace DataAccess.Repositories
 {
     public class PasswordChangeRequestRepository : IPasswordChangeRequestRepository
     {
-        private readonly DatabaseSessionProvider _sessionProvider;
+        private readonly IDatabaseSessionProvider _sessionProvider;
 
-        public PasswordChangeRequestRepository(DatabaseSessionProvider sessionProvider)
+        public PasswordChangeRequestRepository(IDatabaseSessionProvider sessionProvider)
         {
             _sessionProvider = sessionProvider;
         }

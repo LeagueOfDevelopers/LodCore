@@ -1,4 +1,4 @@
-﻿using NotificationService;
+﻿using Common;
 
 namespace Mailing
 {

@@ -1,13 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using NotificationService;
-using UserManagement.Application;
 using UserManagement.Domain;
 using UserManagement.Infrastructure;
-using IMailer = UserManagement.Application.IMailer;
 using Common;
-using RabbitMQEventBus;
 
 namespace UserManagerTests
 {
@@ -15,27 +10,20 @@ namespace UserManagerTests
     public class ConfirmationServiceTests
     {
         private ConfirmationService _confirmationService;
-        private Mock<IEventSink> _eventSinkManagerStub;
-        private Mock<IMailer> _mailerStub;
         private Mock<IUserRepository> _userRepoStub;
         private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
-        private Mock<IEventBus> _eventBus;
+        private Mock<IEventPublisher> _eventBus;
 
         [TestInitialize]
         public void Setup()
         {
             _userRepoStub = new Mock<IUserRepository>();
-            _mailerStub = new Mock<IMailer>();
             _validationRequesRepoStub = new Mock<IValidationRequestsRepository>();
-            _eventSinkManagerStub = new Mock<IEventSink>();
-            _eventBus = new Mock<IEventBus>();
+            _eventBus = new Mock<IEventPublisher>();
 
             _confirmationService = new ConfirmationService(
                 _userRepoStub.Object,
-                _mailerStub.Object,
                 _validationRequesRepoStub.Object,
-                _eventSinkManagerStub.Object,
-                new ConfirmationSettings(new Uri("http://lod-misis.ru/frontend")),
                 _eventBus.Object);
         }
 
@@ -51,9 +39,7 @@ namespace UserManagerTests
             _confirmationService.SetupEmailConfirmation(userId);
 
             //assert
-            _eventBus.Verify(mock => mock.PublishEvent(
-                "MailValidationRequest", "validate_mail",
-                It.IsAny<MailValidationRequest>()), Times.Once);
+            _eventBus.Verify(mock => mock.PublishEvent(It.IsAny<MailValidationRequest>()), Times.Once);
         }
 
         [TestMethod]
