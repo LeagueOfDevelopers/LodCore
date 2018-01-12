@@ -89,7 +89,6 @@
     <Compile Include="MailValidationHandler.cs" />
     <Compile Include="NotificationEventSink.cs" />
     <Compile Include="NotificationService.cs" />
-    <Compile Include="NotificationsHandler.cs" />
     <Compile Include="PasswordChangeHandler.cs" />
     <Compile Include="ProjectsEventSink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,11 +5,11 @@ namespace UserManagement.Domain.Events
 {
     public class NewFullConfirmedDeveloper : EventInfoBase
     {
-        public NewFullConfirmedDeveloper(int userId)
+        public NewFullConfirmedDeveloper(int newDeveloperId)
         {
-            Require.Positive(userId, nameof(userId));
+            Require.Positive(newDeveloperId, nameof(newDeveloperId));
 
-            NewDeveloperId = userId;
+            NewDeveloperId = newDeveloperId;
         }
 
         public int NewDeveloperId { get; private set; }

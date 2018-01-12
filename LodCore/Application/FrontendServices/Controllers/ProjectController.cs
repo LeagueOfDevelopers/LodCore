@@ -101,7 +101,7 @@ namespace FrontendServices.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //return BadRequest(ModelState);
+                return BadRequest(ModelState);
             }
 
             var request = new CreateProjectRequest(

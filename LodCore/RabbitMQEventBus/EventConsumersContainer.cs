@@ -47,7 +47,7 @@ namespace RabbitMQEventBus
 		private static string GetQueueNameForConsumer<T>(IEventConsumer<T> consumer) 
             where T : EventInfoBase
 		{
-			return $"{typeof(T).FullName}-{consumer.GetType().FullName}";
+			return $"{typeof(T).FullName}";
 		}
 
 		private static string GetRoutingKeyForEvent<T>() 
