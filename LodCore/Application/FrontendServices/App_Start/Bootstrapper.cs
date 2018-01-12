@@ -25,7 +25,6 @@ using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using UserPresentaton;
 using RabbitMQEventBus;
-using EventHandlers;
 using Gateway;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;

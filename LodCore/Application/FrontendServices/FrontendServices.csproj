@@ -348,10 +348,6 @@
       <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
       <Name>UserManagement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\EventHandlers\EventHandlers.csproj">
-      <Project>{adbb25d5-9c06-4cd7-ad54-da944f120872}</Project>
-      <Name>EventHandlers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Gateway\Gateway.csproj">
       <Project>{1296caf7-f5fe-444d-8f18-e6699f6c1be0}</Project>
       <Name>Gateway</Name>

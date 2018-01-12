@@ -5,7 +5,8 @@ namespace NotificationService
 {
     public class NotificationService : INotificationService
     {
-        public NotificationService(IEventRepository eventRepository, PaginationSettings notificationsPaginationSettings)
+        public NotificationService(IEventRepository eventRepository, 
+                                   PaginationSettings notificationsPaginationSettings)
         {
             _eventRepository = eventRepository;
             _notificationsPaginationSettings = notificationsPaginationSettings;
