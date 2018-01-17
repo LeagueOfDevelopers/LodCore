@@ -7,6 +7,7 @@ namespace DataAccessTests
     public class DatabaseSessionProviderTests
     {
         [TestMethod]
+        [TestCategory("Integration")]
         public void CreateSchemaTest()
         {
             var provider = new DatabaseSessionProvider();
