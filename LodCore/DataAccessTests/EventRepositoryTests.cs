@@ -11,6 +11,7 @@ namespace DataAccessTests
     public class EventRepositoryTests
     {
         [TestMethod]
+        [TestCategory("Integration")]
         public void EventIsStoredSuccessfully()
         {
             var provider = new DatabaseSessionProvider();

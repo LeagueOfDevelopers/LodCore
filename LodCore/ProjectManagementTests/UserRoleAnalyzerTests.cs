@@ -22,6 +22,7 @@ namespace ProjectManagementTests
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public void EqualRoles_ReturnedAsUserRole()
         {
             var userId = 1;
@@ -35,6 +36,7 @@ namespace ProjectManagementTests
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public void NoRoles_ReturnDefaultRole()
         {
             var userId = 1;
@@ -48,6 +50,7 @@ namespace ProjectManagementTests
         }
 
         [TestMethod]
+        [TestCategory("Integration")]
         public void ApproximatelyEqualRoles_ReturnedAsUserRole()
         {
             var userId = 1;

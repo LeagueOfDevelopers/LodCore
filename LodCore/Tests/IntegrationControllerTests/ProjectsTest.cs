@@ -2,6 +2,7 @@
 using IntegrationControllerTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ploeh.AutoFixture;
+using System.Net.Http;
 
 namespace IntegrationControllerTests
 {

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Net.Http;
 using IntegrationControllerTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
