@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using Common;
 using FrontendServices.Models;
 using Newtonsoft.Json;
 using ProjectManagement.Domain;
 using Image = Common.Image;
+
 
 namespace IntegrationControllerTests.Helpers
 {
@@ -46,7 +47,7 @@ namespace IntegrationControllerTests.Helpers
             };
             var response =
                 await client.PostAsync(
-                    new Uri(Settings.EndpointUri, "projects"),
+                    new Uri(Settings.EndpointUri, "projects").ToString(),
                     project,
                     new JsonMediaTypeFormatter());
             return response;
