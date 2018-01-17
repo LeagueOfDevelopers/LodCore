@@ -25,6 +25,7 @@ using UserManagement.Domain.Events;
 using UserManagement.Infrastructure;
 using UserPresentaton;
 using RabbitMQEventBus;
+using Serilog;
 using Gateway;
 using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
@@ -35,9 +36,9 @@ namespace FrontendServices
     {
         public Container Configure()
         {
+            StartLogger();
             var container = new Container();
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
-
             RegisterSettings(container);
             container.Register<IDatabaseSessionProvider, DatabaseSessionProvider>(Lifestyle.Singleton);
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
@@ -174,5 +175,14 @@ namespace FrontendServices
 			consumersContainer.RegisterConsumer(container.GetInstance<PasswordChangeHandler>());
 			consumersContainer.RegisterConsumer(container.GetInstance<MailValidationHandler>());
 	    }
+
+        private static void StartLogger()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Loggly()
+                .CreateLogger(); 
+            Log.Information("Logger started");
+        }
     }
 }
