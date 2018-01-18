@@ -30,7 +30,6 @@ namespace NotificationServiceTests
         }
 
         [TestMethod]
-        [TestCategory("Integration")]
         public void SendOutEmailsAboutEventUsesNotificationSettings()
         {
             //arrange

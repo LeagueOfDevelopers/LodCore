@@ -28,7 +28,6 @@ namespace UserManagerTests
         }
 
         [TestMethod]
-        [TestCategory("Integration")]
         public void ConfirmationServiceSaveTheToken()
         {
             //arrange
@@ -44,7 +43,6 @@ namespace UserManagerTests
         }
 
         [TestMethod]
-        [TestCategory("Integration")]
         public void ConfirmationServiceConfirmsEmail()
         {
             //arrange
@@ -67,7 +65,6 @@ namespace UserManagerTests
         }
 
         [TestMethod]
-        [TestCategory("Integration")]
         public void ConfirmationServiceConfirmsProfile()
         {
             var mailValidationRq = new MailValidationRequest(42, "thisistoken");

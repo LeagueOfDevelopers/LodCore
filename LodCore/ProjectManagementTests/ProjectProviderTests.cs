@@ -35,7 +35,6 @@ namespace ProjectManagementTests
         }
 
         [TestMethod]
-        [TestCategory("Integration")]
         public void ProjectHasToBeAddedSuccessfully()
         {
             var createRequest = _fixture.Create<CreateProjectRequest>();
