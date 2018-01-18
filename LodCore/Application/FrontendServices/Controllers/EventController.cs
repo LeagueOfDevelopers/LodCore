@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Http;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
@@ -9,7 +7,8 @@ using FrontendServices.Models;
 using Journalist;
 using NotificationService;
 using UserManagement.Domain;
-using Event = FrontendServices.Models.Event;
+using Serilog;
+using System;
 
 namespace FrontendServices.Controllers
 {
@@ -19,7 +18,9 @@ namespace FrontendServices.Controllers
         private readonly EventMapper _eventMapper;
         private readonly IPaginationWrapper<Delivery> _paginationWrapper; 
 
-        public EventController(INotificationService notificationService, EventMapper eventMapper, IPaginationWrapper<NotificationService.Delivery> paginationWrapper)
+        public EventController(INotificationService notificationService, 
+                               EventMapper eventMapper, 
+                               IPaginationWrapper<Delivery> paginationWrapper)
         {
             _notificationService = notificationService;
             _eventMapper = eventMapper;
@@ -39,7 +40,15 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.User)]
         public PaginableObject GetEventsByPage(int pageId)
         {
-            Require.ZeroOrGreater(pageId, nameof(pageId));
+            try
+            {
+                Require.ZeroOrGreater(pageId, nameof(pageId));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return null;
+            }
 
             var userId = User.Identity.GetId();
 

@@ -13,6 +13,7 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
+using Serilog;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;
@@ -57,7 +58,15 @@ namespace FrontendServices.Controllers
         [Route("developers/random/{count}")]
         public IEnumerable<IndexPageDeveloper> GetRandomIndexPageDevelopers(int count)
         {
-            Require.ZeroOrGreater(count, nameof(count));
+            try
+            {
+                Require.ZeroOrGreater(count, nameof(count));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return new IndexPageDeveloper[0];
+            }
 
             var users = _userManager.GetUserList(
                 GetAccountFilter())
@@ -92,11 +101,8 @@ namespace FrontendServices.Controllers
             else
             {
                 var pageParamValue = paramsNameValueConnection[PageParamName];
-
                 if (!int.TryParse(pageParamValue, out pageId))
-                {
                     throw new HttpResponseException(HttpStatusCode.BadRequest);
-                }
             }
 
             var users = _userManager.GetUserList(pageId,
@@ -110,8 +116,6 @@ namespace FrontendServices.Controllers
         [Route("developers/search/{searchString}")]
         public IEnumerable<DeveloperPageDeveloper> SearchDevelopers(string searchString)
         {
-            Require.NotEmpty(searchString, nameof(searchString));
-
             var users = _userManager.GetUserList(searchString);
 
             var developerPageDevelopers = users
@@ -124,7 +128,15 @@ namespace FrontendServices.Controllers
         [Route("developers/{id}")]
         public IHttpActionResult GetDeveloper(int id)
         {
-            Require.Positive(id, nameof(id));
+            try
+            {
+                Require.Positive(id, nameof(id));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
             try
             {
                 var user = _userManager.GetUser(id);
@@ -140,8 +152,9 @@ namespace FrontendServices.Controllers
 
                 return Ok(_mapper.ToGuestDeveloper(user));
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
         }
@@ -173,8 +186,9 @@ namespace FrontendServices.Controllers
             {
                 _userManager.CreateUser(createAccountRequest);
             }
-            catch (AccountAlreadyExistsException)
+            catch (AccountAlreadyExistsException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
 
@@ -186,8 +200,16 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.User)]
         public IHttpActionResult UpdateProfile(int id, [FromBody] ProfileUpdateRequest profileRequest)
         {
-            Require.Positive(id, nameof(id));
-            Require.NotNull(profileRequest, nameof(profileRequest));
+            try
+            {
+                Require.Positive(id, nameof(id));
+                Require.NotNull(profileRequest, nameof(profileRequest));
+            }
+            catch(Exception ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -201,26 +223,24 @@ namespace FrontendServices.Controllers
             {
                 userToChange = _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
 
-            if (profileRequest != null)
+            var profile = new Profile
             {
-                var profile = new Profile
-                {
-                    Image = profileRequest.Image,
-                    InstituteName = profileRequest.InstituteName,
-                    PhoneNumber = profileRequest.PhoneNumber,
-                    Specialization = profileRequest.Specialization,
-                    StudentAccessionYear = profileRequest.StudentAccessionYear,
-                    StudyingDirection = profileRequest.StudyingDirection,
-                    VkProfileUri = profileRequest.VkProfileUri
-                };
+                Image = profileRequest.Image,
+                InstituteName = profileRequest.InstituteName,
+                PhoneNumber = profileRequest.PhoneNumber,
+                Specialization = profileRequest.Specialization,
+                StudentAccessionYear = profileRequest.StudentAccessionYear,
+                StudyingDirection = profileRequest.StudyingDirection,
+                VkProfileUri = profileRequest.VkProfileUri
+            };
 
-                userToChange.Profile = profile;
-            }
+            userToChange.Profile = profile;
 
             _userManager.UpdateUser(userToChange);
 
@@ -232,7 +252,6 @@ namespace FrontendServices.Controllers
         public IHttpActionResult ChangePassword([FromBody] PasswordChangeRequest request)
         {
             Account userToChange;
-
             if (User.IsInRole(AccountRole.User))
             {
                 userToChange = _userManager.GetUser(User.Identity.GetId());
@@ -257,9 +276,7 @@ namespace FrontendServices.Controllers
             {
                 return BadRequest();
             }
-
             _userManager.ChangeUserPassword(userId, request.NewPassword);
-
             return Ok();
         }
 
@@ -269,8 +286,16 @@ namespace FrontendServices.Controllers
         public IHttpActionResult UpdateNotificationSetiings(int id,
             [FromBody] NotificationSetting[] notificationSettings)
         {
-            Require.Positive(id, nameof(id));
-            Require.NotNull(notificationSettings, nameof(notificationSettings));
+            try
+            {
+                Require.Positive(id, nameof(id));
+                Require.NotNull(notificationSettings, nameof(notificationSettings));
+            }
+            catch(Exception ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -292,23 +317,19 @@ namespace FrontendServices.Controllers
             {
                 _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
-
-            if (notificationSettings != null)
+            foreach (var notificationSetting in notificationSettings)
             {
-                foreach (var notificationSetting in notificationSettings)
-                {
-                    _userPresentationProvider.UpdateNotificationSetting(
+                _userPresentationProvider.UpdateNotificationSetting(
                         new UserPresentaton.NotificationSetting(
                             id,
                             notificationSetting.NotificationType,
                             notificationSetting.NotificationSettingValue));
-                }
             }
-
             return Ok();
         }
 
@@ -317,13 +338,22 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.User)]
         public NotificationSetting[] GetNotificationSettings(int id)
         {
-            Require.Positive(id, nameof(id));
+            try
+            {
+                Require.Positive(id, nameof(id));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return new NotificationSetting[0];
+            }
             try
             {
                 var user = _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
@@ -341,18 +371,18 @@ namespace FrontendServices.Controllers
         [Route("developers/confirmation/{confirmationToken}")]
         public IHttpActionResult ConfirmEmail(string confirmationToken)
         {
-            Require.NotEmpty(confirmationToken, nameof(confirmationToken));
-
             try
             {
                 _confirmationService.ConfirmEmail(confirmationToken);
             }
-            catch (TokenNotFoundException)
+            catch (TokenNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return BadRequest("Token not found");
             }
             catch (InvalidOperationException exception)
             {
+                Log.Warning(exception, exception.Message);
                 return BadRequest(exception.Message);
             }
 
@@ -363,7 +393,8 @@ namespace FrontendServices.Controllers
         [Route("password/recovery")]
         public IHttpActionResult InitiateProcedureOfPasswordRecovery([FromBody] Credentials credentials)
         {
-            var accountToRecover = _userManager.GetUserList(user => user.Email.Address == credentials.Email).SingleOrDefault();
+            var accountToRecover = _userManager.GetUserList(user => 
+                user.Email.Address == credentials.Email).SingleOrDefault();
 
             if (accountToRecover != null)
             {
