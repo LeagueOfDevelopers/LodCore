@@ -5,13 +5,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Common;
 using FilesManagement;
 using FrontendServices.Authorization;
-using FrontendServices.Models;
 using Journalist;
 using UserManagement.Domain;
 using Image = FrontendServices.Models.Image;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -49,12 +48,14 @@ namespace FrontendServices.Controllers
             {
                 return await _fileManager.UploadFileAsync(Request.Content);
             }
-            catch (NotSupportedException)
+            catch (NotSupportedException ex)
             {
+                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (InvalidDataException)
+            catch (InvalidDataException ex)
             {
+                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -68,14 +69,17 @@ namespace FrontendServices.Controllers
             {
                 var image = await _fileManager.UploadImageAsync(Request.Content);
 
-                return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath), Path.GetFileName(image.SmallPhotoUri.LocalPath));
+                return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath), 
+                           Path.GetFileName(image.SmallPhotoUri.LocalPath));
             }
-            catch (NotSupportedException)
+            catch (NotSupportedException ex)
             {
+                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (InvalidDataException)
+            catch (InvalidDataException ex)
             {
+                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -87,8 +91,9 @@ namespace FrontendServices.Controllers
             {
                 stream = getStream();
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 

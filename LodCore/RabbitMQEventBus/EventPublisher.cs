@@ -1,6 +1,7 @@
 ﻿using Common;
 using EasyNetQ;
 using EasyNetQ.Topology;
+using Serilog;
 
 namespace RabbitMQEventBus
 {
@@ -14,7 +15,11 @@ namespace RabbitMQEventBus
 
 		public void PublishEvent<T>(T @event) where T : EventInfoBase
 		{
-			_bus.Publish(_exchange, typeof(T).FullName, false, new Message<T>(@event));
+            var routingKey = typeof(T).FullName;
+            var message = new Message<T>(@event);
+			_bus.Publish(_exchange, routingKey, false, message);
+            Log.Information("Message: {0} with routing key {1} was sent to main exchange",
+                            message, routingKey);
 		}
 
 		private readonly IAdvancedBus _bus;

@@ -6,6 +6,7 @@ using UserManagement.Domain;
 using Journalist;
 using FrontendServices.Authorization;
 using UserManagement.Application;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -39,11 +40,19 @@ namespace FrontendServices.Controllers
         [Route("auth/github/callback/{userId}")]
         public IHttpActionResult GetAuthenticationTokenByCode(int userId, string code, string state)
         {
-            if (!_githubGateway.StateIsValid(state))
-                throw new InvalidOperationException(
-                    "Security fail: the received state value doesn't correspond to the expected");
-            if (String.IsNullOrEmpty(code))
-                throw new HttpResponseException(HttpStatusCode.BadGateway);
+            try
+            {
+                if (!_githubGateway.StateIsValid(state))
+                    throw new InvalidOperationException(
+                        "Security fail: the received state value doesn't correspond to the expected");
+                if (String.IsNullOrEmpty(code))
+                    throw new InvalidOperationException("Value of code can't be blank or null");
+            }
+            catch(InvalidOperationException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return StatusCode(HttpStatusCode.BadGateway);
+            }
             var token = _githubGateway.GetTokenByCode(code);
             var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(token));
             SaveLinkToGithubProfile(link, userId);

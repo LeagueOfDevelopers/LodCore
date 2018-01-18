@@ -7,6 +7,7 @@ using NHibernate.Cfg;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Tool.hbm2ddl;
 using Common;
+using Serilog;
 
 namespace DataAccess
 {
@@ -16,28 +17,42 @@ namespace DataAccess
 
         public DatabaseSessionProvider()
         {
-            var configuration = new Configuration();
-            configuration.Configure();
-            var modelMapper = new ModelMapper();
-            modelMapper.AddMapping<UserMap>();
-            modelMapper.AddMapping<ProjectMap>();
-            modelMapper.AddMapping<EventMap>();
-            modelMapper.AddMapping<DeliveryMap>();
-            modelMapper.AddMapping<MailValidationRequestMap>();
-            modelMapper.AddMapping<ProjectMembershipMap>();
-            modelMapper.AddMapping<NotificationSettingMap>();
-            modelMapper.AddMapping<NotificationEmailMapping>();
-            modelMapper.AddMapping<PasswordChangeRequestMap>();
-            configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
-
-            _factory = configuration.BuildSessionFactory();
-
-            new SchemaUpdate(configuration).Execute(false, true);
+            try
+            {
+                var configuration = new Configuration();
+                configuration.Configure();
+                var modelMapper = new ModelMapper();
+                modelMapper.AddMapping<UserMap>();
+                modelMapper.AddMapping<ProjectMap>();
+                modelMapper.AddMapping<EventMap>();
+                modelMapper.AddMapping<DeliveryMap>();
+                modelMapper.AddMapping<MailValidationRequestMap>();
+                modelMapper.AddMapping<ProjectMembershipMap>();
+                modelMapper.AddMapping<NotificationSettingMap>();
+                modelMapper.AddMapping<NotificationEmailMapping>();
+                modelMapper.AddMapping<PasswordChangeRequestMap>();
+                configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
+                _factory = configuration.BuildSessionFactory();
+                new SchemaUpdate(configuration).Execute(false, true);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Database failure: {0}", ex.Message);
+            }
         }
 
         public ISession GetCurrentSession()
         {
-            return Session;
+            Log.Debug("Session {0} is returned", Session);
+            try
+            {
+                return Session;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Database session failure: {0}", ex.Message);
+                return null;
+            }
         }
 
         public void OpenSession()
@@ -51,15 +66,17 @@ namespace DataAccess
             {
                 Transaction = Session.BeginTransaction();
             }
+            Log.Debug("Session {0} with transaction {1} is opened", Session, Transaction);
         }
 
         public void CloseSession()
         {
             if (Transaction != null && Transaction.IsActive)
             {
-                Transaction.Commit();    
+                Transaction.Commit();
+                Log.Debug("Changes were saved during transaction: {0}", Transaction);
             }
-
+            Log.Debug("Session {0} is going to be closed", Session);
             Session?.Dispose();
         }
 
@@ -68,6 +85,7 @@ namespace DataAccess
             if (Transaction != null && Transaction.IsActive)
             {
                 Transaction.Rollback();
+                Log.Debug("Transaction is rolling back: {0}", Transaction);
                 Transaction.Dispose();
             }
 

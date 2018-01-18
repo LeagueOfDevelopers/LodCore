@@ -6,6 +6,7 @@ using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
 using Common;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -34,17 +35,27 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.Administrator)]
         public IHttpActionResult ConfirmDeveloper(int userId)
         {
-            Require.Positive(userId, nameof(userId));
+            try
+            {
+                Require.Positive(userId, nameof(userId));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
             try
             {
                 _confirmationService.ConfirmProfile(userId);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
+                Log.Warning(ex, ex.Message);
                 return Conflict();
             }
 
@@ -56,10 +67,16 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.Administrator)]
         public IHttpActionResult SendAdminNotification([FromBody] AdminNotificationInfo adminNotificationInfo)
         {
-            Require.NotNull(adminNotificationInfo, nameof(adminNotificationInfo));
-
+            try
+            {
+                Require.NotNull(adminNotificationInfo, nameof(adminNotificationInfo));
+            }
+            catch(NullReferenceException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
             _eventPublisher.PublishEvent(adminNotificationInfo);
-
             return Ok();
         }
 
@@ -68,12 +85,18 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.Administrator)]
         public IHttpActionResult ChangeUserHideStatus(int id, bool condition)
         {
-            Require.Positive(id, "id");
-
+            try
+            {
+                Require.Positive(id, nameof(id));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
             var account = _userManager.GetUser(id);
             account.IsHidden = condition;
             _userManager.UpdateUser(account);
-
             return Ok();
         }
 
@@ -82,12 +105,18 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.Administrator)]
         public IHttpActionResult PromoteToAdmin(int id)
         {
-            Require.Positive(id, "id");
-
+            try
+            {
+                Require.Positive(id, nameof(id));
+            }
+            catch(ArgumentOutOfRangeException ex)
+            {
+                Log.Warning(ex, ex.Message);
+                return BadRequest();
+            }
             var account = _userManager.GetUser(id);
             account.Role = AccountRole.Administrator;
             _userManager.UpdateUser(account);
-
             return Ok();
         }
     }
