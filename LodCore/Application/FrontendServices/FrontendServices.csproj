@@ -289,7 +289,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Data\Authorization\ProjectsPolicies.cs" />
-    <Compile Include="App_Data\ExceptionLogger.cs" />
     <Compile Include="App_Data\IPaginationWrapper.cs" />
     <Compile Include="App_Data\Mappers\EventMapper.cs" />
     <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />

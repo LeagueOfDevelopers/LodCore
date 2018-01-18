@@ -165,7 +165,7 @@ namespace FrontendServices
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .WriteTo.File("C:\\Users\\user\\Desktop\\logger.txt")
+                .WriteTo.Loggly()
                 .CreateLogger(); 
             Log.Information("Logger started");
         }
