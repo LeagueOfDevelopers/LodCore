@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
 using UserManagement.Domain;
+using Serilog;
 
 namespace FrontendServices.Authorization
 {
@@ -19,8 +20,9 @@ namespace FrontendServices.Authorization
             {
                 return lodIdentity.UserId;
             }
-
-            throw new ArgumentException("Identity is not lod identity");
+            var ex = new ArgumentException("Identity is not lod identity");
+            Log.Warning(ex, ex.Message);
+            throw ex;
         }
 
         public static void AssertResourceOwnerOrAdmin(this IPrincipal principal, int identityId)
@@ -28,7 +30,9 @@ namespace FrontendServices.Authorization
             var lodPrincipal = principal as LodPrincipal;
             if (lodPrincipal?.Identity.GetId() != identityId && !principal.IsInRole(AccountRole.Administrator))
             {
-                throw new UnauthorizedAccessException();
+                var ex = new UnauthorizedAccessException();
+                Log.Warning(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -37,7 +41,9 @@ namespace FrontendServices.Authorization
             var lodPrincipal = principal as LodPrincipal;
             if (lodPrincipal?.Identity.GetId() != identityId)
             {
-                throw new UnauthorizedAccessException();
+                var ex = new UnauthorizedAccessException();
+                Log.Warning(ex, ex.Message);
+                throw ex;
             }
         }
     }
