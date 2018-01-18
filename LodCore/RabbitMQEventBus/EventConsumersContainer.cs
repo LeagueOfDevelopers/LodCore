@@ -2,6 +2,7 @@
 using EasyNetQ;
 using EasyNetQ.Topology;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace RabbitMQEventBus
 {
@@ -42,6 +43,7 @@ namespace RabbitMQEventBus
 		public void StopListening()
 		{
             _bus.SafeDispose();
+            Log.Information("Event bus listening has stopped");
 		}
 
 		private static string GetQueueNameForConsumer<T>(IEventConsumer<T> consumer) 
@@ -64,6 +66,7 @@ namespace RabbitMQEventBus
 			                       $"password={_eventBusSettings.Password}";
 			_bus = RabbitHutch.CreateBus(connectionString).Advanced;
             _mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
+            Log.Information("Event bus listening has started");
         }
 
         private readonly IDatabaseSessionProvider _databaseSessionProvider;
