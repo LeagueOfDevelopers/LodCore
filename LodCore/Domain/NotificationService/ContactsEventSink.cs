@@ -18,11 +18,9 @@ namespace NotificationService
         {
             Require.NotNull(eventInfo, nameof(eventInfo));
 
-            var @event = new Event(eventInfo);
-
             var distributionPolicy = DistributionPolicyFactory.GetAdminRelatedPolicy();
 
-            EventRepository.DistrubuteEvent(@event, distributionPolicy);
+            EventRepository.SaveEvent(new Event(eventInfo), distributionPolicy);
 
             Mailer.SendNotificationEmail(distributionPolicy.ReceiverIds, eventInfo);
         }

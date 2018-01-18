@@ -7,7 +7,6 @@ using Journalist;
 using NHibernate.Util;
 using ProjectManagement.Infrastructure;
 using UserManagement.Application;
-using IMailer = UserManagement.Application.IMailer;
 using UserManagement.Infrastructure;
 
 namespace UserManagement.Domain
@@ -26,7 +25,6 @@ namespace UserManagement.Domain
             IConfirmationService confirmationService, 
             PaginationSettings paginationSettings, 
             IProjectMembershipRepostiory projectMembershipRepostiory, 
-            IMailer mailer, 
             ApplicationLocationSettings applicationLocationSettings, 
             IPasswordManager passwordManager,
             IEventPublisher eventPublisher)
@@ -35,7 +33,6 @@ namespace UserManagement.Domain
             Require.NotNull(confirmationService, nameof(confirmationService));
             Require.NotNull(paginationSettings, nameof(paginationSettings));
             Require.NotNull(projectMembershipRepostiory, nameof(projectMembershipRepostiory));
-            Require.NotNull(mailer, nameof(mailer));
             Require.NotNull(applicationLocationSettings, nameof(applicationLocationSettings));
             Require.NotNull(passwordManager, nameof(passwordManager));
             Require.NotNull(eventPublisher, nameof(eventPublisher));

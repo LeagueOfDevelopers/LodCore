@@ -9,7 +9,7 @@ namespace NotificationService
     public class MailValidationHandler : IEventConsumer<MailValidationRequest>
     {
         public MailValidationHandler(
-			UserManagement.Application.IMailer mailer, 
+			IMailer mailer, 
             IValidationRequestsRepository validationRequestsRepository,
             ConfirmationSettings confirmationSettings,
             IUserRepository userRepository)
@@ -32,7 +32,7 @@ namespace NotificationService
 		}
 		
 		
-        private readonly UserManagement.Application.IMailer _mailer;
+        private readonly IMailer _mailer;
         private readonly IValidationRequestsRepository _validationRequestsRepository;
         private readonly ConfirmationSettings _confirmationSettings;
         private readonly IUserRepository _userRepository;

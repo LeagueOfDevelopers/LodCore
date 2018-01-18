@@ -11,7 +11,6 @@ using FilesManagement;
 using FrontendServices.App_Data;
 using FrontendServices.App_Data.Mappers;
 using Mailing;
-using Mailing.AsyncMailing;
 using NotificationService;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
@@ -27,7 +26,6 @@ using UserPresentaton;
 using RabbitMQEventBus;
 using Serilog;
 using Gateway;
-using IMailer = UserManagement.Application.IMailer;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 
 namespace FrontendServices
@@ -100,7 +98,6 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.Register<EventMapper>(Lifestyle.Singleton);
             container.Register<IValidationRequestsRepository, ValidationRequestsRepository>(Lifestyle.Singleton);
-            container.Register<INotificationMailRepository, NotificationMailRepository>(Lifestyle.Singleton);
             container.Register<IFileManager, FileManager>(Lifestyle.Singleton);
             container.Register<IUserPresentationProvider, UserPresentationProvider>(Lifestyle.Singleton);
             container.Register<INotificationSettingsRepository, NotificationSettingsRepository>(Lifestyle.Singleton);
@@ -110,6 +107,7 @@ namespace FrontendServices
                 Lifestyle.Singleton);
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
+            container.Register<IMailer, Mailer>(Lifestyle.Singleton);
             container.RegisterCollection<IEventSink>(new[] { typeof(UserManagementEventSink<>).Assembly,
                                                              typeof(NotificationEventSink<>).Assembly,
                                                              typeof(ProjectsEventSink<>).Assembly,
@@ -123,10 +121,6 @@ namespace FrontendServices
                                                       .GetEventPublisher(), Lifestyle.Singleton);
 
             container.Register<IGithubGateway, GithubGateway>(Lifestyle.Singleton);
-
-            RegisterMailing(container);
-            var sender = container.GetInstance<NotificationMailSender>();
-            sender.StartSending();
 
             var consumersContainer = container.GetInstance<EventConsumersContainer>();
             consumersContainer.StartListening();
@@ -152,15 +146,6 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadApplicationLocationSettings(settings), Lifestyle.Singleton);
         }
 
-        private static void RegisterMailing(Container container)
-        {
-            container.Register<Mailer>(Lifestyle.Singleton);
-            container.Register<MailerAsyncProxy>(Lifestyle.Singleton);
-            container.Register<NotificationService.IMailer>(container.GetInstance<MailerAsyncProxy>, Lifestyle.Singleton);
-            container.Register<IMailer>(container.GetInstance<Mailer>, Lifestyle.Singleton);
-            container.Register<NotificationMailSender>();   
-        }
-
 	    private static void RegisterEventConsumers(Container container)
 	    {
             var consumersContainer = container.GetInstance<EventConsumersContainer>();
@@ -180,7 +165,7 @@ namespace FrontendServices
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .WriteTo.Loggly()
+                .WriteTo.File("C:\\Users\\user\\Desktop\\logger.txt")
                 .CreateLogger(); 
             Log.Information("Logger started");
         }

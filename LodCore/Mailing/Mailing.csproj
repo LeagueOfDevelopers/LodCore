@@ -55,6 +55,9 @@
       <HintPath>..\packages\AutoFixture.AutoMoq.3.40.0\lib\net40\Ploeh.AutoFixture.AutoMoq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.5.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -65,17 +68,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncMailing\NotificationEmail.cs" />
-    <Compile Include="AsyncMailing\NotificationMailSender.cs" />
     <Compile Include="EventDescriptionResources.Designer.cs">
       <DependentUpon>EventDescriptionResources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="INotificationEmailDescriber.cs" />
-    <Compile Include="INotificationMailRepository.cs" />
     <Compile Include="Mailer.cs" />
-    <Compile Include="AsyncMailing\MailerAsyncProxy.cs" />
     <Compile Include="MailerSettings.cs" />
     <Compile Include="NotificationEmailDescriber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

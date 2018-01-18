@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{1D70EC78-CF24-4E1B-BDDF-619F49119C9F}"
 EndProject
@@ -51,11 +51,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactContext", "Domain\ContactContext\ContactContext.csproj", "{3C995E20-5C8D-4091-8B11-C752AA06300F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationServiceTests", "Tests\NotificationServiceTests\NotificationServiceTests.csproj", "{24B23A7B-5FBC-4472-9A1A-428B52DE8006}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExternalLibs", "ExternalLibs", "{7C1ADC82-4702-4505-9BEC-73CBCF6EA14B}"
-	ProjectSection(SolutionItems) = preProject
-		ExternalLibs\NGitLab.dll = ExternalLibs\NGitLab.dll
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationControllerTests", "Tests\IntegrationControllerTests\IntegrationControllerTests.csproj", "{2DA0A234-D982-464F-8FB5-D0A520E36E26}"
 EndProject

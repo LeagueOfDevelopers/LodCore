@@ -78,7 +78,6 @@
     <Compile Include="Application\CreateAccountRequest.cs" />
     <Compile Include="Application\IAuthorizer.cs" />
     <Compile Include="Application\IConfirmationService.cs" />
-    <Compile Include="Application\IMailer.cs" />
     <Compile Include="Application\IUserManager.cs" />
     <Compile Include="Domain\Account.cs" />
     <Compile Include="Domain\AccountAlreadyExistsException.cs" />

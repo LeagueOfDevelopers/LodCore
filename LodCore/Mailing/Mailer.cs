@@ -3,22 +3,27 @@ using System.Net.Mail;
 using Common;
 using Journalist;
 using UserManagement.Infrastructure;
-using IMailer = UserManagement.Application.IMailer;
+using NotificationService;
+using Serilog;
 
 namespace Mailing
 {
     public class Mailer : IMailer
     {
-        public Mailer(MailerSettings mailerSettings, INotificationEmailDescriber notificationEmailDescriber,
-            IUserRepository usersRepository)
+        public Mailer(MailerSettings mailerSettings, 
+            INotificationEmailDescriber notificationEmailDescriber,
+            IUserRepository usersRepository,
+            IEventPublisher eventPublisher)
         {
             Require.NotNull(mailerSettings, nameof(mailerSettings));
             Require.NotNull(notificationEmailDescriber, nameof(notificationEmailDescriber));
             Require.NotNull(usersRepository, nameof(usersRepository));
+            Require.NotNull(eventPublisher, nameof(eventPublisher));
 
             _mailerSettings = mailerSettings;
             _notificationEmailDescriber = notificationEmailDescriber;
             _usersRepository = usersRepository;
+            _eventPublisher = eventPublisher;
         }
 
         public void SendConfirmationMail(string confirmationLink, MailAddress emailAddress)
@@ -32,7 +37,15 @@ namespace Mailing
             mail.Subject = MailingResources.ConfirmationMailCaption;
             mail.Body = string.Format(MailingResources.ConfirmationMessageTemplate, confirmationLink);
 
-            client.Send(mail);
+            try
+            {
+                client.Send(mail);
+            }
+            catch (SmtpException ex)
+            {
+                Log.Error(ex, "Sending mail failure: {0}", ex.Message);
+            }
+            Log.Information("Mail with subject {0} has sent to {1}", mail.Subject, mail.To);
             client.Dispose();
         }
 
@@ -47,7 +60,15 @@ namespace Mailing
             mail.Subject = MailingResources.PasswordResetCaption;
             mail.Body = string.Format(MailingResources.PasswordResetMessageTemplate, resetLink);
 
-            client.Send(mail);
+            try
+            {
+                client.Send(mail);
+            }
+            catch (SmtpException ex)
+            {
+                Log.Error(ex, "Sending mail failure: {0}", ex.Message);
+            }
+            Log.Information("Mail with subject {0} has sent to {1}", mail.Subject, mail.To);
             client.Dispose();
         }
 
@@ -70,8 +91,16 @@ namespace Mailing
             {
                 mail.To.Add(emailAdress);
 
-                client.Send(mail);
-
+                try
+                {
+                    client.Send(mail);
+                }
+                catch (SmtpException ex)
+                {
+                    Log.Error(ex, "Sending mail failure: {0}", ex.Message);
+                    _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
+                }
+                Log.Information("Mail with subject {0} has sent to {1}", mail.Subject, mail.To);
                 mail.To.Clear();
             }
 
@@ -89,5 +118,6 @@ namespace Mailing
         private readonly MailerSettings _mailerSettings;
         private readonly INotificationEmailDescriber _notificationEmailDescriber;
         private readonly IUserRepository _usersRepository;
+        private readonly IEventPublisher _eventPublisher;
     }
 }

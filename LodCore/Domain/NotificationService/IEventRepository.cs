@@ -2,7 +2,7 @@
 {
     public interface IEventRepository
     {
-        void DistrubuteEvent(Event @event, DistributionPolicy distributionPolicy);
+        void SaveEvent(Event @event, DistributionPolicy distributionPolicy);
 
         Event[] GetEventsByUser(int userId, bool notReadOnly);
 

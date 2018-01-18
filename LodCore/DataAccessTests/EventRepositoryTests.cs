@@ -22,7 +22,7 @@ namespace DataAccessTests
             var receivers = new[] {30, 31, 32};
             var distributionPolicy = new DistributionPolicy(receivers);
 
-            repository.DistrubuteEvent(@event, distributionPolicy);
+            repository.SaveEvent(@event, distributionPolicy);
             var receivedEvent = repository.GetEventsByUser(receivers[0], false).Single();
 
             Assert.AreEqual(@event.EventInfo, receivedEvent.EventInfo);

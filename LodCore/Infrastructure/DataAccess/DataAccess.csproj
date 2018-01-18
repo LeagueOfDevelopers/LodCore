@@ -79,7 +79,6 @@
     <Compile Include="Mappings\DeliveryMap.cs" />
     <Compile Include="Mappings\EventMap.cs" />
     <Compile Include="Mappings\MailValidationRequestMap.cs" />
-    <Compile Include="Mappings\NotificationEmailMapping.cs" />
     <Compile Include="Mappings\NotificationSettingMap.cs" />
     <Compile Include="Mappings\PasswordChangeRequestMap.cs" />
     <Compile Include="Mappings\ProjectMembershipMap.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="Pagination\IPaginableRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EventRepository.cs" />
-    <Compile Include="Repositories\NotificationMailRepository.cs" />
     <Compile Include="Repositories\NotificationSettingsRepository.cs" />
     <Compile Include="Repositories\PaginableRepository.cs" />
     <Compile Include="Repositories\PasswordChangeRequestRepository.cs" />

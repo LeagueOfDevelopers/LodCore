@@ -8,7 +8,7 @@ namespace NotificationService
     public class PasswordChangeHandler : IEventConsumer<PasswordChangeRequest>
     {
         public PasswordChangeHandler(
-            UserManagement.Application.IMailer mailer,
+            IMailer mailer,
             IPasswordManager passwordManager,
             ApplicationLocationSettings applicationLocationSettings,
             IUserRepository userRepository)
@@ -27,7 +27,7 @@ namespace NotificationService
 		    _mailer.SendPasswordResetMail(link, user.Email);
 		}
 
-        private readonly UserManagement.Application.IMailer _mailer;
+        private readonly IMailer _mailer;
         private readonly IPasswordManager _passwordManager;
         private readonly ApplicationLocationSettings _applicationLocationSettings;
         private readonly IUserRepository _userRepository;

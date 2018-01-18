@@ -18,16 +18,16 @@ namespace DataAccess.Repositories
             _sessionProvider = sessionProvider;
         }
 
-        public void DistrubuteEvent(Event @event, DistributionPolicy distributionPolicy)
+        public void SaveEvent(Event @event, DistributionPolicy distributionPolicy)
         {
             var session = _sessionProvider.GetCurrentSession();
 
             var eventId = (int) session.Save(@event);
+
             foreach (var receiverId in distributionPolicy.ReceiverIds)
             {
                 var id = session.Save(new Delivery(receiverId, eventId));
             }
-            
         }
 
         public Event[] GetEventsByUser(int userId, bool newOnly)

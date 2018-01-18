@@ -22,11 +22,9 @@ namespace NotificationService
         {
             Require.NotNull(eventInfo, nameof(eventInfo));
 
-            var @event = new Event((IEventInfo)eventInfo);
-
             var distributionPolicy = GetDistributionPolicyForEvent((dynamic)eventInfo);
 
-            EventRepository.DistrubuteEvent(@event, distributionPolicy);
+            EventRepository.SaveEvent(new Event(eventInfo), distributionPolicy);
 
             SendOutEmailsAboutEvent(distributionPolicy.ReceiverIds, eventInfo);
         }
