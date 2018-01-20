@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Http;
+using Common;
 using DataAccess;
 using SimpleInjector.Integration.WebApi;
 using EasyNetQ;
@@ -19,14 +20,14 @@ namespace FrontendServices
         protected void Application_BeginRequest()
         {
             var sessionProvider = GlobalConfiguration.Configuration.DependencyResolver.GetService(
-                typeof (DatabaseSessionProvider)) as DatabaseSessionProvider;
+                typeof (IDatabaseSessionProvider)) as IDatabaseSessionProvider;
             sessionProvider.OpenSession();
         }
 
         protected void Application_EndRequest()
         {
             var sessionProvider = GlobalConfiguration.Configuration.DependencyResolver.GetService(
-                typeof (DatabaseSessionProvider)) as DatabaseSessionProvider;
+                typeof (IDatabaseSessionProvider)) as IDatabaseSessionProvider;
             sessionProvider.CloseSession();
         }
     }
