@@ -58,15 +58,7 @@ namespace FrontendServices.Controllers
         [Route("developers/random/{count}")]
         public IEnumerable<IndexPageDeveloper> GetRandomIndexPageDevelopers(int count)
         {
-            try
-            {
-                Require.ZeroOrGreater(count, nameof(count));
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return new IndexPageDeveloper[0];
-            }
+            Require.ZeroOrGreater(count, nameof(count));
 
             var users = _userManager.GetUserList(
                 GetAccountFilter())
@@ -128,15 +120,7 @@ namespace FrontendServices.Controllers
         [Route("developers/{id}")]
         public IHttpActionResult GetDeveloper(int id)
         {
-            try
-            {
-                Require.Positive(id, nameof(id));
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return BadRequest();
-            }
+            Require.Positive(id, nameof(id));
             try
             {
                 var user = _userManager.GetUser(id);
@@ -152,9 +136,8 @@ namespace FrontendServices.Controllers
 
                 return Ok(_mapper.ToGuestDeveloper(user));
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
         }
@@ -186,9 +169,8 @@ namespace FrontendServices.Controllers
             {
                 _userManager.CreateUser(createAccountRequest);
             }
-            catch (AccountAlreadyExistsException ex)
+            catch (AccountAlreadyExistsException)
             {
-                Log.Warning(ex, ex.Message);
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
 
@@ -200,16 +182,8 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.User)]
         public IHttpActionResult UpdateProfile(int id, [FromBody] ProfileUpdateRequest profileRequest)
         {
-            try
-            {
-                Require.Positive(id, nameof(id));
-                Require.NotNull(profileRequest, nameof(profileRequest));
-            }
-            catch(Exception ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return BadRequest();
-            }
+            Require.Positive(id, nameof(id));
+            Require.NotNull(profileRequest, nameof(profileRequest));
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -223,9 +197,8 @@ namespace FrontendServices.Controllers
             {
                 userToChange = _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
 
@@ -286,16 +259,8 @@ namespace FrontendServices.Controllers
         public IHttpActionResult UpdateNotificationSetiings(int id,
             [FromBody] NotificationSetting[] notificationSettings)
         {
-            try
-            {
-                Require.Positive(id, nameof(id));
-                Require.NotNull(notificationSettings, nameof(notificationSettings));
-            }
-            catch(Exception ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return BadRequest();
-            }
+            Require.Positive(id, nameof(id));
+            Require.NotNull(notificationSettings, nameof(notificationSettings));
 
             User.AssertResourceOwnerOrAdmin(id);
 
@@ -317,9 +282,8 @@ namespace FrontendServices.Controllers
             {
                 _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
             foreach (var notificationSetting in notificationSettings)
@@ -338,22 +302,13 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.User)]
         public NotificationSetting[] GetNotificationSettings(int id)
         {
-            try
-            {
-                Require.Positive(id, nameof(id));
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return new NotificationSetting[0];
-            }
+            Require.Positive(id, nameof(id));
             try
             {
                 var user = _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
@@ -375,14 +330,12 @@ namespace FrontendServices.Controllers
             {
                 _confirmationService.ConfirmEmail(confirmationToken);
             }
-            catch (TokenNotFoundException ex)
+            catch (TokenNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return BadRequest("Token not found");
             }
             catch (InvalidOperationException exception)
             {
-                Log.Warning(exception, exception.Message);
                 return BadRequest(exception.Message);
             }
 

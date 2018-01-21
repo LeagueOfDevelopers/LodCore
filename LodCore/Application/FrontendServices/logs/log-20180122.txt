@@ -1,0 +1,2 @@
+2018-01-22 00:11:17.337 +03:00 [Information] Logger started
+2018-01-22 00:11:20.819 +03:00 [Information] Event bus listening has started

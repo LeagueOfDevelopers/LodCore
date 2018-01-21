@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System.Diagnostics;
+using System.Net.Mail;
 using System.Web.Http;
 using ContactContext;
 using ContactContext.Events;
@@ -25,7 +26,6 @@ namespace FrontendServices.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             _contactsService.SendContactMessage(
                 new NewContactMessage(
                     contactMessage.ClientName,

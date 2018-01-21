@@ -54,15 +54,7 @@ namespace FrontendServices.Controllers
         [Route("projects/random/{count}")]
         public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
         {
-            try
-            {
-                Require.ZeroOrGreater(count, nameof(count));
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return new IndexPageProject[0];
-            }
+            Require.ZeroOrGreater(count, nameof(count));
 
             List<Project> requiredProjects;
             if (User.IsInRole(AccountRole.User))
@@ -144,14 +136,12 @@ namespace FrontendServices.Controllers
                 _projectProvider.GetProject(projectId);
                 _userManager.GetUser(developerId);
             }
-            catch (ProjectNotFoundException ex)
+            catch (ProjectNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
 
@@ -159,9 +149,8 @@ namespace FrontendServices.Controllers
             {
                 _projectProvider.AddUserToProject(projectId, developerId, role);
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
-                Log.Warning(ex, ex.Message);
                 return Conflict();
             }
 
@@ -172,15 +161,7 @@ namespace FrontendServices.Controllers
         [Route("projects/{projectId}")]
         public IHttpActionResult UpdateProject(int projectId, [FromBody] ProjectActionRequest updateProjectRequest)
         {
-            try
-            {
-                Require.Positive(projectId, nameof(projectId));
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return BadRequest();
-            }
+            Require.Positive(projectId, nameof(projectId));
 
             if (!ModelState.IsValid)
             {
@@ -220,14 +201,12 @@ namespace FrontendServices.Controllers
                 projectToDeleteUser = _projectProvider.GetProject(projectId);
                 _userManager.GetUser(developerId);
             }
-            catch (ProjectNotFoundException ex)
+            catch (ProjectNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
 
@@ -278,9 +257,8 @@ namespace FrontendServices.Controllers
 
                 return Ok(_projectsMapper.ToProject(project));
             }
-            catch (ProjectNotFoundException ex)
+            catch (ProjectNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return NotFound();
             }
         }
@@ -292,17 +270,8 @@ namespace FrontendServices.Controllers
 
             if (paramsDictionary.TryGetValue(PageParameterName, out page))
             {
-                try
-                {
-                    if (!int.TryParse(page, out pageNumber))
-                    {
-                        throw new HttpResponseException(HttpStatusCode.BadRequest);
-                    }
-                }
-                catch(HttpResponseException ex)
-                {
-                    Log.Warning(ex, ex.Message);
-                }
+                if (!int.TryParse(page, out pageNumber))
+                    throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);

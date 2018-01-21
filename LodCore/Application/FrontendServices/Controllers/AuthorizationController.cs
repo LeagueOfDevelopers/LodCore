@@ -29,14 +29,12 @@ namespace FrontendServices.Controllers
                 var token = _authorizer.Authorize(credentials.Email, new Password(credentials.Password));
                 return token;
             }
-            catch (AccountNotFoundException ex)
+            catch (AccountNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }

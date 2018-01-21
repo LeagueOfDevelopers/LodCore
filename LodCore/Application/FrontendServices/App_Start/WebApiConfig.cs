@@ -3,6 +3,7 @@ using System.Web.Http.Cors;
 using System.Configuration;
 using FrontendServices.Authorization;
 using UserManagement.Application;
+using FrontendServices.App_Data;
 
 namespace FrontendServices
 {
@@ -20,6 +21,7 @@ namespace FrontendServices
 
             var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
             config.Filters.Add(new AuthenticateAttribute(authorizer));
+            config.Filters.Add(new ExceptionLogger());
 
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
                 Newtonsoft.Json.PreserveReferencesHandling.Objects;

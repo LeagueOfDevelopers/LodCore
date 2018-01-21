@@ -48,14 +48,12 @@ namespace FrontendServices.Controllers
             {
                 return await _fileManager.UploadFileAsync(Request.Content);
             }
-            catch (NotSupportedException ex)
+            catch (NotSupportedException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (InvalidDataException ex)
+            catch (InvalidDataException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -72,14 +70,12 @@ namespace FrontendServices.Controllers
                 return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath), 
                            Path.GetFileName(image.SmallPhotoUri.LocalPath));
             }
-            catch (NotSupportedException ex)
+            catch (NotSupportedException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (InvalidDataException ex)
+            catch (InvalidDataException)
             {
-                Log.Warning(ex, ex.Message);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -91,9 +87,8 @@ namespace FrontendServices.Controllers
             {
                 stream = getStream();
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
-                Log.Warning(ex, ex.Message);
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 

@@ -36,20 +36,19 @@ namespace DataAccess
             }
             catch(Exception ex)
             {
-                Log.Error(ex, "Database failure: {0}", ex.Message);
+                Log.Debug(ex, "Database failure: {0}", ex.Message);
             }
         }
 
         public ISession GetCurrentSession()
         {
-            Log.Debug("Session {0} is returned", Session);
             try
             {
                 return Session;
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Database session failure: {0}", ex.Message);
+                Log.Debug(ex, "Database session failure: {0}", ex.Message);
                 return null;
             }
         }
@@ -65,7 +64,6 @@ namespace DataAccess
             {
                 Transaction = Session.BeginTransaction();
             }
-            Log.Debug("Session {0} with transaction {1} is opened", Session, Transaction);
         }
 
         public void CloseSession()
@@ -73,9 +71,7 @@ namespace DataAccess
             if (Transaction != null && Transaction.IsActive)
             {
                 Transaction.Commit();
-                Log.Debug("Changes were saved during transaction: {0}", Transaction);
             }
-            Log.Debug("Session {0} is going to be closed", Session);
             Session?.Dispose();
         }
 
@@ -84,7 +80,6 @@ namespace DataAccess
             if (Transaction != null && Transaction.IsActive)
             {
                 Transaction.Rollback();
-                Log.Debug("Transaction is rolling back: {0}", Transaction);
                 Transaction.Dispose();
             }
 

@@ -40,15 +40,7 @@ namespace FrontendServices.Controllers
         [Authorization(AccountRole.User)]
         public PaginableObject GetEventsByPage(int pageId)
         {
-            try
-            {
-                Require.ZeroOrGreater(pageId, nameof(pageId));
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                return null;
-            }
+            Require.ZeroOrGreater(pageId, nameof(pageId));
 
             var userId = User.Identity.GetId();
 

@@ -27,6 +27,7 @@ using RabbitMQEventBus;
 using Serilog;
 using Gateway;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
+using System.Web;
 
 namespace FrontendServices
 {
@@ -163,9 +164,10 @@ namespace FrontendServices
 
         private static void StartLogger()
         {
+            var rootPath = HttpContext.Current.Server.MapPath("logs");
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Loggly()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(rootPath + @"\log-{Date}.txt", shared: true)
                 .CreateLogger(); 
             Log.Information("Logger started");
         }
