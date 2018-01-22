@@ -1,9 +1,7 @@
 ﻿using System.Web;
 using System.Web.Http;
 using Common;
-using DataAccess;
 using SimpleInjector.Integration.WebApi;
-using EasyNetQ;
 
 namespace FrontendServices
 {

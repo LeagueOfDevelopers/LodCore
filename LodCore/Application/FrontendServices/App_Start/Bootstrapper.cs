@@ -167,7 +167,7 @@ namespace FrontendServices
             var rootPath = HttpContext.Current.Server.MapPath("logs");
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.RollingFile(rootPath + @"\log-{Date}.txt", shared: true)
+                .WriteTo.RollingFile(rootPath + @"\log-{Date}.log", shared: true)
                 .CreateLogger(); 
             Log.Information("Logger started");
         }

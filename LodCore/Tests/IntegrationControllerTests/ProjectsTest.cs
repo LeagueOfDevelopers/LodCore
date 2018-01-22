@@ -10,6 +10,7 @@ namespace IntegrationControllerTests
     public class ProjectsTest
     {
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task ProperProjectCreatedSuccessfully()
         {
             var response = await RequestHelper.CreateProjectAsync();
