@@ -22,6 +22,7 @@ namespace DataAccess.Mappings
             Property(user => user.Role, mapper => mapper.Column("AccountRole"));
             Property(user => user.ConfirmationStatus, mapper => mapper.Column("ConfirmationStatus"));
             Property(user => user.RegistrationTime, mapper => mapper.Column("RegistrationTime"));
+            Property(user => user.GithubAccessToken, mapper => mapper.Column("GithubAccessToken"));
             Property(user => user.IsHidden, mapper => mapper.Column("IsHidden"));
             Property(user => user.Password, mapper =>
             {

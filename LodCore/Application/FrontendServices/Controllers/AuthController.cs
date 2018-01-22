@@ -54,6 +54,7 @@ namespace FrontendServices.Controllers
                 return StatusCode(HttpStatusCode.BadGateway);
             }
             var token = _githubGateway.GetTokenByCode(code);
+            SaveAccessToken(token, userId);
             var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(token));
             SaveLinkToGithubProfile(link, userId);
             return Redirect(_profileSettings.FrontendProfileUri);
@@ -63,6 +64,13 @@ namespace FrontendServices.Controllers
         {
             var user = _userManager.GetUser(userId);
             user.Profile.LinkToGithubProfile = link;
+            _userManager.UpdateUser(user);
+        }
+
+        private void SaveAccessToken(string token, int userId)
+        {
+            var user = _userManager.GetUser(userId);
+            user.GithubAccessToken = token;
             _userManager.UpdateUser(user);
         }
 

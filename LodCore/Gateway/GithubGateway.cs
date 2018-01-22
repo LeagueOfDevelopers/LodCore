@@ -1,7 +1,7 @@
-﻿using System.Web.Security;
-using System;
+﻿using System;
 using Journalist;
 using Octokit;
+using Common;
 
 namespace Gateway
 {
@@ -20,7 +20,7 @@ namespace Gateway
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
                 Scopes = { "read:user" },
-                State = SetCsrfState(),
+                State = SetToken(),
                 RedirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}/{id}")
             };
             var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
@@ -53,9 +53,9 @@ namespace Gateway
             return state == _csrf;
         }
 
-        private string SetCsrfState()
+        private string SetToken()
         {
-            _csrf = Membership.GeneratePassword(24, 0);
+            var _csrf = TokenGenerator.GenerateToken();
             return _csrf;
         }
 

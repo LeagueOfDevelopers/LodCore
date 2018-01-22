@@ -36,6 +36,7 @@ namespace UserManagerTests
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
                 DateTime.Now,
+                null,
                 _profileMock.Object);
 
             //assert
