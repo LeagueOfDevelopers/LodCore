@@ -4,6 +4,8 @@
     {
         string GetLinkToGithubLoginPage(int currentUserId);
 
+        string GetLinkToGithubLoginPage();
+
         string GetTokenByCode(string code);
 
         string GetLinkToUserGithubProfile(string token);

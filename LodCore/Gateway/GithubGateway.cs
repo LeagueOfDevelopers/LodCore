@@ -15,13 +15,27 @@ namespace Gateway
             _gitHubClient = new GitHubClient(new ProductHeaderValue(applicationName));
         }
 
+        // for binding github account
         public string GetLinkToGithubLoginPage(int id)
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
                 Scopes = { "read:user" },
-                State = SetToken(),
+                State = SetCsrfToken(),
                 RedirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}/{id}")
+            };
+            var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
+            return githubLoginUrl.ToString();
+        }
+
+        //for login request
+        public string GetLinkToGithubLoginPage()
+        {
+            var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
+            {
+                Scopes = { "read:user" },
+                State = SetCsrfToken(),
+                RedirectUri = new Uri(_githubGatewaySettings.GithubApiDefaultCallbackUri)
             };
             var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
             return githubLoginUrl.ToString();
@@ -53,7 +67,7 @@ namespace Gateway
             return state == _csrf;
         }
 
-        private string SetToken()
+        private string SetCsrfToken()
         {
             var _csrf = TokenGenerator.GenerateToken();
             return _csrf;

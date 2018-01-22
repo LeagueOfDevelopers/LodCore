@@ -49,6 +49,15 @@ namespace DataAccess.Repositories
             return account;
         }
 
+        public Account GetAccountByGithubAccessToken(string githubAccessToken)
+        {
+            Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
+
+            var session = _sessionProvider.GetCurrentSession();
+            var account = session.Get<Account>(githubAccessToken);
+            return account;
+        }
+
         public List<Account> GetAllAccounts(Func<Account, bool> predicate = null)
         {
             var session = _sessionProvider.GetCurrentSession();

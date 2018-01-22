@@ -58,19 +58,36 @@ namespace UserManagement.Domain
             {
                 throw new UnauthorizedAccessException("Wrong password");
             }
+            var token = GetToken(userAccount);
+            return token;
+        }
 
-            var existantToken = TakeTokenByUserId(userAccount.UserId);
-            if (existantToken != null)
+        public AuthorizationTokenInfo AuthorizeByGithubAccessToken(string githubAccessToken)
+        {
+            Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
+
+            var account = _userRepository.GetAccountByGithubAccessToken(githubAccessToken);
+            if (account == null)
             {
-                return existantToken;
+                throw new AccountNotFoundException("There is no account with such github access token");
             }
-
-            var token = GenerateNewToken(userAccount);
-            _tokensWithGenerationTime.AddOrUpdate(token.Token, token, (oldToken, info) => token);
+            var token = GetToken(account);
             return token;
         }
 
         public TimeSpan TokenLifeTime { get; }
+
+        private AuthorizationTokenInfo GetToken(Account account)
+        {
+            var existantToken = TakeTokenByUserId(account.UserId);
+            if (existantToken != null)
+            {
+                return existantToken;
+            }
+            var token = GenerateNewToken(account);
+            _tokensWithGenerationTime.AddOrUpdate(token.Token, token, (oldToken, info) => token);
+            return token;
+        }
 
         private AuthorizationTokenInfo TakeTokenByUserId(int userId)
         {

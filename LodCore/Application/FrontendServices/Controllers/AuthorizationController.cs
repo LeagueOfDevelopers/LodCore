@@ -6,7 +6,6 @@ using FrontendServices.Models;
 using Journalist;
 using UserManagement.Application;
 using UserManagement.Domain;
-using Serilog;
 
 namespace FrontendServices.Controllers
 {

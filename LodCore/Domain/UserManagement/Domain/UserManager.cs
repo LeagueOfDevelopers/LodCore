@@ -75,6 +75,15 @@ namespace UserManagement.Domain
             return account;
         }
 
+        public Account GetUserByGithubAccessToken(string githubAccessToken)
+        {
+            Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
+
+            var account = _userRepository.GetAccountByGithubAccessToken(githubAccessToken);
+
+            return account;
+        }
+
         public void CreateUser(CreateAccountRequest request)
         {
             Require.NotNull(request, nameof(request));
@@ -99,6 +108,24 @@ namespace UserManagement.Domain
             var userId = _userRepository.CreateAccount(newAccount);
 
             _confirmationService.SetupEmailConfirmation(userId);
+        }
+
+        public int CreateUserTemplate()
+        {
+            var templateAccount = new Account(
+                null,
+                null,
+                null,
+                null,
+                AccountRole.User,
+                ConfirmationStatus.EmailConfirmed,
+                DateTime.Now,
+                null,
+                null);
+
+            var userId = _userRepository.CreateAccount(templateAccount);
+
+            return userId;
         }
 
         public void UpdateUser(Account account)
