@@ -18,8 +18,8 @@ namespace RabbitMQEventBus
             var routingKey = typeof(T).FullName;
             var message = new Message<T>(@event);
 			_bus.Publish(_exchange, routingKey, false, message);
-            Log.Information("Message: {0} with routing key {1} was sent to main exchange",
-                            message, routingKey);
+            Log.Information("Message: {@0} with routing key {1} was sent to main exchange",
+                            message.Body, routingKey);
 		}
 
 		private readonly IAdvancedBus _bus;

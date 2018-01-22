@@ -34,7 +34,7 @@ namespace RabbitMQEventBus
                     {
                         Log.Error(ex, ex.Message);
                     }
-                    Log.Information("Message {0} from queue {1} has consumed", message.Body, queue);
+                    Log.Information("Message {@0} has consumed", info);
                 }
             ));
 		}

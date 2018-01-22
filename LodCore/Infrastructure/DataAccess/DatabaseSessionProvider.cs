@@ -38,6 +38,7 @@ namespace DataAccess
             {
                 Log.Debug(ex, "Database failure: {0}", ex.Message);
             }
+            Log.Information("DatabaseSessionProvider has started");
         }
 
         public ISession GetCurrentSession()

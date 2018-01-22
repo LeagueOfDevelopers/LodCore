@@ -45,7 +45,7 @@ namespace Mailing
             {
                 Log.Error(ex, "Sending mail failure: {0}", ex.Message);
             }
-            Log.Information("Mail with subject {0} has sent to {1}", mail.Subject, mail.To);
+            Log.Information("Mail {@0} has sent", mail);
             client.Dispose();
         }
 
@@ -68,7 +68,7 @@ namespace Mailing
             {
                 Log.Error(ex, "Sending mail failure: {0}", ex.Message);
             }
-            Log.Information("Mail with subject {0} has sent to {1}", mail.Subject, mail.To);
+            Log.Information("Mail {@0} has sent", mail);
             client.Dispose();
         }
 
@@ -100,7 +100,7 @@ namespace Mailing
                     Log.Error(ex, "Sending mail failure: {0}", ex.Message);
                     _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
                 }
-                Log.Information("Mail with subject {0} has sent to {1}", mail.Subject, mail.To);
+                Log.Information("Mail {@0} has sent", mail);
                 mail.To.Clear();
             }
 

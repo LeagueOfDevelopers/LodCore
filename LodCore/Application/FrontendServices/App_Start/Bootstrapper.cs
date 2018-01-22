@@ -169,7 +169,7 @@ namespace FrontendServices
                 .MinimumLevel.Debug()
                 .WriteTo.RollingFile(rootPath + @"\log-{Date}.log", shared: true)
                 .CreateLogger(); 
-            Log.Information("Logger started");
+            Log.Information("Logger has started");
         }
     }
 }
