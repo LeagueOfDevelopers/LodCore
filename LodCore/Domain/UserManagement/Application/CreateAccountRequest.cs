@@ -25,6 +25,19 @@ namespace UserManagement.Application
             Profile = profile;
         }
 
+        public CreateAccountRequest(
+            string lastname,
+            string firstname,
+            Profile profile)
+        {
+            Require.NotEmpty(lastname, nameof(lastname));
+            Require.NotEmpty(firstname, nameof(firstname));
+
+            Lastname = lastname;
+            Firstname = firstname;
+            Profile = profile;
+        }
+
         public string Email { get; private set; }
 
         public string Lastname { get; private set; }

@@ -5,6 +5,7 @@ using Gateway;
 using UserManagement.Domain;
 using Journalist;
 using FrontendServices.Authorization;
+using FrontendServices.Models;
 using UserManagement.Application;
 using Serilog;
 using Common;
@@ -30,27 +31,58 @@ namespace FrontendServices.Controllers
             _authorizer = authorizer;
         }
 
+        [HttpPost]
+        [Route("signup/github")]
+        public string GetRedirectionToAuthenticationGitHubFormToSignUp([FromBody]
+                               RegisterDeveloperWithGithubRequest request)
+        {
+            var createAccountRequest = new CreateAccountRequest(
+                request.LastName,
+                request.FirstName,
+                new Profile
+                {
+                    InstituteName = request.InstituteName,
+                    PhoneNumber = request.PhoneNumber,
+                    Specialization = request.StudyingProfile,
+                    StudentAccessionYear = request.AccessionYear,
+                    IsGraduated = request.IsGraduated,
+                    StudyingDirection = request.Department,
+                    VkProfileUri = request.VkProfileUri == null ? null : new Uri(request.VkProfileUri)
+                });
+            var userId = _userManager.CreateUserTemplate(createAccountRequest);
+            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToSignUp(userId);
+            return githubLoginUrl;
+        }
+
+        [HttpGet]
+        [Route("github/callback/signup/{userId}")]
+        public IHttpActionResult SignUpWithGitHub(int userId, string code, string state)
+        {
+            var githubAccessToken = GetToken(code, state);
+            var user = _userManager.GetUserByGithubAccessToken(githubAccessToken);
+            if (user != null)
+                throw new AccountAlreadyExistsException();
+            user = _userManager.GetUser(userId);
+            SaveUserGithubProfileAttributes(githubAccessToken, user.UserId);
+            return Redirect(_applicationLocationSettings.FrontendAdress);
+        }
+
         [HttpGet]
         [Route("login/github")]
-        public string GetRedirectionToAuthenticationGitHubFormToAuthorize()
+        public string GetRedirectionToAuthenticationGitHubFormToSignIn()
         {
             var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage();
             return githubLoginUrl;
         }
 
         [HttpGet]
-        [Route("login/github/callback")]
+        [Route("github/callback/login")]
         public IHttpActionResult AuthorizeWithGithub(string code, string state)
         {
             var githubAccessToken = GetToken(code, state);
             var user = _userManager.GetUserByGithubAccessToken(githubAccessToken);
             if (user == null)
-            {
-                var userId = _userManager.CreateUserTemplate();
-                var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(githubAccessToken));
-                SaveTokenAndLinkToGithubProfile(link, githubAccessToken, userId);
-                return Redirect(_applicationLocationSettings.FrontendAdress);
-            }
+                throw new AccountNotFoundException();
             var token = _authorizer.AuthorizeByGithubAccessToken(githubAccessToken);
             return RedirectToRoute(_profileSettings.FrontendProfileUri, token);
         }
@@ -58,7 +90,7 @@ namespace FrontendServices.Controllers
         [HttpGet]
         [Authorization(AccountRole.User)]
         [Route("auth/github")]
-        public string GetRedirectionToAuthenticationGitHubForm()
+        public string GetRedirectionToAuthenticationGitHubFormToBindAccount()
         {
             var currentUserId = User.Identity.GetId();
             var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage(currentUserId);
@@ -66,12 +98,11 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
-        [Route("auth/github/callback/{userId}")]
+        [Route("github/callback/auth/{userId}")]
         public IHttpActionResult GetAuthenticationTokenByCode(int userId, string code, string state)
         {
-            var token = GetToken(code, state);
-            var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(token));
-            SaveTokenAndLinkToGithubProfile(link, token, userId);
+            var token = GetToken(code, state); 
+            SaveUserGithubProfileAttributes(token, userId);
             return Redirect(_profileSettings.FrontendProfileUri);
         }
 
@@ -94,9 +125,10 @@ namespace FrontendServices.Controllers
             return token;
         }
 
-        private void SaveTokenAndLinkToGithubProfile(Uri link, string githubAccesstoken, int userId)
+        private void SaveUserGithubProfileAttributes(string githubAccesstoken, int userId)
         {
             var user = _userManager.GetUser(userId);
+            var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(githubAccesstoken));
             user.Profile.LinkToGithubProfile = link;
             user.GithubAccessToken = githubAccesstoken;
             _userManager.UpdateUser(user);

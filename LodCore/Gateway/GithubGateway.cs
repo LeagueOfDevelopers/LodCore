@@ -15,30 +15,25 @@ namespace Gateway
             _gitHubClient = new GitHubClient(new ProductHeaderValue(applicationName));
         }
 
+        // for registration with github request
+        public string GetLinkToGithubLoginPageToSignUp(int id)
+        {
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}signup/{id}");
+            return CreateRequest(redirectUri);
+        }
+
         // for binding github account
         public string GetLinkToGithubLoginPage(int id)
         {
-            var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
-            {
-                Scopes = { "read:user" },
-                State = SetCsrfToken(),
-                RedirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}/{id}")
-            };
-            var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
-            return githubLoginUrl.ToString();
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}auth/{id}");
+            return CreateRequest(redirectUri);
         }
 
-        //for login request
+        // for login request
         public string GetLinkToGithubLoginPage()
         {
-            var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
-            {
-                Scopes = { "read:user" },
-                State = SetCsrfToken(),
-                RedirectUri = new Uri(_githubGatewaySettings.GithubApiDefaultCallbackUri)
-            };
-            var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
-            return githubLoginUrl.ToString();
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}login");
+            return CreateRequest(redirectUri);
         }
 
         public string GetTokenByCode(string code)
@@ -71,6 +66,18 @@ namespace Gateway
         {
             var _csrf = TokenGenerator.GenerateToken();
             return _csrf;
+        }
+
+        private string CreateRequest(Uri redirectUri)
+        {
+            var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
+            {
+                Scopes = { "read:user" },
+                State = SetCsrfToken(),
+                RedirectUri = redirectUri
+            };
+            var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
+            return githubLoginUrl.ToString();
         }
 
         const string applicationName = "LodSite";

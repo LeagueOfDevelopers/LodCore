@@ -2,19 +2,13 @@
 
 namespace FrontendServices.Models
 {
-    public class RegisterDeveloperRequest
+    public class RegisterDeveloperWithGithubRequest
     {
-        [EmailAddress]
-        public string Email { get; set; }
-
         [MaxLength(50)]
         public string FirstName { get; set; }
 
         [MaxLength(50)]
         public string LastName { get; set; }
-
-        [MaxLength(50)]
-        public string Password { get; set; }
 
         [MaxLength(100)]
         public string VkProfileUri { get; set; }

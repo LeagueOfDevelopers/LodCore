@@ -2,6 +2,8 @@
 {
     public interface IGithubGateway
     {
+        string GetLinkToGithubLoginPageToSignUp(int registeredUserId);
+
         string GetLinkToGithubLoginPage(int currentUserId);
 
         string GetLinkToGithubLoginPage();

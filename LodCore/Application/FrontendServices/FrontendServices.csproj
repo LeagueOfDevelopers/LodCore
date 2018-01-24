@@ -336,6 +336,7 @@
     <Compile Include="Models\ProjectMembership.cs" />
     <Compile Include="Models\ProjectPreview.cs" />
     <Compile Include="Models\RegisterDeveloperRequest.cs" />
+    <Compile Include="Models\RegisterDeveloperWithGithubRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,7 @@ namespace UserManagement.Application
 
         Account GetUserByGithubAccessToken(string githubAccessToken);
 
-        int CreateUserTemplate();
+        int CreateUserTemplate(CreateAccountRequest accountRequest);
 
         void CreateUser(CreateAccountRequest request);
 

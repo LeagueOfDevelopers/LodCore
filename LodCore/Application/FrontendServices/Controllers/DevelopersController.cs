@@ -162,6 +162,7 @@ namespace FrontendServices.Controllers
                     PhoneNumber = request.PhoneNumber,
                     Specialization = request.StudyingProfile,
                     StudentAccessionYear = request.AccessionYear,
+                    IsGraduated = request.IsGraduated,
                     StudyingDirection = request.Department,
                     VkProfileUri = request.VkProfileUri == null ? null : new Uri(request.VkProfileUri)
                 });

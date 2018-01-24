@@ -110,18 +110,15 @@ namespace UserManagement.Domain
             _confirmationService.SetupEmailConfirmation(userId);
         }
 
-        public int CreateUserTemplate()
+        public int CreateUserTemplate(CreateAccountRequest accountRequest)
         {
             var templateAccount = new Account(
-                null,
-                null,
-                null,
-                null,
+                accountRequest.Firstname,
+                accountRequest.Lastname,
                 AccountRole.User,
                 ConfirmationStatus.EmailConfirmed,
                 DateTime.Now,
-                null,
-                null);
+                accountRequest.Profile);
 
             var userId = _userRepository.CreateAccount(templateAccount);
 

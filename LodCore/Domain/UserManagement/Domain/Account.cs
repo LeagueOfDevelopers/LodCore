@@ -34,6 +34,25 @@ namespace UserManagement.Domain
             Profile = profile;
         }
 
+        public Account(
+            string firstname,
+            string lastname,
+            AccountRole role,
+            ConfirmationStatus confirmationStatus,
+            DateTime registrationTime,
+            Profile profile)
+        {
+            Require.NotEmpty(firstname, nameof(firstname));
+            Require.NotEmpty(lastname, nameof(lastname));
+
+            Firstname = firstname;
+            Lastname = lastname;
+            Role = role;
+            ConfirmationStatus = confirmationStatus;
+            RegistrationTime = registrationTime;
+            Profile = profile;
+        }
+
         protected Account()
         {
         }

@@ -15,6 +15,8 @@ namespace UserManagement.Domain
 
         public virtual int? StudentAccessionYear { get; set; }
 
+        public virtual bool IsGraduated { get; set; }
+
         public virtual string StudyingDirection { get; set; }
 
         public virtual string InstituteName { get; set; }
