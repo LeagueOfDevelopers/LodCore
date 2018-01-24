@@ -54,7 +54,8 @@ namespace DataAccess.Repositories
             Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
 
             var session = _sessionProvider.GetCurrentSession();
-            var account = session.Get<Account>(githubAccessToken);
+            var account = session.Query<Account>().Where(user => user
+                                 .GithubAccessToken == githubAccessToken).SingleOrDefault();
             return account;
         }
 

@@ -64,7 +64,7 @@ namespace Gateway
 
         private string SetCsrfToken()
         {
-            var _csrf = TokenGenerator.GenerateToken();
+            _csrf = TokenGenerator.GenerateToken();
             return _csrf;
         }
 

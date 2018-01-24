@@ -18,23 +18,25 @@ namespace FrontendServices.Controllers
             IGithubGateway githubGateway, 
             IUserManager userManager,
             ProfileSettings profileSettings,
-            IAuthorizer authorizer)
+            IAuthorizer authorizer,
+            ApplicationLocationSettings applicationLocationSettings)
         {
             Require.NotNull(githubGateway, nameof(githubGateway));
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(profileSettings, nameof(profileSettings));
             Require.NotNull(authorizer, nameof(authorizer));
+            Require.NotNull(applicationLocationSettings, nameof(applicationLocationSettings));
 
             _githubGateway = githubGateway;
             _userManager = userManager;
             _profileSettings = profileSettings;
             _authorizer = authorizer;
+            _applicationLocationSettings = applicationLocationSettings;
         }
 
         [HttpPost]
         [Route("signup/github")]
-        public string GetRedirectionToAuthenticationGitHubFormToSignUp([FromBody]
-                               RegisterDeveloperWithGithubRequest request)
+        public string GetRedirectionToAuthenticationGitHubFormToSignUp([FromBody] RegisterDeveloperWithGithubRequest request)
         {
             var createAccountRequest = new CreateAccountRequest(
                 request.LastName,
