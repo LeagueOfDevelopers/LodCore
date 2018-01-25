@@ -62,11 +62,12 @@ namespace UserManagement.Domain
             return token;
         }
 
-        public AuthorizationTokenInfo AuthorizeByGithubAccessToken(string githubAccessToken)
+        public AuthorizationTokenInfo AuthorizeByGithubAccessToken(string link)
         {
-            Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
+            Require.NotEmpty(link, nameof(link));
 
-            var account = _userRepository.GetAccountByGithubAccessToken(githubAccessToken);
+            var account = _userRepository.GetAllAccounts(a => a.Profile
+                                         .LinkToGithubProfile == new Uri(link)).SingleOrDefault();
             if (account == null)
             {
                 throw new AccountNotFoundException("There is no account with such github access token");

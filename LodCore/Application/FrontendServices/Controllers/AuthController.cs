@@ -79,14 +79,15 @@ namespace FrontendServices.Controllers
 
         [HttpGet]
         [Route("github/callback/login")]
-        public IHttpActionResult AuthorizeWithGithub(string code, string state)
+        public AuthorizationTokenInfo AuthorizeWithGithub(string code, string state)
         {
             var githubAccessToken = GetToken(code, state);
-            var user = _userManager.GetUserByGithubAccessToken(githubAccessToken);
+            var link = _githubGateway.GetLinkToUserGithubProfile(githubAccessToken);
+            var user = _userManager.GetUserList(u => u.Profile.LinkToGithubProfile == new Uri(link))[0];
             if (user == null)
                 throw new AccountNotFoundException();
-            var token = _authorizer.AuthorizeByGithubAccessToken(githubAccessToken);
-            return RedirectToRoute(_profileSettings.FrontendProfileUri, token);
+            var token = _authorizer.AuthorizeByGithubAccessToken(link);
+            return token;
         }
 
         [HttpGet]
