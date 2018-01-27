@@ -77,17 +77,26 @@ namespace FrontendServices.Controllers
             return githubLoginUrl;
         }
 
+        [HttpPost]
+        [Route("login/github/{userId}")]
+        public AuthorizationTokenInfo LoginWithGithub(int userId)
+        {
+            var user = _userManager.GetUser(userId);
+            var link = user.Profile.LinkToGithubProfile.ToString();
+            var token = _authorizer.AuthorizeWithGithub(link);
+            return token;
+        }
+
         [HttpGet]
         [Route("github/callback/login")]
-        public AuthorizationTokenInfo AuthorizeWithGithub(string code, string state)
+        public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string code, string state)
         {
             var githubAccessToken = GetToken(code, state);
             var link = _githubGateway.GetLinkToUserGithubProfile(githubAccessToken);
             var user = _userManager.GetUserList(u => u.Profile.LinkToGithubProfile == new Uri(link))[0];
             if (user == null)
                 throw new AccountNotFoundException();
-            var token = _authorizer.AuthorizeByGithubAccessToken(link);
-            return token;
+            return Redirect(new Uri($"{_applicationLocationSettings.FrontendAdress}/login/github/{user.UserId}"));
         }
 
         [HttpGet]

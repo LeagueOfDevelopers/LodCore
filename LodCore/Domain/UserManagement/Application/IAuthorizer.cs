@@ -12,6 +12,6 @@ namespace UserManagement.Application
 
         AuthorizationTokenInfo Authorize(string email, Password password);
 
-        AuthorizationTokenInfo AuthorizeByGithubAccessToken(string githubAccessToken);
+        AuthorizationTokenInfo AuthorizeWithGithub(string linkToGithubProfile);
     }
 }

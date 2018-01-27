@@ -46,7 +46,7 @@ namespace UserManagement.Domain
 
             var userAccount = _userRepository
                 .GetAllAccounts(
-                    account => account.Email.Address == email
+                    account => account.Email?.Address == email
                                && account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
                 .SingleOrDefault();
             if (userAccount == null)
@@ -62,7 +62,7 @@ namespace UserManagement.Domain
             return token;
         }
 
-        public AuthorizationTokenInfo AuthorizeByGithubAccessToken(string link)
+        public AuthorizationTokenInfo AuthorizeWithGithub(string link)
         {
             Require.NotEmpty(link, nameof(link));
 
