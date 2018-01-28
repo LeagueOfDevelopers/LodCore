@@ -19,6 +19,7 @@ namespace FrontendServices.Models
             Uri vkProfileUri,
             string phoneNumber,
             int? studentAccessionYear,
+            bool isGraduated,
             string studyingDirection,
             string instituteName,
             string specialization,
@@ -41,6 +42,7 @@ namespace FrontendServices.Models
             VkProfileUri = vkProfileUri;
             PhoneNumber = phoneNumber;
             StudentAccessionYear = studentAccessionYear;
+            IsGraduated = isGraduated;
             StudyingDirection = studyingDirection;
             InstituteName = instituteName;
             Specialization = specialization;
@@ -69,6 +71,8 @@ namespace FrontendServices.Models
         public string PhoneNumber { get; private set; }
 
         public int? StudentAccessionYear { get; private set; }
+
+        public bool IsGraduated { get; private set; }
 
         public string StudyingDirection { get; private set; }
 

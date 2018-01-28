@@ -12,7 +12,9 @@ namespace FrontendServices.Models
             Uri photoUri,
             DateTime registrationDate,
             Uri vkProfileUri,
+            Uri linkToGithubProfile,
             int? studentAccessionYear,
+            bool isGraduated,
             string studyingDirection,
             string instituteName,
             string specialization,
@@ -29,7 +31,9 @@ namespace FrontendServices.Models
             PhotoUri = photoUri;
             RegistrationDate = registrationDate;
             VkProfileUri = vkProfileUri;
+            LinkToGithubProfile = linkToGithubProfile;
             StudentAccessionYear = studentAccessionYear;
+            IsGraduated = isGraduated;
             StudyingDirection = studyingDirection;
             InstituteName = instituteName;
             Specialization = specialization;
@@ -49,7 +53,11 @@ namespace FrontendServices.Models
 
         public Uri VkProfileUri { get; private set; }
 
+        public Uri LinkToGithubProfile { get; private set; }
+
         public int? StudentAccessionYear { get; private set; }
+
+        public bool IsGraduated { get; private set; }
 
         public string StudyingDirection { get; private set; }
 
