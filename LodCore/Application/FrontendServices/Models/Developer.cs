@@ -29,7 +29,6 @@ namespace FrontendServices.Models
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(firstName, nameof(firstName));
             Require.NotEmpty(lastName, nameof(lastName));
-            Require.NotEmpty(email, nameof(email));
 
             UserId = userId;
             FirstName = firstName;
