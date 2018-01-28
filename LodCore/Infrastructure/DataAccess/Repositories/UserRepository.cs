@@ -49,13 +49,13 @@ namespace DataAccess.Repositories
             return account;
         }
 
-        public Account GetAccountByGithubAccessToken(string githubAccessToken)
+        public Account GetAccountByLinkToGithubProfile(string link)
         {
-            Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
+            Require.NotEmpty(link, nameof(link));
 
             var session = _sessionProvider.GetCurrentSession();
             var account = session.Query<Account>().Where(user => user
-                                 .GithubAccessToken == githubAccessToken).SingleOrDefault();
+                                 .Profile.LinkToGithubProfile == new Uri(link)).SingleOrDefault();
             return account;
         }
 

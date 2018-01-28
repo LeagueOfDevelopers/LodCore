@@ -13,7 +13,6 @@ using FrontendServices.App_Data.Mappers;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using Journalist;
-using Serilog;
 using UserManagement.Application;
 using UserManagement.Domain;
 using UserPresentaton;

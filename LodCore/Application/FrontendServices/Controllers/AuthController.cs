@@ -61,7 +61,7 @@ namespace FrontendServices.Controllers
         public IHttpActionResult SignUpWithGitHub(int userId, string code, string state)
         {
             var githubAccessToken = GetToken(code, state);
-            var user = _userManager.GetUserByGithubAccessToken(githubAccessToken);
+            var user = _userManager.GetUserByLinkToGithubProfile(githubAccessToken);
             if (user != null)
                 throw new AccountAlreadyExistsException();
             user = _userManager.GetUser(userId);
@@ -93,7 +93,7 @@ namespace FrontendServices.Controllers
         {
             var githubAccessToken = GetToken(code, state);
             var link = _githubGateway.GetLinkToUserGithubProfile(githubAccessToken);
-            var user = _userManager.GetUserList(u => u.Profile.LinkToGithubProfile == new Uri(link))[0];
+            var user = _userManager.GetUserByLinkToGithubProfile(link);
             if (user == null)
                 throw new AccountNotFoundException();
             return Redirect(new Uri($"{_applicationLocationSettings.FrontendAdress}/login/github/{user.UserId}"));

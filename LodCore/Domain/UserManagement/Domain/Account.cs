@@ -15,7 +15,6 @@ namespace UserManagement.Domain
             AccountRole role,
             ConfirmationStatus confirmationStatus,
             DateTime registrationTime,
-            string githubAccessToken,
             Profile profile)
         {
             Require.NotEmpty(firstname, nameof(firstname));
@@ -30,7 +29,6 @@ namespace UserManagement.Domain
             Role = role;
             ConfirmationStatus = confirmationStatus;
             RegistrationTime = registrationTime;
-            GithubAccessToken = githubAccessToken;
             Profile = profile;
         }
 

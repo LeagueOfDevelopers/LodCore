@@ -12,7 +12,7 @@ namespace UserManagement.Infrastructure
 
         Account GetAccount(int accountId);
 
-        Account GetAccountByGithubAccessToken(string githubAccessToken);
+        Account GetAccountByLinkToGithubProfile(string linkToGithubProfile);
 
         List<Account> GetAllAccounts(Func<Account, bool> predicate = null);
 

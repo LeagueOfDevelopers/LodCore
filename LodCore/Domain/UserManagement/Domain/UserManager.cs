@@ -75,11 +75,11 @@ namespace UserManagement.Domain
             return account;
         }
 
-        public Account GetUserByGithubAccessToken(string githubAccessToken)
+        public Account GetUserByLinkToGithubProfile(string link)
         {
-            Require.NotEmpty(githubAccessToken, nameof(githubAccessToken));
+            Require.NotEmpty(link, nameof(link));
 
-            var account = _userRepository.GetAccountByGithubAccessToken(githubAccessToken);
+            var account = _userRepository.GetAccountByLinkToGithubProfile(link);
 
             return account;
         }
@@ -102,7 +102,6 @@ namespace UserManagement.Domain
                 AccountRole.User,
                 ConfirmationStatus.Unconfirmed,
                 DateTime.Now,
-                null,
                 request.Profile);
 
             var userId = _userRepository.CreateAccount(newAccount);
