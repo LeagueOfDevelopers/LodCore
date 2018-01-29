@@ -8,9 +8,13 @@ namespace FrontendServices.Models
 
         public Uri VkProfileUri { get; set; }
 
+        public Uri LinkToGithubProfile { get; set; }
+
         public string PhoneNumber { get; set; }
 
         public int? StudentAccessionYear { get; set; }
+
+        public bool IsGraduated { get; set; }
 
         public string StudyingDirection { get; set; }
 

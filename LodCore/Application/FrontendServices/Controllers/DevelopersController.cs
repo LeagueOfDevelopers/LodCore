@@ -209,8 +209,10 @@ namespace FrontendServices.Controllers
                 PhoneNumber = profileRequest.PhoneNumber,
                 Specialization = profileRequest.Specialization,
                 StudentAccessionYear = profileRequest.StudentAccessionYear,
+                IsGraduated = profileRequest.IsGraduated,
                 StudyingDirection = profileRequest.StudyingDirection,
-                VkProfileUri = profileRequest.VkProfileUri
+                VkProfileUri = profileRequest.VkProfileUri,
+                LinkToGithubProfile = profileRequest.LinkToGithubProfile
             };
 
             userToChange.Profile = profile;
