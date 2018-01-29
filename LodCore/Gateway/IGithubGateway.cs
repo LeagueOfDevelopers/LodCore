@@ -1,4 +1,6 @@
-﻿namespace Gateway
+﻿using Octokit;
+
+namespace Gateway
 {
     public interface IGithubGateway
     {
@@ -10,7 +12,9 @@
 
         string GetTokenByCode(string code);
 
-        string GetLinkToUserGithubProfile(string token);
+        User GetUserGithubProfileInformation(string token);
+
+        EmailAddress GetUserGithubProfileEmailAddress(string token);
 
         bool StateIsValid(string state);
     }

@@ -45,13 +45,22 @@ namespace Gateway
             return token.AccessToken;
         }
 
-        public string GetLinkToUserGithubProfile(string token)
+        public User GetUserGithubProfileInformation(string token)
         {
             Require.NotEmpty(token, nameof(token));
 
             _gitHubClient.Credentials = new Credentials(token);
             var userInfo = _gitHubClient.User.Current().Result;
-            return userInfo.HtmlUrl;
+            return userInfo;
+        }
+
+        public EmailAddress GetUserGithubProfileEmailAddress(string token)
+        {
+            Require.NotEmpty(token, nameof(token));
+
+            _gitHubClient.Credentials = new Credentials(token);
+            var userEmail = _gitHubClient.User.Email.GetAll().Result[0];
+            return userEmail;
         }
 
         public bool StateIsValid(string state)
@@ -72,7 +81,7 @@ namespace Gateway
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
-                Scopes = { "read:user" },
+                Scopes = { "user" },
                 State = SetCsrfToken(),
                 RedirectUri = redirectUri
             };

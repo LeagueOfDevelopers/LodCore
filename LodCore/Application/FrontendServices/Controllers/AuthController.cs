@@ -9,6 +9,7 @@ using FrontendServices.Models;
 using UserManagement.Application;
 using Serilog;
 using Common;
+using System.Net.Mail;
 
 namespace FrontendServices.Controllers
 {
@@ -61,12 +62,15 @@ namespace FrontendServices.Controllers
         public IHttpActionResult SignUpWithGitHub(int userId, string code, string state)
         {
             var githubAccessToken = GetToken(code, state);
-            var link = _githubGateway.GetLinkToUserGithubProfile(githubAccessToken);
-            var user = _userManager.GetUserByLinkToGithubProfile(link);
+            var userInfo = _githubGateway.GetUserGithubProfileInformation(githubAccessToken);
+            var user = _userManager.GetUserByLinkToGithubProfile(userInfo.HtmlUrl);
             if (user != null)
                 throw new AccountAlreadyExistsException();
             user = _userManager.GetUser(userId);
-            SaveUserGithubProfileAttributes(githubAccessToken, user.UserId);
+            user.GithubAccessToken = githubAccessToken;
+            user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
+            user.Email = new MailAddress(_githubGateway.GetUserGithubProfileEmailAddress(githubAccessToken).Email);
+            _userManager.UpdateUser(user);
             return Redirect(_applicationLocationSettings.FrontendAdress);
         }
 
@@ -93,7 +97,7 @@ namespace FrontendServices.Controllers
         public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string code, string state)
         {
             var githubAccessToken = GetToken(code, state);
-            var link = _githubGateway.GetLinkToUserGithubProfile(githubAccessToken);
+            var link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
             var user = _userManager.GetUserByLinkToGithubProfile(link);
             if (user == null)
                 throw new AccountNotFoundException();
@@ -114,8 +118,12 @@ namespace FrontendServices.Controllers
         [Route("github/callback/auth/{userId}")]
         public IHttpActionResult GetAuthenticationTokenByCode(int userId, string code, string state)
         {
-            var token = GetToken(code, state); 
-            SaveUserGithubProfileAttributes(token, userId);
+            var token = GetToken(code, state);
+            var userInfo = _githubGateway.GetUserGithubProfileInformation(token);
+            var user = _userManager.GetUser(userId);
+            user.GithubAccessToken = token;
+            user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
+            _userManager.UpdateUser(user);
             return Redirect(_profileSettings.FrontendProfileUri);
         }
 
@@ -136,15 +144,6 @@ namespace FrontendServices.Controllers
             }
             var token = _githubGateway.GetTokenByCode(code);
             return token;
-        }
-
-        private void SaveUserGithubProfileAttributes(string githubAccesstoken, int userId)
-        {
-            var user = _userManager.GetUser(userId);
-            var link = new Uri(_githubGateway.GetLinkToUserGithubProfile(githubAccesstoken));
-            user.Profile.LinkToGithubProfile = link;
-            user.GithubAccessToken = githubAccesstoken;
-            _userManager.UpdateUser(user);
         }
 
         private readonly IGithubGateway _githubGateway;

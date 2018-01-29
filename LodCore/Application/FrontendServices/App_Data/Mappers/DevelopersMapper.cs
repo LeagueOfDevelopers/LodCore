@@ -78,7 +78,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.UserId,
                 account.Firstname,
                 account.Lastname,
-                account.Email?.Address,
+                account.Email.Address,
                 account.ConfirmationStatus,
                 account.Profile?.Image?.BigPhotoUri,
                 account.RegistrationTime,

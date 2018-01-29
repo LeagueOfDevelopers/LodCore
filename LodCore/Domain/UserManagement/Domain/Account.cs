@@ -61,7 +61,7 @@ namespace UserManagement.Domain
 
         public virtual string Lastname { get; protected set; }
 
-        public virtual MailAddress Email { get; protected set; }
+        public virtual MailAddress Email { get; set; }
 
         public virtual Password Password { get; set; }
 
