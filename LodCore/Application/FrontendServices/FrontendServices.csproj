@@ -17,7 +17,7 @@
     <AssemblyName>FrontendServices</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44379</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -303,6 +303,7 @@
     <Compile Include="Authorization\AuthenticateAttribute.cs" />
     <Compile Include="Authorization\AuthorizationAttribute.cs" />
     <Compile Include="Authorization\AuthorizationExtensions.cs" />
+    <Compile Include="Authorization\HttpsValidator.cs" />
     <Compile Include="Authorization\LodIdentity.cs" />
     <Compile Include="Authorization\LodPrincipal.cs" />
     <Compile Include="Controllers\AdminController.cs" />

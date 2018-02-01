@@ -22,6 +22,7 @@ namespace FrontendServices
             var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
             config.Filters.Add(new AuthenticateAttribute(authorizer));
             config.Filters.Add(new ExceptionLogger());
+            config.Filters.Add(new HttpsValidator());
 
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
                 Newtonsoft.Json.PreserveReferencesHandling.Objects;
@@ -31,7 +32,7 @@ namespace FrontendServices
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
-            var cors = new EnableCorsAttribute(frontendDomain, "*", "*")
+            var cors = new EnableCorsAttribute("*", "*", "*")
             { SupportsCredentials = true };
             config.EnableCors(cors);
         }
