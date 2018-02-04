@@ -67,10 +67,12 @@ namespace UserManagement.Domain
             Require.NotEmpty(link, nameof(link));
 
             var account = _userRepository.GetAllAccounts(a => a.Profile
-                                         .LinkToGithubProfile == new Uri(link)).SingleOrDefault();
+                                         .LinkToGithubProfile == new Uri(link) &&
+                                         a.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
+                                         .SingleOrDefault();
             if (account == null)
             {
-                throw new AccountNotFoundException("There is no account with such github access token");
+                throw new AccountNotFoundException("There is no account with such link to github profile");
             }
             var token = GetToken(account);
             return token;

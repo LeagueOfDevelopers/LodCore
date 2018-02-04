@@ -89,9 +89,17 @@ namespace FrontendServices.Controllers
             var githubAccessToken = GetToken(code, state);
             var link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
             var user = _userManager.GetUserByLinkToGithubProfile(link);
-            if (user == null)
-                throw new AccountNotFoundException();
-            var token = _authorizer.AuthorizeWithGithub(link);
+            AuthorizationTokenInfo token;
+            try
+            {
+                if (user == null)
+                    throw new AccountNotFoundException();
+                token = _authorizer.AuthorizeWithGithub(link);
+            }
+            catch (AccountNotFoundException)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
             var encodedToken = Encoder.Encode(token);
             return Redirect(new Uri($"{_applicationLocationSettings.FrontendAdress}/login/github/{encodedToken}"));
         }
