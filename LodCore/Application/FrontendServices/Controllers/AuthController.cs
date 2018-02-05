@@ -7,7 +7,6 @@ using Journalist;
 using FrontendServices.Authorization;
 using FrontendServices.Models;
 using UserManagement.Application;
-using Serilog;
 using Common;
 using System.Net.Mail;
 
@@ -61,16 +60,23 @@ namespace FrontendServices.Controllers
         [Route("github/callback/signup/{userId}")]
         public IHttpActionResult SignUpWithGitHub(int userId, string code, string state)
         {
-            var githubAccessToken = GetToken(code, state);
-            var userInfo = _githubGateway.GetUserGithubProfileInformation(githubAccessToken);
-            var user = _userManager.GetUserByLinkToGithubProfile(userInfo.HtmlUrl);
-            if (user != null)
-                throw new AccountAlreadyExistsException();
-            user = _userManager.GetUser(userId);
-            user.GithubAccessToken = githubAccessToken;
-            user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
-            user.Email = new MailAddress(_githubGateway.GetUserGithubProfileEmailAddress(githubAccessToken).Email);
-            _userManager.UpdateUser(user);
+            try
+            {
+                var githubAccessToken = GetToken(code, state);
+                var userInfo = _githubGateway.GetUserGithubProfileInformation(githubAccessToken);
+                var user = _userManager.GetUserByLinkToGithubProfile(userInfo.HtmlUrl);
+                if (user != null)
+                    throw new AccountAlreadyExistsException();
+                user = _userManager.GetUser(userId);
+                user.GithubAccessToken = githubAccessToken;
+                user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
+                user.Email = new MailAddress(_githubGateway.GetUserGithubProfileEmailAddress(githubAccessToken).Email);
+                _userManager.UpdateUser(user);
+            }
+            catch (Exception)
+            {
+                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
+            }
             return Redirect(_applicationLocationSettings.FrontendAdress);
         }
 
@@ -86,21 +92,22 @@ namespace FrontendServices.Controllers
         [Route("github/callback/login")]
         public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string code, string state)
         {
-            var githubAccessToken = GetToken(code, state);
-            var link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
-            var user = _userManager.GetUserByLinkToGithubProfile(link);
-            AuthorizationTokenInfo token;
+            string encodedToken;
             try
             {
+                var githubAccessToken = GetToken(code, state);
+                var link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
+                var user = _userManager.GetUserByLinkToGithubProfile(link);
+                AuthorizationTokenInfo token;
                 if (user == null)
                     throw new AccountNotFoundException();
                 token = _authorizer.AuthorizeWithGithub(link);
+                encodedToken = Encoder.Encode(token);
             }
-            catch (AccountNotFoundException)
+            catch (Exception)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/login");
             }
-            var encodedToken = Encoder.Encode(token);
             return Redirect(new Uri($"{_applicationLocationSettings.FrontendAdress}/login/github/{encodedToken}"));
         }
 
@@ -129,19 +136,11 @@ namespace FrontendServices.Controllers
 
         private string GetToken(string code, string state)
         {
-            try
-            {
-                if (!_githubGateway.StateIsValid(state))
-                    throw new InvalidOperationException(
-                        "Security fail: the received state value doesn't correspond to the expected");
-                if (String.IsNullOrEmpty(code))
-                    throw new InvalidOperationException("Value of code can't be blank or null");
-            }
-            catch (InvalidOperationException ex)
-            {
-                Log.Warning(ex, ex.Message);
-                throw new HttpResponseException(HttpStatusCode.BadGateway);
-            }
+            if (!_githubGateway.StateIsValid(state))
+                throw new InvalidOperationException(
+                    "Security fail: the received state value doesn't correspond to the expected");
+            if (String.IsNullOrEmpty(code))
+                throw new InvalidOperationException("Value of code can't be blank or null");
             var token = _githubGateway.GetTokenByCode(code);
             return token;
         }
