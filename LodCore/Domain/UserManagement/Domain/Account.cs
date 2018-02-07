@@ -28,6 +28,7 @@ namespace UserManagement.Domain
             Password = password;
             Role = role;
             ConfirmationStatus = confirmationStatus;
+            HasPassword = true;
             RegistrationTime = registrationTime;
             Profile = profile;
         }
@@ -47,6 +48,7 @@ namespace UserManagement.Domain
             Lastname = lastname;
             Role = role;
             ConfirmationStatus = confirmationStatus;
+            HasPassword = false;
             RegistrationTime = registrationTime;
             Profile = profile;
         }
@@ -70,6 +72,8 @@ namespace UserManagement.Domain
         public virtual AccountRole Role { get; set; }
 
         public virtual ConfirmationStatus ConfirmationStatus { get; set; }
+
+        public virtual bool HasPassword { get; set; }
 
         public virtual DateTime RegistrationTime { get; protected set; }
 

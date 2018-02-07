@@ -13,6 +13,7 @@ namespace FrontendServices.Models
             string lastName,
             string email,
             ConfirmationStatus confirmationStatus,
+            bool hasPassword,
             Uri photoUri,
             DateTime registrationDate,
             Uri linkToGithubProfile,
@@ -29,12 +30,14 @@ namespace FrontendServices.Models
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(firstName, nameof(firstName));
             Require.NotEmpty(lastName, nameof(lastName));
+            Require.NotNull(hasPassword, nameof(hasPassword));
 
             UserId = userId;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             ConfirmationStatus = confirmationStatus;
+            HasPassword = hasPassword;
             PhotoUri = photoUri;
             RegistrationDate = registrationDate;
             LinkToGithubProfile = linkToGithubProfile;
@@ -58,6 +61,8 @@ namespace FrontendServices.Models
         public string Email { get; private set; }
 
         public ConfirmationStatus ConfirmationStatus { get; private set; }
+
+        public bool HasPassword { get; private set; }
 
         public Uri PhotoUri { get; private set; }
 

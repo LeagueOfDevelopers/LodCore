@@ -16,6 +16,8 @@ namespace Gateway
 
         EmailAddress GetUserGithubProfileEmailAddress(string token);
 
+        void RevokeAccess(string token);
+
         bool StateIsValid(string state);
     }
 }

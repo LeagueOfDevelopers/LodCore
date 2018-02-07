@@ -134,6 +134,24 @@ namespace FrontendServices.Controllers
             return Redirect(_profileSettings.FrontendProfileUri);
         }
 
+        [HttpPost]
+        [Authorization(AccountRole.User)]
+        [Route("unlink/github")]
+        public IHttpActionResult UnlinkGithubProfile()
+        {
+            var currentUserId = User.Identity.GetId();
+            var user = _userManager.GetUser(currentUserId);
+            if (user.Password != null)
+            {
+                _githubGateway.RevokeAccess(user.GithubAccessToken);
+                user.GithubAccessToken = null;
+                user.Profile.LinkToGithubProfile = null;
+                _userManager.UpdateUser(user);
+                return Ok();
+            }
+            return Conflict();
+        }
+
         private string GetToken(string code, string state)
         {
             if (!_githubGateway.StateIsValid(state))

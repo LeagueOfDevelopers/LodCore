@@ -80,6 +80,7 @@ namespace FrontendServices.App_Data.Mappers
                 account.Lastname,
                 account.Email.Address,
                 account.ConfirmationStatus,
+                account.HasPassword,
                 account.Profile?.Image?.BigPhotoUri,
                 account.RegistrationTime,
                 account.Profile?.LinkToGithubProfile,

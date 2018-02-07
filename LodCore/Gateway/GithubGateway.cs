@@ -63,6 +63,12 @@ namespace Gateway
             return userEmail;
         }
 
+        public void RevokeAccess(string token)
+        {
+            _gitHubClient.Credentials = new Credentials(token);
+            _gitHubClient.Authorization.ResetApplicationAuthentication(_githubGatewaySettings.ClientId, token);
+        }
+
         public bool StateIsValid(string state)
         {
             Require.NotEmpty(state, nameof(state));

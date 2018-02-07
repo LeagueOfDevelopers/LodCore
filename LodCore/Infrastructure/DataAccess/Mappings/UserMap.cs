@@ -21,12 +21,9 @@ namespace DataAccess.Mappings
             Property(user => user.Lastname, mapper => mapper.Column("Lastname"));
             Property(user => user.Role, mapper => mapper.Column("AccountRole"));
             Property(user => user.ConfirmationStatus, mapper => mapper.Column("ConfirmationStatus"));
+            Property(user => user.HasPassword, mapper => mapper.Column("HasPassword"));
             Property(user => user.RegistrationTime, mapper => mapper.Column("RegistrationTime"));
-            Property(user => user.GithubAccessToken, mapper => 
-            {
-                mapper.Column("GithubAccessToken");
-                mapper.Unique(true);
-            });
+            Property(user => user.GithubAccessToken, mapper => mapper.Column("GithubAccessToken"));
             Property(user => user.IsHidden, mapper => mapper.Column("IsHidden"));
             Property(user => user.Password, mapper =>
             {
@@ -51,7 +48,11 @@ namespace DataAccess.Mappings
                 m.Property(profile => profile.IsGraduated, mapper => mapper.Column("IsGraduated"));
                 m.Property(profile => profile.StudyingDirection, mapper => mapper.Column("StudyingDirection"));
                 m.Property(profile => profile.VkProfileUri, mapper => mapper.Column("VkProfileUri"));
-                m.Property(profile => profile.LinkToGithubProfile, mapper => mapper.Column("GitHubProfileUri"));
+                m.Property(profile => profile.LinkToGithubProfile, mapper => 
+                {
+                    mapper.Column("GitHubProfileUri");
+                    mapper.Unique(true);
+                });
             });
         }
     }
