@@ -77,7 +77,7 @@ namespace FrontendServices.Controllers
             {
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
             }
-            return Redirect(_applicationLocationSettings.FrontendAdress);
+            return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/github");
         }
 
         [HttpGet]

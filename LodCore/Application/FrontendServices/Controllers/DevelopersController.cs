@@ -37,7 +37,8 @@ namespace FrontendServices.Controllers
             IUserManager userManager,
             DevelopersMapper mapper,
             IConfirmationService confirmationService,
-            IUserPresentationProvider userPresentationProvider, IPaginationWrapper<Account> paginationWrapper,
+            IUserPresentationProvider userPresentationProvider, 
+            IPaginationWrapper<Account> paginationWrapper,
             IPasswordManager passwordManager)
         {
             Require.NotNull(userManager, nameof(userManager));
@@ -173,7 +174,6 @@ namespace FrontendServices.Controllers
             {
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
-
             return Ok();
         }
 
