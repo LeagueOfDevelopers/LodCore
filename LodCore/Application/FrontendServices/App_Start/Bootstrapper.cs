@@ -40,6 +40,7 @@ namespace FrontendServices
             container.Options.DefaultScopedLifestyle = new WebApiRequestLifestyle();
             RegisterSettings(container);
             container.Register<IDatabaseSessionProvider, DatabaseSessionProvider>(Lifestyle.Singleton);
+            container.Register<WebSocketProvider>(Lifestyle.Singleton);
             container.Register<IUserManager, UserManager>(Lifestyle.Singleton);
             container.Register<ProjectRepository>(Lifestyle.Singleton);
             container.Register<IPasswordManager, PasswordManager>(Lifestyle.Singleton);
