@@ -1,21 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.WebSockets;
-using FrontendServices.App_Data;
+using NotificationService;
+using Common;
 
 namespace FrontendServices.Controllers
 {
     public class WebSocketController : ApiController
     {
-        public WebSocketController(WebSocketProvider webSocketProvider)
+
+
+        public WebSocketController(IEventRepository eventRepository, IDatabaseSessionProvider databaseSessionProvider)
         {
-            _webSocketProvider = webSocketProvider;
+            _eventRepository = eventRepository;
+            _databaseSessionProvider = databaseSessionProvider;
         }
 
         [HttpGet]
@@ -28,20 +32,40 @@ namespace FrontendServices.Controllers
             {
                 if (currentContext.IsWebSocketRequest || currentContext.IsWebSocketRequestUpgrading)
                 {
-                    currentContext.AcceptWebSocketRequest(ProcessWebSocketRequest);
+                    currentContext.AcceptWebSocketRequest(ProcessWebSocketSession);
                     return Request.CreateResponse(HttpStatusCode.SwitchingProtocols);
                 }
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             });
         }
 
-        private async Task ProcessWebSocketRequest(AspNetWebSocketContext context)
+        private async Task ProcessWebSocketSession(AspNetWebSocketContext context)
         {
-            var sessionCookie = context.Cookies["SessionId"];
-            if (sessionCookie != null)
-                await _webSocketProvider.ProcessWebSocketRequestAsync(context);
+            var ws = context.WebSocket;
+            var currentUserId = Convert.ToInt32(context.QueryString["id"]);
+            new Task(() =>
+            {
+                SendMessage(ws, currentUserId);
+                while (true)
+                {
+                    if (ws.State == WebSocketState.Open && _eventRepository.WasUpdated())
+                        SendMessage(ws, currentUserId);
+                }
+            }).Start();
         }
 
-        private readonly WebSocketProvider _webSocketProvider;
+        private async void SendMessage(WebSocket webSocket, int userId)
+        {
+            _databaseSessionProvider.OpenSession();
+            var numberOfUnreadEvents = _eventRepository.GetCountOfUnreadEvents(userId);
+            _databaseSessionProvider.CloseSession();
+            byte[] dataToSend = { (byte)numberOfUnreadEvents };
+            var segment = new ArraySegment<byte>(dataToSend);
+            await webSocket.SendAsync(segment, WebSocketMessageType.Binary,
+                true, CancellationToken.None);
+        }
+
+        private readonly IDatabaseSessionProvider _databaseSessionProvider;
+        private readonly IEventRepository _eventRepository;
     }
 }

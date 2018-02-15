@@ -13,5 +13,7 @@
         int GetCountOfUnreadEvents(int userId);
 
         bool WasThisEventRead(int eventId, int userId);
+
+        bool WasUpdated();
     }
 }

@@ -10,6 +10,7 @@ namespace DataAccess.Repositories
     public class EventRepository : IEventRepository
     {
         private readonly IDatabaseSessionProvider _sessionProvider;
+        private bool _wasUpdated;
 
         public EventRepository(IDatabaseSessionProvider sessionProvider)
         {
@@ -28,6 +29,8 @@ namespace DataAccess.Repositories
             {
                 var id = session.Save(new Delivery(receiverId, eventId));
             }
+
+            _wasUpdated = true;
         }
 
         public Event[] GetEventsByUser(int userId, bool newOnly)
@@ -72,6 +75,8 @@ namespace DataAccess.Repositories
                 delivery.WasRead = true;
                 session.Update(delivery);
             }
+
+            _wasUpdated = true;
         }
 
         public int GetCountOfUnreadEvents(int userId)
@@ -88,6 +93,16 @@ namespace DataAccess.Repositories
                 session.Query<Delivery>().Single(delivery => delivery.UserId == userId && delivery.EventId == eventId);
 
             return userDelivery.WasRead;
+        }
+
+        public bool WasUpdated()
+        {
+            if (_wasUpdated)
+            {
+                _wasUpdated = false;
+                return true;
+            }
+            return false;
         }
     }
 }
