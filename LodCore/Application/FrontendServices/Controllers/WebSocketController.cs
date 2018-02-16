@@ -9,13 +9,12 @@ using System.Web.Http;
 using System.Web.WebSockets;
 using NotificationService;
 using Common;
+using System.Text;
 
 namespace FrontendServices.Controllers
 {
     public class WebSocketController : ApiController
     {
-
-
         public WebSocketController(IEventRepository eventRepository, IDatabaseSessionProvider databaseSessionProvider)
         {
             _eventRepository = eventRepository;
@@ -41,27 +40,27 @@ namespace FrontendServices.Controllers
 
         private async Task ProcessWebSocketSession(AspNetWebSocketContext context)
         {
-            var ws = context.WebSocket;
             var currentUserId = Convert.ToInt32(context.QueryString["id"]);
-            new Task(() =>
+            await Task.Run(() =>
             {
+                var ws = context.WebSocket;
                 SendMessage(ws, currentUserId);
-                while (true)
+                while (ws.State == WebSocketState.Open)
                 {
-                    if (ws.State == WebSocketState.Open && _eventRepository.WasUpdated())
+                    if (_eventRepository.WasUpdated())
                         SendMessage(ws, currentUserId);
                 }
-            }).Start();
+            });
         }
 
-        private async void SendMessage(WebSocket webSocket, int userId)
+        private void SendMessage(WebSocket webSocket, int userId)
         {
             _databaseSessionProvider.OpenSession();
             var numberOfUnreadEvents = _eventRepository.GetCountOfUnreadEvents(userId);
             _databaseSessionProvider.CloseSession();
-            byte[] dataToSend = { (byte)numberOfUnreadEvents };
-            var segment = new ArraySegment<byte>(dataToSend);
-            await webSocket.SendAsync(segment, WebSocketMessageType.Binary,
+            var encoded = Encoding.UTF8.GetBytes(numberOfUnreadEvents.ToString());
+            var segment = new ArraySegment<Byte>(encoded, 0, encoded.Length);
+            webSocket.SendAsync(segment, WebSocketMessageType.Text,
                 true, CancellationToken.None);
         }
 

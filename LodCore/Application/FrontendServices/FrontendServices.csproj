@@ -302,8 +302,6 @@
     <Compile Include="App_Data\Mappers\ProjectsMapper.cs" />
     <Compile Include="App_Data\PaginationWrapper.cs" />
     <Compile Include="App_Data\SettingsReader.cs" />
-    <Compile Include="App_Data\WebSocketConfig.cs" />
-    <Compile Include="App_Data\WebSocketProvider.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Authorization\AuthenticateAttribute.cs" />
