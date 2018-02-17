@@ -2,6 +2,7 @@
 using Journalist;
 using Octokit;
 using Common;
+using System.Collections.Generic;
 
 namespace Gateway
 {
@@ -67,6 +68,27 @@ namespace Gateway
         {
             _gitHubClient.Credentials = new Credentials(token);
             _gitHubClient.Authorization.ResetApplicationAuthentication(_githubGatewaySettings.ClientId, token);
+        }
+
+        public IEnumerable<string> GetLeagueOfDevelopersRepositories()
+        {
+            var repositories = _gitHubClient.Repository.GetAllForOrg(_githubGatewaySettings.OrganizationName).Result;
+            List<string> repositoryNames = new List<string>();
+            foreach (var repo in repositories)
+                repositoryNames.Add(repo.Name);
+            return repositoryNames;
+        }
+
+        public IEnumerable<string> GetLinksToGithubRepositories(string[] repositoryNames)
+        {
+            List<string> linksToGithubRepositories = new List<string>();
+            foreach (var repoName in repositoryNames)
+            {
+                var linkToGithubRepository = _gitHubClient.Repository.Get(_githubGatewaySettings.OrganizationName, repoName).Result.Url;
+                linksToGithubRepositories.Add(linkToGithubRepository);
+            }
+            
+            return linksToGithubRepositories;
         }
 
         public bool StateIsValid(string state)

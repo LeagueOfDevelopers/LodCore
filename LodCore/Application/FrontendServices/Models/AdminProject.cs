@@ -18,7 +18,8 @@ namespace FrontendServices.Models
             AccessLevel accessLevel,
             HashSet<Issue> issues,
             HashSet<ProjectMembership> projectDevelopers,
-            HashSet<Common.Image> screenshots)
+            HashSet<Common.Image> screenshots,
+            HashSet<Uri> linksToGithubRepositories)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.NotEmpty(name, nameof(name));
@@ -34,6 +35,7 @@ namespace FrontendServices.Models
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<Common.Image>();
+            LinksToGithubRepositories = linksToGithubRepositories ?? new HashSet<Uri>();
         }
 
         public int ProjectId { get; private set; }
@@ -55,5 +57,7 @@ namespace FrontendServices.Models
         public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
 
         public HashSet<Common.Image> Screenshots { get; private set; }
+
+        public HashSet<Uri> LinksToGithubRepositories { get; private set; }
     }
 }

@@ -52,7 +52,8 @@ namespace FrontendServices.App_Data.Mappers
                 project.AccessLevel,
                 new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<Common.Image>(project.Screenshots));
+                new HashSet<Common.Image>(project.Screenshots),
+                new HashSet<System.Uri>(project.LinksToGithubRepositories));
         }
 
         public Models.Project ToProject(Project project)

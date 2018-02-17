@@ -74,7 +74,8 @@ namespace ProjectManagement.Domain
                 null,
                 request.Screenshots != null 
                 ? new HashSet<Image>(request.Screenshots) 
-                : null );
+                : null,
+                null);
             var projectId = _projectRepository.SaveProject(project);
 
             var @event = new NewProjectCreated(projectId);
