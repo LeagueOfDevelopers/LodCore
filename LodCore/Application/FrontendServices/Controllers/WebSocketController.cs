@@ -10,6 +10,7 @@ using System.Web.WebSockets;
 using NotificationService;
 using Common;
 using System.Text;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
