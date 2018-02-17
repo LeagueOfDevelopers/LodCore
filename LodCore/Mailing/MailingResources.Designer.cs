@@ -19,7 +19,7 @@ namespace Mailing {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MailingResources {
@@ -70,9 +70,7 @@ namespace Mailing {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
-        ///
-        ///Поздравляем! Вы создали учетную запись на сайте Лиги Разработчиков!
+        ///   Ищет локализованную строку, похожую на Поздравляем! Вы создали учетную запись на сайте Лиги Разработчиков!
         ///
         ///Теперь вы будете в курсе деятельности самой продуктивной организации программистов в МИСиС,а так же сможете оставить заказ!
         ///
@@ -108,7 +106,7 @@ namespace Mailing {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
+        ///   Ищет локализованную строку, похожую на Здравствуйте!
         ///
         ///
         ///На сайте Лиги Разработчиков только что:
@@ -140,8 +138,7 @@ namespace Mailing {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Здравствуйте, %username%!
-        ///
+        ///   Ищет локализованную строку, похожую на Здравствуйте!
         ///
         /// На сайте Лиги Разработчиков было запрошено восстановление пароля на учетную запись, привязанную к Вашему e-mail.
         ///
