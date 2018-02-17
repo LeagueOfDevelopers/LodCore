@@ -6,14 +6,12 @@ namespace FrontendServices.Models
 {
     public class ProjectActionRequest
     {
-        [MaxLength(25)]
         [Required]
         public string Name { get; set; }
 
         [Required]
         public ProjectType[] ProjectTypes { get; set; }
 
-        [MaxLength(500)]
         public string Info { get; set; }
 
         [Required]
