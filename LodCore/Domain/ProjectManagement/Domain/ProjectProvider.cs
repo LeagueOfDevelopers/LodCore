@@ -75,7 +75,9 @@ namespace ProjectManagement.Domain
                 request.Screenshots != null 
                 ? new HashSet<Image>(request.Screenshots) 
                 : null,
-                null);
+                request.LinksToGithubRepositories != null
+                ? new HashSet<Uri>(request.LinksToGithubRepositories)
+                : null);
             var projectId = _projectRepository.SaveProject(project);
 
             var @event = new NewProjectCreated(projectId);

@@ -10,7 +10,6 @@ using System.Web.WebSockets;
 using NotificationService;
 using Common;
 using System.Text;
-using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -25,7 +24,6 @@ namespace FrontendServices.Controllers
         [HttpGet]
         [Route("socket")]
         public async Task<HttpResponseMessage> Messages()
-
         {
             var currentContext = HttpContext.Current;
             return await Task.Run(() =>

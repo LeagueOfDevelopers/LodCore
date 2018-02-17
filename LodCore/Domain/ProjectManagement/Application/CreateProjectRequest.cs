@@ -14,7 +14,8 @@ namespace ProjectManagement.Application
             ProjectStatus projectStatus,
             AccessLevel accessLevel, 
             Image landingImage, 
-            Image[] screenshots)
+            Image[] screenshots,
+            Uri[] linksToGithubRepositories)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotEmpty(info, nameof(info));
@@ -27,6 +28,7 @@ namespace ProjectManagement.Application
             LandingImage = landingImage;
             ProjectStatus = projectStatus;
             Screenshots = screenshots;
+            LinksToGithubRepositories = linksToGithubRepositories;
         }
 
         public string Name { get; private set; }
@@ -42,5 +44,7 @@ namespace ProjectManagement.Application
         public Image LandingImage { get; private set; }
 
         public Image[] Screenshots { get; private set; }
+
+        public Uri[] LinksToGithubRepositories { get; private set; }
     }
 }

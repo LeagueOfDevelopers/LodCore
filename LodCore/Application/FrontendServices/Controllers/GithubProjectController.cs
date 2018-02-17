@@ -40,7 +40,7 @@ namespace FrontendServices.Controllers
         public IHttpActionResult GetLinksToDefinedRepositories(int projectId, [FromUri] string[] repositoryNames)
         {
             var linksToGithubRepositories = _githubGateway.GetLinksToGithubRepositories(repositoryNames);
-            SaveLinksToDefinedGithubRepositories(projectId, linksToGithubRepositories);
+            //SaveLinksToDefinedGithubRepositories(projectId, linksToGithubRepositories);
             return Ok();
         } 
 
