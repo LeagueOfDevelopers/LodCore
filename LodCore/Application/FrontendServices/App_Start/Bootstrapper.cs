@@ -28,6 +28,7 @@ using Serilog;
 using Gateway;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 using System.Web;
+using WebSocketConnection;
 
 namespace FrontendServices
 {
@@ -71,7 +72,9 @@ namespace FrontendServices
                 container.GetInstance<IValidationRequestsRepository>(),
                 container.GetInstance<IEventPublisher>()), 
                 Lifestyle.Singleton);
-            container.Register<IEventRepository, EventRepository>(Lifestyle.Singleton);
+            container.Register<EventRepository>(Lifestyle.Singleton);
+            container.Register<IEventRepository>(() => container.GetInstance<EventRepository>(), Lifestyle.Singleton);
+            container.Register<INumberOfNotificationsProvider>(() => container.GetInstance<EventRepository>(), Lifestyle.Singleton);
             container.Register<IDistributionPolicyFactory, DistributionPolicyFactory>(Lifestyle.Singleton);
             container.Register<IPasswordChangeRequestRepository, PasswordChangeRequestRepository>(Lifestyle.Singleton);
             container.Register<IUsersRepository>(() => container.GetInstance<UserRepository>(), Lifestyle.Singleton);
@@ -109,6 +112,7 @@ namespace FrontendServices
             container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.Register<IProjectMembershipRepostiory, ProjectMembershipRepository>(Lifestyle.Singleton);
             container.Register<IMailer, Mailer>(Lifestyle.Singleton);
+            container.Register<IWebSocketStreamProvider, WebSocketStreamProvider>(Lifestyle.Singleton);
             container.RegisterCollection<IEventSink>(new[] { typeof(UserManagementEventSink<>).Assembly,
                                                              typeof(NotificationEventSink<>).Assembly,
                                                              typeof(ProjectsEventSink<>).Assembly,

@@ -406,6 +406,10 @@
       <Project>{184FF097-9B8C-4236-8538-444F9DCCB564}</Project>
       <Name>UserPresentaton</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\WebSocketConnection\WebSocketConnection.csproj">
+      <Project>{92fe77dc-ac94-4b4e-a833-63309dc44490}</Project>
+      <Name>WebSocketConnection</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,22 +1,22 @@
 ﻿using System.Linq;
 using Journalist;
-using NHibernate.Criterion;
 using NHibernate.Linq;
 using NotificationService;
 using Common;
 
 namespace DataAccess.Repositories
 {
-    public class EventRepository : IEventRepository
+    public class EventRepository : IEventRepository, INumberOfNotificationsProvider
     {
         private readonly IDatabaseSessionProvider _sessionProvider;
-        private bool _wasUpdated;
+        private readonly IWebSocketStreamProvider _webSocketStreamProvider;
 
-        public EventRepository(IDatabaseSessionProvider sessionProvider)
+        public EventRepository(IDatabaseSessionProvider sessionProvider, IWebSocketStreamProvider webSocketStreamProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 
             _sessionProvider = sessionProvider;
+            _webSocketStreamProvider = webSocketStreamProvider;
         }
 
         public void SaveEvent(Event @event, DistributionPolicy distributionPolicy)
@@ -30,7 +30,7 @@ namespace DataAccess.Repositories
                 var id = session.Save(new Delivery(receiverId, eventId));
             }
 
-            _wasUpdated = true;
+            SendNumberOfNotificationsViaWebSocket();
         }
 
         public Event[] GetEventsByUser(int userId, bool newOnly)
@@ -76,7 +76,7 @@ namespace DataAccess.Repositories
                 session.Update(delivery);
             }
 
-            _wasUpdated = true;
+            SendNumberOfNotificationsViaWebSocket();
         }
 
         public int GetCountOfUnreadEvents(int userId)
@@ -95,14 +95,10 @@ namespace DataAccess.Repositories
             return userDelivery.WasRead;
         }
 
-        public bool WasUpdated()
+        public void SendNumberOfNotificationsViaWebSocket()
         {
-            if (_wasUpdated)
-            {
-                _wasUpdated = false;
-                return true;
-            }
-            return false;
+            var countOfUnreadEvents = GetCountOfUnreadEvents(_webSocketStreamProvider.GetCurrentUserId()).ToString();
+            _webSocketStreamProvider.SendMessage(countOfUnreadEvents);
         }
     }
 }
