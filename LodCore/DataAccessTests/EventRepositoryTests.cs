@@ -4,6 +4,7 @@ using DataAccess.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NotificationService;
 using UserManagement.Domain.Events;
+using WebSocketConnection;
 
 namespace DataAccessTests
 {
@@ -14,9 +15,10 @@ namespace DataAccessTests
         [TestCategory("Integration")]
         public void EventIsStoredSuccessfully()
         {
-            var provider = new DatabaseSessionProvider();
-            provider.OpenSession();
-            var repository = new EventRepository(provider);
+            var dbProvider = new DatabaseSessionProvider();
+            dbProvider.OpenSession();
+            var wsProvider = new WebSocketStreamProvider();
+            var repository = new EventRepository(dbProvider, wsProvider);
             var eventInfo = new NewEmailConfirmedDeveloper(1);
             var @event = new Event(eventInfo);
             var receivers = new[] {30, 31, 32};

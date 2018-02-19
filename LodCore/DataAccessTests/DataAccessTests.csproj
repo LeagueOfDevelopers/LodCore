@@ -113,6 +113,10 @@
       <Project>{c55c196d-d726-4b14-8f4c-981c013a1c81}</Project>
       <Name>RabbitMQEventBus</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WebSocketConnection\WebSocketConnection.csproj">
+      <Project>{92fe77dc-ac94-4b4e-a833-63309dc44490}</Project>
+      <Name>WebSocketConnection</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
