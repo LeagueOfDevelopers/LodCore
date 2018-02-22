@@ -19,9 +19,7 @@ namespace Gateway
 
         void RevokeAccess(string token);
 
-        IEnumerable<string> GetLeagueOfDevelopersRepositories();
-
-        IEnumerable<string> GetLinksToGithubRepositories(string[] repositoryName);
+        IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
         bool StateIsValid(string state);
     }

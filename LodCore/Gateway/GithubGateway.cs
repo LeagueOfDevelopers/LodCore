@@ -70,25 +70,13 @@ namespace Gateway
             _gitHubClient.Authorization.ResetApplicationAuthentication(_githubGatewaySettings.ClientId, token);
         }
 
-        public IEnumerable<string> GetLeagueOfDevelopersRepositories()
+        public IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories()
         {
             var repositories = _gitHubClient.Repository.GetAllForOrg(_githubGatewaySettings.OrganizationName).Result;
-            List<string> repositoryNames = new List<string>();
+            List<GithubRepository> githubRepositories = new List<GithubRepository>();
             foreach (var repo in repositories)
-                repositoryNames.Add(repo.Name);
-            return repositoryNames;
-        }
-
-        public IEnumerable<string> GetLinksToGithubRepositories(string[] repositoryNames)
-        {
-            List<string> linksToGithubRepositories = new List<string>();
-            foreach (var repoName in repositoryNames)
-            {
-                var linkToGithubRepository = _gitHubClient.Repository.Get(_githubGatewaySettings.OrganizationName, repoName).Result.Url;
-                linksToGithubRepositories.Add(linkToGithubRepository);
-            }
-            
-            return linksToGithubRepositories;
+                githubRepositories.Add(new GithubRepository(repo.Name, repo.HtmlUrl));
+            return githubRepositories;
         }
 
         public bool StateIsValid(string state)

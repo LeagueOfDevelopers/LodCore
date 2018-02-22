@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="GithubGateway.cs" />
     <Compile Include="GithubGatewaySettings.cs" />
+    <Compile Include="GithubRepository.cs" />
     <Compile Include="IGithubGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
