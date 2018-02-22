@@ -15,7 +15,6 @@ using Journalist.Extensions;
 using ProjectManagement;
 using ProjectManagement.Application;
 using ProjectManagement.Domain;
-using Serilog;
 using UserManagement.Application;
 using UserManagement.Domain;
 using Image = Common.Image;
@@ -113,7 +112,8 @@ namespace FrontendServices.Controllers
                 createProjectRequest.ProjectStatus,
                 createProjectRequest.AccessLevel,
                 createProjectRequest.LandingImage,
-                createProjectRequest.Screenshots);
+                createProjectRequest.Screenshots,
+                createProjectRequest.LinksToGithubRepositories);
 
             var projectId = _projectProvider.CreateProject(request);
 
@@ -177,6 +177,7 @@ namespace FrontendServices.Controllers
             projectToUpdate.ProjectStatus = updateProjectRequest.ProjectStatus;
             projectToUpdate.LandingImage = updateProjectRequest.LandingImage;
             projectToUpdate.Screenshots = new HashSet<Image>(updateProjectRequest.Screenshots);
+            projectToUpdate.LinksToGithubRepositories = new HashSet<Uri>(updateProjectRequest.LinksToGithubRepositories);
 
             _projectProvider.UpdateProject(projectToUpdate);
 

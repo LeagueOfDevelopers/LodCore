@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Common;
 using Journalist;
 
@@ -15,7 +16,8 @@ namespace ProjectManagement.Domain
             AccessLevel accessLevel,
             ISet<Issue> issues, 
             ISet<ProjectMembership> projectDevelopers,
-            ISet<Image> screenshots)
+            ISet<Image> screenshots,
+            ISet<Uri> linksToGithubRepositories)
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
@@ -30,6 +32,7 @@ namespace ProjectManagement.Domain
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<Image>();
+            LinksToGithubRepositories = linksToGithubRepositories ?? new HashSet<Uri>();
         }
 
         protected Project()
@@ -55,5 +58,7 @@ namespace ProjectManagement.Domain
         public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
 
         public virtual ISet<Image> Screenshots { get; set; }
+
+        public virtual ISet<Uri> LinksToGithubRepositories { get; set; }
     }
 }

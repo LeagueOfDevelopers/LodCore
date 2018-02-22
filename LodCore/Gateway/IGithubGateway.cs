@@ -1,4 +1,5 @@
 ﻿using Octokit;
+using System.Collections.Generic;
 
 namespace Gateway
 {
@@ -17,6 +18,8 @@ namespace Gateway
         EmailAddress GetUserGithubProfileEmailAddress(string token);
 
         void RevokeAccess(string token);
+
+        IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
         bool StateIsValid(string state);
     }

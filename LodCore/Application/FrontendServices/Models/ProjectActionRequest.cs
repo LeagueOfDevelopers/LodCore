@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Common;
 using ProjectManagement.Domain;
 
@@ -25,5 +26,7 @@ namespace FrontendServices.Models
         public Common.Image LandingImage { get; set; }
 
         public Common.Image[] Screenshots { get; set; }
+
+        public Uri[] LinksToGithubRepositories { get; set; }
     }
-}
+    }

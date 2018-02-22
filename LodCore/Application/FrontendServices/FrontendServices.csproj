@@ -317,6 +317,7 @@
     <Compile Include="Controllers\DevelopersController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\GithubProjectController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\TestAssignmentController.cs" />
     <Compile Include="Controllers\WebSocketController.cs" />

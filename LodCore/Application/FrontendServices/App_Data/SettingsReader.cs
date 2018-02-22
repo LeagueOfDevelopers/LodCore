@@ -17,7 +17,8 @@ namespace FrontendServices.App_Data
             return new GithubGatewaySettings(
                 settings["GithubGateway.ClientId"],
                 settings["GithubGateway.ClientSecret"],
-                settings["GithubGateway.GithubApiDefaultCallbackUri"]);
+                settings["GithubGateway.GithubApiDefaultCallbackUri"],
+                settings["GithubGateway.OrganizationName"]);
         }
 
         public static ProfileSettings ReadProfileSettings(NameValueCollection settings)

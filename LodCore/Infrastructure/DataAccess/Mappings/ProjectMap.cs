@@ -43,6 +43,11 @@ namespace DataAccess.Mappings
                     mapper.Key(m => m.Column("ProjectId"));
                 },
                 action => action.OneToMany());
+            Set(project => project.LinksToGithubRepositories, mapper =>
+            {
+                mapper.Cascade(Cascade.All);
+                mapper.Table("GithubRepositoriesLinks");
+            }); 
         }
     }
 }
