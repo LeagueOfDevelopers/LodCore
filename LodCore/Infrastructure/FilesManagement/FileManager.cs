@@ -99,7 +99,7 @@ namespace FilesManagement
 
         private string GetFileExtension(string fileName)
         {
-            return Path.GetExtension(fileName).TrimStart('.');
+            return Path.GetExtension(fileName).TrimStart('.').ToLower();
         }
 
         private void CreateFoldersIfNeeded()
