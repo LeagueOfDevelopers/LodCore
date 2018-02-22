@@ -6,7 +6,6 @@ using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
 using Common;
-using Serilog;
 
 namespace FrontendServices.Controllers
 {

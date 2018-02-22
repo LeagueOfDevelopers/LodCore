@@ -10,7 +10,6 @@ using FrontendServices.Authorization;
 using Journalist;
 using UserManagement.Domain;
 using Image = FrontendServices.Models.Image;
-using Serilog;
 
 namespace FrontendServices.Controllers
 {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using Common;
+using Journalist;
 
 namespace FrontendServices.Controllers
 {
@@ -12,6 +13,9 @@ namespace FrontendServices.Controllers
         public WebSocketController(IWebSocketStreamProvider webSocketStreamProvider, 
                                    INumberOfNotificationsProvider numberOfNotificationsProvider)
         {
+            Require.NotNull(webSocketStreamProvider, nameof(webSocketStreamProvider));
+            Require.NotNull(numberOfNotificationsProvider, nameof(numberOfNotificationsProvider));
+
             _webSocketStreamProvider = webSocketStreamProvider;
             _numberOfNotificationsProvider = numberOfNotificationsProvider;
         }

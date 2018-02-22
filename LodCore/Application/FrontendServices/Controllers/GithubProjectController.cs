@@ -1,9 +1,6 @@
-﻿using Common;
-using FrontendServices.Authorization;
+﻿using FrontendServices.Authorization;
 using Gateway;
 using Journalist;
-using ProjectManagement.Application;
-using System;
 using System.Collections.Generic;
 using System.Web.Http;
 using UserManagement.Domain;

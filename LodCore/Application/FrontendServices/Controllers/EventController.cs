@@ -7,8 +7,6 @@ using FrontendServices.Models;
 using Journalist;
 using NotificationService;
 using UserManagement.Domain;
-using Serilog;
-using System;
 
 namespace FrontendServices.Controllers
 {
