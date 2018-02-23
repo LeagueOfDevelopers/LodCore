@@ -47,15 +47,5 @@ namespace FrontendServices.Controllers
             var eventsPreview = events.Select(@event => _eventMapper.ToEventPageEvent(@event, userId));
             return _paginationWrapper.WrapResponse(eventsPreview, @event => @event.UserId == userId);
         }
-
-        [HttpGet]
-        [Route("event/count")]
-        [Authorization(AccountRole.User)]
-        public int GetCountOfUnreadEvents()
-        {
-            var userId = User.Identity.GetId();
-
-            return _notificationService.GetNumberOfUnreadEvents(userId);
-        }
     }
 }
