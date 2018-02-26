@@ -1,5 +1,4 @@
-﻿using System.Net.Mail;
-using Common;
+﻿using Common;
 using Journalist;
 
 namespace ContactContext.Events
@@ -8,7 +7,7 @@ namespace ContactContext.Events
     {
         public NewContactMessage(
             string clientName, 
-            MailAddress clientEmailAddress, 
+            string clientEmailAddress, 
             string messageTopic,
             string messageBody)
         {
@@ -25,7 +24,7 @@ namespace ContactContext.Events
 
         public string ClientName { get; private set; }
 
-        public MailAddress ClientEmailAddress { get; private set; }
+        public string ClientEmailAddress { get; private set; }
 
         public string MessageTopic { get; private set; }
 
