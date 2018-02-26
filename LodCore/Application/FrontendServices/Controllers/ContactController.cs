@@ -29,7 +29,7 @@ namespace FrontendServices.Controllers
             _contactsService.SendContactMessage(
                 new NewContactMessage(
                     contactMessage.ClientName,
-                    new MailAddress(contactMessage.ClientEmail),
+                    contactMessage.ClientEmail,
                     contactMessage.MessageTopic,
                     contactMessage.MessageBody));
             return Ok();
