@@ -28,6 +28,8 @@ using Serilog;
 using Gateway;
 using IUserRepository = UserManagement.Infrastructure.IUserRepository;
 using System.Web;
+using Loggly;
+using Loggly.Config;
 using WebSocketConnection;
 
 namespace FrontendServices
@@ -168,10 +170,20 @@ namespace FrontendServices
 
         private static void StartLogger()
         {
-            var rootPath = HttpContext.Current.Server.MapPath("logs");
+	        var logglyConfig = LogglyConfig.Instance;
+	        logglyConfig.CustomerToken = ConfigurationManager.AppSettings["Loggly.CustomerToken"];
+	        logglyConfig.ApplicationName = "LodBackend";
+	        logglyConfig.Transport.EndpointHostname = "logs-01.loggly.com";
+	        logglyConfig.Transport.EndpointPort = 6514;
+	        logglyConfig.Transport.LogTransport = LogTransport.SyslogSecure;
+	        var ct = new ApplicationNameTag {Formatter = "application-{0}"};
+			logglyConfig.TagConfig.Tags.Add(ct);
+
+			var rootPath = HttpContext.Current.Server.MapPath("logs");
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .WriteTo.RollingFile(rootPath + @"\log-{Date}.log", shared: true)
+				.WriteTo.Loggly()
                 .CreateLogger(); 
             Log.Information("Logger has started");
         }
