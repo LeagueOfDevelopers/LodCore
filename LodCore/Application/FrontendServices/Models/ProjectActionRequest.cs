@@ -14,7 +14,7 @@ namespace FrontendServices.Models
         [Required]
         public ProjectType[] ProjectTypes { get; set; }
 
-        [MaxLength(500)]
+        [MaxLength(3000)]
         public string Info { get; set; }
 
         [Required]
