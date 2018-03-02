@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -10,33 +11,42 @@ namespace WebSocketConnection
 {
     public class WebSocketStreamProvider : IWebSocketStreamProvider
     {
+        static WebSocketStreamProvider()
+        {
+            _wsClients = new Dictionary<int, WebSocket>();
+        }
+
         public async Task ProcessWebSocketSession(AspNetWebSocketContext context)
         {
             await Task.Run(() =>
             {
-                _userId = Convert.ToInt32(context.QueryString["id"]);
-                _webSocket = context.WebSocket;
+                var userId = Convert.ToInt32(context.QueryString["id"]);
+                var socket = context.WebSocket;
+                if (!_wsClients.ContainsKey(userId))
+                    _wsClients.Add(userId, socket);
                 while (true) ;
             });
         }
 
-            public void SendMessage(string message)
+        public void SendMessage(int userId, string message)
         {
-            if (_webSocket.State == WebSocketState.Open)
+            if (_wsClients.ContainsKey(userId))
             {
-                var encoded = Encoding.UTF8.GetBytes(message);
-                var segment = new ArraySegment<Byte>(encoded, 0, encoded.Length);
-                _webSocket.SendAsync(segment, WebSocketMessageType.Text,
-                    true, CancellationToken.None);
+                if (_wsClients[userId].State == WebSocketState.Open)
+                {
+                    var encoded = Encoding.UTF8.GetBytes(message);
+                    var segment = new ArraySegment<Byte>(encoded, 0, encoded.Length);
+                    _wsClients[userId].SendAsync(segment, WebSocketMessageType.Text,
+                        true, CancellationToken.None);
+                }
+                else
+                {
+                    _wsClients.Remove(userId);
+                }
             }
+                
         }
-
-        public int GetCurrentUserId()
-        {
-            return _userId;
-        }
-
-        private WebSocket _webSocket;
-        private int _userId;
+        
+        private static readonly Dictionary<int, WebSocket> _wsClients;
     }
 }

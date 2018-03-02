@@ -3,6 +3,6 @@ namespace Common
 {
     public interface INumberOfNotificationsProvider
     {
-        void SendNumberOfNotificationsViaWebSocket();
+        void SendNumberOfNotificationsViaWebSocket(int userId);
     }
 }

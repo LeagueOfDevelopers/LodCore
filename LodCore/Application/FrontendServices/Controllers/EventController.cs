@@ -27,9 +27,11 @@ namespace FrontendServices.Controllers
 
         [HttpPut]
         [Route("event/read")]
+        [Authorization(AccountRole.User)]
         public IHttpActionResult MarkEventsAsRead([FromBody] int[] eventIds)
         {
-            _notificationService.MarkEventsAsRead(eventIds);
+            var userId = User.Identity.GetId();
+            _notificationService.MarkEventsAsRead(userId, eventIds);
             return Ok();
         }
 

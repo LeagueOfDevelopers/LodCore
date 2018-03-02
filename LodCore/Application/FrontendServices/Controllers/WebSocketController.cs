@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -40,7 +41,8 @@ namespace FrontendServices.Controllers
         [Route("socket/message")]
         public void SendFirstMessage()
         {
-            _numberOfNotificationsProvider.SendNumberOfNotificationsViaWebSocket();
+            var userId = Convert.ToInt32(HttpContext.Current.Request.QueryString["id"]);
+            _numberOfNotificationsProvider.SendNumberOfNotificationsViaWebSocket(userId);
         }
 
         private readonly IWebSocketStreamProvider _webSocketStreamProvider;

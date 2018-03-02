@@ -8,7 +8,7 @@
 
         Event[] GetSomeEvents(int userId, int projectsToSkip, int takeCount);
 
-        void MarkEventsAsRead(int[] eventIds);
+        void MarkEventsAsRead(int userId, int[] eventIds);
 
         int GetCountOfUnreadEvents(int userId);
 

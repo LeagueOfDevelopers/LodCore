@@ -7,8 +7,6 @@ namespace Common
     {
         Task ProcessWebSocketSession(AspNetWebSocketContext context);
 
-        void SendMessage(string message);
-
-        int GetCurrentUserId();
+        void SendMessage(int userId, string message);
     }
 }

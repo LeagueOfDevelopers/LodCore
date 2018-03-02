@@ -28,9 +28,8 @@ namespace DataAccess.Repositories
             foreach (var receiverId in distributionPolicy.ReceiverIds)
             {
                 var id = session.Save(new Delivery(receiverId, eventId));
+                SendNumberOfNotificationsViaWebSocket(receiverId);
             }
-
-            SendNumberOfNotificationsViaWebSocket();
         }
 
         public Event[] GetEventsByUser(int userId, bool newOnly)
@@ -65,18 +64,17 @@ namespace DataAccess.Repositories
             return events;
         }
 
-        public void MarkEventsAsRead(int[] eventIds)
+        public void MarkEventsAsRead(int userId, int[] eventIds)
         {
             var session = _sessionProvider.GetCurrentSession();
             var deliveries =
-                session.Query<Delivery>().Where(delivery => eventIds.Contains(delivery.EventId)).ToArray();
+                session.Query<Delivery>().Where(delivery => eventIds.Contains(delivery.EventId) && delivery.UserId == userId).ToArray();
             foreach (var delivery in deliveries)
             {
                 delivery.WasRead = true;
                 session.Update(delivery);
             }
-
-            SendNumberOfNotificationsViaWebSocket();
+            SendNumberOfNotificationsViaWebSocket(userId);
         }
 
         public int GetCountOfUnreadEvents(int userId)
@@ -95,10 +93,10 @@ namespace DataAccess.Repositories
             return userDelivery.WasRead;
         }
 
-        public void SendNumberOfNotificationsViaWebSocket()
+        public void SendNumberOfNotificationsViaWebSocket(int userId)
         {
-            var countOfUnreadEvents = GetCountOfUnreadEvents(_webSocketStreamProvider.GetCurrentUserId()).ToString();
-            _webSocketStreamProvider.SendMessage(countOfUnreadEvents);
+            var countOfUnreadEvents = GetCountOfUnreadEvents(userId).ToString();
+            _webSocketStreamProvider.SendMessage(userId, countOfUnreadEvents);
         }
     }
 }

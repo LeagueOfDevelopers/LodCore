@@ -21,9 +21,9 @@ namespace NotificationService
             return _eventRepository.GetSomeEvents(userId, projectsToSkip, takeCount);
         }
 
-        public void MarkEventsAsRead(params int[] eventIds)
+        public void MarkEventsAsRead(int userId, params int[] eventIds)
         {
-            _eventRepository.MarkEventsAsRead(eventIds);
+            _eventRepository.MarkEventsAsRead(userId, eventIds);
         }
 
         public int GetNumberOfUnreadEvents(int userId)

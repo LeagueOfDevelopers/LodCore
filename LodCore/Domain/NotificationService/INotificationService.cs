@@ -4,7 +4,7 @@
     {
         Event[] GetEventsForUser(int userId, int pageNumber);
 
-        void MarkEventsAsRead(params int[] eventIds);
+        void MarkEventsAsRead(int userId, params int[] eventIds);
 
         int GetNumberOfUnreadEvents(int userId);
 
