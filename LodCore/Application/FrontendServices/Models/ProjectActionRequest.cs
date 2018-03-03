@@ -9,12 +9,14 @@ namespace FrontendServices.Models
     {
         [MaxLength(50)]
         [Required]
+        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string Name { get; set; }
 
         [Required]
         public ProjectType[] ProjectTypes { get; set; }
 
         [MaxLength(3000)]
+        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string Info { get; set; }
 
         [Required]
