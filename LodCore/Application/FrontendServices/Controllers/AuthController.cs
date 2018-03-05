@@ -8,6 +8,7 @@ using FrontendServices.Models;
 using UserManagement.Application;
 using Common;
 using System.Net.Mail;
+using UserManagement.Domain.Events;
 
 namespace FrontendServices.Controllers
 {
@@ -18,19 +19,22 @@ namespace FrontendServices.Controllers
             IUserManager userManager,
             ProfileSettings profileSettings,
             IAuthorizer authorizer,
-            ApplicationLocationSettings applicationLocationSettings)
+            ApplicationLocationSettings applicationLocationSettings,
+            IEventPublisher eventPublisher)
         {
             Require.NotNull(githubGateway, nameof(githubGateway));
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(profileSettings, nameof(profileSettings));
             Require.NotNull(authorizer, nameof(authorizer));
             Require.NotNull(applicationLocationSettings, nameof(applicationLocationSettings));
+            Require.NotNull(eventPublisher, nameof(eventPublisher));
 
             _githubGateway = githubGateway;
             _userManager = userManager;
             _profileSettings = profileSettings;
             _authorizer = authorizer;
             _applicationLocationSettings = applicationLocationSettings;
+            _eventPublisher = eventPublisher;
         }
 
         [HttpPost]
@@ -76,6 +80,8 @@ namespace FrontendServices.Controllers
             {
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
             }
+            var @event = new NewEmailConfirmedDeveloper(userId);
+            _eventPublisher.PublishEvent(@event);
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/github");
         }
 
@@ -167,5 +173,6 @@ namespace FrontendServices.Controllers
         private readonly ProfileSettings _profileSettings;
         private readonly IAuthorizer _authorizer;
         private readonly ApplicationLocationSettings _applicationLocationSettings;
+        private readonly IEventPublisher _eventPublisher;
     }
 }
