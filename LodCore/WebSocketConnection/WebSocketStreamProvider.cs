@@ -24,6 +24,8 @@ namespace WebSocketConnection
                 var socket = context.WebSocket;
                 if (!_wsClients.ContainsKey(userId))
                     _wsClients.Add(userId, socket);
+                else
+                    _wsClients[userId] = socket;
                 while (true) ;
             });
         }
