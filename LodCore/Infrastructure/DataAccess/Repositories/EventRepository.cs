@@ -50,15 +50,17 @@ namespace DataAccess.Repositories
                 session.Query<Delivery>()
                     .Where(delivery => delivery.UserId == userId)
                     .OrderBy(delivery => delivery.WasRead)
+                    .ThenByDescending(delivery => delivery.EventId)
                     .Skip(projectsToSkip)
                     .Take(takeCount)
                     .ToArray();
-            var unreadedEventIds = userDeliveries.Where(delivery => !delivery.WasRead).Select(delivery => delivery.EventId);
+            var unreadEventIds = userDeliveries.Where(delivery => !delivery.WasRead).Select(delivery => delivery.EventId);
             var eventIds = userDeliveries.Select(delivery => delivery.EventId);
             var events =
                 session.Query<Event>()
                     .Where(@event => eventIds.Contains(@event.Id))
-                    .OrderBy(@event => unreadedEventIds.Contains(@event.Id) ? 0 : 1)
+                    .OrderBy(@event => unreadEventIds.Contains(@event.Id) ? 0 : 1)
+                    .ThenByDescending(@event => @event.OccuredOn)
                     .ToArray();
 
             return events;
