@@ -6,6 +6,7 @@ using NotificationService;
 using UserManagement.Application;
 using UserManagement.Domain;
 using Common;
+using System.Text.RegularExpressions;
 
 namespace FrontendServices.Controllers
 {
@@ -74,6 +75,22 @@ namespace FrontendServices.Controllers
         }
 
         [HttpPost]
+        [Route("admin/developers/{id}/date/{newRegistrationDate}")]
+        [Authorization(AccountRole.Administrator)]
+        public IHttpActionResult ChangeUserRegistrationDate(int id, string newRegistrationDate)
+        {
+            Require.Positive(id, nameof(id));
+            Require.NotEmpty(newRegistrationDate, nameof(newRegistrationDate));
+            if (!DateIsCorrect(newRegistrationDate))
+                return BadRequest();
+            var dateComponents = newRegistrationDate.Split('.');
+            var account = _userManager.GetUser(id);
+            account.RegistrationTime = new DateTime(Convert.ToInt32(dateComponents[2]), Convert.ToInt32(dateComponents[1]), Convert.ToInt32(dateComponents[0]));
+            _userManager.UpdateUser(account);
+            return Ok();
+        }
+
+        [HttpPost]
         [Route("admin/{id}")]
         [Authorization(AccountRole.Administrator)]
         public IHttpActionResult PromoteToAdmin(int id)
@@ -83,6 +100,12 @@ namespace FrontendServices.Controllers
             account.Role = AccountRole.Administrator;
             _userManager.UpdateUser(account);
             return Ok();
+        }
+
+        private bool DateIsCorrect(string date)
+        {
+            var rgx = new Regex(@"^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$");
+            return rgx.IsMatch(date);
         }
     }
 }

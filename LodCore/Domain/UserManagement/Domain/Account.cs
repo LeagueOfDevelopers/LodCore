@@ -75,7 +75,7 @@ namespace UserManagement.Domain
 
         public virtual bool IsOauthRegistered { get; set; }
 
-        public virtual DateTime RegistrationTime { get; protected set; }
+        public virtual DateTime RegistrationTime { get; set; }
 
         public virtual string GithubAccessToken { get; set; }
 
