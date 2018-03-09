@@ -13,7 +13,7 @@ namespace Gateway
             Require.NotNull(githubGatewaySettings, nameof(githubGatewaySettings));
 
             _githubGatewaySettings = githubGatewaySettings;
-            _gitHubClient = new GitHubClient(new ProductHeaderValue(applicationName));
+            _gitHubClient = new GitHubClient(new ProductHeaderValue(_githubGatewaySettings.OrganizationName));
         }
 
         // for registration with github request
@@ -79,6 +79,35 @@ namespace Gateway
             return githubRepositories;
         }
 
+        public void AddCollaboratorToRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
+        {
+            if (user.Profile.LinkToGithubProfile == null)
+                throw new NotFoundException("Link to GitHub profile is missed", System.Net.HttpStatusCode.NotFound);
+            var repoLinks = project.LinksToGithubRepositories;
+            if (repoLinks.Count != 0)
+            {
+                var userName = GetNameFromUri(user.Profile.LinkToGithubProfile);
+                foreach (var link in repoLinks)
+                {
+                    var repoName = GetNameFromUri(link);
+                    if (!_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
+                        _gitHubClient.Repository.Collaborator.Add(_githubGatewaySettings.OrganizationName, repoName, userName);
+                }
+            }
+        }
+
+        public void RemoveCollaboratorFromRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
+        {
+            var repoLinks = project.LinksToGithubRepositories;
+            var userName = GetNameFromUri(user.Profile.LinkToGithubProfile);
+            foreach (var link in repoLinks)
+            {
+                var repoName = GetNameFromUri(link);
+                if (_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
+                    _gitHubClient.Repository.Collaborator.Delete(_githubGatewaySettings.OrganizationName, repoName, userName);
+            }
+        }
+
         public bool StateIsValid(string state)
         {
             Require.NotEmpty(state, nameof(state));
@@ -86,6 +115,7 @@ namespace Gateway
 
             return state == _csrf;
         }
+
 
         private string SetCsrfToken()
         {
@@ -105,7 +135,11 @@ namespace Gateway
             return githubLoginUrl.ToString();
         }
 
-        const string applicationName = "LodSite";
+        private string GetNameFromUri(Uri uri)
+        {
+            return uri.AbsolutePath.Split('/')[uri.AbsolutePath.Split('/').Length - 1];
+        }
+
         private readonly GitHubClient _gitHubClient;
         private string _csrf;
         private readonly GithubGatewaySettings _githubGatewaySettings;

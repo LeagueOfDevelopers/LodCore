@@ -21,6 +21,10 @@ namespace Gateway
 
         IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
+        void AddCollaboratorToRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
+
+        void RemoveCollaboratorFromRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
+
         bool StateIsValid(string state);
     }
 }

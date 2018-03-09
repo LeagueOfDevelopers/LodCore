@@ -62,6 +62,14 @@
       <Project>{d37500b8-386f-45fb-b3fb-d31c2b6eb124}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Domain\ProjectManagement\ProjectManagement.csproj">
+      <Project>{c3f94fdd-f4c4-45d5-b6b1-a91d3520cd1d}</Project>
+      <Name>ProjectManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\UserManagement\UserManagement.csproj">
+      <Project>{56b90624-417a-4998-83c8-68a34dae0ab0}</Project>
+      <Name>UserManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
