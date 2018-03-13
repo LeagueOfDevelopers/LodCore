@@ -149,7 +149,7 @@ namespace FrontendServices
             container.Register(() => SettingsReader.ReadConfirmationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadNotificationsPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadRelativeEqualityComparerSettings(settings), Lifestyle.Singleton);
-            container.Register(() => SettingsReader.ReadIssuePaginationSettings(settings), Lifestyle.Singleton);
+            container.Register(() => SettingsReader.ReadProjectPaginationSettings(settings), Lifestyle.Singleton);
             container.Register(() => SettingsReader.ReadApplicationLocationSettings(settings), Lifestyle.Singleton);
         }
 

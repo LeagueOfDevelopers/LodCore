@@ -61,9 +61,9 @@ namespace FrontendServices.App_Data
             return new RelativeEqualityComparer(int.Parse(settings["UserRoleAnalyzer.AppropriateEditDistance"]));
         }
 
-        public static IssuePaginationSettings ReadIssuePaginationSettings(NameValueCollection settings)
+        public static ProjectPaginationSettings ReadProjectPaginationSettings(NameValueCollection settings)
         {
-            return new IssuePaginationSettings(0);
+            return new ProjectPaginationSettings(int.Parse(settings["Projects.Pagination.PageSize"]));
         }
 
         public static ApplicationLocationSettings ReadApplicationLocationSettings(NameValueCollection settings)
