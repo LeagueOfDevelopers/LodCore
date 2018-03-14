@@ -145,7 +145,7 @@ namespace Gateway
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
-                Scopes = { "user", "admin:org" },
+                Scopes = { "user", "admin:org", "repo" },
                 State = SetCsrfToken(),
                 RedirectUri = redirectUri
             };

@@ -7,6 +7,7 @@ using UserManagement.Domain;
 using ProjectManagement.Application;
 using UserManagement.Application;
 using Common;
+using System;
 
 namespace FrontendServices.Controllers
 {
@@ -49,10 +50,17 @@ namespace FrontendServices.Controllers
         [Route("github/callback/repositories/{projectId}/developer/{developerId}")]
         public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string code, string state)
         {
-            var githubAccessToken = _githubGateway.GetToken(code, state);
             var project = _projectProvider.GetProject(projectId);
             var developer = _userManager.GetUser(developerId);
-            _githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
+            try
+            {
+                var githubAccessToken = _githubGateway.GetToken(code, state);
+                _githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
+            }
+            catch (Exception)
+            {
+                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
+            }
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
         }
 
