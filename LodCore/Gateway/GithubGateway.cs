@@ -37,13 +37,21 @@ namespace Gateway
             return CreateRequest(redirectUri);
         }
 
-        public string GetTokenByCode(string code)
+        public string GetLinkToGithubLoginPage(int projectId, int developerId)
         {
-            var token = _gitHubClient.Oauth.CreateAccessToken(new OauthTokenRequest(
-                _githubGatewaySettings.ClientId,
-                _githubGatewaySettings.ClientSecret,
-                code)).Result;
-            return token.AccessToken;
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}");
+            return CreateRequest(redirectUri);
+        }
+
+        public string GetToken(string code, string state)
+        {
+            if (!StateIsValid(state))
+                throw new InvalidOperationException(
+                    "Security fail: the received state value doesn't correspond to the expected");
+            if (String.IsNullOrEmpty(code))
+                throw new InvalidOperationException("Value of code can't be blank or null");
+            var token = GetTokenByCode(code);
+            return token;
         }
 
         public User GetUserGithubProfileInformation(string token)
@@ -79,8 +87,9 @@ namespace Gateway
             return githubRepositories;
         }
 
-        public void AddCollaboratorToRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
+        public void AddCollaboratorToRepository(string token, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
         {
+            _gitHubClient.Credentials = new Credentials(token);
             if (user.Profile.LinkToGithubProfile == null)
                 throw new NotFoundException("Link to GitHub profile is missed", System.Net.HttpStatusCode.NotFound);
             var repoLinks = project.LinksToGithubRepositories;
@@ -108,7 +117,16 @@ namespace Gateway
             }
         }
 
-        public bool StateIsValid(string state)
+        private string GetTokenByCode(string code)
+        {
+            var token = _gitHubClient.Oauth.CreateAccessToken(new OauthTokenRequest(
+                _githubGatewaySettings.ClientId,
+                _githubGatewaySettings.ClientSecret,
+                code)).Result;
+            return token.AccessToken;
+        }
+
+        private bool StateIsValid(string state)
         {
             Require.NotEmpty(state, nameof(state));
             Require.NotNull(state, nameof(state));
@@ -127,7 +145,7 @@ namespace Gateway
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
-                Scopes = { "user" },
+                Scopes = { "user", "admin:org" },
                 State = SetCsrfToken(),
                 RedirectUri = redirectUri
             };

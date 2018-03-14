@@ -65,7 +65,7 @@ namespace FrontendServices.Controllers
         {
             try
             {
-                var githubAccessToken = GetToken(code, state);
+                var githubAccessToken = _githubGateway.GetToken(code, state);
                 var userInfo = _githubGateway.GetUserGithubProfileInformation(githubAccessToken);
                 var user = _userManager.GetUserByLinkToGithubProfile(userInfo.HtmlUrl);
                 if (user != null)
@@ -100,7 +100,7 @@ namespace FrontendServices.Controllers
             string encodedToken;
             try
             {
-                var githubAccessToken = GetToken(code, state);
+                var githubAccessToken = _githubGateway.GetToken(code, state);
                 var link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
                 var user = _userManager.GetUserByLinkToGithubProfile(link);
                 AuthorizationTokenInfo token;
@@ -130,7 +130,7 @@ namespace FrontendServices.Controllers
         [Route("github/callback/auth/{userId}")]
         public IHttpActionResult GetAuthenticationTokenByCode(int userId, string code, string state)
         {
-            var token = GetToken(code, state);
+            var token = _githubGateway.GetToken(code, state);
             var userInfo = _githubGateway.GetUserGithubProfileInformation(token);
             var user = _userManager.GetUser(userId);
             user.GithubAccessToken = token;
@@ -155,17 +155,6 @@ namespace FrontendServices.Controllers
                 return Ok();
             }
             return Conflict();
-        }
-
-        private string GetToken(string code, string state)
-        {
-            if (!_githubGateway.StateIsValid(state))
-                throw new InvalidOperationException(
-                    "Security fail: the received state value doesn't correspond to the expected");
-            if (String.IsNullOrEmpty(code))
-                throw new InvalidOperationException("Value of code can't be blank or null");
-            var token = _githubGateway.GetTokenByCode(code);
-            return token;
         }
 
         private readonly IGithubGateway _githubGateway;

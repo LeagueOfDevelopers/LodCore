@@ -11,7 +11,9 @@ namespace Gateway
 
         string GetLinkToGithubLoginPage();
 
-        string GetTokenByCode(string code);
+        string GetLinkToGithubLoginPage(int projectId, int developerId);
+
+        string GetToken(string code, string state);
 
         User GetUserGithubProfileInformation(string token);
 
@@ -21,10 +23,9 @@ namespace Gateway
 
         IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
-        void AddCollaboratorToRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
+        void AddCollaboratorToRepository(string githubAccessToken, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
 
         void RemoveCollaboratorFromRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
 
-        bool StateIsValid(string state);
     }
 }
