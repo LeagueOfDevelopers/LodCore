@@ -47,6 +47,14 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
+        [Authorization(AccountRole.Administrator)]
+        [Route("github/repositories/{projectId}/developer/{developerId}/delete")]
+        public string GetLinkToGithubLoginPageToCheckAuthenticationForDeletion(int projectId, int developerId)
+        {
+            return _githubGateway.GetLinkToGithubLoginPageToRemoveCollaborator(projectId, developerId);
+        }
+
+        [HttpGet]
         [Route("github/callback/repositories/{projectId}/developer/{developerId}")]
         public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string code, string state)
         {
@@ -64,15 +72,22 @@ namespace FrontendServices.Controllers
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
         }
 
-        [HttpDelete]
-        [Authorization(AccountRole.Administrator)]
-        [Route("github/repositories/{projectId}/developer/{developerId}")]
-        public IHttpActionResult RemoveCollaboratorFromProjectRepositories(int projectId, int developerId)
+        [HttpGet]
+        [Route("github/callback/repositories/{projectId}/developer/{developerId}/delete")]
+        public IHttpActionResult RemoveCollaboratorFromProjectRepositories(int projectId, int developerId, string code, string state)
         {
             var project = _projectProvider.GetProject(projectId);
             var developer = _userManager.GetUser(developerId);
-            _githubGateway.RemoveCollaboratorFromRepository(developer, project);
-            return Ok();
+            try
+            {
+                var githubAccessToken = _githubGateway.GetToken(code, state);
+                _githubGateway.RemoveCollaboratorFromRepository(githubAccessToken, developer, project);
+            }
+            catch (Exception)
+            {
+                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
+            }
+            return Redirect($"{_applicationLocationSettings.FrontendAdress}/admin/projects/edit/{projectId}");
         }
 
         private readonly IGithubGateway _githubGateway;

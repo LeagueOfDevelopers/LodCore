@@ -13,6 +13,8 @@ namespace Gateway
 
         string GetLinkToGithubLoginPage(int projectId, int developerId);
 
+        string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId);
+
         string GetToken(string code, string state);
 
         User GetUserGithubProfileInformation(string token);
@@ -25,7 +27,7 @@ namespace Gateway
 
         void AddCollaboratorToRepository(string githubAccessToken, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
 
-        void RemoveCollaboratorFromRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
+        void RemoveCollaboratorFromRepository(string token, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
 
     }
 }

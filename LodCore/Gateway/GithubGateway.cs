@@ -43,6 +43,12 @@ namespace Gateway
             return CreateRequest(redirectUri);
         }
 
+        public string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId)
+        {
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete");
+            return CreateRequest(redirectUri);
+        }
+
         public string GetToken(string code, string state)
         {
             if (!StateIsValid(state))
@@ -105,15 +111,16 @@ namespace Gateway
             }
         }
 
-        public void RemoveCollaboratorFromRepository(UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
+        public void RemoveCollaboratorFromRepository(string token, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
         {
+            _gitHubClient.Credentials = new Credentials(token);
             var repoLinks = project.LinksToGithubRepositories;
             var userName = GetNameFromUri(user.Profile.LinkToGithubProfile);
             foreach (var link in repoLinks)
             {
                 var repoName = GetNameFromUri(link);
                 if (_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
-                    _gitHubClient.Repository.Collaborator.Delete(_githubGatewaySettings.OrganizationName, repoName, userName);
+                   _gitHubClient.Repository.Collaborator.Delete(_githubGatewaySettings.OrganizationName, repoName, userName);
             }
         }
 
