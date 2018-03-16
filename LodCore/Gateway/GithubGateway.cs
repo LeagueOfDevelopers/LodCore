@@ -20,33 +20,33 @@ namespace Gateway
         public string GetLinkToGithubLoginPageToSignUp(int id)
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}signup/{id}");
-            return CreateRequest(redirectUri);
+            return CreateRequest(redirectUri, "user");
         }
 
         // for binding github account
         public string GetLinkToGithubLoginPage(int id)
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}auth/{id}");
-            return CreateRequest(redirectUri);
+            return CreateRequest(redirectUri, "user");
         }
 
         // for login request
         public string GetLinkToGithubLoginPage()
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}login");
-            return CreateRequest(redirectUri);
+            return CreateRequest(redirectUri, "user");
         }
 
         public string GetLinkToGithubLoginPage(int projectId, int developerId)
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}");
-            return CreateRequest(redirectUri);
+            return CreateRequest(redirectUri, "user", "admin:org", "repo");
         }
 
         public string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId)
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete");
-            return CreateRequest(redirectUri);
+            return CreateRequest(redirectUri, "user", "admin:org", "repo");
         }
 
         public string GetToken(string code, string state)
@@ -148,11 +148,11 @@ namespace Gateway
             return _csrf;
         }
 
-        private string CreateRequest(Uri redirectUri)
+        private string CreateRequest(Uri redirectUri, params string[] scopes)
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
-                Scopes = { "user", "admin:org", "repo" },
+                Scopes = { String.Join(",", scopes) },
                 State = SetCsrfToken(),
                 RedirectUri = redirectUri
             };

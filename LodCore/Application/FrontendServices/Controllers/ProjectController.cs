@@ -73,8 +73,8 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
-        [Route("projects")]
-        public PaginableObject GetAllProjects()
+        [Route("projects/{projectsToSkip}/{projectsToReturn}")]
+        public PaginableObject GetAllProjects(int projectsToSkip, int projectsToReturn)
         {
             var paramsQuery = Request.RequestUri.Query;
 
@@ -82,7 +82,7 @@ namespace FrontendServices.Controllers
                 paramsQuery.Split(new[] {'?', '&'}, StringSplitOptions.RemoveEmptyEntries)
                     .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
 
-            var requiredProjects = GetSomeProjects(paramsDictionary);
+            var requiredProjects = GetSomeProjects(projectsToSkip, projectsToReturn, paramsDictionary);
 
             if (!User.IsInRole(AccountRole.User))
             {
@@ -223,16 +223,6 @@ namespace FrontendServices.Controllers
             return Ok();
         }
 
-        [Route("projects/page/{pageNumber}")]
-        public PaginableObject GetProjectByPage(int pageNumber)
-        {
-            var requiredProjects = _projectProvider.GetProjects(pageNumber);
-
-            var projectsPreview = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-
-            return _paginationWrapper.WrapResponse(projectsPreview);
-        }
-
         [HttpGet]
         [Route("projects/{projectId}")]
         public IHttpActionResult GetProject(int projectId)
@@ -264,16 +254,9 @@ namespace FrontendServices.Controllers
             }
         }
 
-        private IEnumerable<Project> GetSomeProjects(Dictionary<string, string> paramsDictionary)
+        private IEnumerable<Project> GetSomeProjects(int projectsToSkip, int projectsToReturn, Dictionary<string, string> paramsDictionary)
         {
-            string page, categoriesQuery;
-            int pageNumber = 0;
-
-            if (paramsDictionary.TryGetValue(PageParameterName, out page))
-            {
-                if (!int.TryParse(page, out pageNumber))
-                    throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
+            string categoriesQuery;
 
             paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
 
@@ -282,7 +265,7 @@ namespace FrontendServices.Controllers
                 : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType) category).ToArray();
 
 
-            var requiredProjects = _projectProvider.GetProjects(pageNumber,
+            var requiredProjects = _projectProvider.GetProjects(projectsToSkip, projectsToReturn,
                 project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
 

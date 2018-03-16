@@ -32,12 +32,11 @@ namespace ProjectManagement.Domain
             return allProjects.ToList();
         }
 
-        public List<Project> GetProjects(int pageNumber, Expression<Func<Project, bool>> predicate = null)
+        public List<Project> GetProjects(int projectsToSkip, int projectsToReturn, Expression<Func<Project, bool>> predicate = null)
         {
-            var projectsToSkip = pageNumber*_projectPaginationSettings.PageSize;
             var requiredProjects = _projectRepository.GetSomeProjects(
                 projectsToSkip,
-                _projectPaginationSettings.PageSize,
+                projectsToReturn,
                 project => project.ProjectStatus == ProjectStatus.Done // well, that's a funny workaround
                     ? 1 // i can't figure out, how to sort it other way
                     : project.ProjectStatus == ProjectStatus.InProgress // even simple switch clause doesn't work here

@@ -9,7 +9,7 @@ namespace ProjectManagement.Application
     {
         List<Project> GetProjects(Func<Project, bool> predicate = null);
 
-        List<Project> GetProjects(int pageNumber, Expression<Func<Project, bool>> predicate = null);
+        List<Project> GetProjects(int projectsToSkip, int projectsToReturn, Expression<Func<Project, bool>> predicate = null);
 
         Project GetProject(int projectId, List<IssueType> issueTypes = null, List<IssueStatus> statusList = null);
 
