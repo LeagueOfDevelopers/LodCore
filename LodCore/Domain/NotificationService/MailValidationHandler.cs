@@ -23,12 +23,12 @@ namespace NotificationService
 		public void Consume(MailValidationRequest request)
 		{
 			_validationRequestsRepository.SaveValidationRequest(request);
-
+            var user = _userRepository.GetAccount(request.UserId);
 			var confirmationLink = new Uri(
 				_confirmationSettings.FrontendMailConfirmationUri,
 				request.Token);
-			_mailer.SendConfirmationMail(confirmationLink.AbsoluteUri,
-				_userRepository.GetAccount(request.UserId).Email);
+			_mailer.SendConfirmationMail(user.Firstname, confirmationLink.AbsoluteUri,
+				user.Email);
 		}
 		
 		

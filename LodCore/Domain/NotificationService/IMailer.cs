@@ -7,8 +7,8 @@ namespace NotificationService
     {
         void SendNotificationEmail(int[] userIds, IEventInfo eventInfo);
 
-        void SendConfirmationMail(string confirmationLink, MailAddress emailAddress);
+        void SendConfirmationMail(string userName, string confirmationLink, MailAddress emailAddress);
 
-        void SendPasswordResetMail(string resetLink, MailAddress emailAddress);
+        void SendPasswordResetMail(string userName, string resetLink, MailAddress emailAddress);
     }
 }

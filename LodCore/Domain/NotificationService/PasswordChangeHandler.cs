@@ -24,7 +24,7 @@ namespace NotificationService
 			var user = _userRepository.GetAccount(request.UserId);
 		    var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{request.Token}";
 		    _passwordManager.SavePasswordChangeRequest(request);
-		    _mailer.SendPasswordResetMail(link, user.Email);
+		    _mailer.SendPasswordResetMail(user.Firstname, link, user.Email);
 		}
 
         private readonly IMailer _mailer;

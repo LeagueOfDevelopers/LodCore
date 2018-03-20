@@ -5,6 +5,7 @@ using Journalist;
 using UserManagement.Infrastructure;
 using NotificationService;
 using Serilog;
+using FrontendServices.Email_Templates.Models;
 
 namespace Mailing
 {
@@ -26,7 +27,7 @@ namespace Mailing
             _eventPublisher = eventPublisher;
         }
 
-        public void SendConfirmationMail(string confirmationLink, MailAddress emailAddress)
+        public void SendConfirmationMail(string userName, string confirmationLink, MailAddress emailAddress)
         {
             Require.NotNull(confirmationLink, nameof(confirmationLink));
             Require.NotNull(emailAddress, nameof(emailAddress));
@@ -49,7 +50,7 @@ namespace Mailing
             client.Dispose();
         }
 
-        public void SendPasswordResetMail(string resetLink, MailAddress emailAddress)
+        public void SendPasswordResetMail(string userName, string resetLink, MailAddress emailAddress)
         {
             Require.NotNull(resetLink, nameof(resetLink));
             Require.NotNull(emailAddress, nameof(emailAddress));
@@ -58,7 +59,8 @@ namespace Mailing
             var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.PasswordResetCaption;
-            mail.Body = string.Format(MailingResources.PasswordResetMessageTemplate, resetLink);
+            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new PasswordRecovery(userName, resetLink));
+            mail.IsBodyHtml = true;
 
             try
             {
@@ -84,8 +86,10 @@ namespace Mailing
             var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.NotificationMailCaption;
-            mail.Body = string.Format(MailingResources.NotificationMessageTemplate,
-                _notificationEmailDescriber.Describe((dynamic) eventInfo));
+            /*mail.Body = RenderEmailTemplateHelper.RenderPartialToString("~/Email_Templates/MainEmailTemplate.cshtml", 
+                new EmailContentModel { Message = string.Format(MailingResources.NotificationMessageTemplate,
+                _notificationEmailDescriber.Describe((dynamic) eventInfo)) });
+            mail.IsBodyHtml = true;*/
 
             foreach (var emailAdress in userIds.Select(userId => _usersRepository.GetAccount(userId).Email))
             {
