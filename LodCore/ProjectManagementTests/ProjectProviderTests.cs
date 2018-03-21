@@ -23,14 +23,12 @@ namespace ProjectManagementTests
             _fixture = new Fixture();
             _projectRepository = new Mock<IProjectRepository>();
             _eventBus = new Mock<IEventPublisher>();
-            var paginationSettings = new PaginationSettings(10);
 
             _projectRepository
                 .Setup(repo => repo.SaveProject(It.IsAny<Project>()))
                 .Returns(1);
             _projectProvider = new ProjectProvider(
                 _projectRepository.Object,
-                paginationSettings,
                 _eventBus.Object);
         }
 

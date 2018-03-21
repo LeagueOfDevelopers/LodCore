@@ -94,7 +94,6 @@ namespace FrontendServices
             container.Register<IProjectProvider>(() =>
                 new ProjectProvider(
                     container.GetInstance<IProjectRepository>(),
-                    container.GetInstance<PaginationSettings>(),
                     container.GetInstance<IEventPublisher>()),
                 Lifestyle.Singleton);
             container.Register<IProjectRepository>(

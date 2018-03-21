@@ -9,11 +9,11 @@ namespace FrontendServices.Models
         public string Email { get; set; }
 
         [MaxLength(50)]
-        [RegularExpression(@"^[А-Яа-яёЁ]+$")]
+        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string FirstName { get; set; }
 
         [MaxLength(50)]
-        [RegularExpression(@"^[А-Яа-яёЁ]+$")]
+        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string LastName { get; set; }
 
         [MaxLength(50)]
@@ -29,7 +29,7 @@ namespace FrontendServices.Models
         public string PhoneNumber { get; set; }
 
         [MaxLength(255)]
-        [RegularExpression(@"^[А-Яа-яёЁ\s]+$")]
+        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string StudyingProfile { get; set; }
 
         [MaxLength(10)]
@@ -37,7 +37,7 @@ namespace FrontendServices.Models
         public string InstituteName { get; set; }
 
         [MaxLength(255)]
-        [RegularExpression(@"^[А-Яа-яёЁ\s]+$")]
+        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string Department { get; set; }
 
         [Range(typeof(int), "2000", "2030")]

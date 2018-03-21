@@ -6,6 +6,7 @@ using Common;
 using Journalist;
 using NHibernate.Util;
 using ProjectManagement.Infrastructure;
+using ProjectManagement.Domain;
 using UserManagement.Application;
 using UserManagement.Infrastructure;
 
@@ -15,7 +16,7 @@ namespace UserManagement.Domain
     {
         private readonly IConfirmationService _confirmationService;
         private readonly IUserRepository _userRepository;
-        private readonly PaginationSettings _paginationSettings;
+        private readonly ProjectPaginationSettings _paginationSettings;
         private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
         private readonly IPasswordManager _passwordManager;
         private readonly IEventPublisher _eventPublisher;
@@ -23,7 +24,7 @@ namespace UserManagement.Domain
         public UserManager(
             IUserRepository userRepository,
             IConfirmationService confirmationService, 
-            PaginationSettings paginationSettings, 
+            ProjectPaginationSettings paginationSettings, 
             IProjectMembershipRepostiory projectMembershipRepostiory, 
             ApplicationLocationSettings applicationLocationSettings, 
             IPasswordManager passwordManager,
@@ -52,8 +53,8 @@ namespace UserManagement.Domain
 
         public List<Account> GetUserList(int pageNumber, Func<Account, bool> criteria = null)
         {
-            var projectToSkip = _paginationSettings.PageSize*pageNumber;
-            var projectsToTake = _paginationSettings.PageSize;
+            var projectToSkip = _paginationSettings.NumberOfProjects*pageNumber;
+            var projectsToTake = _paginationSettings.NumberOfProjects;
 
             return _userRepository.GetSomeAccounts(
                 projectToSkip, 

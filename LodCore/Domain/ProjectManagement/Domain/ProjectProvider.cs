@@ -14,15 +14,12 @@ namespace ProjectManagement.Domain
     {
         public ProjectProvider(
             IProjectRepository projectRepository,
-            PaginationSettings projectPaginationSettings, 
             IEventPublisher eventPublisher)
         {
             Require.NotNull(projectRepository, nameof(projectRepository));
-            Require.NotNull(projectPaginationSettings, nameof(projectPaginationSettings));
             Require.NotNull(eventPublisher, nameof(eventPublisher));
 
             _projectRepository = projectRepository;
-            _projectPaginationSettings = projectPaginationSettings;
             _eventPublisher = eventPublisher;
         }
 
@@ -137,7 +134,6 @@ namespace ProjectManagement.Domain
             _eventPublisher.PublishEvent(@event);
         }
 		
-        private readonly PaginationSettings _projectPaginationSettings;
         private readonly IProjectRepository _projectRepository;
         private readonly IEventPublisher _eventPublisher;
     }
