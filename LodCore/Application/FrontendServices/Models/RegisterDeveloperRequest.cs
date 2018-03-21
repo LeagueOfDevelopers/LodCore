@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FrontendServices.Models
 {
@@ -21,16 +20,16 @@ namespace FrontendServices.Models
         public string Password { get; set; }
 
         [MaxLength(100)]
-        [RegularExpression("^http://vk.com/")]
+        [RegularExpression("^http://vk.com/[a-zA-Z0-9]+$")]
         public string VkProfileUri { get; set; }
 
-        [MaxLength(12)]
+        [MaxLength(11)]
         [RegularExpression(@"^7\d{10}$")]
         [StringLength(11)]
         public string PhoneNumber { get; set; }
 
         [MaxLength(255)]
-        [RegularExpression(@"^[А-Яа-яёЁ]+$")]
+        [RegularExpression(@"^[А-Яа-яёЁ\s]+$")]
         public string StudyingProfile { get; set; }
 
         [MaxLength(10)]
@@ -38,10 +37,10 @@ namespace FrontendServices.Models
         public string InstituteName { get; set; }
 
         [MaxLength(255)]
-        [RegularExpression(@"^[А-Яа-яёЁ]+$")]
+        [RegularExpression(@"^[А-Яа-яёЁ\s]+$")]
         public string Department { get; set; }
 
-        [Range(typeof(int), "2000", "2020")]
+        [Range(typeof(int), "2000", "2030")]
         public int AccessionYear { get; set; }
 
         public bool IsGraduated { get; set; }
