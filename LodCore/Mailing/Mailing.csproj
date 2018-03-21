@@ -76,6 +76,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EmailModels\AdminNotification.cs" />
+    <Compile Include="EmailModels\DeveloperHasLeftProject.cs" />
+    <Compile Include="EmailModels\EmailConfirmation.cs" />
+    <Compile Include="EmailModels\NewContactMessage.cs" />
+    <Compile Include="EmailModels\NewDeveloperOnProject.cs" />
+    <Compile Include="EmailModels\NewEmailConfirmedDeveloper.cs" />
+    <Compile Include="EmailModels\NewFullConfirmedDeveloper.cs" />
+    <Compile Include="EmailModels\NewProject.cs" />
     <Compile Include="EmailModels\PasswordRecovery.cs" />
     <Compile Include="EventDescriptionResources.Designer.cs">
       <DependentUpon>EventDescriptionResources.resx</DependentUpon>

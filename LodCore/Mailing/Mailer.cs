@@ -5,7 +5,6 @@ using Journalist;
 using UserManagement.Infrastructure;
 using NotificationService;
 using Serilog;
-using FrontendServices.Email_Templates.Models;
 
 namespace Mailing
 {
@@ -36,7 +35,8 @@ namespace Mailing
             var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.ConfirmationMailCaption;
-            mail.Body = string.Format(MailingResources.ConfirmationMessageTemplate, confirmationLink);
+            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.EmailConfirmation(userName, confirmationLink));
+            mail.IsBodyHtml = true;
 
             try
             {
@@ -59,7 +59,7 @@ namespace Mailing
             var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.PasswordResetCaption;
-            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new PasswordRecovery(userName, resetLink));
+            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.PasswordRecovery(userName, resetLink));
             mail.IsBodyHtml = true;
 
             try
@@ -86,14 +86,12 @@ namespace Mailing
             var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.NotificationMailCaption;
-            /*mail.Body = RenderEmailTemplateHelper.RenderPartialToString("~/Email_Templates/MainEmailTemplate.cshtml", 
-                new EmailContentModel { Message = string.Format(MailingResources.NotificationMessageTemplate,
-                _notificationEmailDescriber.Describe((dynamic) eventInfo)) });
-            mail.IsBodyHtml = true;*/
+            mail.IsBodyHtml = true;
 
-            foreach (var emailAdress in userIds.Select(userId => _usersRepository.GetAccount(userId).Email))
+            foreach (var user in userIds.Select(userId => _usersRepository.GetAccount(userId)))
             {
-                mail.To.Add(emailAdress);
+                mail.Body = _notificationEmailDescriber.Describe(user.Firstname, eventInfo);
+                mail.To.Add(user.Email);
 
                 try
                 {

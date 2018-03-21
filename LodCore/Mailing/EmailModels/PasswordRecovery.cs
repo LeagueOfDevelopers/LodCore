@@ -1,4 +1,5 @@
-﻿namespace FrontendServices.Email_Templates.Models
+﻿
+namespace Mailing.EmailModels
 {
     public class PasswordRecovery
     {

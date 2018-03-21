@@ -23,78 +23,82 @@ namespace Mailing
             _userRepository = userRepository;
         }
 
-        public string Describe(IEventInfo @eventInfo)
+        public string Describe(string userName, IEventInfo @eventInfo)
         {
             Require.NotNull(@eventInfo, nameof(@eventInfo));
+            Require.NotEmpty(userName, nameof(userName));
 
-            return Describe((dynamic) @eventInfo);
+            return Describe(userName, (dynamic) @eventInfo);
         }
 
-        private string Describe(NewContactMessage @event)
+        private string Describe(string userName, NewContactMessage @event)
         {
             Require.NotNull(@event, nameof(@event));
-
-            return string.Format(EventDescriptionResources.NewContactMessage, @event.ClientName, @event.MessageTopic,
-                @event.MessageBody, @event.ClientEmailAddress);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.NewContactMessage(
+                userName, @event.ClientName, @event.MessageTopic, @event.MessageBody, @event.ClientEmailAddress));
+            return template;
         }
 
-        private string Describe(DeveloperHasLeftProject @event)
+        private string Describe(string userName, DeveloperHasLeftProject @event)
         {
             Require.NotNull(@event, nameof(@event));
 
             var developer = _userRepository.GetAccount(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
-
             var project = _projectRepository.GetProject(@event.ProjectId);
-
-            return string.Format(EventDescriptionResources.DeveloperHasLeftProject, developerFullName, project.Name);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.DeveloperHasLeftProject(
+                userName, developerFullName, project.Name));
+            return template;
         }
 
-        private string Describe(NewDeveloperOnProject @event)
+        private string Describe(string userName, NewDeveloperOnProject @event)
         {
             Require.NotNull(@event, nameof(@event));
 
             var developer = _userRepository.GetAccount(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
-
             var project = _projectRepository.GetProject(@event.ProjectId);
-
-            return string.Format(EventDescriptionResources.NewDeveloperOnProject, project.Name, developerFullName);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.NewDeveloperOnProject(
+                userName, developerFullName, project.Name));
+            return template;
         }
 
-        private string Describe(NewEmailConfirmedDeveloper @event)
+        private string Describe(string userName, NewEmailConfirmedDeveloper @event)
         {
             Require.NotNull(@event, nameof(@event));
 
             var developer = _userRepository.GetAccount(@event.UserId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
-
-            return string.Format(EventDescriptionResources.NewEmailConfirmedDeveloper, developerFullName,
-                developer.Email.Address);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.NewEmailConfirmedDeveloper(
+                userName, developerFullName, developer.Email.Address));
+            return template;
         }
 
-        private string Describe(NewFullConfirmedDeveloper @event)
+        private string Describe(string userName, NewFullConfirmedDeveloper @event)
         {
             Require.NotNull(@event, nameof(@event));
 
             var developer = _userRepository.GetAccount(@event.NewDeveloperId);
             var developerFullName = developer.Firstname + " " + developer.Lastname;
-
-            return string.Format(EventDescriptionResources.NewFullConfirmedDeveloper, developerFullName);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.NewFullConfirmedDeveloper(
+                userName, developerFullName));
+            return template;
         }
 
-        private string Describe(NewProjectCreated @event)
+        private string Describe(string userName, NewProjectCreated @event)
         {
             Require.NotNull(@event, nameof(@event));
-
             var project = _projectRepository.GetProject(@event.ProjectId);
-
-            return string.Format(EventDescriptionResources.NewProjectCreated, project.Name, project.Info);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.NewProject(
+                userName, project.Name, project.Info));
+            return template;
         }
 
-        private string Describe(AdminNotificationInfo @event)
+        private string Describe(string userName, AdminNotificationInfo @event)
         {
-            return string.Format(@event.InfoText);
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.AdminNotification(
+                userName, @event.InfoText));
+            return template;
         }
     }
 }

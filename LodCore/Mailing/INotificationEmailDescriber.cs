@@ -4,6 +4,6 @@ namespace Mailing
 {
     public interface INotificationEmailDescriber
     {
-        string Describe(IEventInfo @event);
+        string Describe(string userName, IEventInfo @event);
     }
 }
