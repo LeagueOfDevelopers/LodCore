@@ -18,16 +18,26 @@ namespace WebSocketConnection
 
         public async Task ProcessWebSocketSession(AspNetWebSocketContext context)
         {
-            await Task.Run(() =>
+            var userId = Convert.ToInt32(context.QueryString["id"]);
+            var socket = context.WebSocket;
+            if (!_wsClients.ContainsKey(userId))
+                _wsClients.Add(userId, socket);
+            else
+                _wsClients[userId] = socket;
+            const int maxMsgSize = 1024;
+            var cancellationToken = new CancellationToken();
+            ArraySegment<Byte> receivedDataBuffer = new ArraySegment<Byte>(new Byte[maxMsgSize]);
+            while (socket.State == WebSocketState.Open)
             {
-                var userId = Convert.ToInt32(context.QueryString["id"]);
-                var socket = context.WebSocket;
-                if (!_wsClients.ContainsKey(userId))
-                    _wsClients.Add(userId, socket);
-                else
-                    _wsClients[userId] = socket;
-                while (true) ;
-            });
+                WebSocketReceiveResult webSocketReceiveResult =
+                  await socket.ReceiveAsync(receivedDataBuffer, cancellationToken);
+                if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
+                {
+                    await socket.CloseAsync(WebSocketCloseStatus.NormalClosure,
+                      String.Empty, cancellationToken);
+                    _wsClients.Remove(userId);
+                }
+            }
         }
 
         public void SendMessage(int userId, string message)
@@ -46,7 +56,6 @@ namespace WebSocketConnection
                     _wsClients.Remove(userId);
                 }
             }
-                
         }
         
         private static readonly Dictionary<int, WebSocket> _wsClients;
