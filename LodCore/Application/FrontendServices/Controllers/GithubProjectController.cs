@@ -55,6 +55,14 @@ namespace FrontendServices.Controllers
         }
 
         [HttpGet]
+        [Authorization(AccountRole.Administrator)]
+        [Route("github/repositories/{newRepositoryName}")]
+        public string GetLinkToGithubLoginPageToCreateRepository(string newRepositoryName)
+        {
+            return _githubGateway.GetLinktoGithubLoginPageToCreateRepository(newRepositoryName);
+        }
+
+        [HttpGet]
         [Route("github/callback/repositories/{projectId}/developer/{developerId}")]
         public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string code, string state)
         {
@@ -88,6 +96,15 @@ namespace FrontendServices.Controllers
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
             }
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/admin/projects/edit/{projectId}");
+        }
+
+        [HttpGet]
+        [Route("github/callback/repositories/{newRepositoryName}")]
+        public IHttpActionResult CreateRepository(string newRepositoryName, string code, string state)
+        {
+            var githubAccessToken = _githubGateway.GetToken(code, state);
+            _githubGateway.CreateRepository(githubAccessToken, newRepositoryName);
+            return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
         }
 
         private readonly IGithubGateway _githubGateway;

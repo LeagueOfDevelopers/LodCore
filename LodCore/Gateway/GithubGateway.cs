@@ -37,6 +37,7 @@ namespace Gateway
             return CreateRequest(redirectUri, "user");
         }
 
+        // for collaborators management
         public string GetLinkToGithubLoginPage(int projectId, int developerId)
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}");
@@ -46,6 +47,13 @@ namespace Gateway
         public string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId)
         {
             var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete");
+            return CreateRequest(redirectUri, "user", "admin:org", "repo");
+        }
+
+        // for repository creation
+        public string GetLinktoGithubLoginPageToCreateRepository(string newRepositoryName)
+        {
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{newRepositoryName}");
             return CreateRequest(redirectUri, "user", "admin:org", "repo");
         }
 
@@ -122,6 +130,12 @@ namespace Gateway
                 if (_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
                    _gitHubClient.Repository.Collaborator.Delete(_githubGatewaySettings.OrganizationName, repoName, userName);
             }
+        }
+
+        public void CreateRepository(string token, string newRepositoryName)
+        {
+            _gitHubClient.Credentials = new Credentials(token);
+            _gitHubClient.Repository.Create(_githubGatewaySettings.OrganizationName, new NewRepository(newRepositoryName));
         }
 
         private string GetTokenByCode(string code)

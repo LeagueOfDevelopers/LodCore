@@ -15,6 +15,8 @@ namespace Gateway
 
         string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId);
 
+        string GetLinktoGithubLoginPageToCreateRepository(string newRepositoryName);
+
         string GetToken(string code, string state);
 
         User GetUserGithubProfileInformation(string token);
@@ -25,9 +27,12 @@ namespace Gateway
 
         IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
-        void AddCollaboratorToRepository(string githubAccessToken, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
+        void AddCollaboratorToRepository(string githubAccessToken, UserManagement.Domain.Account user, 
+                                                                   ProjectManagement.Domain.Project project);
 
-        void RemoveCollaboratorFromRepository(string token, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project);
+        void RemoveCollaboratorFromRepository(string token, UserManagement.Domain.Account user, 
+                                                            ProjectManagement.Domain.Project project);
 
+        void CreateRepository(string token, string newRepositoryName);
     }
 }
