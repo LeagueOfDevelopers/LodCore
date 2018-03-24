@@ -9,6 +9,8 @@ namespace Gateway
 
         string GetLinkToGithubLoginPage(int currentUserId);
 
+        string GetLinkToGithubLoginPageToUnlink();
+
         string GetLinkToGithubLoginPage();
 
         string GetLinkToGithubLoginPage(int projectId, int developerId);

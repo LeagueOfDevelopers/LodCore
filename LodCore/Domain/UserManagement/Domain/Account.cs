@@ -77,8 +77,6 @@ namespace UserManagement.Domain
 
         public virtual DateTime RegistrationTime { get; set; }
 
-        public virtual string GithubAccessToken { get; set; }
-
         public virtual Profile Profile { get; set; }
     }
 }

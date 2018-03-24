@@ -30,6 +30,13 @@ namespace Gateway
             return CreateRequest(redirectUri, "user");
         }
 
+        // for unbinding github account
+        public string GetLinkToGithubLoginPageToUnlink()
+        {
+            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}unlink");
+            return CreateRequest(redirectUri, "user");
+        }
+
         // for login request
         public string GetLinkToGithubLoginPage()
         {
@@ -89,7 +96,7 @@ namespace Gateway
         public void RevokeAccess(string token)
         {
             _gitHubClient.Credentials = new Credentials(token);
-            _gitHubClient.Authorization.ResetApplicationAuthentication(_githubGatewaySettings.ClientId, token);
+            _gitHubClient.Authorization.RevokeApplicationAuthentication(_githubGatewaySettings.ClientId, token);
         }
 
         public IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories()

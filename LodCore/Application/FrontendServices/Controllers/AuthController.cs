@@ -71,7 +71,6 @@ namespace FrontendServices.Controllers
                 if (user != null)
                     throw new AccountAlreadyExistsException();
                 user = _userManager.GetUser(userId);
-                user.GithubAccessToken = githubAccessToken;
                 user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
                 user.Email = new MailAddress(_githubGateway.GetUserGithubProfileEmailAddress(githubAccessToken).Email);
                 _userManager.UpdateUser(user);
@@ -91,6 +90,32 @@ namespace FrontendServices.Controllers
         {
             var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage();
             return githubLoginUrl;
+        }
+
+        [HttpGet]
+        [Authorization(AccountRole.User)]
+        [Route("unlink/github")]
+        public IHttpActionResult GetRedirectionToAuthenticationGitHubFormToUnlinkProfile()
+        {
+            var currentUserId = User.Identity.GetId();
+            var user = _userManager.GetUser(currentUserId);
+            if (user.Password != null)
+            {
+                user.Profile.LinkToGithubProfile = null;
+                _userManager.UpdateUser(user);
+                var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToUnlink();
+                return Ok(githubLoginUrl);
+            }
+            return Conflict();
+        }
+
+        [HttpGet]
+        [Route("github/callback/unlink")]
+        public IHttpActionResult UnlinkGithubProfile(string code, string state)
+        {
+            var githubAccessToken = _githubGateway.GetToken(code, state);
+            _githubGateway.RevokeAccess(githubAccessToken);
+            return Redirect(_profileSettings.FrontendProfileUri);
         }
 
         [HttpGet]
@@ -133,28 +158,9 @@ namespace FrontendServices.Controllers
             var token = _githubGateway.GetToken(code, state);
             var userInfo = _githubGateway.GetUserGithubProfileInformation(token);
             var user = _userManager.GetUser(userId);
-            user.GithubAccessToken = token;
             user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
             _userManager.UpdateUser(user);
             return Redirect(_profileSettings.FrontendProfileUri);
-        }
-
-        [HttpPost]
-        [Authorization(AccountRole.User)]
-        [Route("unlink/github")]
-        public IHttpActionResult UnlinkGithubProfile()
-        {
-            var currentUserId = User.Identity.GetId();
-            var user = _userManager.GetUser(currentUserId);
-            if (user.Password != null)
-            {
-                _githubGateway.RevokeAccess(user.GithubAccessToken);
-                user.GithubAccessToken = null;
-                user.Profile.LinkToGithubProfile = null;
-                _userManager.UpdateUser(user);
-                return Ok();
-            }
-            return Conflict();
         }
 
         private readonly IGithubGateway _githubGateway;
