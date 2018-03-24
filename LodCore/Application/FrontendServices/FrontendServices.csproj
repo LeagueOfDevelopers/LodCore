@@ -374,6 +374,15 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Email_Templates\AdminNotification.cshtml" />
+    <Content Include="Email_Templates\DeveloperHasLeftProject.cshtml" />
+    <Content Include="Email_Templates\EmailConfirmation.cshtml" />
+    <Content Include="Email_Templates\NewContactMessage.cshtml" />
+    <Content Include="Email_Templates\NewDeveloperOnProject.cshtml" />
+    <Content Include="Email_Templates\NewEmailConfirmedDeveloper.cshtml" />
+    <Content Include="Email_Templates\NewFullConfirmedDeveloper.cshtml" />
+    <Content Include="Email_Templates\NewProject.cshtml" />
+    <Content Include="Email_Templates\PasswordRecovery.cshtml" />
     <None Include="Properties\PublishProfiles\Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\FileDeploy.pubxml" />
     <None Include="Properties\PublishProfiles\LodCore.pubxml" />
@@ -384,9 +393,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Email_Templates\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{D37500B8-386F-45FB-B3FB-D31C2B6EB124}</Project>
