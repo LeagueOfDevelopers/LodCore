@@ -211,7 +211,7 @@ namespace FrontendServices.Controllers
                 StudentAccessionYear = profileRequest.StudentAccessionYear,
                 IsGraduated = profileRequest.IsGraduated,
                 StudyingDirection = profileRequest.StudyingDirection,
-                VkProfileUri = new Uri(profileRequest.VkProfileUri),
+                VkProfileUri = String.IsNullOrWhiteSpace(profileRequest.VkProfileUri) ? null : new Uri(profileRequest.VkProfileUri),
                 LinkToGithubProfile = profileRequest.LinkToGithubProfile
             };
 
