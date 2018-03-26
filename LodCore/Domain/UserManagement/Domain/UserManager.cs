@@ -167,8 +167,13 @@ namespace UserManagement.Domain
 
             var userToInitiateProcedure = GetUser(userId);
 
-            var @event = _passwordManager.GetPasswordChangeRequest(userId) ??
-                new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
+            var @event = _passwordManager.GetPasswordChangeRequest(userId);
+
+            if (@event == null)
+            {
+                @event = new PasswordChangeRequest(userId, TokenGenerator.GenerateToken());
+                _passwordManager.SavePasswordChangeRequest(@event);
+            }
 
             _eventPublisher.PublishEvent(@event);
         }
