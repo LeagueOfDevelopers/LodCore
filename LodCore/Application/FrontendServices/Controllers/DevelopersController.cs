@@ -18,6 +18,7 @@ using UserManagement.Domain;
 using UserPresentaton;
 using NotificationSetting = FrontendServices.Models.NotificationSetting;
 using PasswordChangeRequest = FrontendServices.Models.PasswordChangeRequest;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -136,8 +137,9 @@ namespace FrontendServices.Controllers
 
                 return Ok(_mapper.ToGuestDeveloper(user));
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
         }
@@ -170,8 +172,9 @@ namespace FrontendServices.Controllers
             {
                 _userManager.CreateUser(createAccountRequest);
             }
-            catch (AccountAlreadyExistsException)
+            catch (AccountAlreadyExistsException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
             return Ok();
@@ -197,8 +200,9 @@ namespace FrontendServices.Controllers
             {
                 userToChange = _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
 
@@ -284,8 +288,9 @@ namespace FrontendServices.Controllers
             {
                 _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
             foreach (var notificationSetting in notificationSettings)
@@ -309,8 +314,9 @@ namespace FrontendServices.Controllers
             {
                 var user = _userManager.GetUser(id);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
@@ -332,13 +338,15 @@ namespace FrontendServices.Controllers
             {
                 _confirmationService.ConfirmEmail(confirmationToken);
             }
-            catch (TokenNotFoundException)
+            catch (TokenNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return BadRequest("Token not found");
             }
-            catch (InvalidOperationException exception)
+            catch (InvalidOperationException ex)
             {
-                return BadRequest(exception.Message);
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                return BadRequest(ex.Message);
             }
 
             return Ok();

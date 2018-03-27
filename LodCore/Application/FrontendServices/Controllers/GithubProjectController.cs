@@ -8,6 +8,7 @@ using ProjectManagement.Application;
 using UserManagement.Application;
 using Common;
 using System;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -73,8 +74,9 @@ namespace FrontendServices.Controllers
                 var githubAccessToken = _githubGateway.GetToken(code, state);
                 _githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
             }
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
@@ -91,8 +93,9 @@ namespace FrontendServices.Controllers
                 var githubAccessToken = _githubGateway.GetToken(code, state);
                 _githubGateway.RemoveCollaboratorFromRepository(githubAccessToken, developer, project);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
             }
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/admin/projects/edit/{projectId}");

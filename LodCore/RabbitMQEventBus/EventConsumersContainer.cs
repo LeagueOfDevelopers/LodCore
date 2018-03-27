@@ -32,7 +32,7 @@ namespace RabbitMQEventBus
                     }
                     catch(Exception ex)
                     {
-                        Log.Error(ex, ex.Message);
+                        Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                     }
                     Log.Information("Message {@0} has consumed", info);
                 }

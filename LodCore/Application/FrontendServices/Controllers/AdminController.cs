@@ -7,6 +7,7 @@ using UserManagement.Application;
 using UserManagement.Domain;
 using Common;
 using System.Text.RegularExpressions;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -40,12 +41,14 @@ namespace FrontendServices.Controllers
             {
                 _confirmationService.ConfirmProfile(userId);
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return Conflict();
             }
 

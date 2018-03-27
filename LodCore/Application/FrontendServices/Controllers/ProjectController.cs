@@ -20,6 +20,7 @@ using UserManagement.Domain;
 using Image = Common.Image;
 using Project = ProjectManagement.Domain.Project;
 using ProjectActionRequest = FrontendServices.Models.ProjectActionRequest;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -136,12 +137,14 @@ namespace FrontendServices.Controllers
                 _projectProvider.GetProject(projectId);
                 _userManager.GetUser(developerId);
             }
-            catch (ProjectNotFoundException)
+            catch (ProjectNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
 
@@ -149,8 +152,9 @@ namespace FrontendServices.Controllers
             {
                 _projectProvider.AddUserToProject(projectId, developerId, role);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return Conflict();
             }
 
@@ -202,12 +206,14 @@ namespace FrontendServices.Controllers
                 projectToDeleteUser = _projectProvider.GetProject(projectId);
                 _userManager.GetUser(developerId);
             }
-            catch (ProjectNotFoundException)
+            catch (ProjectNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
 
@@ -248,8 +254,9 @@ namespace FrontendServices.Controllers
 
                 return Ok(_projectsMapper.ToProject(project));
             }
-            catch (ProjectNotFoundException)
+            catch (ProjectNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return NotFound();
             }
         }

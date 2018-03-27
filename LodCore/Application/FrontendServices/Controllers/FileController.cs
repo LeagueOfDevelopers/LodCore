@@ -10,6 +10,7 @@ using FrontendServices.Authorization;
 using Journalist;
 using UserManagement.Domain;
 using Image = FrontendServices.Models.Image;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -47,12 +48,14 @@ namespace FrontendServices.Controllers
             {
                 return await _fileManager.UploadFileAsync(Request.Content);
             }
-            catch (NotSupportedException)
+            catch (NotSupportedException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (InvalidDataException)
+            catch (InvalidDataException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -69,12 +72,14 @@ namespace FrontendServices.Controllers
                 return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath), 
                            Path.GetFileName(image.SmallPhotoUri.LocalPath));
             }
-            catch (NotSupportedException)
+            catch (NotSupportedException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            catch (InvalidDataException)
+            catch (InvalidDataException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -86,8 +91,9 @@ namespace FrontendServices.Controllers
             {
                 stream = getStream();
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 

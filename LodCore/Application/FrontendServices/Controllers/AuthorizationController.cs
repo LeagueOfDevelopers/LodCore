@@ -6,6 +6,7 @@ using FrontendServices.Models;
 using Journalist;
 using UserManagement.Application;
 using UserManagement.Domain;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -28,12 +29,14 @@ namespace FrontendServices.Controllers
                 var token = _authorizer.Authorize(credentials.Email, new Password(credentials.Password));
                 return token;
             }
-            catch (AccountNotFoundException)
+            catch (AccountNotFoundException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }

@@ -44,7 +44,7 @@ namespace Mailing
             }
             catch (SmtpException ex)
             {
-                Log.Error(ex, "Sending mail failure: {0}", ex.Message);
+                Log.Error(ex, "Sending mail failure: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
             }
             Log.Information("Mail with subject {0} has sent to {@1}", mail.Subject, mail.To);
             client.Dispose();
@@ -68,7 +68,7 @@ namespace Mailing
             }
             catch (SmtpException ex)
             {
-                Log.Error(ex, "Sending mail failure: {0}", ex.Message);
+                Log.Error(ex, "Sending mail failure: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
             }
             Log.Information("Mail with subject {0} has sent to {@1}", mail.Subject, mail.To);
             client.Dispose();
@@ -99,7 +99,7 @@ namespace Mailing
                 }
                 catch (SmtpException ex)
                 {
-                    Log.Error(ex, "Sending mail failure: {0}", ex.Message);
+                    Log.Error(ex, "Sending mail failure: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
                     _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
                 }
                 Log.Information("Mail with subject {0} has sent to {@1}", mail.Subject, mail.To);

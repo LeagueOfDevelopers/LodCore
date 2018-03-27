@@ -9,6 +9,7 @@ using UserManagement.Application;
 using Common;
 using System.Net.Mail;
 using UserManagement.Domain.Events;
+using Serilog;
 
 namespace FrontendServices.Controllers
 {
@@ -75,8 +76,9 @@ namespace FrontendServices.Controllers
                 user.Email = new MailAddress(_githubGateway.GetUserGithubProfileEmailAddress(githubAccessToken).Email);
                 _userManager.UpdateUser(user);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
             }
             var @event = new NewEmailConfirmedDeveloper(userId);
@@ -134,8 +136,9 @@ namespace FrontendServices.Controllers
                 token = _authorizer.AuthorizeWithGithub(link);
                 encodedToken = Encoder.Encode(token);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/login");
             }
             return Redirect(new Uri($"{_applicationLocationSettings.FrontendAdress}/login/github/{encodedToken}"));
