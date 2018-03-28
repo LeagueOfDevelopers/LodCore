@@ -78,7 +78,8 @@ namespace FrontendServices.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to register user with template id={0} via github. {1} StackTrace: {2}",
+                    userId.ToString(), ex.Message, ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
             }
             var @event = new NewEmailConfirmedDeveloper(userId);
@@ -125,16 +126,22 @@ namespace FrontendServices.Controllers
         public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string code, string state)
         {
             string encodedToken;
+            string link = "";
             try
             {
                 var githubAccessToken = _githubGateway.GetToken(code, state);
-                var link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
+                link = _githubGateway.GetUserGithubProfileInformation(githubAccessToken).HtmlUrl;
                 var user = _userManager.GetUserByLinkToGithubProfile(link);
                 AuthorizationTokenInfo token;
                 if (user == null)
                     throw new AccountNotFoundException();
                 token = _authorizer.AuthorizeWithGithub(link);
                 encodedToken = Encoder.Encode(token);
+            }
+            catch (AccountNotFoundException ex)
+            {
+                Log.Error("Failed to get user with linkToGithubProfile={0}. {1} StackTrace: {2}", link, ex.Message, ex.StackTrace);
+                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/login");
             }
             catch (Exception ex)
             {

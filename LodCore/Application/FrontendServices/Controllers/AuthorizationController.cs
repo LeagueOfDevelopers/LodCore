@@ -31,12 +31,12 @@ namespace FrontendServices.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             catch (UnauthorizedAccessException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to allow access to user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }

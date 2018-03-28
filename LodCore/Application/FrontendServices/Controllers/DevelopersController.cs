@@ -139,7 +139,7 @@ namespace FrontendServices.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
         }
@@ -174,7 +174,7 @@ namespace FrontendServices.Controllers
             }
             catch (AccountAlreadyExistsException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to register user with email={0}. {1} StackTrace: {2}", request.Email, ex.Message, ex.StackTrace);
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
             return Ok();
@@ -202,7 +202,7 @@ namespace FrontendServices.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
 
@@ -290,7 +290,7 @@ namespace FrontendServices.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
             foreach (var notificationSetting in notificationSettings)
@@ -316,7 +316,7 @@ namespace FrontendServices.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
@@ -340,12 +340,12 @@ namespace FrontendServices.Controllers
             }
             catch (TokenNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to find confirmationToken={0}. {1} StackTrace: {2}", confirmationToken, ex.Message, ex.StackTrace);
                 return BadRequest("Token not found");
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to confirm email by confirmationToken={0}. {1} StackTrace: {2}", confirmationToken, ex.Message, ex.StackTrace);
                 return BadRequest(ex.Message);
             }
 

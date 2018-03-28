@@ -76,7 +76,8 @@ namespace FrontendServices.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error(ex, "Failed to add collaborator with id={0} to project with id={1}: {2}. StackTrace: {3}",
+                    developerId.ToString(), projectId.ToString(), ex.Message, ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
             }
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
@@ -95,7 +96,8 @@ namespace FrontendServices.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error(ex, "Failed to remove collaborator with id={0} from project with id={1}: {2}. StackTrace: {3}", 
+                    developerId.ToString(), projectId.ToString(), ex.Message, ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
             }
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/admin/projects/edit/{projectId}");

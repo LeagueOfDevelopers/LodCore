@@ -44,9 +44,9 @@ namespace Mailing
             }
             catch (SmtpException ex)
             {
-                Log.Error(ex, "Sending mail failure: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
+                Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
             }
-            Log.Information("Mail with subject {0} has sent to {@1}", mail.Subject, mail.To);
+            Log.Information("Mail with event type of EmailConfirmation has sent to {@0}", mail.To);
             client.Dispose();
         }
 
@@ -68,9 +68,9 @@ namespace Mailing
             }
             catch (SmtpException ex)
             {
-                Log.Error(ex, "Sending mail failure: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
+                Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
             }
-            Log.Information("Mail with subject {0} has sent to {@1}", mail.Subject, mail.To);
+            Log.Information("Mail with event type of PasswordRecovery has sent to {@0}", mail.To);
             client.Dispose();
         }
 
@@ -99,10 +99,10 @@ namespace Mailing
                 }
                 catch (SmtpException ex)
                 {
-                    Log.Error(ex, "Sending mail failure: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
+                    Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
                     _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
                 }
-                Log.Information("Mail with subject {0} has sent to {@1}", mail.Subject, mail.To);
+                Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
                 mail.To.Clear();
             }
 

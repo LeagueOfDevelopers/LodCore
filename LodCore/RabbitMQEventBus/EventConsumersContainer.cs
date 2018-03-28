@@ -32,7 +32,8 @@ namespace RabbitMQEventBus
                     }
                     catch(Exception ex)
                     {
-                        Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                        Log.Error("Failed to consume message with info={@0}: {1} StackTrace: {2}",
+                    info, ex.Message, ex.StackTrace);
                     }
                     Log.Information("Message {@0} has consumed", info);
                 }

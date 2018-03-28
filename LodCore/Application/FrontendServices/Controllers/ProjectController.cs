@@ -139,12 +139,12 @@ namespace FrontendServices.Controllers
             }
             catch (ProjectNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", developerId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
 
@@ -154,7 +154,8 @@ namespace FrontendServices.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to add user with id={0}(role={1}) to project with id={2}. {3} StackTrace: {4}", 
+                    developerId.ToString(), role, projectId.ToString(), ex.Message, ex.StackTrace);
                 return Conflict();
             }
 
@@ -208,12 +209,12 @@ namespace FrontendServices.Controllers
             }
             catch (ProjectNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", developerId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
 
@@ -256,7 +257,7 @@ namespace FrontendServices.Controllers
             }
             catch (ProjectNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
         }

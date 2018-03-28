@@ -50,12 +50,14 @@ namespace FrontendServices.Controllers
             }
             catch (NotSupportedException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to upload file with requets content headers={@0}. {1} StackTrace: {2}", 
+                    Request.Content.Headers, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             catch (InvalidDataException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to upload file with requets content headers={@0}. {1} StackTrace: {2}",
+                    Request.Content.Headers, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -74,12 +76,14 @@ namespace FrontendServices.Controllers
             }
             catch (NotSupportedException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to upload file with requets content headers={@0}. {1} StackTrace: {2}",
+                    Request.Content.Headers, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             catch (InvalidDataException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to upload file with requets content headers={@0}. {1} StackTrace: {2}",
+                    Request.Content.Headers, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotAcceptable);
             }
         }
@@ -93,7 +97,8 @@ namespace FrontendServices.Controllers
             }
             catch (FileNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to find file with requets content headers={@0}. {1} StackTrace: {2}",
+                    Request.Content.Headers, ex.Message, ex.StackTrace);
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
 

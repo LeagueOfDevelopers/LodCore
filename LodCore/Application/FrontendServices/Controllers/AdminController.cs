@@ -43,12 +43,12 @@ namespace FrontendServices.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", userId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
+                Log.Error("Failed to confirm user with id={0}. {1} StackTrace: {2}", userId.ToString(), ex.Message, ex.StackTrace);
                 return Conflict();
             }
 
