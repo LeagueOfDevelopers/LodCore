@@ -132,10 +132,12 @@ namespace FrontendServices.Controllers
             }
 
             User.AssertResourceOwnerOrAdmin(developerId);
+            Project project;
+            Account user;
             try
             {
-                _projectProvider.GetProject(projectId);
-                _userManager.GetUser(developerId);
+                project = _projectProvider.GetProject(projectId);
+                user = _userManager.GetUser(developerId);
             }
             catch (ProjectNotFoundException ex)
             {
@@ -150,7 +152,7 @@ namespace FrontendServices.Controllers
 
             try
             {
-                _projectProvider.AddUserToProject(projectId, developerId, role);
+                _projectProvider.AddUserToProject(projectId, developerId, role, user.Firstname, user.Lastname, project.Name);
             }
             catch (InvalidOperationException ex)
             {
@@ -201,11 +203,12 @@ namespace FrontendServices.Controllers
 
             User.AssertResourceOwnerOrAdmin(developerId);
             Project projectToDeleteUser;
+            Account user;
 
             try
             {
                 projectToDeleteUser = _projectProvider.GetProject(projectId);
-                _userManager.GetUser(developerId);
+                user = _userManager.GetUser(developerId);
             }
             catch (ProjectNotFoundException ex)
             {
@@ -225,7 +228,7 @@ namespace FrontendServices.Controllers
                 return NotFound();
             }
 
-            _projectProvider.RemoveUserFromProject(projectId, developerId);
+            _projectProvider.RemoveUserFromProject(projectId, developerId, user.Firstname, user.Lastname, projectToDeleteUser.Name);
 
             return Ok();
         }

@@ -19,7 +19,7 @@ namespace DataAccessTests
             dbProvider.OpenSession();
             var wsProvider = new WebSocketStreamProvider();
             var repository = new EventRepository(dbProvider, wsProvider);
-            var eventInfo = new NewEmailConfirmedDeveloper(1);
+            var eventInfo = new NewEmailConfirmedDeveloper(1, "firstName", "lastName");
             var @event = new Event(eventInfo);
             var receivers = new[] {30, 31, 32};
             var distributionPolicy = new DistributionPolicy(receivers);

@@ -14,7 +14,8 @@ namespace ProjectManagement.Domain
     {
         public ProjectProvider(
             IProjectRepository projectRepository,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher
+            )
         {
             Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventPublisher, nameof(eventPublisher));
@@ -76,7 +77,7 @@ namespace ProjectManagement.Domain
                 : null);
             var projectId = _projectRepository.SaveProject(project);
 
-            var @event = new NewProjectCreated(projectId);
+            var @event = new NewProjectCreated(projectId, project.Name);
 
             _eventPublisher.PublishEvent(@event);
 
@@ -90,7 +91,7 @@ namespace ProjectManagement.Domain
             _projectRepository.UpdateProject(project);
         }
 
-        public void AddUserToProject(int projectId, int userId, string role)
+        public void AddUserToProject(int projectId, int userId, string role, string firstName, string lastName, string projectName)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.Positive(userId, nameof(userId));
@@ -107,12 +108,12 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            var @event = new NewDeveloperOnProject(userId, projectId);
+            var @event = new NewDeveloperOnProject(userId, projectId, firstName, lastName, projectName);
 
             _eventPublisher.PublishEvent(@event);
         }
 
-        public void RemoveUserFromProject(int projectId, int userId)
+        public void RemoveUserFromProject(int projectId, int userId, string firstName, string lastName, string projectName)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.Positive(userId, nameof(userId));
@@ -129,7 +130,7 @@ namespace ProjectManagement.Domain
 
             UpdateProject(project);
 
-            var @event = new DeveloperHasLeftProject(userId, projectId);
+            var @event = new DeveloperHasLeftProject(userId, projectId, firstName, lastName, projectName);
 
             _eventPublisher.PublishEvent(@event);
         }

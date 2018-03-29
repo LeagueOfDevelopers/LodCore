@@ -64,11 +64,12 @@ namespace FrontendServices.Controllers
         [Route("github/callback/signup/{userId}")]
         public IHttpActionResult SignUpWithGitHub(int userId, string code, string state)
         {
+            Account user;
             try
             {
                 var githubAccessToken = _githubGateway.GetToken(code, state);
                 var userInfo = _githubGateway.GetUserGithubProfileInformation(githubAccessToken);
-                var user = _userManager.GetUserByLinkToGithubProfile(userInfo.HtmlUrl);
+                user = _userManager.GetUserByLinkToGithubProfile(userInfo.HtmlUrl);
                 if (user != null)
                     throw new AccountAlreadyExistsException();
                 user = _userManager.GetUser(userId);
@@ -82,7 +83,7 @@ namespace FrontendServices.Controllers
                     userId.ToString(), ex.Message, ex.StackTrace);
                 return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
             }
-            var @event = new NewEmailConfirmedDeveloper(userId);
+            var @event = new NewEmailConfirmedDeveloper(user.UserId, user.Firstname, user.Lastname);
             _eventPublisher.PublishEvent(@event);
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/github");
         }

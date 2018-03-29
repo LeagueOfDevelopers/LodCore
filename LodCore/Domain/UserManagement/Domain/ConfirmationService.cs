@@ -55,7 +55,7 @@ namespace UserManagement.Domain
 
             _validationRequestsRepository.DeleteValidationToken(validationRequest);
 
-            var @event = new NewEmailConfirmedDeveloper(userAccount.UserId);
+            var @event = new NewEmailConfirmedDeveloper(userAccount.UserId, userAccount.Firstname, userAccount.Lastname);
 
             _eventPublisher.PublishEvent(@event);
         }
@@ -78,7 +78,7 @@ namespace UserManagement.Domain
 
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
-            var @event = new NewFullConfirmedDeveloper(userAccount.UserId);
+            var @event = new NewFullConfirmedDeveloper(userAccount.UserId, userAccount.Firstname, userAccount.Lastname);
 
             _userRepository.UpdateAccount(userAccount);
 

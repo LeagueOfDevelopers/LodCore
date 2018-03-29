@@ -54,7 +54,7 @@ namespace NotificationServiceTests
                 _mailerMock.Object,
                 _userPresentationProviderMock.Object);
 
-            var developerOnProjectEvent = new NewDeveloperOnProject(11, 10);
+            var developerOnProjectEvent = new NewDeveloperOnProject(11, 10, "firstName", "lastName", "projectName");
 
             //act
             _projectsEventSink.Consume(developerOnProjectEvent);
