@@ -92,7 +92,9 @@
     <Compile Include="Password.cs" />
     <Compile Include="ProjectType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryStringParser.cs" />
     <Compile Include="RelativeEqualityComparer.cs" />
+    <Compile Include="ResponseSuccessMarker.cs" />
     <Compile Include="TokenGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

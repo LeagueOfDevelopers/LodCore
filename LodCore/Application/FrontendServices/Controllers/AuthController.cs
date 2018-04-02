@@ -10,6 +10,8 @@ using Common;
 using System.Net.Mail;
 using UserManagement.Domain.Events;
 using Serilog;
+using System.Web;
+using System.Net;
 
 namespace FrontendServices.Controllers
 {
@@ -42,6 +44,18 @@ namespace FrontendServices.Controllers
         [Route("signup/github")]
         public string GetRedirectionToAuthenticationGitHubFormToSignUp([FromBody] RegisterDeveloperWithGithubRequest request)
         {
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch(HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}", 
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
             var createAccountRequest = new CreateAccountRequest(
                 request.LastName,
                 request.FirstName,
@@ -56,13 +70,13 @@ namespace FrontendServices.Controllers
                     VkProfileUri = request.VkProfileUri == null ? null : new Uri(request.VkProfileUri)
                 });
             var userId = _userManager.CreateUserTemplate(createAccountRequest);
-            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToSignUp(userId);
+            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToSignUp(frontCallback, userId);
             return githubLoginUrl;
         }
 
         [HttpGet]
         [Route("github/callback/signup/{userId}")]
-        public IHttpActionResult SignUpWithGitHub(int userId, string code, string state)
+        public IHttpActionResult SignUpWithGitHub(int userId, string frontend_callback, string code, string state)
         {
             Account user;
             try
@@ -81,53 +95,40 @@ namespace FrontendServices.Controllers
             {
                 Log.Error("Failed to register user with template id={0} via github. {1} StackTrace: {2}",
                     userId.ToString(), ex.Message, ex.StackTrace);
-                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/registration");
+                return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, false));
             }
             var @event = new NewEmailConfirmedDeveloper(user.UserId, user.Firstname, user.Lastname);
             _eventPublisher.PublishEvent(@event);
-            return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/github");
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, true));
         }
 
         [HttpGet]
         [Route("login/github")]
         public string GetRedirectionToAuthenticationGitHubFormToSignIn()
         {
-            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage();
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch (HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage(frontCallback);
             return githubLoginUrl;
         }
 
         [HttpGet]
-        [Authorization(AccountRole.User)]
-        [Route("unlink/github")]
-        public IHttpActionResult GetRedirectionToAuthenticationGitHubFormToUnlinkProfile()
-        {
-            var currentUserId = User.Identity.GetId();
-            var user = _userManager.GetUser(currentUserId);
-            if (user.Password != null)
-            {
-                user.Profile.LinkToGithubProfile = null;
-                _userManager.UpdateUser(user);
-                var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToUnlink();
-                return Ok(githubLoginUrl);
-            }
-            return Conflict();
-        }
-
-        [HttpGet]
-        [Route("github/callback/unlink")]
-        public IHttpActionResult UnlinkGithubProfile(string code, string state)
-        {
-            var githubAccessToken = _githubGateway.GetToken(code, state);
-            _githubGateway.RevokeAccess(githubAccessToken);
-            return Redirect(_profileSettings.FrontendProfileUri);
-        }
-
-        [HttpGet]
         [Route("github/callback/login")]
-        public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string code, string state)
+        public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string frontend_callback, string code, string state)
         {
-            string encodedToken;
+            string encodedToken = "";
             string link = "";
+            var success = true;
             try
             {
                 var githubAccessToken = _githubGateway.GetToken(code, state);
@@ -142,14 +143,52 @@ namespace FrontendServices.Controllers
             catch (AccountNotFoundException ex)
             {
                 Log.Error("Failed to get user with linkToGithubProfile={0}. {1} StackTrace: {2}", link, ex.Message, ex.StackTrace);
-                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/login");
+                success = false;
             }
             catch (Exception ex)
             {
                 Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
-                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/login");
+                success = false;
             }
-            return Redirect(new Uri($"{_applicationLocationSettings.FrontendAdress}/login/github/{encodedToken}"));
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}?encoded_token={encodedToken}", success));
+        }
+
+        [HttpGet]
+        [Authorization(AccountRole.User)]
+        [Route("unlink/github")]
+        public IHttpActionResult GetRedirectionToAuthenticationGitHubFormToUnlinkProfile()
+        {
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch (HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            var currentUserId = User.Identity.GetId();
+            var user = _userManager.GetUser(currentUserId);
+            if (user.Password != null)
+            {
+                user.Profile.LinkToGithubProfile = null;
+                _userManager.UpdateUser(user);
+                var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToUnlink(frontCallback);
+                return Ok(githubLoginUrl);
+            }
+            return Conflict();
+        }
+
+        [HttpGet]
+        [Route("github/callback/unlink")]
+        public IHttpActionResult UnlinkGithubProfile(string frontend_callback, string code, string state)
+        {
+            var githubAccessToken = _githubGateway.GetToken(code, state);
+            _githubGateway.RevokeAccess(githubAccessToken);
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, true));
         }
 
         [HttpGet]
@@ -157,23 +196,38 @@ namespace FrontendServices.Controllers
         [Route("auth/github")]
         public string GetRedirectionToAuthenticationGitHubFormToBindAccount()
         {
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch (HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
             var currentUserId = User.Identity.GetId();
-            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage(currentUserId);
+            var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToBind(frontCallback, currentUserId);
             return githubLoginUrl;
         }
 
         [HttpGet]
-        [Route("github/callback/auth/{userId}")]
-        public IHttpActionResult GetAuthenticationTokenByCode(int userId, string code, string state)
+        [Route("github/callback/auth/{id}")]
+        public IHttpActionResult GetAuthenticationTokenByCode(int id, string frontend_callback, string code, string state)
         {
             var token = _githubGateway.GetToken(code, state);
             var userInfo = _githubGateway.GetUserGithubProfileInformation(token);
-            var user = _userManager.GetUser(userId);
+            var user = _userManager.GetUser(id);
             user.Profile.LinkToGithubProfile = new Uri(userInfo.HtmlUrl);
             _userManager.UpdateUser(user);
-            return Redirect(_profileSettings.FrontendProfileUri);
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, true));
         }
 
+        
+
+        private const string frontendCallbackComponentName = "frontend_callback";
         private readonly IGithubGateway _githubGateway;
         private readonly IUserManager _userManager;
         private readonly ProfileSettings _profileSettings;

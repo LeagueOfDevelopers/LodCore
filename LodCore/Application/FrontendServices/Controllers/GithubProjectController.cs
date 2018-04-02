@@ -9,6 +9,8 @@ using UserManagement.Application;
 using Common;
 using System;
 using Serilog;
+using System.Web;
+using System.Net;
 
 namespace FrontendServices.Controllers
 {
@@ -38,13 +40,25 @@ namespace FrontendServices.Controllers
         {
             return _githubGateway.GetLeagueOfDevelopersRepositories();
         }
-
+        
         [HttpGet]
         [Authorization(AccountRole.Administrator)]
         [Route("github/repositories/{projectId}/developer/{developerId}")]
         public string GetLinkToGithubLoginPageToCheckAuthentication(int projectId, int developerId)
         {
-            return _githubGateway.GetLinkToGithubLoginPage(projectId, developerId);
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch (HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            return _githubGateway.GetLinkToGithubLoginPage(frontCallback, projectId, developerId);
         }
 
         [HttpGet]
@@ -52,17 +66,41 @@ namespace FrontendServices.Controllers
         [Route("github/repositories/{projectId}/developer/{developerId}/delete")]
         public string GetLinkToGithubLoginPageToCheckAuthenticationForDeletion(int projectId, int developerId)
         {
-            return _githubGateway.GetLinkToGithubLoginPageToRemoveCollaborator(projectId, developerId);
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch (HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            return _githubGateway.GetLinkToGithubLoginPageToRemoveCollaborator(frontCallback, projectId, developerId);
         }
 
         [HttpGet]
         [Authorization(AccountRole.Administrator)]
         [Route("github/repositories/{newRepositoryName}")]
-        public string GetLinkToGithubLoginPageToCreateRepository(string newRepositoryName)
+        public string GetLinkToGithubLoginPageToCreateRepository(string newRepositoryName, string frontend_callback)
         {
-            return _githubGateway.GetLinktoGithubLoginPageToCreateRepository(newRepositoryName);
+            var queryString = Request.RequestUri.Query;
+            string frontCallback;
+            try
+            {
+                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+            }
+            catch (HttpParseException ex)
+            {
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
+                    frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            return _githubGateway.GetLinktoGithubLoginPageToCreateRepository(frontCallback, newRepositoryName);
         }
-
+        
         [HttpGet]
         [Route("github/callback/repositories/{projectId}/developer/{developerId}")]
         public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string code, string state)
@@ -112,6 +150,7 @@ namespace FrontendServices.Controllers
             return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
         }
 
+        private const string frontendCallbackComponentName = "frontend_callback";
         private readonly IGithubGateway _githubGateway;
         private readonly IProjectProvider _projectProvider;
         private readonly IUserManager _userManager;

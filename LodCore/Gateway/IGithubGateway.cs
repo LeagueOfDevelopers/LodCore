@@ -5,19 +5,19 @@ namespace Gateway
 {
     public interface IGithubGateway
     {
-        string GetLinkToGithubLoginPageToSignUp(int registeredUserId);
+        string GetLinkToGithubLoginPageToSignUp(string frontendCallback, int registeredUserId);
 
-        string GetLinkToGithubLoginPage(int currentUserId);
+        string GetLinkToGithubLoginPageToBind(string frontendCallback, int currentUserId);
 
-        string GetLinkToGithubLoginPageToUnlink();
+        string GetLinkToGithubLoginPageToUnlink(string frontendCallback);
 
-        string GetLinkToGithubLoginPage();
+        string GetLinkToGithubLoginPage(string frontendCallback);
 
-        string GetLinkToGithubLoginPage(int projectId, int developerId);
+        string GetLinkToGithubLoginPage(string frontendCallback, int projectId, int developerId);
 
-        string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId);
+        string GetLinkToGithubLoginPageToRemoveCollaborator(string frontendCallback, int projectId, int developerId);
 
-        string GetLinktoGithubLoginPageToCreateRepository(string newRepositoryName);
+        string GetLinktoGithubLoginPageToCreateRepository(string frontendCallback, string newRepositoryName);
 
         string GetToken(string code, string state);
 

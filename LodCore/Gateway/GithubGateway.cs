@@ -17,51 +17,51 @@ namespace Gateway
         }
 
         // for registration with github request
-        public string GetLinkToGithubLoginPageToSignUp(int id)
+        public string GetLinkToGithubLoginPageToSignUp(string frontendCallback, int id)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}signup/{id}");
-            return CreateRequest(redirectUri, "user");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}signup/{id}";
+            return CreateRequest(redirectUri, frontendCallback, "user");
         }
 
         // for binding github account
-        public string GetLinkToGithubLoginPage(int id)
+        public string GetLinkToGithubLoginPageToBind(string frontendCallback, int id)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}auth/{id}");
-            return CreateRequest(redirectUri, "user");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}auth/{id}";
+            return CreateRequest(redirectUri, frontendCallback, "user");
         }
 
         // for unbinding github account
-        public string GetLinkToGithubLoginPageToUnlink()
+        public string GetLinkToGithubLoginPageToUnlink(string frontendCallback)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}unlink");
-            return CreateRequest(redirectUri, "user");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}unlink";
+            return CreateRequest(redirectUri, frontendCallback, "user");
         }
 
         // for login request
-        public string GetLinkToGithubLoginPage()
+        public string GetLinkToGithubLoginPage(string frontendCallback)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}login");
-            return CreateRequest(redirectUri, "user");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}login";
+            return CreateRequest(redirectUri, frontendCallback, "user");
         }
 
         // for collaborators management
-        public string GetLinkToGithubLoginPage(int projectId, int developerId)
+        public string GetLinkToGithubLoginPage(string frontendCallback, int projectId, int developerId)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}");
-            return CreateRequest(redirectUri, "user", "admin:org", "repo");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}";
+            return CreateRequest(redirectUri, frontendCallback, "user", "admin:org", "repo");
         }
 
-        public string GetLinkToGithubLoginPageToRemoveCollaborator(int projectId, int developerId)
+        public string GetLinkToGithubLoginPageToRemoveCollaborator(string frontendCallback, int projectId, int developerId)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete");
-            return CreateRequest(redirectUri, "user", "admin:org", "repo");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete";
+            return CreateRequest(redirectUri, frontendCallback, "user", "admin:org", "repo");
         }
 
         // for repository creation
-        public string GetLinktoGithubLoginPageToCreateRepository(string newRepositoryName)
+        public string GetLinktoGithubLoginPageToCreateRepository(string frontendCallback, string newRepositoryName)
         {
-            var redirectUri = new Uri($"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{newRepositoryName}");
-            return CreateRequest(redirectUri, "user", "admin:org", "repo");
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{newRepositoryName}";
+            return CreateRequest(redirectUri, frontendCallback, "user", "admin:org", "repo");
         }
 
         public string GetToken(string code, string state)
@@ -169,16 +169,23 @@ namespace Gateway
             return _csrf;
         }
 
-        private string CreateRequest(Uri redirectUri, params string[] scopes)
+        private string CreateRequest(string redirectUri, string frontendCallback, params string[] scopes)
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
                 Scopes = { String.Join(",", scopes) },
                 State = SetCsrfToken(),
-                RedirectUri = redirectUri
+                RedirectUri = BindFrontendCallbackToUrl(redirectUri, frontendCallback)
             };
             var githubLoginUrl = _gitHubClient.Oauth.GetGitHubLoginUrl(request);
             return githubLoginUrl.ToString();
+        }
+
+        private Uri BindFrontendCallbackToUrl(string url, string frontendCallback)
+        {
+            if (url.Contains("?"))
+                return new Uri($"{url}&frontend_callback={frontendCallback}");
+            return new Uri($"{url}?frontend_callback={frontendCallback}");
         }
 
         private string GetNameFromUri(Uri uri)
