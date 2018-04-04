@@ -35,6 +35,6 @@ namespace Gateway
         void RemoveCollaboratorFromRepository(string token, UserManagement.Domain.Account user, 
                                                             ProjectManagement.Domain.Project project);
 
-        void CreateRepository(string token, string newRepositoryName);
+        string CreateRepository(string token, string newRepositoryName);
     }
 }

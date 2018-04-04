@@ -103,51 +103,64 @@ namespace FrontendServices.Controllers
         
         [HttpGet]
         [Route("github/callback/repositories/{projectId}/developer/{developerId}")]
-        public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string code, string state)
+        public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string frontend_callback, string code, string state)
         {
             var project = _projectProvider.GetProject(projectId);
             var developer = _userManager.GetUser(developerId);
+            var success = true;
             try
             {
-                var githubAccessToken = _githubGateway.GetToken(code, state);
-                _githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
+                //var githubAccessToken = _githubGateway.GetToken(code, state);
+                //_githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to add collaborator with id={0} to project with id={1}: {2}. StackTrace: {3}",
                     developerId.ToString(), projectId.ToString(), ex.Message, ex.StackTrace);
-                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
+                success = false;
             }
-            return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, success));
         }
 
         [HttpGet]
         [Route("github/callback/repositories/{projectId}/developer/{developerId}/delete")]
-        public IHttpActionResult RemoveCollaboratorFromProjectRepositories(int projectId, int developerId, string code, string state)
+        public IHttpActionResult RemoveCollaboratorFromProjectRepositories(int projectId, int developerId, string frontend_callback, string code, string state)
         {
             var project = _projectProvider.GetProject(projectId);
             var developer = _userManager.GetUser(developerId);
+            var success = true;
             try
             {
-                var githubAccessToken = _githubGateway.GetToken(code, state);
-                _githubGateway.RemoveCollaboratorFromRepository(githubAccessToken, developer, project);
+                //var githubAccessToken = _githubGateway.GetToken(code, state);
+                //_githubGateway.RemoveCollaboratorFromRepository(githubAccessToken, developer, project);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to remove collaborator with id={0} from project with id={1}: {2}. StackTrace: {3}", 
                     developerId.ToString(), projectId.ToString(), ex.Message, ex.StackTrace);
-                return Redirect($"{_applicationLocationSettings.FrontendAdress}/error/admin");
+                success = false;
             }
-            return Redirect($"{_applicationLocationSettings.FrontendAdress}/admin/projects/edit/{projectId}");
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, success));
         }
 
         [HttpGet]
         [Route("github/callback/repositories/{newRepositoryName}")]
-        public IHttpActionResult CreateRepository(string newRepositoryName, string code, string state)
+        public IHttpActionResult CreateRepository(string newRepositoryName, string frontend_callback, string code, string state)
         {
-            var githubAccessToken = _githubGateway.GetToken(code, state);
-            _githubGateway.CreateRepository(githubAccessToken, newRepositoryName);
-            return Redirect($"{_applicationLocationSettings.FrontendAdress}/success/admin");
+            var success = true;
+            var newRepositoryUrl = "http://repo";
+            try
+            {
+                //var githubAccessToken = _githubGateway.GetToken(code, state);
+                //newRepositoryUrl = _githubGateway.CreateRepository(githubAccessToken, newRepositoryName);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Failed to remove create repository with name={0}: {1}. StackTrace: {2}",
+                    newRepositoryName, ex.Message, ex.StackTrace);
+                success = false;
+            }
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}&repository_link={newRepositoryUrl}", success));
         }
 
         private const string frontendCallbackComponentName = "frontend_callback";

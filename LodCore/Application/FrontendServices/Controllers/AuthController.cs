@@ -150,7 +150,7 @@ namespace FrontendServices.Controllers
                 Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 success = false;
             }
-            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}?encoded_token={encodedToken}", success));
+            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}/{encodedToken}", success));
         }
 
         [HttpGet]

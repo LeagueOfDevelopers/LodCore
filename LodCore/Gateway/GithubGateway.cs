@@ -139,10 +139,10 @@ namespace Gateway
             }
         }
 
-        public void CreateRepository(string token, string newRepositoryName)
+        public string CreateRepository(string token, string newRepositoryName)
         {
             _gitHubClient.Credentials = new Credentials(token);
-            _gitHubClient.Repository.Create(_githubGatewaySettings.OrganizationName, new NewRepository(newRepositoryName));
+            return _gitHubClient.Repository.Create(_githubGatewaySettings.OrganizationName, new NewRepository(newRepositoryName)).Result.HtmlUrl;
         }
 
         private string GetTokenByCode(string code)
