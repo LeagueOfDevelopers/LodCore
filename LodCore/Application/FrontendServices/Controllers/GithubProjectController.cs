@@ -110,8 +110,8 @@ namespace FrontendServices.Controllers
             var success = true;
             try
             {
-                //var githubAccessToken = _githubGateway.GetToken(code, state);
-                //_githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
+                var githubAccessToken = _githubGateway.GetToken(code, state);
+                _githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
             }
             catch (Exception ex)
             {
@@ -131,8 +131,8 @@ namespace FrontendServices.Controllers
             var success = true;
             try
             {
-                //var githubAccessToken = _githubGateway.GetToken(code, state);
-                //_githubGateway.RemoveCollaboratorFromRepository(githubAccessToken, developer, project);
+                var githubAccessToken = _githubGateway.GetToken(code, state);
+                _githubGateway.RemoveCollaboratorFromRepository(githubAccessToken, developer, project);
             }
             catch (Exception ex)
             {
@@ -148,11 +148,11 @@ namespace FrontendServices.Controllers
         public IHttpActionResult CreateRepository(string newRepositoryName, string frontend_callback, string code, string state)
         {
             var success = true;
-            var newRepositoryUrl = "http://repo";
+            var newRepositoryUrl = "";
             try
             {
-                //var githubAccessToken = _githubGateway.GetToken(code, state);
-                //newRepositoryUrl = _githubGateway.CreateRepository(githubAccessToken, newRepositoryName);
+                var githubAccessToken = _githubGateway.GetToken(code, state);
+                newRepositoryUrl = _githubGateway.CreateRepository(githubAccessToken, newRepositoryName);
             }
             catch(Exception ex)
             {

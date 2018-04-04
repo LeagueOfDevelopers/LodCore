@@ -53,6 +53,8 @@ namespace UserManagerTests
 
             var testAccMock = new Mock<Account>();
             testAccMock.Setup(acc => acc.UserId).Returns(42);
+            testAccMock.Setup(acc => acc.Firstname).Returns("FirstName");
+            testAccMock.Setup(acc => acc.Lastname).Returns("LastName");
             testAccMock.Setup(acc => acc.ConfirmationStatus).Returns(ConfirmationStatus.Unconfirmed);
 
             _userRepoStub.Setup(rep => rep.GetAccount(mailValidationRq.UserId)).Returns(testAccMock.Object);
@@ -74,6 +76,8 @@ namespace UserManagerTests
 
             var testAccMock = new Mock<Account>();
             testAccMock.Setup(acc => acc.UserId).Returns(42);
+            testAccMock.Setup(acc => acc.Firstname).Returns("FirstName");
+            testAccMock.Setup(acc => acc.Lastname).Returns("LastName");
             testAccMock.Setup(acc => acc.Password).Returns(Password.FromPlainString("f34password"));
             testAccMock.Setup(acc => acc.ConfirmationStatus).Returns(ConfirmationStatus.Unconfirmed);
 
