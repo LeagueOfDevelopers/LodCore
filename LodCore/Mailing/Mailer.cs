@@ -5,6 +5,7 @@ using Journalist;
 using UserManagement.Infrastructure;
 using NotificationService;
 using Serilog;
+using System;
 
 namespace Mailing
 {
@@ -42,9 +43,23 @@ namespace Mailing
             {
                 client.Send(mail);
             }
+            catch (SmtpFailedRecipientsException ex)
+            {
+                for (int i = 0; i < ex.InnerExceptions.Length; i++)
+                {
+                    SmtpStatusCode status = ex.InnerExceptions[i].StatusCode;
+                    Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message, ex.InnerExceptions[i].StatusCode);
+                    client.Send(mail);
+                    Log.Information("Retry: mail with event type of EmailConfirmation has sent to {@1}", mail.To);
+                }
+            }
             catch (SmtpException ex)
             {
                 Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
+            }
+            finally
+            {
+                client.Dispose();
             }
             Log.Information("Mail with event type of EmailConfirmation has sent to {@0}", mail.To);
             client.Dispose();
@@ -66,9 +81,23 @@ namespace Mailing
             {
                 client.Send(mail);
             }
+            catch (SmtpFailedRecipientsException ex)
+            {
+                for (int i = 0; i < ex.InnerExceptions.Length; i++)
+                {
+                    SmtpStatusCode status = ex.InnerExceptions[i].StatusCode;
+                    Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message, ex.InnerExceptions[i].StatusCode);
+                    client.Send(mail);
+                    Log.Information("Retry: mail with event type of PasswordRecovery has sent to {@1}", mail.To);
+                }
+            }
             catch (SmtpException ex)
             {
                 Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
+            }
+            finally
+            {
+                client.Dispose();
             }
             Log.Information("Mail with event type of PasswordRecovery has sent to {@0}", mail.To);
             client.Dispose();
@@ -81,38 +110,55 @@ namespace Mailing
 
             var mail = new MailMessage
             {
-                From = new MailAddress(_mailerSettings.From)
+                From = new MailAddress(_mailerSettings.From, "Лига Разработчиков")
             };
             var client = _mailerSettings.GetSmtpClient();
 
             mail.Subject = MailingResources.NotificationMailCaption;
             mail.IsBodyHtml = true;
 
-            foreach (var user in userIds.Select(userId => _usersRepository.GetAccount(userId)))
+            try
             {
-                mail.Body = _notificationEmailDescriber.Describe(user.Firstname, eventInfo);
-                mail.To.Add(user.Email);
+                foreach (var user in userIds.Select(userId => _usersRepository.GetAccount(userId)))
+                {
+                    mail.Body = _notificationEmailDescriber.Describe(user.Firstname, eventInfo);
+                    mail.To.Add(user.Email);
 
-                try
-                {
-                    client.Send(mail);
+                    try
+                    {
+                        client.Send(mail);
+                    }
+                    catch (SmtpFailedRecipientsException ex)
+                    {
+                        for (int i = 0; i < ex.InnerExceptions.Length; i++)
+                        {
+                            SmtpStatusCode status = ex.InnerExceptions[i].StatusCode;
+                            Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message, ex.InnerExceptions[i].StatusCode);
+                            client.Send(mail);
+                            Log.Information("Retry: mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
+                        }
+                    }
+                    catch (SmtpException ex)
+                    {
+                        Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
+                        _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
+                    }
+
+                    Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
+                    mail.To.Clear();
                 }
-                catch (SmtpException ex)
-                {
-                    Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
-                    _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
-                }
-                Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
-                mail.To.Clear();
             }
-
-            mail.Dispose();
+            catch(Exception ex)
+            {
+                Log.Error(ex, "Failed to send mail. An error occured: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
+            }
+            client.Dispose();
         }
         
         private MailMessage InitMail(MailAddress emailAddress)
         {
             var mail = new MailMessage();
-            mail.From = new MailAddress(_mailerSettings.From);
+            mail.From = new MailAddress(_mailerSettings.From, "Лига Разработчиков");
             mail.To.Add(emailAddress);
             return mail;
         }
