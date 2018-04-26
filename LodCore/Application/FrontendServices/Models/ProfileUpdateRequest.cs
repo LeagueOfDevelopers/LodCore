@@ -24,15 +24,12 @@ namespace FrontendServices.Models
         public bool IsGraduated { get; set; }
 
         [MaxLength(255)]
-        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string StudyingDirection { get; set; }
 
         [MaxLength(10)]
-        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string InstituteName { get; set; }
 
         [MaxLength(255)]
-        [RegularExpression(@"^[\d\w\s][^<>/]+$")]
         public string Specialization { get; set; }
     }
 }
