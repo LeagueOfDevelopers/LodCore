@@ -18,7 +18,7 @@ namespace UserManagement.Application
 
         int CreateUserTemplate(CreateAccountRequest accountRequest);
 
-        void CreateUser(CreateAccountRequest request);
+        int CreateUser(CreateAccountRequest request);
 
         void UpdateUser(Account account);
 

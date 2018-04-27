@@ -85,7 +85,7 @@ namespace UserManagement.Domain
             return account;
         }
 
-        public void CreateUser(CreateAccountRequest request)
+        public int CreateUser(CreateAccountRequest request)
         {
             Require.NotNull(request, nameof(request));
 
@@ -107,7 +107,7 @@ namespace UserManagement.Domain
 
             var userId = _userRepository.CreateAccount(newAccount);
 
-            _confirmationService.SetupEmailConfirmation(userId);
+            return userId;
         }
 
         public int CreateUserTemplate(CreateAccountRequest accountRequest)

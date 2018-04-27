@@ -170,14 +170,15 @@ namespace FrontendServices.Controllers
                 });
             try
             {
-                _userManager.CreateUser(createAccountRequest);
+                var newUserId = _userManager.CreateUser(createAccountRequest);
+                return Ok(newUserId);
             }
             catch (AccountAlreadyExistsException ex)
             {
                 Log.Error("Failed to register user with email={0}. {1} StackTrace: {2}", request.Email, ex.Message, ex.StackTrace);
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
-            return Ok();
+            
         }
 
         [HttpPut]
