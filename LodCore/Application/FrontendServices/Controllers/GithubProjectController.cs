@@ -41,16 +41,18 @@ namespace FrontendServices.Controllers
             return _githubGateway.GetLeagueOfDevelopersRepositories();
         }
         
-        [HttpGet]
+        [HttpPost]
         [Authorization(AccountRole.Administrator)]
-        [Route("github/repositories/{projectId}/developer/{developerId}")]
-        public string GetLinkToGithubLoginPageToCheckAuthentication(int projectId, int developerId)
+        [Route("github/repositories/{projectId}")]
+        public string GetLinkToGithubLoginPageToCheckAuthentication(int projectId)
         {
             var queryString = Request.RequestUri.Query;
             string frontCallback;
+            string developerIdsJsonString;
             try
             {
                 frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                developerIdsJsonString = QueryStringParser.ParseQueryStringToGetParameter(queryString, "ids");
             }
             catch (HttpParseException ex)
             {
@@ -58,7 +60,7 @@ namespace FrontendServices.Controllers
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            return _githubGateway.GetLinkToGithubLoginPage(frontCallback, projectId, developerId);
+            return _githubGateway.GetLinkToGithubLoginPage(frontCallback, projectId, developerIdsJsonString);
         }
 
         [HttpGet]
@@ -102,21 +104,26 @@ namespace FrontendServices.Controllers
         }
         
         [HttpGet]
-        [Route("github/callback/repositories/{projectId}/developer/{developerId}")]
-        public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, int developerId, string frontend_callback, string code, string state)
+        [Route("github/callback/repositories/{projectId}/collaborators")]
+        public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, string frontend_callback, string code, string state)
         {
             var project = _projectProvider.GetProject(projectId);
-            var developer = _userManager.GetUser(developerId);
+            var queryString = Request.RequestUri.Query;
+            var developerIdsJsonString = QueryStringParser.ParseQueryStringToGetParameter(queryString, "ids");
+            var ids = developerIdsJsonString.Trim('[', ']', '"', '"').Split(',');
+            var developerIds = new int[ids.Length];
+            for (var id = 0; id < developerIds.Length; id++)
+                developerIds[id] = Convert.ToInt32(ids[id]);
             var success = true;
             try
             {
                 var githubAccessToken = _githubGateway.GetToken(code, state);
-                _githubGateway.AddCollaboratorToRepository(githubAccessToken, developer, project);
+                _githubGateway.AddCollaboratorToRepository(githubAccessToken, developerIds, project);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to add collaborator with id={0} to project with id={1}: {2}. StackTrace: {3}",
-                    developerId.ToString(), projectId.ToString(), ex.Message, ex.StackTrace);
+                Log.Error(ex, "Failed to add collaborators to project with id={0}: {1}. StackTrace: {2}",
+                    projectId.ToString(), ex.Message, ex.StackTrace);
                 success = false;
             }
             return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, success));

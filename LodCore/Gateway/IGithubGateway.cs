@@ -1,4 +1,5 @@
 ﻿using Octokit;
+using System;
 using System.Collections.Generic;
 
 namespace Gateway
@@ -13,7 +14,7 @@ namespace Gateway
 
         string GetLinkToGithubLoginPage(string frontendCallback);
 
-        string GetLinkToGithubLoginPage(string frontendCallback, int projectId, int developerId);
+        string GetLinkToGithubLoginPage(string frontendCallback, int projectId, string developerIds);
 
         string GetLinkToGithubLoginPageToRemoveCollaborator(string frontendCallback, int projectId, int developerId);
 
@@ -29,8 +30,7 @@ namespace Gateway
 
         IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
-        void AddCollaboratorToRepository(string githubAccessToken, UserManagement.Domain.Account user, 
-                                                                   ProjectManagement.Domain.Project project);
+        void AddCollaboratorToRepository(string githubAccessToken, Array developerIds, ProjectManagement.Domain.Project project);
 
         void RemoveCollaboratorFromRepository(string token, UserManagement.Domain.Account user, 
                                                             ProjectManagement.Domain.Project project);

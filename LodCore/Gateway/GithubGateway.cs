@@ -3,17 +3,20 @@ using Journalist;
 using Octokit;
 using Common;
 using System.Collections.Generic;
+using UserManagement.Application;
 
 namespace Gateway
 {
     public class GithubGateway : IGithubGateway
     {
-        public GithubGateway(GithubGatewaySettings githubGatewaySettings)
+        public GithubGateway(GithubGatewaySettings githubGatewaySettings, IUserManager userManager)
         {
             Require.NotNull(githubGatewaySettings, nameof(githubGatewaySettings));
+            Require.NotNull(userManager, nameof(userManager));
 
             _githubGatewaySettings = githubGatewaySettings;
             _gitHubClient = new GitHubClient(new ProductHeaderValue(_githubGatewaySettings.OrganizationName));
+            _userManager = userManager;
         }
 
         // for registration with github request
@@ -45,9 +48,9 @@ namespace Gateway
         }
 
         // for collaborators management
-        public string GetLinkToGithubLoginPage(string frontendCallback, int projectId, int developerId)
+        public string GetLinkToGithubLoginPage(string frontendCallback, int projectId, string developerIds)
         {
-            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}";
+            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/collaborators?ids={developerIds}";
             return CreateRequest(redirectUri, frontendCallback, "user", "admin:org", "repo");
         }
 
@@ -108,20 +111,24 @@ namespace Gateway
             return githubRepositories;
         }
 
-        public void AddCollaboratorToRepository(string token, UserManagement.Domain.Account user, ProjectManagement.Domain.Project project)
+        public void AddCollaboratorToRepository(string token, Array developerIds, ProjectManagement.Domain.Project project)
         {
             _gitHubClient.Credentials = new Credentials(token);
-            if (user.Profile.LinkToGithubProfile == null)
-                throw new NotFoundException("Link to GitHub profile is missed", System.Net.HttpStatusCode.NotFound);
-            var repoLinks = project.LinksToGithubRepositories;
-            if (repoLinks.Count != 0)
+            foreach (var developerId in developerIds)
             {
-                var userName = GetNameFromUri(user.Profile.LinkToGithubProfile);
-                foreach (var link in repoLinks)
+                var user = _userManager.GetUser((int)developerId);
+                if (user.Profile.LinkToGithubProfile == null)
+                    throw new NotFoundException("Link to GitHub profile is missed", System.Net.HttpStatusCode.NotFound);
+                var repoLinks = project.LinksToGithubRepositories;
+                if (repoLinks.Count != 0)
                 {
-                    var repoName = GetNameFromUri(link);
-                    if (!_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
-                        _gitHubClient.Repository.Collaborator.Add(_githubGatewaySettings.OrganizationName, repoName, userName);
+                    var userName = GetNameFromUri(user.Profile.LinkToGithubProfile);
+                    foreach (var link in repoLinks)
+                    {
+                        var repoName = GetNameFromUri(link);
+                        if (!_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
+                            _gitHubClient.Repository.Collaborator.Add(_githubGatewaySettings.OrganizationName, repoName, userName);
+                    }
                 }
             }
         }
@@ -196,5 +203,6 @@ namespace Gateway
         private readonly GitHubClient _gitHubClient;
         private string _csrf;
         private readonly GithubGatewaySettings _githubGatewaySettings;
+        private readonly IUserManager _userManager;
     }
 }
