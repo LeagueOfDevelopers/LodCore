@@ -33,7 +33,7 @@ namespace Mailing
             Require.NotNull(emailAddress, nameof(emailAddress));
 
             var mail = InitMail(emailAddress);
-            var client = _mailerSettings.GetSmtpClient();
+            var client = _mailerSettings.GetSmtpClientRelayer();
 
             mail.Subject = MailingResources.ConfirmationMailCaption;
             mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.EmailConfirmation(userName, confirmationLink));
@@ -42,6 +42,7 @@ namespace Mailing
             try
             {
                 client.Send(mail);
+                Log.Information("Mail with event type of EmailConfirmation has sent to {@0}", mail.To);
             }
             catch (SmtpFailedRecipientsException ex)
             {
@@ -61,8 +62,6 @@ namespace Mailing
             {
                 client.Dispose();
             }
-            Log.Information("Mail with event type of EmailConfirmation has sent to {@0}", mail.To);
-            client.Dispose();
         }
 
         public void SendPasswordResetMail(string userName, string resetLink, MailAddress emailAddress)
@@ -71,7 +70,7 @@ namespace Mailing
             Require.NotNull(emailAddress, nameof(emailAddress));
 
             var mail = InitMail(emailAddress);
-            var client = _mailerSettings.GetSmtpClient();
+            var client = _mailerSettings.GetSmtpClientRelayer();
 
             mail.Subject = MailingResources.PasswordResetCaption;
             mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.PasswordRecovery(userName, resetLink));
@@ -80,6 +79,7 @@ namespace Mailing
             try
             {
                 client.Send(mail);
+                Log.Information("Mail with event type of PasswordRecovery has sent to {@0}", mail.To);
             }
             catch (SmtpFailedRecipientsException ex)
             {
@@ -99,8 +99,6 @@ namespace Mailing
             {
                 client.Dispose();
             }
-            Log.Information("Mail with event type of PasswordRecovery has sent to {@0}", mail.To);
-            client.Dispose();
         }
 
         public void SendNotificationEmail(int[] userIds, IEventInfo eventInfo)
@@ -110,9 +108,9 @@ namespace Mailing
 
             var mail = new MailMessage
             {
-                From = new MailAddress(_mailerSettings.From, "Лига Разработчиков")
+                From = new MailAddress(_mailerSettings.From, _mailerSettings.DisplayName)
             };
-            var client = _mailerSettings.GetSmtpClient();
+            var client = _mailerSettings.GetSmtpClientRelayer();
 
             mail.Subject = MailingResources.NotificationMailCaption;
             mail.IsBodyHtml = true;
@@ -127,6 +125,7 @@ namespace Mailing
                     try
                     {
                         client.Send(mail);
+                        Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
                     }
                     catch (SmtpFailedRecipientsException ex)
                     {
@@ -144,7 +143,6 @@ namespace Mailing
                         _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
                     }
 
-                    Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
                     mail.To.Clear();
                 }
             }
@@ -158,7 +156,7 @@ namespace Mailing
         private MailMessage InitMail(MailAddress emailAddress)
         {
             var mail = new MailMessage();
-            mail.From = new MailAddress(_mailerSettings.From, "Лига Разработчиков");
+            mail.From = new MailAddress(_mailerSettings.From, _mailerSettings.DisplayName);
             mail.To.Add(emailAddress);
             return mail;
         }

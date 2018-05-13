@@ -38,10 +38,12 @@ namespace FrontendServices.App_Data
         public static MailerSettings ReadMailerSettings(NameValueCollection settings)
         {
             return new MailerSettings(
+                settings["MailerSettings.SmtpRelayer"],
                 settings["MailerSettings.SmtpServer"],
                 int.Parse(settings["MailerSettings.Port"]),
                 settings["MailerSettings.Password"],
                 settings["MailerSettings.From"],
+                settings["MailerSettings.DisplayName"],
                 settings["MailerSettings.MessageTemplate"],
                 settings["MailerSettings.Caption"],
                 int.Parse(settings["MailerSettings.BasicEmailTimeoutInSecond"]),
