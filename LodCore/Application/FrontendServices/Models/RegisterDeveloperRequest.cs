@@ -20,7 +20,7 @@ namespace FrontendServices.Models
         public string Password { get; set; }
 
         [MaxLength(100)]
-        [RegularExpression("^(http|https)?://vk.com/[a-zA-Z0-9]+$")]
+        [RegularExpression("^(http|https)?://vk.com/.+$")]
         public string VkProfileUri { get; set; }
 
         [MaxLength(11)]

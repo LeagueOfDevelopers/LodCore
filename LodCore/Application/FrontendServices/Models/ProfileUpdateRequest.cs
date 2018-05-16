@@ -8,7 +8,7 @@ namespace FrontendServices.Models
         public Common.Image Image { get; set; }
 
         [MaxLength(100)]
-        [RegularExpression("^(http|https)?://vk.com/[a-zA-Z0-9]+$")]
+        [RegularExpression("^(http|https)?://vk.com/.+$")]
         public string VkProfileUri { get; set; }
 
         public Uri LinkToGithubProfile { get; set; }
