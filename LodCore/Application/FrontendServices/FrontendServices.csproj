@@ -488,4 +488,7 @@
   </Target>
   </Target>
   -->
+  <Target Name="AfterBuild">
+    <TransformXml Source="Web.config" Transform="Web.$(Configuration).config" Destination="Web.config" StackTrace="true" />
+  </Target>
 </Project>

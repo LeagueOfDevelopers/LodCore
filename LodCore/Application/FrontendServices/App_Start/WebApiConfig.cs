@@ -12,7 +12,7 @@ namespace FrontendServices
         public static void Register(HttpConfiguration config)
         {
             config.MapHttpAttributeRoutes();
-
+            
             ConfigureCrossDomainRequestsSupport(config);
 
             config.Routes.MapHttpRoute(
