@@ -488,6 +488,7 @@
   </Target>
   </Target>
   -->
+  <UsingTask TaskName="TransformXml" AssemblyFile="Microsoft.Web.Publishing.Tasks.dll" /> 
   <Target Name="AfterBuild">
     <TransformXml Source="Web.config" Transform="Web.$(Configuration).config" Destination="Web.config" StackTrace="true" />
   </Target>
