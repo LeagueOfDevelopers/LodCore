@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.props" Condition="Exists('..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2E2FD871-0BD5-440A-87F0-19B42BC08679}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LodCoreLibrary</RootNamespace>
+    <AssemblyName>LodCoreLibrary</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr3.Runtime.3.5.1\lib\net40-client\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="EasyNetQ, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyNetQ.2.2.0\lib\net451\EasyNetQ.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.4\lib\net461\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Journalist.LanguageExtensions, Version=0.20.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Journalist.LanguageExtensions.0.20.0\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Magick.NET-Q16-AnyCPU, Version=7.5.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.5.0\lib\net40\Magick.NET-Q16-AnyCPU.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net46\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.12\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Octokit, Version=0.30.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Octokit.0.30.0\lib\net45\Octokit.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.5.1.0\lib\net451\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.2.1.2\lib\net45\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq.EagerFetching, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Remotion.Linq.EagerFetching.2.1.0\lib\net45\Remotion.Linq.EagerFetching.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.7.1\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.6\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.6\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\ApplicationLocationSettings.cs" />
+    <Compile Include="Common\Encoder.cs" />
+    <Compile Include="Domain\NotificationService\Event\EventInfoBase.cs" />
+    <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Common\IDatabaseSessionProvider.cs" />
+    <Compile Include="Domain\NotificationService\IEventConsumer.cs" />
+    <Compile Include="Domain\NotificationService\Event\IEventInfo.cs" />
+    <Compile Include="Infrastructure\EventBus\IEventPublisher.cs" />
+    <Compile Include="Common\Image.cs" />
+    <Compile Include="Common\INumberOfNotificationsProvider.cs" />
+    <Compile Include="Infrastructure\WebSocketConnection\IWebSocketStreamProvider.cs" />
+    <Compile Include="Common\JsonEmailConverter.cs" />
+    <Compile Include="Common\JsonPasswordConverter.cs" />
+    <Compile Include="Common\PaginationSettings.cs" />
+    <Compile Include="Common\Password.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\ProjectType.cs" />
+    <Compile Include="Common\QueryStringParser.cs" />
+    <Compile Include="Common\RelativeEqualityComparer.cs" />
+    <Compile Include="Common\ResponseSuccessMarker.cs" />
+    <Compile Include="Common\TokenGenerator.cs" />
+    <Compile Include="Domain\NotificationService\Event\AdminNotificationInfo.cs" />
+    <Compile Include="Domain\NotificationService\Consumers\ContactsEventSink.cs" />
+    <Compile Include="Domain\NotificationService\Delivery.cs" />
+    <Compile Include="Domain\NotificationService\DistributionPolicy\DistributionPolicy.cs" />
+    <Compile Include="Domain\NotificationService\DistributionPolicy\DistributionPolicyFactory.cs" />
+    <Compile Include="Domain\NotificationService\Event\Event.cs" />
+    <Compile Include="Domain\NotificationService\EventSinkBase.cs" />
+    <Compile Include="Domain\NotificationService\DistributionPolicy\IDistributionPolicyFactory.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IEventRepository.cs" />
+    <Compile Include="Domain\NotificationService\IEventSink.cs" />
+    <Compile Include="Infrastructure\Mailing\IMailer.cs" />
+    <Compile Include="Domain\NotificationService\INotificationService.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IProjectRelativesRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IUsersRepository.cs" />
+    <Compile Include="Domain\NotificationService\Consumers\MailValidationHandler.cs" />
+    <Compile Include="Domain\NotificationService\Consumers\NotificationEventSink.cs" />
+    <Compile Include="Domain\NotificationService\NotificationService.cs" />
+    <Compile Include="Domain\NotificationService\Consumers\PasswordChangeHandler.cs" />
+    <Compile Include="Domain\NotificationService\Consumers\ProjectsEventSink.cs" />
+    <Compile Include="Domain\NotificationService\Consumers\UserManagementEventSink.cs" />
+    <Compile Include="Domain\ProjectManagment\CreateProjectRequest.cs" />
+    <Compile Include="Facades\IProjectProvider.cs" />
+    <Compile Include="Domain\ProjectManagment\IUserRoleAnalyzer.cs" />
+    <Compile Include="Domain\NotificationService\Events\DeveloperHasLeftProject.cs" />
+    <Compile Include="Domain\NotificationService\Events\NewDeveloperOnProject.cs" />
+    <Compile Include="Domain\NotificationService\Events\NewProjectCreated.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\Issue.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\IssueCompletionStatus.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\IssueType.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\Project.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\ProjectMembership.cs" />
+    <Compile Include="Domain\Exceptions\ProjectNotFoundException.cs" />
+    <Compile Include="Domain\ProjectManagment\ProjectPaginationSettings.cs" />
+    <Compile Include="Facades\ProjectProvider.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\ProjectStatus.cs" />
+    <Compile Include="Domain\ProjectManagment\UserRoleAnalyzer.cs" />
+    <Compile Include="Domain\ProjectManagment\UserRoleAnalyzerSettings.cs" />
+    <Compile Include="Domain\ProjectManagment\VersionControlSystemInfo.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IProjectMembershipRepostiory.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IProjectRepository.cs" />
+    <Compile Include="Domain\ProjectManagment\Project\IssueStatus.cs" />
+    <Compile Include="Domain\Exceptions\ProjectCreationFailedException.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\ConfirmationSettings.cs" />
+    <Compile Include="Domain\UserManagment\CreateAccountRequest.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\IAuthorizer.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\IConfirmationService.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\IPasswordManager.cs" />
+    <Compile Include="Facades\IUserManager.cs" />
+    <Compile Include="Domain\UserManagment\Account\ProfileSettings.cs" />
+    <Compile Include="Domain\UserManagment\Account\Account.cs" />
+    <Compile Include="Domain\Exceptions\AccountAlreadyExistsException.cs" />
+    <Compile Include="Domain\Exceptions\AccountNotFoundException.cs" />
+    <Compile Include="Domain\UserManagment\Account\AccountRole.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\AuthorizationTokenInfo.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\Authorizer.cs" />
+    <Compile Include="Domain\Exceptions\ConfirmationFailedException.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\ConfirmationService.cs" />
+    <Compile Include="Domain\UserManagment\Account\ConfirmationStatus.cs" />
+    <Compile Include="Domain\NotificationService\Events\NewEmailConfirmedDeveloper.cs" />
+    <Compile Include="Domain\NotificationService\Events\NewFullConfirmedDeveloper.cs" />
+    <Compile Include="Domain\UserManagment\MailValidationRequest.cs" />
+    <Compile Include="Domain\UserManagment\PasswordChangeRequest.cs" />
+    <Compile Include="Domain\UserManagment\AccountServices\PasswordManager.cs" />
+    <Compile Include="Domain\UserManagment\Account\Profile.cs" />
+    <Compile Include="Domain\Exceptions\TokenNotFoundException.cs" />
+    <Compile Include="Facades\UserManager.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IPasswordChangeRequestRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IUserRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\IValidationRequestsRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\INotificationSettingsRepository.cs" />
+    <Compile Include="Domain\UserManagment\UserPresentation\IUserPresentationProvider.cs" />
+    <Compile Include="Domain\UserManagment\UserPresentation\NotificationSetting.cs" />
+    <Compile Include="Domain\UserManagment\UserPresentation\NotificationSettingValue.cs" />
+    <Compile Include="Domain\UserManagment\UserPresentation\NotificationType.cs" />
+    <Compile Include="Domain\UserManagment\UserPresentation\UserPresentationProvider.cs" />
+    <Compile Include="Domain\UserManagment\UserPresentation\UserSettings.cs" />
+    <Compile Include="Infrastructure\ContactContext\ContactsService.cs" />
+    <Compile Include="Domain\NotificationService\Events\NewContactMessage.cs" />
+    <Compile Include="Infrastructure\ContactContext\IContactsService.cs" />
+    <Compile Include="Infrastructure\DataAccess\DatabaseSessionProvider.cs" />
+    <Compile Include="Common\MailAddressType.cs" />
+    <Compile Include="Common\PasswordType.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\DeliveryMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\EventMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\MailValidationRequestMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\NotificationSettingMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\PasswordChangeRequestMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMembershipMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\UserMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Pagination\IPaginable.cs" />
+    <Compile Include="Infrastructure\DataAccess\Pagination\IPaginableRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\EventRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\NotificationSettingsRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\PaginableRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\PasswordChangeRequestRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\ProjectMembershipRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\ProjectRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\UserRepository.cs" />
+    <Compile Include="Infrastructure\DataAccess\Repositories\ValidationRequestsRepository.cs" />
+    <Compile Include="Infrastructure\EventBus\EventBusSettings.cs" />
+    <Compile Include="Infrastructure\EventBus\EventConsumersContainer.cs" />
+    <Compile Include="Infrastructure\EventBus\EventPublisher.cs" />
+    <Compile Include="Infrastructure\EventBus\IEventConsumersContainer.cs" />
+    <Compile Include="Infrastructure\EventBus\IEventPublisherProvider.cs" />
+    <Compile Include="Infrastructure\FilesManagment\CustomMultipartStreamProvider.cs" />
+    <Compile Include="Infrastructure\FilesManagment\FileManager.cs" />
+    <Compile Include="Infrastructure\FilesManagment\FileStorageSettings.cs" />
+    <Compile Include="Infrastructure\FilesManagment\IFileManager.cs" />
+    <Compile Include="Infrastructure\FilesManagment\IImageResizer.cs" />
+    <Compile Include="Infrastructure\FilesManagment\ImageResizer.cs" />
+    <Compile Include="Infrastructure\Gateway\GithubGateway.cs" />
+    <Compile Include="Infrastructure\Gateway\GithubGatewaySettings.cs" />
+    <Compile Include="Infrastructure\Gateway\GithubRepository.cs" />
+    <Compile Include="Infrastructure\Gateway\IGithubGateway.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\AdminNotification.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\DeveloperHasLeftProject.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\EmailConfirmation.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\NewContactMessage.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\NewDeveloperOnProject.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\NewEmailConfirmedDeveloper.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\NewFullConfirmedDeveloper.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\NewProject.cs" />
+    <Compile Include="Infrastructure\Mailing\EmailModels\PasswordRecovery.cs" />
+    <Compile Include="Infrastructure\Mailing\EventDescriptionResources.Designer.cs">
+      <DependentUpon>EventDescriptionResources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Infrastructure\Mailing\INotificationEmailDescriber.cs" />
+    <Compile Include="Infrastructure\Mailing\Mailer.cs" />
+    <Compile Include="Infrastructure\Mailing\MailerSettings.cs" />
+    <Compile Include="Infrastructure\Mailing\MailingResources.Designer.cs">
+      <DependentUpon>MailingResources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Infrastructure\Mailing\NotificationEmailDescriber.cs" />
+    <Compile Include="Infrastructure\Mailing\RenderEmailTemplateHelper.cs" />
+    <Compile Include="Infrastructure\WebSocketConnection\WebSocketStreamProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Infrastructure\Mailing\EventDescriptionResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EventDescriptionResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\Mailing\MailingResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MailingResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.props'))" />
+    <Error Condition="!Exists('..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.targets'))" />
+  </Target>
+  <Import Project="..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.targets" Condition="Exists('..\packages\SourceLink.Create.GitHub.2.8.0\build\SourceLink.Create.GitHub.targets')" />
+</Project>
