@@ -47,6 +47,9 @@
     <Reference Include="EasyNetQ, Version=1.1.4.506, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EasyNetQ.1.1.4.506\lib\net45\EasyNetQ.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
     <Reference Include="Journalist.LanguageExtensions, Version=0.9.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Journalist.LanguageExtensions.0.9.5\lib\net451\Journalist.LanguageExtensions.dll</HintPath>
     </Reference>
