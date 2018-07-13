@@ -13,7 +13,7 @@ namespace LodCoreApi.Models
         [Required]
         public ProjectType[] ProjectTypes { get; set; }
 
-        [MaxLength(3000)]
+        [MaxLength(9000)]
         public string Info { get; set; }
         
         [Required]
