@@ -76,7 +76,6 @@ namespace LodCoreLibrary.Infrastructure.EventBus
 			                       $"username={_eventBusSettings.UserName}; " +
 			                       $"password={_eventBusSettings.Password}";
 			_bus = RabbitHutch.CreateBus(connectionString).Advanced;
-            throw new Exception(connectionString);
             _mainExchange = _bus.ExchangeDeclare(mainExchangeName, ExchangeType.Direct);
             Log.Information("Event bus listening has started");
         }

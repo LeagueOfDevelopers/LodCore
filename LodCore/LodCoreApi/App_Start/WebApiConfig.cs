@@ -12,7 +12,7 @@ namespace LodCoreApi
         public static void Register(HttpConfiguration config)
         {
             config.MapHttpAttributeRoutes();
-            
+
             ConfigureCrossDomainRequestsSupport(config);
 
             config.Routes.MapHttpRoute(
@@ -22,7 +22,12 @@ namespace LodCoreApi
             var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
             config.Filters.Add(new AuthenticateAttribute(authorizer));
             config.Filters.Add(new ExceptionLogger());
-            //config.Filters.Add(new HttpsValidator());
+
+            var isLocalLaunch = ConfigurationManager.AppSettings["LocalLaunch"];
+            if (isLocalLaunch.Equals("false"))
+            {
+                config.Filters.Add(new HttpsValidator());
+            }
 
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
                 Newtonsoft.Json.PreserveReferencesHandling.Objects;
@@ -32,7 +37,7 @@ namespace LodCoreApi
         private static void ConfigureCrossDomainRequestsSupport(HttpConfiguration config)
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
-            var cors = new EnableCorsAttribute("*", "*", "*")
+            var cors = new EnableCorsAttribute(frontendDomain, "*", "*")
             { SupportsCredentials = true };
             config.EnableCors(cors);
         }

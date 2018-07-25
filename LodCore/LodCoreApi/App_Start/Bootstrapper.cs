@@ -122,8 +122,8 @@ namespace LodCoreApi
             container.Register<IGithubGateway, GithubGateway>(Lifestyle.Singleton);
 
             var consumersContainer = container.GetInstance<EventConsumersContainer>();
-            consumersContainer.StartListening();
-            RegisterEventConsumers(container);
+            //consumersContainer.StartListening();
+            //RegisterEventConsumers(container);
 
             container.Verify();
             return container;
