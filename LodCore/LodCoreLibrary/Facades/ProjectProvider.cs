@@ -73,6 +73,9 @@ namespace LodCoreLibrary.Facades
                 request.Screenshots != null 
                 ? new HashSet<Image>(request.Screenshots) 
                 : null,
+                request.Links != null
+                ? new HashSet<ProjectLink>(request.Links)
+                :null,
                 request.LinksToGithubRepositories != null
                 ? new HashSet<Uri>(request.LinksToGithubRepositories)
                 : null);

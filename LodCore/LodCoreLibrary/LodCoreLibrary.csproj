@@ -119,6 +119,9 @@
     <Compile Include="Common\IDatabaseSessionProvider.cs" />
     <Compile Include="Domain\NotificationService\IEventConsumer.cs" />
     <Compile Include="Domain\NotificationService\Event\IEventInfo.cs" />
+    <Compile Include="Common\ProjectLink.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\ProjectLinkMap.cs" />
+    <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMap.cs" />
     <Compile Include="Infrastructure\EventBus\IEventPublisher.cs" />
     <Compile Include="Common\Image.cs" />
     <Compile Include="Common\INumberOfNotificationsProvider.cs" />
@@ -219,7 +222,6 @@
     <Compile Include="Infrastructure\DataAccess\Mappings\MailValidationRequestMap.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\NotificationSettingMap.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\PasswordChangeRequestMap.cs" />
-    <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMap.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMembershipMap.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\UserMap.cs" />
     <Compile Include="Infrastructure\DataAccess\Pagination\IPaginable.cs" />

@@ -16,6 +16,7 @@ namespace LodCoreLibrary.Domain.ProjectManagment
             ISet<Issue> issues, 
             ISet<ProjectMembership> projectDevelopers,
             ISet<Image> screenshots,
+            ISet<ProjectLink> links,
             ISet<Uri> linksToGithubRepositories)
         {
             Require.NotEmpty(name, nameof(name));
@@ -30,6 +31,7 @@ namespace LodCoreLibrary.Domain.ProjectManagment
             Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<Image>();
+            Links = links ?? new HashSet<ProjectLink>();
             LinksToGithubRepositories = linksToGithubRepositories ?? new HashSet<Uri>();
         }
 
@@ -54,6 +56,8 @@ namespace LodCoreLibrary.Domain.ProjectManagment
         public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
 
         public virtual ISet<Image> Screenshots { get; set; }
+
+        public virtual ISet<ProjectLink> Links { get; set; }
 
         public virtual ISet<Uri> LinksToGithubRepositories { get; set; }
     }

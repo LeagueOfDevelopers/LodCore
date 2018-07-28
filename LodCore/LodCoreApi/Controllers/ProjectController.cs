@@ -94,7 +94,7 @@ namespace LodCoreApi.Controllers
 
         [HttpPost]
         [Route("projects")]
-        [Authorization(AccountRole.Administrator)]
+        //[Authorization(AccountRole.Administrator)]
         public IHttpActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
@@ -109,6 +109,7 @@ namespace LodCoreApi.Controllers
                 createProjectRequest.ProjectStatus,
                 createProjectRequest.LandingImage,
                 createProjectRequest.Screenshots,
+                createProjectRequest.Links,
                 createProjectRequest.LinksToGithubRepositories);
 
             var projectId = _projectProvider.CreateProject(request);

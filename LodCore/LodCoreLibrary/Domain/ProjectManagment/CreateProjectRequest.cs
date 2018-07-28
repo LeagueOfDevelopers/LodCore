@@ -13,6 +13,7 @@ namespace LodCoreLibrary.Domain.ProjectManagment
             ProjectStatus projectStatus,
             Image landingImage, 
             Image[] screenshots,
+            ProjectLink[] links,
             Uri[] linksToGithubRepositories)
         {
             Require.NotEmpty(name, nameof(name));
@@ -25,6 +26,7 @@ namespace LodCoreLibrary.Domain.ProjectManagment
             LandingImage = landingImage;
             ProjectStatus = projectStatus;
             Screenshots = screenshots;
+            Links = links;
             LinksToGithubRepositories = linksToGithubRepositories;
         }
 
@@ -39,6 +41,8 @@ namespace LodCoreLibrary.Domain.ProjectManagment
         public Image LandingImage { get; private set; }
 
         public Image[] Screenshots { get; private set; }
+
+        public ProjectLink[] Links { get; private set; }
 
         public Uri[] LinksToGithubRepositories { get; private set; }
     }

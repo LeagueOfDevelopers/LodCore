@@ -34,6 +34,14 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Mappings
                 mapper.Cascade(Cascade.All);
                 mapper.Table("Screenshots");
             });
+            Set(project => project.Links, mapper =>
+            {
+                mapper.Key(k =>
+                {
+                    k.Column("ProjectId");
+                });
+                mapper.Cascade(Cascade.All);
+            });
             Set(
                 membership => membership.ProjectMemberships,
                 mapper =>
@@ -46,7 +54,7 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Mappings
             {
                 mapper.Cascade(Cascade.All);
                 mapper.Table("GithubRepositoriesLinks");
-            }); 
+            });
         }
     }
 }
