@@ -1,4 +1,5 @@
-﻿using LodCoreLibrary.Domain.ProjectManagment;
+﻿using LodCoreLibrary.Common;
+using LodCoreLibrary.Domain.ProjectManagment;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 
@@ -36,11 +37,15 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Mappings
             });
             Set(project => project.Links, mapper =>
             {
-                mapper.Key(k =>
-                {
-                    k.Column("ProjectId");
-                });
+                mapper.Table("ProjectLinks");
                 mapper.Cascade(Cascade.All);
+            }, elementRelation =>
+            {
+                elementRelation.Component(component =>
+                {
+                    component.Parent(link => link.Name);
+                    component.Parent(link => link.Uri);
+                });
             });
             Set(
                 membership => membership.ProjectMemberships,

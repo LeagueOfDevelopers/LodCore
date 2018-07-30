@@ -17,6 +17,7 @@ namespace LodCoreApi.Models
             HashSet<Issue> issues,
             HashSet<ProjectMembership> projectMemberships,
             HashSet<LodCoreLibrary.Common.Image> screenshots,
+            HashSet<LodCoreLibrary.Common.ProjectLink> links,
             HashSet<Uri> linksToGithubRepositories)
         {
             Require.Positive(projectId, nameof(projectId));
@@ -32,6 +33,7 @@ namespace LodCoreApi.Models
             Issues = issues;
             ProjectMemberships = projectMemberships;
             Screenshots = screenshots;
+            Links = links;
             LinksToGithubRepositories = linksToGithubRepositories;
         }
 
@@ -56,6 +58,8 @@ namespace LodCoreApi.Models
         public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
 
         public HashSet<LodCoreLibrary.Common.Image> Screenshots { get; private set; }
+
+        public HashSet<LodCoreLibrary.Common.ProjectLink> Links { get; private set; }
 
         public HashSet<Uri> LinksToGithubRepositories { get; private set; }
     }

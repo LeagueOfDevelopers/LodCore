@@ -120,7 +120,6 @@
     <Compile Include="Domain\NotificationService\IEventConsumer.cs" />
     <Compile Include="Domain\NotificationService\Event\IEventInfo.cs" />
     <Compile Include="Common\ProjectLink.cs" />
-    <Compile Include="Infrastructure\DataAccess\Mappings\ProjectLinkMap.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMap.cs" />
     <Compile Include="Infrastructure\EventBus\IEventPublisher.cs" />
     <Compile Include="Common\Image.cs" />

@@ -179,6 +179,7 @@ namespace LodCoreApi.Controllers
             projectToUpdate.ProjectStatus = updateProjectRequest.ProjectStatus;
             projectToUpdate.LandingImage = updateProjectRequest.LandingImage;
             projectToUpdate.Screenshots = new HashSet<Image>(updateProjectRequest.Screenshots);
+            projectToUpdate.Links = new HashSet<ProjectLink>(updateProjectRequest.Links);
             projectToUpdate.LinksToGithubRepositories = new HashSet<Uri>(updateProjectRequest.LinksToGithubRepositories);
 
             _projectProvider.UpdateProject(projectToUpdate);
@@ -245,12 +246,12 @@ namespace LodCoreApi.Controllers
                 {
                     return Ok(_projectsMapper.ToAdminProject(project));
                 }
-
+                /*
                 if (!ProjectsPolicies.OnlyDoneOrInProgress(project))
                 {
                     return Unauthorized();
                 }
-
+                */
                 return Ok(_projectsMapper.ToProject(project));
             }
             catch (ProjectNotFoundException ex)

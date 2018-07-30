@@ -19,27 +19,26 @@ namespace LodCoreLibrary.Infrastructure.DataAccess
         {
             try
             {
+                var configuration = new Configuration();
+                configuration.Configure();
+                var modelMapper = new ModelMapper();
+                modelMapper.AddMapping<UserMap>();
+                modelMapper.AddMapping<ProjectMap>();
+                modelMapper.AddMapping<EventMap>();
+                modelMapper.AddMapping<DeliveryMap>();
+                modelMapper.AddMapping<MailValidationRequestMap>();
+                modelMapper.AddMapping<ProjectMembershipMap>();
+                modelMapper.AddMapping<NotificationSettingMap>();
+                modelMapper.AddMapping<PasswordChangeRequestMap>();
+                configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
+                _factory = configuration.BuildSessionFactory();
+                new SchemaUpdate(configuration).Execute(false, true);
             }
             catch(Exception ex)
             {
                 Log.Debug(ex, "Database failure: {0}", ex.Message);
             }
             Log.Information("DatabaseSessionProvider has started");
-        
-            var configuration = new Configuration();
-            configuration.Configure();
-            var modelMapper = new ModelMapper();
-            modelMapper.AddMapping<UserMap>();
-            modelMapper.AddMapping<ProjectMap>();
-            modelMapper.AddMapping<EventMap>();
-            modelMapper.AddMapping<DeliveryMap>();
-            modelMapper.AddMapping<MailValidationRequestMap>();
-            modelMapper.AddMapping<ProjectMembershipMap>();
-            modelMapper.AddMapping<NotificationSettingMap>();
-            modelMapper.AddMapping<PasswordChangeRequestMap>();
-            configuration.AddDeserializedMapping(modelMapper.CompileMappingForAllExplicitlyAddedEntities(), null);
-            _factory = configuration.BuildSessionFactory();
-            new SchemaUpdate(configuration).Execute(false, true);
         }
 
         public ISession GetCurrentSession()
