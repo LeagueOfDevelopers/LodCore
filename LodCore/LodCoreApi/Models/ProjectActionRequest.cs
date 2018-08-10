@@ -37,9 +37,10 @@ namespace LodCoreApi.Models
         {
             var links = value as ProjectLink[];
 
-            if (links.ToList().TrueForAll(link => link.Name.Length <= 50))
-                return true;
-            else return false;     
+            if (value != null && !links.ToList().TrueForAll(link => link.Name.Length <= 50))
+                    return false;
+
+            else return true;
         }
     }
 }

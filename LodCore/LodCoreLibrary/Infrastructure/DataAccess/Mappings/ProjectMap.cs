@@ -43,8 +43,9 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Mappings
             {
                 elementRelation.Component(component =>
                 {
-                    component.Parent(link => link.Name);
-                    component.Parent(link => link.Uri);
+                    component.Lazy(false);
+                    component.Property(p => p.Name);
+                    component.Property(p => p.Uri);
                 });
             });
             Set(
