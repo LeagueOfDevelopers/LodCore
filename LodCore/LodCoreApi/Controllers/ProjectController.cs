@@ -94,7 +94,7 @@ namespace LodCoreApi.Controllers
 
         [HttpPost]
         [Route("projects")]
-        //[Authorization(AccountRole.Administrator)]
+        [Authorization(AccountRole.Administrator)]
         public IHttpActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace LodCoreApi.Controllers
                 createProjectRequest.ProjectStatus,
                 createProjectRequest.LandingImage,
                 createProjectRequest.Screenshots,
-                createProjectRequest.Links,
+                new ProjectLink[1],
                 createProjectRequest.LinksToGithubRepositories);
 
             var projectId = _projectProvider.CreateProject(request);
@@ -179,7 +179,7 @@ namespace LodCoreApi.Controllers
             projectToUpdate.ProjectStatus = updateProjectRequest.ProjectStatus;
             projectToUpdate.LandingImage = updateProjectRequest.LandingImage;
             projectToUpdate.Screenshots = new HashSet<Image>(updateProjectRequest.Screenshots);
-            projectToUpdate.Links = new HashSet<ProjectLink>(updateProjectRequest.Links);
+            projectToUpdate.Links = new HashSet<ProjectLink>(new ProjectLink[1]);
             projectToUpdate.LinksToGithubRepositories = new HashSet<Uri>(updateProjectRequest.LinksToGithubRepositories);
 
             _projectProvider.UpdateProject(projectToUpdate);
@@ -246,12 +246,12 @@ namespace LodCoreApi.Controllers
                 {
                     return Ok(_projectsMapper.ToAdminProject(project));
                 }
-                /*
+
                 if (!ProjectsPolicies.OnlyDoneOrInProgress(project))
                 {
                     return Unauthorized();
                 }
-                */
+
                 return Ok(_projectsMapper.ToProject(project));
             }
             catch (ProjectNotFoundException ex)
