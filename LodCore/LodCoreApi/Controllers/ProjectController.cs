@@ -109,7 +109,7 @@ namespace LodCoreApi.Controllers
                 createProjectRequest.ProjectStatus,
                 createProjectRequest.LandingImage,
                 createProjectRequest.Screenshots,
-                new ProjectLink[1],
+                createProjectRequest.Links,
                 createProjectRequest.LinksToGithubRepositories);
 
             var projectId = _projectProvider.CreateProject(request);
@@ -179,7 +179,7 @@ namespace LodCoreApi.Controllers
             projectToUpdate.ProjectStatus = updateProjectRequest.ProjectStatus;
             projectToUpdate.LandingImage = updateProjectRequest.LandingImage;
             projectToUpdate.Screenshots = new HashSet<Image>(updateProjectRequest.Screenshots);
-            projectToUpdate.Links = new HashSet<ProjectLink>(new ProjectLink[1]);
+            projectToUpdate.Links = new HashSet<ProjectLink>(updateProjectRequest.Links);
             projectToUpdate.LinksToGithubRepositories = new HashSet<Uri>(updateProjectRequest.LinksToGithubRepositories);
 
             _projectProvider.UpdateProject(projectToUpdate);

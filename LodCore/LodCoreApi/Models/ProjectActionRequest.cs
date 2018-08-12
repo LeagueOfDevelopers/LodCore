@@ -25,8 +25,8 @@ namespace LodCoreApi.Models
 
         public LodCoreLibrary.Common.Image[] Screenshots { get; set; }
 
-        //[ProjectLinksValidation]
-        //public ProjectLink[] Links { get; set; }
+        [ProjectLinksValidation]
+        public ProjectLink[] Links { get; set; }
 
         public Uri[] LinksToGithubRepositories { get; set; }
     }
