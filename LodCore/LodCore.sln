@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LodCoreApi", "LodCoreApi\Lo
 		{2E2FD871-0BD5-440A-87F0-19B42BC08679} = {2E2FD871-0BD5-440A-87F0-19B42BC08679}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LodCore", "LodCore\LodCore.csproj", "{568093C1-78C9-4D9B-9334-420C2AEC3E52}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2E2FD871-0BD5-440A-87F0-19B42BC08679} = {2E2FD871-0BD5-440A-87F0-19B42BC08679}
+		{AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B} = {AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,10 @@ Global
 		{AA48634F-8781-4E58-B0D0-AAF107C73A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA48634F-8781-4E58-B0D0-AAF107C73A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA48634F-8781-4E58-B0D0-AAF107C73A9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{568093C1-78C9-4D9B-9334-420C2AEC3E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{568093C1-78C9-4D9B-9334-420C2AEC3E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{568093C1-78C9-4D9B-9334-420C2AEC3E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{568093C1-78C9-4D9B-9334-420C2AEC3E52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
