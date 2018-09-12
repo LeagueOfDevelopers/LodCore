@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LodCore.Mappers;
@@ -15,21 +16,39 @@ using LodCoreLibrary.Infrastructure.DataAccess.Pagination;
 using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
 using LodCoreLibrary.Infrastructure.EventBus;
 using LodCoreLibrary.Infrastructure.WebSocketConnection;
+using Loggly;
+using Loggly.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LodCore
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        {
+            Configuration = configuration;
+            Env = env;
+        }
+
+        public IConfiguration Configuration { get; }
+        public IHostingEnvironment Env { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            StartLogger();
+
             DatabaseSessionProvider databaseSessionProvider = new DatabaseSessionProvider();
             IEventPublisherProvider eventPublisherProvider = new EventConsumersContainer(
-                new EventBusSettings("localhost", "/", "guest", "guest"), databaseSessionProvider);
+                new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
+                Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
+                Configuration.GetSection("EventBusSettings").GetValue<string>("UserName"),
+                Configuration.GetSection("EventBusSettings").GetValue<string>("Password")), 
+                databaseSessionProvider);
             IEventPublisher eventPublisher = eventPublisherProvider.GetEventPublisher();
             IWebSocketStreamProvider webSocketStreamProvider = new WebSocketStreamProvider();
 
@@ -60,14 +79,14 @@ namespace LodCore
             IPaginableRepository<Project> paginableProjectRepository = new PaginableRepository<Project>(databaseSessionProvider);
             IPaginationWrapper<Project> paginationProjectWrapper = new PaginationWrapper<Project>(paginableProjectRepository);
 
-            services.AddSingleton<IProjectProvider>(projectProvider);
-            services.AddSingleton<ProjectsMapper>(projectsMapper);
-            services.AddSingleton<IUserManager>(userManager);
-            services.AddSingleton<IPaginationWrapper<Project>>(paginationProjectWrapper);
-            services.AddSingleton<IContactsService>(contactsService);
-            services.AddSingleton<EventMapper>(eventMapper);
-            services.AddSingleton<INotificationService>(notificationService);
-            services.AddSingleton<IPaginationWrapper<Delivery>>(paginationDeliveryWrapper);
+            services.AddSingleton(projectProvider);
+            services.AddSingleton(projectsMapper);
+            services.AddSingleton(userManager);
+            services.AddSingleton(paginationProjectWrapper);
+            services.AddSingleton(contactsService);
+            services.AddSingleton(eventMapper);
+            services.AddSingleton(notificationService);
+            services.AddSingleton(paginationDeliveryWrapper);
 
             services.AddMvc();
             services.AddSwaggerGen(c =>
@@ -94,11 +113,33 @@ namespace LodCore
 
             app.UseStaticFiles();
             app.UseMvc();
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "LodCore API");
             });
+        }
+
+        private void StartLogger()
+        {
+            var logglyConfig = LogglyConfig.Instance;
+            logglyConfig.CustomerToken = Configuration.GetSection("Logging").GetValue<string>("CustomerToken");
+            logglyConfig.ApplicationName = "LodBackend";
+
+            logglyConfig.Transport.EndpointHostname = "logs-01.loggly.com";
+            logglyConfig.Transport.EndpointPort = 6514;
+            logglyConfig.Transport.LogTransport = LogTransport.SyslogSecure;
+
+            var ct = new ApplicationNameTag { Formatter = "application-{0}" };
+            logglyConfig.TagConfig.Tags.Add(ct);
+            
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.RollingFile(Path.Combine(Env.ContentRootPath, @"logs/log-{Date}.log"), shared: true)
+                .WriteTo.Loggly()
+                .CreateLogger();
+            
+            Log.Information("Logger has started");
         }
     }
 }
