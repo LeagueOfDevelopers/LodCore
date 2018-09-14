@@ -14,6 +14,8 @@ namespace LodCoreLibrary.Facades
 
         Account GetUser(int userId);
 
+        Account GetUserByCredentials(string email, string password);
+
         Account GetUserByLinkToGithubProfile(string linkToGithubProfile);
 
         int CreateUserTemplate(CreateAccountRequest accountRequest);

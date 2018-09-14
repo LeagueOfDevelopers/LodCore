@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using LodCore.Mappers;
-using LodCore.Authorization;
 using LodCore.Models;
 using Journalist;
 using LodCoreLibrary.Domain.NotificationService;
 using LodCore.Pagination;
+using LodCore.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LodCore.Controllers
 {
@@ -28,9 +29,10 @@ namespace LodCore.Controllers
         [HttpPut]
         [Route("event/read")]
         //[Authorization(AccountRole.User)]
+        [Authorize]
         public IActionResult MarkEventsAsRead([FromBody] int[] eventIds)
         {
-            var userId = User.Identity.GetId();
+            var userId = Request.GetUserId();
             _notificationService.MarkEventsAsRead(userId, eventIds);
             return Ok();
         }
@@ -38,11 +40,12 @@ namespace LodCore.Controllers
         [HttpGet]
         [Route("event/{pageId}")]
         //[Authorization(AccountRole.User)]
+        [Authorize]
         public PaginableObject GetEventsByPage(int pageId)
         {
             Require.ZeroOrGreater(pageId, nameof(pageId));
 
-            var userId = User.Identity.GetId();
+            var userId = Request.GetUserId();
 
             var events = _notificationService.GetEventsForUser(userId, pageId).ToList();
 

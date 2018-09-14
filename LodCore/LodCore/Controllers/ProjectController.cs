@@ -18,8 +18,9 @@ using Microsoft.AspNetCore.Http.Extensions;
 using LodCore.Mappers;
 using LodCore.Pagination;
 using LodCore.Models;
-using LodCore.Authorization;
+using LodCore.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using LodCore.Security;
 
 namespace LodCore.Controllers
 {
@@ -56,9 +57,9 @@ namespace LodCore.Controllers
         public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-
+            
             List<Project> requiredProjects;
-            if (User.IsInRole(AccountRole.User))
+            if (Request.IsInRole(Claims.Roles.User))
             {
                 requiredProjects = _projectProvider.GetProjects();
             }
@@ -86,7 +87,7 @@ namespace LodCore.Controllers
 
             var requiredProjects = GetSomeProjects(projectsToSkip, projectsToReturn, paramsDictionary);
 
-            if (!User.IsInRole(AccountRole.User))
+            if (!Request.IsInRole(Claims.Roles.User))
             {
                 requiredProjects = requiredProjects
                     .Where(ProjectsPolicies.OnlyDoneOrInProgress);
@@ -98,7 +99,7 @@ namespace LodCore.Controllers
 
         [HttpPost]
         [Route("projects")]
-        //[Authorize(AccountRole.Administrator)]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
@@ -123,7 +124,8 @@ namespace LodCore.Controllers
 
         [HttpPost]
         [Route("projects/{projectId}/developer/{developerId}")]
-        //[Authorization(AccountRole.User)]
+        //[Authorization(AccountRole.User]
+        [Authorize]
         public IActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody] string role)
         {
             if (!ModelState.IsValid)
@@ -131,7 +133,7 @@ namespace LodCore.Controllers
                 return BadRequest(ModelState);
             }
 
-            User.AssertResourceOwnerOrAdmin(developerId);
+            //User.AssertResourceOwnerOrAdmin(developerId);
             Project project;
             Account user;
             try
@@ -195,6 +197,7 @@ namespace LodCore.Controllers
         [HttpDelete]
         [Route("projects/{projectId}/developer/{developerId}")]
         //[Authorization(AccountRole.User)]
+        [Authorize]
         public IActionResult DeleteDeveloperFromProject(int projectId, int developerId)
         {
             if (!ModelState.IsValid)
@@ -202,7 +205,7 @@ namespace LodCore.Controllers
                 return BadRequest(ModelState);
             }
 
-            User.AssertResourceOwnerOrAdmin(developerId);
+            //User.AssertResourceOwnerOrAdmin(developerId);
             Project projectToDeleteUser;
             Account user;
 
@@ -247,7 +250,7 @@ namespace LodCore.Controllers
             {
                 var project = _projectProvider.GetProject(projectId, issueTypes, statusOfIssues);
 
-                if (User.IsInRole(AccountRole.User))
+                if (Request.IsInRole(Claims.Roles.User))
                 {
                     return Ok(_projectsMapper.ToAdminProject(project));
                 }
@@ -294,7 +297,7 @@ namespace LodCore.Controllers
                 ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
                 : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
 
-            return User.IsInRole(AccountRole.Administrator) || User.IsInRole(AccountRole.User)
+            return Request.IsInRole(Claims.Roles.Admin) || Request.IsInRole(Claims.Roles.User)
                 ? (Expression<Func<Project, bool>>)(project =>
                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
                 : (project =>

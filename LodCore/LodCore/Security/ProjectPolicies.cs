@@ -1,6 +1,10 @@
 ﻿using LodCoreLibrary.Domain.ProjectManagment;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace LodCore.Authorization
+namespace LodCore.Security
 {
     public static class ProjectsPolicies
     {

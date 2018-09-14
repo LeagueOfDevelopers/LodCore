@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using LodCore.Mappers;
 using LodCore.Pagination;
+using LodCore.Security;
 using LodCoreLibrary.Common;
 using LodCoreLibrary.Domain.NotificationService;
 using LodCoreLibrary.Domain.ProjectManagment;
@@ -18,11 +20,15 @@ using LodCoreLibrary.Infrastructure.EventBus;
 using LodCoreLibrary.Infrastructure.WebSocketConnection;
 using Loggly;
 using Loggly.Config;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace LodCore
@@ -41,6 +47,7 @@ namespace LodCore
         public void ConfigureServices(IServiceCollection services)
         {
             StartLogger();
+            ConfigureSecurity(services);
 
             DatabaseSessionProvider databaseSessionProvider = new DatabaseSessionProvider();
             IEventPublisherProvider eventPublisherProvider = new EventConsumersContainer(
@@ -96,6 +103,16 @@ namespace LodCore
                     Version = "v1",
                     Title = "LodCore API"
                 });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description =
+                        "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.OperationFilter<ExamplesOperationFilter>();
+                c.DescribeAllEnumsAsStrings();
             });
         }
 
@@ -140,6 +157,45 @@ namespace LodCore
                 .CreateLogger();
             
             Log.Information("Logger has started");
+        }
+
+        private void ConfigureSecurity(IServiceCollection services)
+        {
+            var securityConfiguration = Configuration.GetSection("Authorizer");
+            var securitySettings = new SecuritySettings(
+                securityConfiguration["EncryptionKey"], 
+                securityConfiguration["Issue"],
+                securityConfiguration.GetValue<TimeSpan>("ExpirationPeriod"));
+            var jwtIssuer = new JwtIssuer(securitySettings);
+            services.AddSingleton(securitySettings);
+            services.AddSingleton<IJwtIssuer>(jwtIssuer);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.Zero,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(securitySettings.EncryptionKey))
+                    };
+                });
+
+            services
+                .AddAuthorization(options =>
+                {
+                    options.DefaultPolicy =
+                        new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                            .RequireAuthenticatedUser().Build();
+
+                    options.AddPolicy("AdminOnly",
+                        new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                            .RequireClaim(Claims.Roles.RoleClaim, Claims.Roles.Admin).Build());
+                });
         }
     }
 }

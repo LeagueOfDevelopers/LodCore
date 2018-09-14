@@ -207,5 +207,18 @@ namespace LodCoreLibrary.Facades
                             Extensions.Contains($"{account.Firstname} {account.Lastname}",
                                 searchString))).ToList();
         }
+
+        //TODO: доработать
+        public Account GetUserByCredentials(string email, string password)
+        {
+            var account = _userRepository.GetAllAccounts().First(a => a.Email == new MailAddress(email));
+
+            if (account.Password.Value == password)
+            {
+                return account;
+            }
+            else throw new Exception("Неверный пароль");
+
+        }
     }
 }
