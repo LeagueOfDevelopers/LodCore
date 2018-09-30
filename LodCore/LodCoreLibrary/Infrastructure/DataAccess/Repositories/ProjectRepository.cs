@@ -7,27 +7,28 @@ using Journalist.Extensions;
 using NHibernate.Linq;
 using LodCoreLibrary.Common;
 using LodCoreLibrary.Domain.ProjectManagment;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 {
     public class ProjectRepository : IProjectRepository, IProjectRelativesRepository
     {
+        private readonly string _connectionString;
         private readonly IDatabaseSessionProvider _databaseSessionProvider;
 
-        public ProjectRepository(IDatabaseSessionProvider databaseSessionProvider)
+        public ProjectRepository(string connectionString)
         {
-            Require.NotNull(databaseSessionProvider, nameof(databaseSessionProvider));
-
-            _databaseSessionProvider = databaseSessionProvider;
+            _connectionString = connectionString;
         }
-
+        
         public int[] GetAllProjectRelativeIds(int projectId)
         {
             return GetProject(projectId)
                 .ProjectMemberships
                 .SelectToArray(developer => developer.DeveloperId);
         }
-
+        
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)
         {
             var session = _databaseSessionProvider.GetCurrentSession();
@@ -64,10 +65,17 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 
         public int SaveProject(Project project)
         {
-            Require.NotNull(project, nameof(project));
+            int projectId;
 
-            var session = _databaseSessionProvider.GetCurrentSession();
-            return (int) session.Save(project);
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var sqlQuery = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
+                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
+                    "SELECT CAST(SCOPE_IDENTITY() as int)";
+                projectId = connection.Query<int>(sqlQuery, project).FirstOrDefault();
+            }
+
+            return projectId;
         }
 
         public void UpdateProject(Project project)

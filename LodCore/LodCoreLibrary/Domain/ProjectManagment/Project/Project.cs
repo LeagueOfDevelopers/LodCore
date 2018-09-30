@@ -21,7 +21,7 @@ namespace LodCoreLibrary.Domain.ProjectManagment
         {
             Require.NotEmpty(name, nameof(name));
             Require.NotNull(info, nameof(info));
-            Require.NotEmpty(projectTypes, nameof(projectTypes));
+            //Require.NotEmpty(projectTypes, nameof(projectTypes));
 
             Name = name;
             ProjectTypes = projectTypes;

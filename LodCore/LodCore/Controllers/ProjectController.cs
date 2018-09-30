@@ -21,6 +21,8 @@ using LodCore.Models;
 using LodCore.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using LodCore.Security;
+using LodCoreLibrary.QueryService;
+using LodCoreLibrary.QueryService.Queries;
 
 namespace LodCore.Controllers
 {
@@ -34,22 +36,26 @@ namespace LodCore.Controllers
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
         private readonly IPaginationWrapper<Project> _paginationWrapper;
+        private readonly QueryHandler _queryHandler;
 
         public ProjectController(
             IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
             IUserManager userManager,
-            IPaginationWrapper<Project> paginationWrapper)
+            IPaginationWrapper<Project> paginationWrapper,
+            QueryHandler queryHandler)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(paginationWrapper, nameof(paginationWrapper));
+            Require.NotNull(queryHandler, nameof(queryHandler));
 
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
             _userManager = userManager;
             _paginationWrapper = paginationWrapper;
+            _queryHandler = queryHandler;
         }
 
         [HttpGet]
@@ -76,8 +82,9 @@ namespace LodCore.Controllers
 
         [HttpGet]
         [Route("projects/{projectsToSkip}/{projectsToReturn}")]
-        public PaginableObject GetAllProjects(int projectsToSkip, int projectsToReturn)
+        public IActionResult GetAllProjects(int projectsToSkip, int projectsToReturn)
         {
+            return Ok(_queryHandler.Handle(new AllProjectsQuery()));
             //var paramsQuery = Request.RequestUri.Query;
             var paramsQuery = Request.GetDisplayUrl();
 
@@ -94,12 +101,12 @@ namespace LodCore.Controllers
             }
 
             var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-            return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
+            //return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
         }
 
         [HttpPost]
         [Route("projects")]
-        [Authorize(Policy = "AdminOnly")]
+        //[Authorize(Policy = "AdminOnly")]
         public IActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
         {
             if (!ModelState.IsValid)

@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="EasyNetQ" Version="1.1.4.506" />
     <PackageReference Include="Journalist.LanguageExtensions" Version="0.9.5" />
     <PackageReference Include="loggly-csharp" Version="4.6.0.5" />

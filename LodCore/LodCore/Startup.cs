@@ -18,6 +18,7 @@ using LodCoreLibrary.Infrastructure.DataAccess.Pagination;
 using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
 using LodCoreLibrary.Infrastructure.EventBus;
 using LodCoreLibrary.Infrastructure.WebSocketConnection;
+using LodCoreLibrary.QueryService;
 using Loggly;
 using Loggly.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -61,7 +62,7 @@ namespace LodCore
 
             IValidationRequestsRepository validationRequestsRepository = new ValidationRequestsRepository(databaseSessionProvider);
             IUserRepository userRepository = new UserRepository(databaseSessionProvider);
-            IProjectRepository projectRepository = new ProjectRepository(databaseSessionProvider);
+            IProjectRepository projectRepository = new ProjectRepository(@"Server=localhost\SQLEXPRESS;Database=lodcore;Trusted_Connection=True;");
             IProjectMembershipRepostiory projectMembershipRepostiory = new ProjectMembershipRepository(databaseSessionProvider);
             IPasswordChangeRequestRepository passwordChangeRequestRepository = new PasswordChangeRequestRepository(databaseSessionProvider);
             IEventRepository eventRepository = new EventRepository(databaseSessionProvider, webSocketStreamProvider);
@@ -80,6 +81,7 @@ namespace LodCore
             ProjectsMapper projectsMapper = new ProjectsMapper(userManager);
             EventMapper eventMapper = new EventMapper(notificationService);
             IContactsService contactsService = new ContactsService(eventPublisher);
+            QueryHandler queryHandler = new QueryHandler(@"Server=localhost\SQLEXPRESS;Database=lodcore;Trusted_Connection=True;");
 
             IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>(databaseSessionProvider);
             IPaginationWrapper<Delivery> paginationDeliveryWrapper = new PaginationWrapper<Delivery>(paginableDeliveryRepository);
@@ -94,6 +96,7 @@ namespace LodCore
             services.AddSingleton(eventMapper);
             services.AddSingleton(notificationService);
             services.AddSingleton(paginationDeliveryWrapper);
+            services.AddSingleton(queryHandler);
 
             services.AddMvc();
             services.AddSwaggerGen(c =>
