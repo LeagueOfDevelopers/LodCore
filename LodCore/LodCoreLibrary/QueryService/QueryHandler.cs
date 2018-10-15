@@ -6,26 +6,34 @@ using Dapper;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using LodCoreLibrary.QueryService.DTOs;
 
 namespace LodCoreLibrary.QueryService
 {
-    public class QueryHandler
+    public class QueryHandler : IQueryHandler
     {
-        private readonly string _connectionString;
+        private IQueryDescriber _queryDescriber;
+        private string _connectionString;
 
-        public QueryHandler(string connectionString)
+        public QueryHandler(IQueryDescriber queryDescriber, string connectionString)
         {
+            _queryDescriber = queryDescriber;
             _connectionString = connectionString;
         }
 
-        public IEnumerable<Project> Handle(AllProjectsQuery query)
+        public dynamic Handle(IQuery query)
         {
-            return query.Ask(_connectionString);
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return Handle((dynamic)query, connection);
+            }
         }
 
-        public Project Handle(GetProjectQuery query)
+        private IEnumerable<ProjectDto> Handle(AllProjectsQuery query, SqlConnection connection)
         {
-            return query.Ask(_connectionString);
+            var sql = _queryDescriber.Describe(query);
+            return connection.Query<ProjectDto>(sql).ToList();
         }
     }
 }

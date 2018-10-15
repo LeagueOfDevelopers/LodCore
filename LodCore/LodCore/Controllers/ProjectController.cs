@@ -23,6 +23,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using LodCore.Security;
 using LodCoreLibrary.QueryService;
 using LodCoreLibrary.QueryService.Queries;
+using LodCoreLibrary.QueryService.DTOs;
 
 namespace LodCore.Controllers
 {
@@ -36,14 +37,14 @@ namespace LodCore.Controllers
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
         private readonly IPaginationWrapper<Project> _paginationWrapper;
-        private readonly QueryHandler _queryHandler;
+        private readonly IQueryHandler _queryHandler;
 
         public ProjectController(
             IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
             IUserManager userManager,
             IPaginationWrapper<Project> paginationWrapper,
-            QueryHandler queryHandler)
+            IQueryHandler queryHandler)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
@@ -82,6 +83,7 @@ namespace LodCore.Controllers
 
         [HttpGet]
         [Route("projects/{projectsToSkip}/{projectsToReturn}")]
+        [SwaggerResponse(200, Type = typeof(ProjectDto))]
         public IActionResult GetAllProjects(int projectsToSkip, int projectsToReturn)
         {
             return Ok(_queryHandler.Handle(new AllProjectsQuery()));

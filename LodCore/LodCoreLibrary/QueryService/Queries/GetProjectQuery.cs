@@ -10,30 +10,18 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Queries
 {
-    public class GetProjectQuery
+    public class GetProjectQuery : IQuery
     {
-        private int _projectId;
-
         public GetProjectQuery(int projectId)
         {
-            _projectId = projectId;
+            ProjectId = projectId;
         }
 
-        public Project Ask(string connectionString)
+        public int ProjectId { get; }
+
+        string IQuery.GetType()
         {
-            Project project;
-            ProjectDto projectDto;
-
-            using (var connection = new SqlConnection(connectionString))
-            {
-               projectDto = connection.Query<ProjectDto>("SELECT * FROM Projects WHERE Id = @id", 
-                    new { _projectId }).FirstOrDefault();
-            }
-
-            project = new Project(projectDto.Name, null, projectDto.Info, projectDto.ProjectStatus,
-                new Common.Image(new Uri(projectDto.BigPhotoUri), new Uri(projectDto.SmallPhotoUri)), null, null, null, null, null);
-
-            return project;
+            return GetType().ToString();
         }
     }
 }

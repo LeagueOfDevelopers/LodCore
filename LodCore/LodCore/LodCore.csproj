@@ -29,4 +29,6 @@
     <ProjectReference Include="..\LodCoreLibrary\LodCoreLibrary.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+
 </Project>

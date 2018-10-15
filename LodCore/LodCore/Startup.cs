@@ -19,6 +19,7 @@ using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
 using LodCoreLibrary.Infrastructure.EventBus;
 using LodCoreLibrary.Infrastructure.WebSocketConnection;
 using LodCoreLibrary.QueryService;
+using LodCoreLibrary.QueryService.Queries;
 using Loggly;
 using Loggly.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -62,7 +63,7 @@ namespace LodCore
 
             IValidationRequestsRepository validationRequestsRepository = new ValidationRequestsRepository(databaseSessionProvider);
             IUserRepository userRepository = new UserRepository(databaseSessionProvider);
-            IProjectRepository projectRepository = new ProjectRepository(@"Server=localhost\SQLEXPRESS;Database=lodcore;Trusted_Connection=True;");
+            IProjectRepository projectRepository = new ProjectRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
             IProjectMembershipRepostiory projectMembershipRepostiory = new ProjectMembershipRepository(databaseSessionProvider);
             IPasswordChangeRequestRepository passwordChangeRequestRepository = new PasswordChangeRequestRepository(databaseSessionProvider);
             IEventRepository eventRepository = new EventRepository(databaseSessionProvider, webSocketStreamProvider);
@@ -81,7 +82,8 @@ namespace LodCore
             ProjectsMapper projectsMapper = new ProjectsMapper(userManager);
             EventMapper eventMapper = new EventMapper(notificationService);
             IContactsService contactsService = new ContactsService(eventPublisher);
-            QueryHandler queryHandler = new QueryHandler(@"Server=localhost\SQLEXPRESS;Database=lodcore;Trusted_Connection=True;");
+            IQueryDescriber queryDescriber = new QueryDescriber();
+            IQueryHandler queryHandler = new QueryHandler(queryDescriber, Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
 
             IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>(databaseSessionProvider);
             IPaginationWrapper<Delivery> paginationDeliveryWrapper = new PaginationWrapper<Delivery>(paginableDeliveryRepository);

@@ -125,6 +125,8 @@
     <Compile Include="Common\ProjectLink.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMap.cs" />
     <Compile Include="QueryService\DTOs\ProjectDto.cs" />
+    <Compile Include="QueryService\IQueryDescriber.cs" />
+    <Compile Include="QueryService\IQueryHandler.cs" />
     <Compile Include="QueryService\Queries\AllProjectsQuery.cs" />
     <Compile Include="Infrastructure\EventBus\IEventPublisher.cs" />
     <Compile Include="Common\Image.cs" />
@@ -280,6 +282,8 @@
     <Compile Include="Infrastructure\WebSocketConnection\WebSocketStreamProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryService\Queries\GetProjectQuery.cs" />
+    <Compile Include="QueryService\Queries\IQuery.cs" />
+    <Compile Include="QueryService\QueryDescriber.cs" />
     <Compile Include="QueryService\QueryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
