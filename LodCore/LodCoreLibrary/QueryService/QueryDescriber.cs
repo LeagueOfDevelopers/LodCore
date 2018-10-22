@@ -4,24 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LodCoreLibrary.QueryService.Queries;
+using LodCoreLibrary.QueryService.Views;
 
 namespace LodCoreLibrary.QueryService
 {
     public class QueryDescriber : IQueryDescriber
     {
-        public string Describe(IQuery query)
+        public string Describe(AllProjectsQuery query)
         {
-            switch (query)
-            {
-                case AllProjectsQuery knownQuery:
-                    return "SELECT * FROM projects";
+            return "SELECT * FROM projects AS A FULL JOIN screenshots AS B ON A.projectId = B.projectId;";
+        }
 
-                case GetProjectQuery knownQuery:
-                    return $"SELECT * FROM Projects WHERE Id = {knownQuery.ProjectId}";
-
-                default:
-                    throw new InvalidOperationException($"Unknown event {query.GetType()} to describe");
-            }
+        public string Describe(GetProjectQuery query)
+        {
+            return $"SELECT * FROM Projects WHERE Id = {query.ProjectId}";
         }
     }
 }

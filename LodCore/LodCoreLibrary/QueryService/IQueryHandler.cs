@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService
 {
-    public interface IQueryHandler
+    public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {
-        dynamic Handle(IQuery query);
+        TResult Handle(TQuery query);
     }
 }

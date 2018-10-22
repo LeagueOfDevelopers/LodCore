@@ -1,4 +1,5 @@
 ﻿using LodCoreLibrary.QueryService.Queries;
+using LodCoreLibrary.QueryService.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace LodCoreLibrary.QueryService
 {
     public interface IQueryDescriber
     {
-        string Describe(IQuery query);
+        string Describe(AllProjectsQuery query);
+        string Describe(GetProjectQuery query);
     }
 }

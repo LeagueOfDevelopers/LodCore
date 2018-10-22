@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Queries
 {
-    public interface IQuery
+    public interface IQuery<TResult>
     {
-        string GetType();
     }
 }

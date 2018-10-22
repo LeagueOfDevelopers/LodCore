@@ -124,7 +124,10 @@
     <Compile Include="Domain\NotificationService\Event\IEventInfo.cs" />
     <Compile Include="Common\ProjectLink.cs" />
     <Compile Include="Infrastructure\DataAccess\Mappings\ProjectMap.cs" />
+    <Compile Include="QueryService\DTOs\ImageDto.cs" />
     <Compile Include="QueryService\DTOs\ProjectDto.cs" />
+    <Compile Include="QueryService\DTOs\ProjectMembershipDto.cs" />
+    <Compile Include="QueryService\Handlers\ProjectQueryHandler.cs" />
     <Compile Include="QueryService\IQueryDescriber.cs" />
     <Compile Include="QueryService\IQueryHandler.cs" />
     <Compile Include="QueryService\Queries\AllProjectsQuery.cs" />
@@ -284,7 +287,9 @@
     <Compile Include="QueryService\Queries\GetProjectQuery.cs" />
     <Compile Include="QueryService\Queries\IQuery.cs" />
     <Compile Include="QueryService\QueryDescriber.cs" />
-    <Compile Include="QueryService\QueryHandler.cs" />
+    <Compile Include="QueryService\Views\AllProjectsView.cs" />
+    <Compile Include="QueryService\Views\ImageView.cs" />
+    <Compile Include="QueryService\Views\ProjectView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

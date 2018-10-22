@@ -24,6 +24,8 @@ using LodCore.Security;
 using LodCoreLibrary.QueryService;
 using LodCoreLibrary.QueryService.Queries;
 using LodCoreLibrary.QueryService.DTOs;
+using LodCoreLibrary.QueryService.Handlers;
+using LodCoreLibrary.QueryService.Views;
 
 namespace LodCore.Controllers
 {
@@ -37,26 +39,26 @@ namespace LodCore.Controllers
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
         private readonly IPaginationWrapper<Project> _paginationWrapper;
-        private readonly IQueryHandler _queryHandler;
+        private readonly ProjectQueryHandler _projectQueryHandler;
 
         public ProjectController(
             IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
             IUserManager userManager,
             IPaginationWrapper<Project> paginationWrapper,
-            IQueryHandler queryHandler)
+            ProjectQueryHandler projectQueryHandler)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(paginationWrapper, nameof(paginationWrapper));
-            Require.NotNull(queryHandler, nameof(queryHandler));
+            Require.NotNull(projectQueryHandler, nameof(projectQueryHandler));
 
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
             _userManager = userManager;
             _paginationWrapper = paginationWrapper;
-            _queryHandler = queryHandler;
+            _projectQueryHandler = projectQueryHandler;
         }
 
         [HttpGet]
@@ -83,12 +85,12 @@ namespace LodCore.Controllers
 
         [HttpGet]
         [Route("projects/{projectsToSkip}/{projectsToReturn}")]
-        [SwaggerResponse(200, Type = typeof(ProjectDto))]
+        [SwaggerResponse(200, Type = typeof(AllProjectsView))]
         public IActionResult GetAllProjects(int projectsToSkip, int projectsToReturn)
         {
-            return Ok(_queryHandler.Handle(new AllProjectsQuery()));
+           var result = _projectQueryHandler.Handle(new AllProjectsQuery());
             //var paramsQuery = Request.RequestUri.Query;
-            var paramsQuery = Request.GetDisplayUrl();
+            /*var paramsQuery = Request.GetDisplayUrl();
 
             var paramsDictionary =
                 paramsQuery.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries)
@@ -103,7 +105,8 @@ namespace LodCore.Controllers
             }
 
             var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-            //return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
+            //return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));*/
+            return Ok(result);
         }
 
         [HttpPost]

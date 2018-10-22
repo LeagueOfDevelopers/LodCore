@@ -19,6 +19,7 @@ using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
 using LodCoreLibrary.Infrastructure.EventBus;
 using LodCoreLibrary.Infrastructure.WebSocketConnection;
 using LodCoreLibrary.QueryService;
+using LodCoreLibrary.QueryService.Handlers;
 using LodCoreLibrary.QueryService.Queries;
 using Loggly;
 using Loggly.Config;
@@ -83,7 +84,8 @@ namespace LodCore
             EventMapper eventMapper = new EventMapper(notificationService);
             IContactsService contactsService = new ContactsService(eventPublisher);
             IQueryDescriber queryDescriber = new QueryDescriber();
-            IQueryHandler queryHandler = new QueryHandler(queryDescriber, Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
+                queryDescriber);
 
             IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>(databaseSessionProvider);
             IPaginationWrapper<Delivery> paginationDeliveryWrapper = new PaginationWrapper<Delivery>(paginableDeliveryRepository);
@@ -98,7 +100,7 @@ namespace LodCore
             services.AddSingleton(eventMapper);
             services.AddSingleton(notificationService);
             services.AddSingleton(paginationDeliveryWrapper);
-            services.AddSingleton(queryHandler);
+            services.AddSingleton(projectQueryHandler);
 
             services.AddMvc();
             services.AddSwaggerGen(c =>

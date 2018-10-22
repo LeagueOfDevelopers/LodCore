@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using LodCoreLibrary.Domain.ProjectManagment;
 using LodCoreLibrary.QueryService.DTOs;
+using LodCoreLibrary.QueryService.Views;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -10,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Queries
 {
-    public class AllProjectsQuery : IQuery
+    public class AllProjectsQuery : IQuery<AllProjectsView>
     {
-        string IQuery.GetType()
+        public AllProjectsView FormResult(List<ProjectDto> rawResult)
         {
-            return GetType().ToString();
+            return new AllProjectsView(rawResult);
         }
     }
 }
