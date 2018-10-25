@@ -86,11 +86,10 @@ namespace LodCore.Controllers
         [HttpGet]
         [Route("projects/{projectsToSkip}/{projectsToReturn}")]
         [SwaggerResponse(200, Type = typeof(AllProjectsView))]
-        public IActionResult GetAllProjects(int projectsToSkip, int projectsToReturn)
+        public PaginableObject GetAllProjects(int projectsToSkip, int projectsToReturn)
         {
-           var result = _projectQueryHandler.Handle(new GetProjectQuery(2));
             //var paramsQuery = Request.RequestUri.Query;
-            /*var paramsQuery = Request.GetDisplayUrl();
+            var paramsQuery = Request.GetDisplayUrl();
 
             var paramsDictionary =
                 paramsQuery.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries)
@@ -105,8 +104,7 @@ namespace LodCore.Controllers
             }
 
             var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-            //return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));*/
-            return Ok(result);
+            return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
         }
 
         [HttpPost]

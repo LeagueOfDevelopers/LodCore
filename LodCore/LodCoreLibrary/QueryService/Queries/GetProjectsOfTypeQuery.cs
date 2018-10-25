@@ -1,30 +1,27 @@
-﻿using Dapper;
-using LodCoreLibrary.Domain.ProjectManagment;
-using LodCoreLibrary.QueryService.DTOs;
+﻿using LodCoreLibrary.Domain.ProjectManagment;
 using LodCoreLibrary.QueryService.Views;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Queries
 {
-    public class GetProjectQuery : IQuery<FullProjectView>
+    public class GetProjectsOfTypeQuery : IQuery<ProjectsOfTypeView>
     {
-        public GetProjectQuery(int projectId)
+        public GetProjectsOfTypeQuery(ProjectType type)
         {
-            ProjectId = projectId;
+            Type = type;
             Sql = "SELECT * FROM projects AS Project " +
                 "LEFT JOIN screenshots AS Screenshot ON Project.projectId = Screenshot.projectId " +
                 "LEFT JOIN projectMemberships AS ProjMembership ON Project.projectId = ProjMembership.projectId " +
                 "LEFT JOIN projectLinks AS Link ON Project.projectId = Link.projectId " +
                 "LEFT JOIN projectTypes AS Type ON Project.projectId = Type.projectId " +
-                $"WHERE Project.projectId = {ProjectId};";
+                $"WHERE Type.type = {Type};";
         }
 
-        public int ProjectId { get; }
+        public ProjectType Type { get; }
         public string Sql { get; }
     }
 }
