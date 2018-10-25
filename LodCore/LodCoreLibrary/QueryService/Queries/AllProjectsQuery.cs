@@ -13,9 +13,16 @@ namespace LodCoreLibrary.QueryService.Queries
 {
     public class AllProjectsQuery : IQuery<AllProjectsView>
     {
+        public AllProjectsQuery()
+        {
+            Sql = "SELECT * FROM projects;";
+        }
+
         public AllProjectsView FormResult(List<ProjectDto> rawResult)
         {
             return new AllProjectsView(rawResult);
         }
+
+        public string Sql { get; }
     }
 }

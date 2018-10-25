@@ -11,11 +11,11 @@ namespace LodCoreLibrary.QueryService.Views
     {
         public AllProjectsView(IEnumerable<ProjectDto> allProjects)
         {
-            var result = new List<ProjectView>();
-            allProjects.ToList().ForEach(p => result.Add(new ProjectView(p)));
+            var result = new List<ShortProjectView>();
+            allProjects.ToList().ForEach(p => result.Add(new ShortProjectView(p)));
             AllProjects = result;
         }
 
-        public IEnumerable<ProjectView> AllProjects { get; }
+        public IEnumerable<ShortProjectView> AllProjects { get; }
     }
 }

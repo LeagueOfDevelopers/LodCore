@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Handlers
 {
-    public class ProjectQueryHandler : IQueryHandler<AllProjectsQuery, AllProjectsView>
+    public class ProjectQueryHandler : IQueryHandler<AllProjectsQuery, AllProjectsView>, 
+        IQueryHandler<GetProjectQuery, FullProjectView>
     {
         private string _connectionString;
         private IQueryDescriber _queryDescriber;
@@ -24,15 +25,26 @@ namespace LodCoreLibrary.QueryService.Handlers
 
         public AllProjectsView Handle(AllProjectsQuery query)
         {
-            string sql = _queryDescriber.Describe(query);
             List<ProjectDto> result;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                result = connection.Query<ProjectDto>(query.Sql).ToList();
+            }
+
+            return query.FormResult(result);
+        }
+
+        public FullProjectView Handle(GetProjectQuery query)
+        {
+            List<ProjectDto> allProjects;
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, ProjectDto>();
 
-                result = connection.Query<ProjectDto, ImageDto, ProjectDto>(sql, 
-                    (project, screenshot) =>
+                allProjects = connection.Query<ProjectDto, ImageDto, ProjectMembershipDto, ProjectLinkDto, ProjectTypeDto, ProjectDto>(query.Sql,
+                    (project, screenshot, projectMembership, projectLink, projectType) =>
                     {
                         ProjectDto projectEntry;
 
@@ -40,16 +52,31 @@ namespace LodCoreLibrary.QueryService.Handlers
                         {
                             projectEntry = project;
                             projectEntry.Screenshots = new List<ImageDto>();
+                            projectEntry.Developers = new List<ProjectMembershipDto>();
+                            projectEntry.Links = new List<ProjectLinkDto>();
+                            projectEntry.Types = new List<ProjectTypeDto>();
                             resultDictionary.Add(projectEntry.ProjectId, projectEntry);
                         }
+                                                
+                        if (screenshot != null && !projectEntry.Screenshots.Any(s => s.BigPhotoUri == screenshot.BigPhotoUri))
+                            projectEntry.Screenshots.Add(screenshot);
 
-                        projectEntry.Screenshots.Add(screenshot);
-                        
+                        if (projectMembership != null && !projectEntry.Developers.Any(d => d.MembershipId == projectMembership.MembershipId))
+                            projectEntry.Developers.Add(projectMembership);
+
+                        if (projectLink != null && !projectEntry.Links.Any(l => l.Uri == projectLink.Uri))
+                            projectEntry.Links.Add(projectLink);
+
+                        if (projectType != null && !projectEntry.Types.Any(t => t.Type == projectType.Type))
+                            projectEntry.Types.Add(projectType);
+
                         return projectEntry;
-                    }, splitOn: "screenshotId").Distinct().ToList();
+                    }, splitOn: "projectId,membershipId,projectId,projectId").Distinct().ToList();
             }
 
-            return query.FormResult(result);
+            var result = allProjects.Find(p => p.ProjectId == query.ProjectId);
+
+            return new FullProjectView(result);
         }
     }
 }

@@ -23,5 +23,7 @@ namespace LodCoreLibrary.QueryService.DTOs
         public Uri UriLink { get; set; }
         public List<ImageDto> Screenshots { get; set; }
         public List<ProjectMembershipDto> Developers { get; set; }
+        public List<ProjectTypeDto> Types { get; set; }
+        public List<ProjectLinkDto> Links { get; set; }
     }
 }

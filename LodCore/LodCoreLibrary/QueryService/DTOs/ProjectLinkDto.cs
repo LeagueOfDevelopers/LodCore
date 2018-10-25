@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.DTOs
 {
-    public class ImageDto
+    public class ProjectLinkDto
     {
-        public ImageDto()
+        public ProjectLinkDto()
         {
         }
-        
+
         public int ProjectId { get; set; }
-        public string BigPhotoUri { get; set; }
-        public string SmallPhotoUri { get; set; }
+        public string Name { get; set; }
+        public string Uri { get; set; }
     }
 }

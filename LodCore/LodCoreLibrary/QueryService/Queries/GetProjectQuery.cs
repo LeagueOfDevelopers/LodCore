@@ -11,13 +11,19 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Queries
 {
-    public class GetProjectQuery : IQuery<ProjectView>
+    public class GetProjectQuery : IQuery<FullProjectView>
     {
         public GetProjectQuery(int projectId)
         {
             ProjectId = projectId;
+            Sql = "SELECT * FROM projects AS Project " +
+                "LEFT JOIN screenshots AS Screenshot ON Project.projectId = Screenshot.projectId " +
+                "LEFT JOIN projectMemberships AS ProjMembership ON Project.projectId = ProjMembership.projectId " +
+                "LEFT JOIN projectLinks AS Link ON Project.projectId = Link.projectId " +
+                "LEFT JOIN projectTypes AS Type ON Project.projectId = Type.projectId;";
         }
 
         public int ProjectId { get; }
+        public string Sql { get; }
     }
 }

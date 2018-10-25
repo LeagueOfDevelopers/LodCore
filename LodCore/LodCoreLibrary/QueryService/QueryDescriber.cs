@@ -12,7 +12,7 @@ namespace LodCoreLibrary.QueryService
     {
         public string Describe(AllProjectsQuery query)
         {
-            return "SELECT * FROM projects AS A FULL JOIN screenshots AS B ON A.projectId = B.projectId;";
+            return "SELECT * FROM projects AS A LEFT JOIN projectMemberships AS C ON A.projectId = C.projectId;";
         }
 
         public string Describe(GetProjectQuery query)

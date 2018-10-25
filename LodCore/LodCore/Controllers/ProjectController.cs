@@ -88,7 +88,7 @@ namespace LodCore.Controllers
         [SwaggerResponse(200, Type = typeof(AllProjectsView))]
         public IActionResult GetAllProjects(int projectsToSkip, int projectsToReturn)
         {
-           var result = _projectQueryHandler.Handle(new AllProjectsQuery());
+           var result = _projectQueryHandler.Handle(new GetProjectQuery(2));
             //var paramsQuery = Request.RequestUri.Query;
             /*var paramsQuery = Request.GetDisplayUrl();
 
