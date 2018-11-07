@@ -42,7 +42,7 @@ namespace LodCoreLibrary.QueryService.Handlers
                         }
                         
                         return projectEntry;
-                    }, splitOn: "projectId,membershipId,projectId,projectId").Distinct().ToList();
+                    }, splitOn: "projectId").Distinct().ToList();
             }
 
             return query.FormResult(result);

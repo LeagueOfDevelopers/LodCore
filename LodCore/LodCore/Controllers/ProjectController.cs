@@ -32,7 +32,6 @@ namespace LodCore.Controllers
     [Produces("application/json")]
     public class ProjectController : Controller
     {
-        private const string CategoriesQueryParameterName = "categories";
         private const string PageParameterName = "page";
 
         private readonly IProjectProvider _projectProvider;
@@ -91,15 +90,14 @@ namespace LodCore.Controllers
             [FromQuery(Name = "offset")] int offset,
             [FromQuery(Name = "category")] int[] categories)
         {
-            var result = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories)).Projects;
+            var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories));
 
             if (!User.Identity.IsAuthenticated)
             {
-                result = result.Where(p => p.ProjectStatus == ProjectStatus.Done
-                || p.ProjectStatus == ProjectStatus.InProgress);
+                resultOfQuery.FilterResult();
             }
-
-            return Ok(result);
+            
+            return Ok(resultOfQuery);
         }
 
         [HttpPost]

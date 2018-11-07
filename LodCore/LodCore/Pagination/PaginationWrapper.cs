@@ -12,11 +12,7 @@ namespace LodCore.Pagination
         {
             var countOfEntities = _paginableRepository.GetCountOfEntities(criteria);
 
-            return new PaginableObject()
-            {
-                Data = content,
-                CountOfEntities = countOfEntities
-            };
+            return new PaginableObject(content, countOfEntities);
         }
 
         private readonly IPaginableRepository<T> _paginableRepository;

@@ -18,6 +18,7 @@ namespace LodCoreLibrary.QueryService.Queries
             Offset = offset;
             Count = count;
             Categories = categories;
+
             Sql = "SELECT * FROM projects AS Project LEFT JOIN projectTypes AS ProjectType " +
                 $"ON Project.projectid = ProjectType.projectId WHERE type IN({string.Join(",", Categories)});";
         }
@@ -25,9 +26,9 @@ namespace LodCoreLibrary.QueryService.Queries
         public SomeProjectsView FormResult(List<ProjectDto> rawResult)
         {
             var necessaryProjects = rawResult.Skip(Offset).Take(Count);
-            return new SomeProjectsView(necessaryProjects);
+            return new SomeProjectsView(necessaryProjects, rawResult.Count());
         }
-
+        
         public int Offset { get; }
         public int Count { get; }
         public int[] Categories { get; }

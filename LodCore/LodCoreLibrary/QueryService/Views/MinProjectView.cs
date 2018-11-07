@@ -1,4 +1,5 @@
 ﻿using LodCoreLibrary.Domain.ProjectManagment;
+using LodCoreLibrary.Infrastructure.DataAccess.Pagination;
 using LodCoreLibrary.QueryService.DTOs;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Views
 {
-    public class MinProjectView
+    public class MinProjectView 
     {
         public MinProjectView(ProjectDto projectDto)
         {
