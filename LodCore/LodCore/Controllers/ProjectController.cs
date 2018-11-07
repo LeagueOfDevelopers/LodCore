@@ -84,27 +84,22 @@ namespace LodCore.Controllers
         }
 
         [HttpGet]
-        [Route("projects/{projectsToSkip}/{projectsToReturn}")]
-        [SwaggerResponse(200, Type = typeof(AllProjectsView))]
-        public PaginableObject GetAllProjects(int projectsToSkip, int projectsToReturn)
+        [Route("projects")]
+        [SwaggerResponse(200, Type = typeof(SomeProjectsView))]
+        public IActionResult GetAllProjects(
+            [FromQuery(Name = "count")] int count, 
+            [FromQuery(Name = "offset")] int offset,
+            [FromQuery(Name = "category")] int[] categories)
         {
-            //var paramsQuery = Request.RequestUri.Query;
-            var paramsQuery = Request.GetDisplayUrl();
+            var result = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories)).Projects;
 
-            var paramsDictionary =
-                paramsQuery.Split(new[] { '?', '&' }, StringSplitOptions.RemoveEmptyEntries)
-                    .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
-
-            var requiredProjects = GetSomeProjects(projectsToSkip, projectsToReturn, paramsDictionary);
-
-            if (!Request.IsInRole(Claims.Roles.User))
+            if (!User.Identity.IsAuthenticated)
             {
-                requiredProjects = requiredProjects
-                    .Where(ProjectsPolicies.OnlyDoneOrInProgress);
+                result = result.Where(p => p.ProjectStatus == ProjectStatus.Done
+                || p.ProjectStatus == ProjectStatus.InProgress);
             }
 
-            var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-            return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
+            return Ok(result);
         }
 
         [HttpPost]
@@ -252,67 +247,27 @@ namespace LodCore.Controllers
         public IActionResult GetProject(int projectId)
         {
             Require.Positive(projectId, nameof(projectId));
-
-            var issueTypes = new[] { IssueType.Research, IssueType.Task }.ToList();
-            var statusOfIssues = new[] { IssueStatus.Ready, IssueStatus.InProgress }.ToList();
-
+            
             try
             {
-                var project = _projectProvider.GetProject(projectId, issueTypes, statusOfIssues);
-
-                if (Request.IsInRole(Claims.Roles.User))
+                //What is it?!
+                if (User.IsInRole(Claims.Roles.User))
                 {
-                    return Ok(_projectsMapper.ToAdminProject(project));
+                    var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
+
+                    if (project.ProjectStatus == ProjectStatus.Done || project.ProjectStatus == ProjectStatus.InProgress)
+                        return Ok(_projectQueryHandler.Handle(new GetProjectQuery(projectId)));
+                    else
+                        return Unauthorized();
                 }
 
-                if (!ProjectsPolicies.OnlyDoneOrInProgress(project))
-                {
-                    return Unauthorized();
-                }
-
-                return Ok(_projectsMapper.ToProject(project));
+                return Ok(_projectQueryHandler.Handle(new GetProjectQuery(projectId)));
             }
             catch (ProjectNotFoundException ex)
             {
                 Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
-        }
-
-        private IEnumerable<Project> GetSomeProjects(int projectsToSkip, int projectsToReturn, Dictionary<string, string> paramsDictionary)
-        {
-            string categoriesQuery;
-
-            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
-
-            var projectTypes = categoriesQuery.IsNullOrEmpty()
-                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
-                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
-
-
-            var requiredProjects = _projectProvider.GetProjects(projectsToSkip, projectsToReturn,
-                project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
-                .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
-
-            return requiredProjects;
-        }
-
-        private Expression<Func<Project, bool>> GetPublicProjectsCounterExpression(Dictionary<string, string> paramsDictionary)
-        {
-            string categoriesQuery;
-
-            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
-
-            var projectTypes = categoriesQuery.IsNullOrEmpty()
-                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
-                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
-
-            return Request.IsInRole(Claims.Roles.Admin) || Request.IsInRole(Claims.Roles.User)
-                ? (Expression<Func<Project, bool>>)(project =>
-                   project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
-                : (project =>
-                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)) &&
-                    (project.ProjectStatus == ProjectStatus.Done || project.ProjectStatus == ProjectStatus.InProgress));
         }
     }
 }

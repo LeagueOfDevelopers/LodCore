@@ -11,7 +11,7 @@ namespace LodCoreLibrary.QueryService.DTOs
         public ImageDto()
         {
         }
-        
+
         public int ProjectId { get; set; }
         public string BigPhotoUri { get; set; }
         public string SmallPhotoUri { get; set; }

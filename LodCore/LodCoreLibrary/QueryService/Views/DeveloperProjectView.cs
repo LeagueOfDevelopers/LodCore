@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Views
 {
-    public class ShortProjectView
+    public class DeveloperProjectView
     {
-        public ShortProjectView(ProjectDto projectDto)
+        public DeveloperProjectView(ProjectDto projectDto, ProjectMembershipDto projMembershipDto)
         {
-            ProjectId = projectDto.ProjectId;
-            Name = projectDto.Name;
+            ProjectName = projectDto.Name;
             ProjectStatus = projectDto.ProjectStatus;
             LandingImage = new ImageView(projectDto.BigPhotoUri, projectDto.SmallPhotoUri);
+            DeveloperRole = projMembershipDto.Role;
         }
 
-        public int ProjectId { get; }
-        public string Name { get; }
+        public string ProjectName { get; }
         public ProjectStatus ProjectStatus { get; }
         public ImageView LandingImage { get; }
+        public string DeveloperRole { get; }
     }
 }

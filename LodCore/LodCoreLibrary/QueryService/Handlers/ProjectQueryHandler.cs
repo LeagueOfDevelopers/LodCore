@@ -11,9 +11,8 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Handlers
 {
-    public class ProjectQueryHandler : IQueryHandler<AllProjectsQuery, AllProjectsView>, 
-        IQueryHandler<GetProjectQuery, FullProjectView>,
-        IQueryHandler<GetProjectsOfTypeQuery, ProjectsOfTypeView>
+    public class ProjectQueryHandler : IQueryHandler<GetSomeProjectsQuery, SomeProjectsView>, 
+        IQueryHandler<GetProjectQuery, FullProjectView>
     {
         private string _connectionString;
 
@@ -22,13 +21,28 @@ namespace LodCoreLibrary.QueryService.Handlers
             _connectionString = connectionString;
         }
 
-        public AllProjectsView Handle(AllProjectsQuery query)
+        public SomeProjectsView Handle(GetSomeProjectsQuery query)
         {
             List<ProjectDto> result;
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                result = connection.Query<ProjectDto>(query.Sql).ToList();
+                var resultDictionary = new Dictionary<int, ProjectDto>();
+
+                result = connection.Query<ProjectDto, ProjectTypeDto, ProjectDto>(query.Sql,
+                    (project, projectType) =>
+                    {
+                        ProjectDto projectEntry;
+
+                        if (!resultDictionary.TryGetValue(project.ProjectId, out projectEntry))
+                        {
+                            projectEntry = project;
+                            projectEntry.Types = new List<ProjectTypeDto>();
+                            resultDictionary.Add(projectEntry.ProjectId, projectEntry);
+                        }
+                        
+                        return projectEntry;
+                    }, splitOn: "projectId,membershipId,projectId,projectId").Distinct().ToList();
             }
 
             return query.FormResult(result);
@@ -74,48 +88,6 @@ namespace LodCoreLibrary.QueryService.Handlers
             }
             
             return new FullProjectView(result);
-        }
-
-        public ProjectsOfTypeView Handle(GetProjectsOfTypeQuery query)
-        {
-            List<ProjectDto> result;
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var resultDictionary = new Dictionary<int, ProjectDto>();
-
-                result = connection.Query<ProjectDto, ImageDto, ProjectMembershipDto, ProjectLinkDto, ProjectTypeDto, ProjectDto>(query.Sql,
-                    (project, screenshot, projectMembership, projectLink, projectType) =>
-                    {
-                        ProjectDto projectEntry;
-
-                        if (!resultDictionary.TryGetValue(project.ProjectId, out projectEntry))
-                        {
-                            projectEntry = project;
-                            projectEntry.Screenshots = new List<ImageDto>();
-                            projectEntry.Developers = new List<ProjectMembershipDto>();
-                            projectEntry.Links = new List<ProjectLinkDto>();
-                            projectEntry.Types = new List<ProjectTypeDto>();
-                            resultDictionary.Add(projectEntry.ProjectId, projectEntry);
-                        }
-
-                        if (screenshot != null && !projectEntry.Screenshots.Any(s => s.BigPhotoUri == screenshot.BigPhotoUri))
-                            projectEntry.Screenshots.Add(screenshot);
-
-                        if (projectMembership != null && !projectEntry.Developers.Any(d => d.MembershipId == projectMembership.MembershipId))
-                            projectEntry.Developers.Add(projectMembership);
-
-                        if (projectLink != null && !projectEntry.Links.Any(l => l.Uri == projectLink.Uri))
-                            projectEntry.Links.Add(projectLink);
-
-                        if (projectType != null && !projectEntry.Types.Any(t => t.Type == projectType.Type))
-                            projectEntry.Types.Add(projectType);
-
-                        return projectEntry;
-                    }, splitOn: "projectId,membershipId,projectId,projectId").Distinct().ToList();
-            }
-
-            return new ProjectsOfTypeView(result);
         }
 
         // Future mapping-method

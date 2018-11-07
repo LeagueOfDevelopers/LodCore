@@ -9,6 +9,7 @@ using LodCoreLibrary.Common;
 using LodCoreLibrary.Domain.ProjectManagment;
 using System.Data.SqlClient;
 using Dapper;
+using LodCoreLibrary.QueryService.DTOs;
 
 namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 {
@@ -69,10 +70,17 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
-                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
+                connection.Open();
+                SqlTransaction sqlTransaction = connection.BeginTransaction();
+
+                var sqlQuery = "INSERT INTO projects (name, info, projectstatus) " +
+                    "VALUES(@Name, @Info, @ProjectStatus); " +
                     "SELECT CAST(SCOPE_IDENTITY() as int)";
-                projectId = connection.Query<int>(sqlQuery, project).FirstOrDefault();
+
+                projectId = connection.Query<int>(sqlQuery, project, sqlTransaction).FirstOrDefault();
+
+                sqlTransaction.Commit();
+                connection.Close();
             }
 
             return projectId;
