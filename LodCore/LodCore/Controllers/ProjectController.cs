@@ -248,18 +248,17 @@ namespace LodCore.Controllers
             
             try
             {
+                var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
+
                 //What is it?!
                 if (User.IsInRole(Claims.Roles.User))
                 {
-                    var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
-
                     if (project.ProjectStatus == ProjectStatus.Done || project.ProjectStatus == ProjectStatus.InProgress)
-                        return Ok(_projectQueryHandler.Handle(new GetProjectQuery(projectId)));
+                        return Ok(project);
                     else
                         return Unauthorized();
                 }
-
-                return Ok(_projectQueryHandler.Handle(new GetProjectQuery(projectId)));
+                return Ok(project);
             }
             catch (ProjectNotFoundException ex)
             {

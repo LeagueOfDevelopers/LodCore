@@ -67,17 +67,17 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
         public int SaveProject(Project project)
         {
             int projectId;
+            var projectDto = new ProjectDto(project);
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 SqlTransaction sqlTransaction = connection.BeginTransaction();
 
-                var sqlQuery = "INSERT INTO projects (name, info, projectstatus) " +
-                    "VALUES(@Name, @Info, @ProjectStatus); " +
+                var sqlQuery = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
+                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
                     "SELECT CAST(SCOPE_IDENTITY() as int)";
-
-                projectId = connection.Query<int>(sqlQuery, project, sqlTransaction).FirstOrDefault();
+                projectId = connection.Query<int>(sqlQuery, projectDto, sqlTransaction).FirstOrDefault();
 
                 sqlTransaction.Commit();
                 connection.Close();
@@ -88,11 +88,19 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 
         public void UpdateProject(Project project)
         {
-            Require.NotNull(project, nameof(project));
+            var projectDto = new ProjectDto(project);
 
-            var session = _databaseSessionProvider.GetCurrentSession();
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                SqlTransaction sqlTransaction = connection.BeginTransaction();
 
-            session.Update(project);
+                var sqlQuery = $"UPDATE projects SET name={projectDto.Name}, info={projectDto.Info} WHERE projectId={projectDto.ProjectId};";
+                connection.Execute(sqlQuery, projectDto, sqlTransaction);
+
+                sqlTransaction.Commit();
+                connection.Close();
+            }
         }
 
         public IEnumerable<string> GetUserRoles(int userId )

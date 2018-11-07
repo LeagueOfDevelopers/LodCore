@@ -13,6 +13,16 @@ namespace LodCoreLibrary.QueryService.DTOs
         {
         }
 
+        public ProjectDto(Project project)
+        {
+            ProjectId = project.ProjectId;
+            Name = project.Name;
+            Info = project.Info;
+            ProjectStatus = project.ProjectStatus;
+            BigPhotoUri = project.LandingImage.BigPhotoUri.ToString();
+            SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString();
+        }
+
         public int ProjectId { get; set; }
         public string Name { get; set; }
         public string Info { get; set; }
@@ -21,9 +31,9 @@ namespace LodCoreLibrary.QueryService.DTOs
         public string SmallPhotoUri { get; set; }
         public string LinkName { get; set; }
         public Uri UriLink { get; set; }
-        public List<ImageDto> Screenshots { get; set; }
-        public List<ProjectMembershipDto> Developers { get; set; }
-        public List<ProjectTypeDto> Types { get; set; }
-        public List<ProjectLinkDto> Links { get; set; }
+        public ISet<ImageDto> Screenshots { get; set; }
+        public ISet<ProjectMembershipDto> Developers { get; set; }
+        public ISet<ProjectTypeDto> Types { get; set; }
+        public ISet<ProjectLinkDto> Links { get; set; }
     }
 }
