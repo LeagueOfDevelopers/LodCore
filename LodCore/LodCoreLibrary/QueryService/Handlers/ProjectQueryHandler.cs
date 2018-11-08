@@ -37,7 +37,7 @@ namespace LodCoreLibrary.QueryService.Handlers
                         if (!resultDictionary.TryGetValue(project.ProjectId, out projectEntry))
                         {
                             projectEntry = project;
-                            projectEntry.Types = new List<ProjectTypeDto>();
+                            projectEntry.Types = new HashSet<ProjectTypeDto>();
                             resultDictionary.Add(projectEntry.ProjectId, projectEntry);
                         }
                         
@@ -64,10 +64,10 @@ namespace LodCoreLibrary.QueryService.Handlers
                         if (!resultDictionary.TryGetValue(project.ProjectId, out projectEntry))
                         {
                             projectEntry = project;
-                            projectEntry.Screenshots = new List<ImageDto>();
-                            projectEntry.Developers = new List<ProjectMembershipDto>();
-                            projectEntry.Links = new List<ProjectLinkDto>();
-                            projectEntry.Types = new List<ProjectTypeDto>();
+                            projectEntry.Screenshots = new HashSet<ImageDto>();
+                            projectEntry.Developers = new HashSet<ProjectMembershipDto>();
+                            projectEntry.Links = new HashSet<ProjectLinkDto>();
+                            projectEntry.Types = new HashSet<ProjectTypeDto>();
                             resultDictionary.Add(projectEntry.ProjectId, projectEntry);
                         }
                                                 

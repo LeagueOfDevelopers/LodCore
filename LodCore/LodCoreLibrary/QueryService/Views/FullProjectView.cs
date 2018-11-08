@@ -20,16 +20,16 @@ namespace LodCoreLibrary.QueryService.Views
             LandingImage = new ImageView(projectDto.BigPhotoUri, projectDto.SmallPhotoUri);
 
             ProjectTypes = new List<int>();
-            projectDto.Types.ForEach(t => ProjectTypes.Add(t.Type));
+            projectDto.Types.ToList().ForEach(t => ProjectTypes.Add(t.Type));
 
             ProjectMemberships = new List<ProjectMembershipView>();
-            projectDto.Developers.ForEach(d => ProjectMemberships.Add(new ProjectMembershipView(d.DeveloperId, d.Role)));
+            projectDto.Developers.ToList().ForEach(d => ProjectMemberships.Add(new ProjectMembershipView(d.DeveloperId, d.Role)));
 
             Screenshots = new List<ImageView>();
-            projectDto.Screenshots.ForEach(s => Screenshots.Add(new ImageView(s.BigPhotoUri, s.SmallPhotoUri)));
+            projectDto.Screenshots.ToList().ForEach(s => Screenshots.Add(new ImageView(s.BigPhotoUri, s.SmallPhotoUri)));
 
             Links = new List<ProjectLinkView>();
-            projectDto.Links.ForEach(l => Links.Add(new ProjectLinkView(l.Name, l.Uri)));
+            projectDto.Links.ToList().ForEach(l => Links.Add(new ProjectLinkView(l.Name, l.Uri)));
         }
 
         public int ProjectId { get; }

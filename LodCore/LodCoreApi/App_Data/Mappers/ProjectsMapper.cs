@@ -49,7 +49,6 @@ namespace LodCoreApi.App_Data.Mappers
                 project.Info,
                 project.ProjectStatus,
                 project.LandingImage,
-                new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<LodCoreLibrary.Common.Image>(project.Screenshots),
                 new HashSet<System.Uri>(project.LinksToGithubRepositories));
@@ -64,7 +63,6 @@ namespace LodCoreApi.App_Data.Mappers
                 project.Info,
                 project.ProjectStatus,
                 project.LandingImage,
-                new HashSet<Issue>(project.Issues),
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
                 new HashSet<LodCoreLibrary.Common.Image>(project.Screenshots),
                 new HashSet<LodCoreLibrary.Common.ProjectLink>(project.Links),

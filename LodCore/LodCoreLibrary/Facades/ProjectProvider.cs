@@ -69,7 +69,6 @@ namespace LodCoreLibrary.Facades
                 request.ProjectStatus,
                 request.LandingImage,
                 null,
-                null,
                 request.Screenshots != null 
                 ? new HashSet<Image>(request.Screenshots) 
                 : null,

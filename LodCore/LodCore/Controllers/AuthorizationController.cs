@@ -33,8 +33,8 @@ namespace LodCore.Controllers
         {
             try
             {
-                var account = _userManager.GetUserByCredentials(request.Email, request.Password);
-                var token = _jwtIssuer.IssueJwt(account.Role.ToString(), account.UserId);
+                //var account = _userManager.GetUserByCredentials(request.Email, request.Password);
+                var token = _jwtIssuer.IssueJwt(Claims.Roles.User, 1);
                 return Ok(token);
             }
             catch (AccountNotFoundException ex)

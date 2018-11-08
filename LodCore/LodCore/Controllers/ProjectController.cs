@@ -83,6 +83,8 @@ namespace LodCore.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         [Route("projects")]
         [SwaggerResponse(200, Type = typeof(SomeProjectsView))]
         public IActionResult GetAllProjects(
@@ -241,6 +243,8 @@ namespace LodCore.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         [Route("projects/{projectId}")]
         public IActionResult GetProject(int projectId)
         {
@@ -249,9 +253,8 @@ namespace LodCore.Controllers
             try
             {
                 var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
-
-                //What is it?!
-                if (User.IsInRole(Claims.Roles.User))
+                
+                if (!User.Identity.IsAuthenticated)
                 {
                     if (project.ProjectStatus == ProjectStatus.Done || project.ProjectStatus == ProjectStatus.InProgress)
                         return Ok(project);

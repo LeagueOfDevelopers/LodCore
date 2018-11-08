@@ -14,7 +14,6 @@ namespace LodCoreApi.Models
             string info,
             ProjectStatus projectStatus,
             LodCoreLibrary.Common.Image landingImage,
-            HashSet<Issue> issues,
             HashSet<ProjectMembership> projectDevelopers,
             HashSet<LodCoreLibrary.Common.Image> screenshots,
             HashSet<Uri> linksToGithubRepositories)
@@ -29,7 +28,6 @@ namespace LodCoreApi.Models
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
-            Issues = issues ?? new HashSet<Issue>();
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
             Screenshots = screenshots ?? new HashSet<LodCoreLibrary.Common.Image>();
             LinksToGithubRepositories = linksToGithubRepositories ?? new HashSet<Uri>();
@@ -46,8 +44,6 @@ namespace LodCoreApi.Models
         public ProjectStatus ProjectStatus { get; private set; }
 
         public LodCoreLibrary.Common.Image LandingImage { get; private set; }
-
-        public HashSet<Issue> Issues { get; private set; }
 
         public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
 

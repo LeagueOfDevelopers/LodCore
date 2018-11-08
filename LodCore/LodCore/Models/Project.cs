@@ -14,7 +14,6 @@ namespace LodCore.Models
             string info,
             ProjectStatus projectStatus,
             LodCoreLibrary.Common.Image landingImage,
-            HashSet<Issue> issues,
             HashSet<ProjectMembership> projectMemberships,
             HashSet<LodCoreLibrary.Common.Image> screenshots,
             HashSet<LodCoreLibrary.Common.ProjectLink> links,
@@ -30,7 +29,6 @@ namespace LodCore.Models
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
-            Issues = issues;
             ProjectMemberships = projectMemberships;
             Screenshots = screenshots;
             Links = links;
@@ -52,9 +50,7 @@ namespace LodCore.Models
         public Uri VersionControlSystemUri { get; private set; }
 
         public Uri ProjectManagementSystemUri { get; private set; }
-
-        public HashSet<Issue> Issues { get; private set; }
-
+        
         public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
 
         public HashSet<LodCoreLibrary.Common.Image> Screenshots { get; private set; }

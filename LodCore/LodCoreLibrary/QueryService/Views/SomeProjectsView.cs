@@ -25,14 +25,13 @@ namespace LodCoreLibrary.QueryService.Views
             AllProjectsCount = allProjectsCount;
         }
 
-        public IEnumerable<MinProjectView> Projects { get; }
+        public IEnumerable<MinProjectView> Projects { get; private set; }
         public int AllProjectsCount { get; }
 
-        public SomeProjectsView FilterResult()
+        public void FilterResult()
         {
-            var resultProjects = Projects.Where(p => p.ProjectStatus == ProjectStatus.Done
+            Projects = Projects.Where(p => p.ProjectStatus == ProjectStatus.Done
                 || p.ProjectStatus == ProjectStatus.InProgress);
-            return new SomeProjectsView(resultProjects, AllProjectsCount);
         }
     }
 }
