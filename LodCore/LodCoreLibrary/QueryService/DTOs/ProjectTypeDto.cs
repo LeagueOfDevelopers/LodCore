@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LodCoreLibrary.Domain.ProjectManagment;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,13 @@ namespace LodCoreLibrary.QueryService.DTOs
         {
         }
 
+        public ProjectTypeDto(ProjectType projectType, int projectId)
+        {
+            Type = projectType;
+            ProjectId = projectId;
+        }
+
         public int ProjectId { get; set; }
-        public int Type { get; set; }
+        public ProjectType Type { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace LodCoreLibrary.QueryService.Views
             ProjectStatus = projectDto.ProjectStatus;
             LandingImage = new ImageView(projectDto.BigPhotoUri, projectDto.SmallPhotoUri);
 
-            ProjectTypes = new List<int>();
+            ProjectTypes = new List<ProjectType>();
             projectDto.Types.ToList().ForEach(t => ProjectTypes.Add(t.Type));
 
             ProjectMemberships = new List<ProjectMembershipView>();
@@ -34,12 +34,17 @@ namespace LodCoreLibrary.QueryService.Views
 
         public int ProjectId { get; }
         public string Name { get; }
-        public List<int> ProjectTypes { get; }
+        public List<ProjectType> ProjectTypes { get; }
         public string Info { get; }
         public ProjectStatus ProjectStatus { get; }
         public ImageView LandingImage { get; }
         public List<ProjectMembershipView> ProjectMemberships { get; }
         public List<ImageView> Screenshots { get; }
         public List<ProjectLinkView> Links { get; set; }
+
+        public bool IsInProgressOrDone()
+        {
+            return ProjectStatus == ProjectStatus.Done || ProjectStatus == ProjectStatus.InProgress;
+        }
     }
 }

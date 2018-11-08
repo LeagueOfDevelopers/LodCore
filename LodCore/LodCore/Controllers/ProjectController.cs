@@ -61,25 +61,22 @@ namespace LodCore.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         [Route("projects/random/{count}")]
-        public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
+        public IActionResult GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
             
-            List<Project> requiredProjects;
-            if (Request.IsInRole(Claims.Roles.User))
+            var result = _projectQueryHandler.Handle(new AllProjectsQuery());
+            if (!User.Identity.IsAuthenticated)
             {
-                requiredProjects = _projectProvider.GetProjects();
-            }
-            else
-            {
-                requiredProjects = _projectProvider.GetProjects(
-                    project => ProjectsPolicies.OnlyDoneOrInProgress(project));
+                result.FilterResult();
             }
 
-            var randomProjects = requiredProjects.GetRandom(count);
+            result.SelectRandomProjects(count);
 
-            return randomProjects.Select(_projectsMapper.ToIndexPageProject);
+            return Ok(result);
         }
 
         [HttpGet]
@@ -254,14 +251,10 @@ namespace LodCore.Controllers
             {
                 var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
                 
-                if (!User.Identity.IsAuthenticated)
-                {
-                    if (project.ProjectStatus == ProjectStatus.Done || project.ProjectStatus == ProjectStatus.InProgress)
-                        return Ok(project);
-                    else
-                        return Unauthorized();
-                }
-                return Ok(project);
+                if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
+                    return Unauthorized();
+                else
+                    return Ok(project);
             }
             catch (ProjectNotFoundException ex)
             {

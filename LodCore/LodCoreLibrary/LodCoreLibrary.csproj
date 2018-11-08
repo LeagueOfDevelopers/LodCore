@@ -136,7 +136,8 @@
     <Compile Include="QueryService\Handlers\DeveloperQueryHandler.cs" />
     <Compile Include="QueryService\Handlers\ProjectQueryHandler.cs" />
     <Compile Include="QueryService\IQueryHandler.cs" />
-    <Compile Include="QueryService\Queries\AllDevelopersQuery.cs" />
+    <Compile Include="QueryService\Queries\GetSomeDevelopersQuery.cs" />
+    <Compile Include="QueryService\Queries\AllProjectsQuery.cs" />
     <Compile Include="QueryService\Queries\GetSomeProjectsQuery.cs" />
     <Compile Include="Infrastructure\EventBus\IEventPublisher.cs" />
     <Compile Include="Common\Image.cs" />
@@ -294,7 +295,9 @@
     <Compile Include="QueryService\Queries\GetDeveloperQuery.cs" />
     <Compile Include="QueryService\Queries\GetProjectQuery.cs" />
     <Compile Include="QueryService\Queries\IQuery.cs" />
-    <Compile Include="QueryService\Views\AllDevelopersView.cs" />
+    <Compile Include="QueryService\Views\GuestFullDeveloperView.cs" />
+    <Compile Include="QueryService\Views\SomeDevelopersView.cs" />
+    <Compile Include="QueryService\Views\AllProjectsView.cs" />
     <Compile Include="QueryService\Views\MinProjectView.cs" />
     <Compile Include="QueryService\Views\SomeProjectsView.cs" />
     <Compile Include="QueryService\Views\DeveloperProjectView.cs" />

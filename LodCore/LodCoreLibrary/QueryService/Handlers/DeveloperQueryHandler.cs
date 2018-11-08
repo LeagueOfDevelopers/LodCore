@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Handlers
 {
-    public class DeveloperQueryHandler : IQueryHandler<AllDevelopersQuery, AllDevelopersView>,
+    public class DeveloperQueryHandler : IQueryHandler<GetSomeDevelopersQuery, SomeDevelopersView>,
         IQueryHandler<GetDeveloperQuery, FullDeveloperView>
     {
         public DeveloperQueryHandler(string connectionString)
@@ -19,7 +19,7 @@ namespace LodCoreLibrary.QueryService.Handlers
             _connectionString = connectionString;
         }
 
-        public AllDevelopersView Handle(AllDevelopersQuery query)
+        public SomeDevelopersView Handle(GetSomeDevelopersQuery query)
         {
             List<AccountDto> result;
 
@@ -47,7 +47,7 @@ namespace LodCoreLibrary.QueryService.Handlers
                     }, splitOn: "membershipId").Distinct().ToList();
             }
 
-            return new AllDevelopersView(result);
+            return query.FormResult(result);
         }
 
         public FullDeveloperView Handle(GetDeveloperQuery query)

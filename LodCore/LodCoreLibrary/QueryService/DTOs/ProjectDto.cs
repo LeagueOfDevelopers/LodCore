@@ -21,6 +21,12 @@ namespace LodCoreLibrary.QueryService.DTOs
             ProjectStatus = project.ProjectStatus;
             BigPhotoUri = project.LandingImage.BigPhotoUri.ToString();
             SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString();
+
+            Screenshots = new HashSet<ImageDto>();
+            project.Screenshots.ToList().ForEach(s => Screenshots.Add(new ImageDto(s, ProjectId)));
+
+            Types = new HashSet<ProjectTypeDto>();
+            project.ProjectTypes.ToList().ForEach(t => Types.Add(new ProjectTypeDto(t, ProjectId)));
         }
 
         public int ProjectId { get; set; }

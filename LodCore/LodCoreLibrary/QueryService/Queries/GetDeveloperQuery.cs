@@ -9,7 +9,7 @@ namespace LodCoreLibrary.QueryService.Queries
 {
     public class GetDeveloperQuery : IQuery<FullDeveloperView>
     {
-        public GetDeveloperQuery(int developerId, string sql)
+        public GetDeveloperQuery(int developerId)
         {
             DeveloperId = developerId;
             Sql = "SELECT * FROM accounts AS Account " +

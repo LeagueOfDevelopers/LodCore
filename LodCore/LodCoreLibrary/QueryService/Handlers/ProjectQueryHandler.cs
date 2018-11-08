@@ -12,7 +12,8 @@ using System.Threading.Tasks;
 namespace LodCoreLibrary.QueryService.Handlers
 {
     public class ProjectQueryHandler : IQueryHandler<GetSomeProjectsQuery, SomeProjectsView>, 
-        IQueryHandler<GetProjectQuery, FullProjectView>
+        IQueryHandler<GetProjectQuery, FullProjectView>,
+        IQueryHandler<AllProjectsQuery, AllProjectsView>
     {
         private string _connectionString;
 
@@ -88,6 +89,20 @@ namespace LodCoreLibrary.QueryService.Handlers
             }
             
             return new FullProjectView(result);
+        }
+
+        public AllProjectsView Handle(AllProjectsQuery query)
+        {
+            List<ProjectDto> result;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var resultDictionary = new Dictionary<int, ProjectDto>();
+
+                result = connection.Query<ProjectDto>(query.Sql).ToList();
+            }
+
+            return query.FormResult(result);
         }
 
         // Future mapping-method

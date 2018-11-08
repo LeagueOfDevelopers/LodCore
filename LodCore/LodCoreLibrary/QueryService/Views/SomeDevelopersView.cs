@@ -7,15 +7,18 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Views
 {
-    public class AllDevelopersView
+    public class SomeDevelopersView
     {
-        public AllDevelopersView(IEnumerable<AccountDto> developers)
+        public SomeDevelopersView(IEnumerable<AccountDto> developers, int allDevelopersCount)
         {
             var result = new List<MinDeveloperView>();
             developers.ToList().ForEach(d => result.Add(new MinDeveloperView(d)));
             Developers = result;
+
+            AllDevelopersCount = allDevelopersCount;
         }
 
         public IEnumerable<MinDeveloperView> Developers { get; }
+        public int AllDevelopersCount { get; }
     }
 }

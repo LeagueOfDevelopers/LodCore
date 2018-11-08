@@ -78,6 +78,20 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
                     "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
                     "SELECT CAST(SCOPE_IDENTITY() as int)";
                 projectId = connection.Query<int>(sqlQuery, projectDto, sqlTransaction).FirstOrDefault();
+                
+                foreach (var image in projectDto.Screenshots)
+                {
+                    var sql = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
+                        "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
+                    connection.Execute(sql, image, sqlTransaction);
+                }
+
+                foreach (var type in projectDto.Types)
+                {
+                    var sql = "INSERT INTO projectTypes (projectId, type) " +
+                        "VALUES(@ProjectId, @Type);";
+                    connection.Execute(sql, type, sqlTransaction);
+                }
 
                 sqlTransaction.Commit();
                 connection.Close();

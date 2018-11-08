@@ -118,9 +118,11 @@ namespace LodCoreApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         [Route("developers/{id}")]
         public IHttpActionResult GetDeveloper(int id)
-        {
+        { 
             Require.Positive(id, nameof(id));
             try
             {
@@ -379,7 +381,7 @@ namespace LodCoreApi.Controllers
 
             return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !account.IsHidden;
         }
-
+        
         private Expression<Func<Account, bool>> GetAccountFilterExpression()
         {
             if (User.IsInRole(AccountRole.Administrator))

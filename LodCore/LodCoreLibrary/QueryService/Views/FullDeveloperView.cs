@@ -52,5 +52,10 @@ namespace LodCoreLibrary.QueryService.Views
         public string InstituteName { get; }
         public string Specialization { get; }
         public List<DeveloperProjectView> Projects { get; }
+
+        public GuestFullDeveloperView GetGuestView()
+        {
+            return new GuestFullDeveloperView(this);
+        }
     }
 }
