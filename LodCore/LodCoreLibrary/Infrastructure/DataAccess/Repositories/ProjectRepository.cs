@@ -82,14 +82,14 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
                 foreach (var image in projectDto.Screenshots)
                 {
                     var sql = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
-                        "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
+                        $"VALUES({projectId}, @BigPhotoUri, @SmallPhotoUri);";
                     connection.Execute(sql, image, sqlTransaction);
                 }
 
                 foreach (var type in projectDto.Types)
                 {
                     var sql = "INSERT INTO projectTypes (projectId, type) " +
-                        "VALUES(@ProjectId, @Type);";
+                        $"VALUES({projectId}, @Type);";
                     connection.Execute(sql, type, sqlTransaction);
                 }
 
