@@ -303,6 +303,7 @@
     <Compile Include="QueryService\Queries\ProjectQuery\SaveProjectQuery.cs" />
     <Compile Include="QueryService\Views\DeveloperView\AllDevelopersView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\GuestFullDeveloperView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\MinAccountView.cs" />
     <Compile Include="QueryService\Views\ProjectView\ProjectSavedView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\SomeDevelopersView.cs" />
     <Compile Include="QueryService\Views\ProjectView\AllProjectsView.cs" />

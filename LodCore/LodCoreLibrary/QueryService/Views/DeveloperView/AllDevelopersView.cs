@@ -13,20 +13,20 @@ namespace LodCoreLibrary.QueryService.Views.DeveloperView
     {
         public AllDevelopersView(IEnumerable<AccountDto> developers)
         {
-            Developers = developers.Select(d => new MinDeveloperView(d));
+            Developers = developers.Select(d => new MinAccountView(d));
             _rawResult = developers;
         }
 
-        public IEnumerable<MinDeveloperView> Developers { get; private set; }
+        public IEnumerable<MinAccountView> Developers { get; private set; }
 
         public void SelectRandomDevelopers(int count, AccountRole callingUser)
         {
             if (callingUser == AccountRole.Administrator)
                 Developers = _rawResult.Where(d => d.ConfirmationStatus != ConfirmationStatus.Unconfirmed)
-                    .Select(d => new MinDeveloperView(d)).GetRandom(count);
+                    .Select(d => new MinAccountView(d)).GetRandom(count);
             else
                 Developers = _rawResult.Where(d => d.ConfirmationStatus == ConfirmationStatus.FullyConfirmed &&
-                !d.IsHidden).Select(d => new MinDeveloperView(d)).GetRandom(count);
+                !d.IsHidden).Select(d => new MinAccountView(d)).GetRandom(count);
         }
 
         private IEnumerable<AccountDto> _rawResult;
