@@ -84,6 +84,7 @@ namespace LodCore
             EventMapper eventMapper = new EventMapper(notificationService);
             IContactsService contactsService = new ContactsService(eventPublisher);
             ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            DeveloperQueryHandler developerQueryHandler = new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
 
             IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>(databaseSessionProvider);
             IPaginationWrapper<Delivery> paginationDeliveryWrapper = new PaginationWrapper<Delivery>(paginableDeliveryRepository);
@@ -99,6 +100,7 @@ namespace LodCore
             services.AddSingleton(notificationService);
             services.AddSingleton(paginationDeliveryWrapper);
             services.AddSingleton(projectQueryHandler);
+            services.AddSingleton(developerQueryHandler);
 
             services.AddMvc();
             services.AddSwaggerGen(c =>

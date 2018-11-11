@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LodCoreLibrary.QueryService.Queries
+namespace LodCoreLibrary.QueryService.Queries.DeveloperQuery
 {
     public class GetSomeDevelopersQuery : IQuery<SomeDevelopersView>
     {

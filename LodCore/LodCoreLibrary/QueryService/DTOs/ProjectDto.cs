@@ -36,7 +36,7 @@ namespace LodCoreLibrary.QueryService.DTOs
         public string BigPhotoUri { get; set; }
         public string SmallPhotoUri { get; set; }
         public string LinkName { get; set; }
-        public Uri UriLink { get; set; }
+        public string UriLink { get; set; }
         public ISet<ImageDto> Screenshots { get; set; }
         public ISet<ProjectMembershipDto> Developers { get; set; }
         public ISet<ProjectTypeDto> Types { get; set; }

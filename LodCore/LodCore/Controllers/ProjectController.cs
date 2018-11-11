@@ -26,6 +26,7 @@ using LodCoreLibrary.QueryService.Queries;
 using LodCoreLibrary.QueryService.DTOs;
 using LodCoreLibrary.QueryService.Handlers;
 using LodCoreLibrary.QueryService.Views;
+using LodCoreLibrary.QueryService.Queries.ProjectQuery;
 
 namespace LodCore.Controllers
 {

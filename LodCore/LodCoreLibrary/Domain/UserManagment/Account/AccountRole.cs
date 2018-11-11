@@ -3,6 +3,7 @@
     public enum AccountRole
     {
         User,
-        Administrator
+        Administrator,
+        Unknown
     }
 }

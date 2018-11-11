@@ -38,6 +38,9 @@
     <Reference Include="Dapper, Version=1.50.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.50.5\lib\net451\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper.Contrib, Version=1.50.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.Contrib.1.50.5\lib\net451\Dapper.Contrib.dll</HintPath>
+    </Reference>
     <Reference Include="EasyNetQ, Version=1.1.4.506, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\EasyNetQ.1.1.4.506\lib\net45\EasyNetQ.dll</HintPath>
     </Reference>
@@ -84,6 +87,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http" />
@@ -135,10 +139,11 @@
     <Compile Include="QueryService\DTOs\ProjectTypeDto.cs" />
     <Compile Include="QueryService\Handlers\DeveloperQueryHandler.cs" />
     <Compile Include="QueryService\Handlers\ProjectQueryHandler.cs" />
-    <Compile Include="QueryService\IQueryHandler.cs" />
-    <Compile Include="QueryService\Queries\GetSomeDevelopersQuery.cs" />
-    <Compile Include="QueryService\Queries\AllProjectsQuery.cs" />
-    <Compile Include="QueryService\Queries\GetSomeProjectsQuery.cs" />
+    <Compile Include="QueryService\Handlers\IQueryHandler.cs" />
+    <Compile Include="QueryService\Queries\DeveloperQuery\AllDevelopersQuery.cs" />
+    <Compile Include="QueryService\Queries\DeveloperQuery\GetSomeDevelopersQuery.cs" />
+    <Compile Include="QueryService\Queries\ProjectQuery\AllProjectsQuery.cs" />
+    <Compile Include="QueryService\Queries\ProjectQuery\GetSomeProjectsQuery.cs" />
     <Compile Include="Infrastructure\EventBus\IEventPublisher.cs" />
     <Compile Include="Common\Image.cs" />
     <Compile Include="Common\INumberOfNotificationsProvider.cs" />
@@ -292,21 +297,24 @@
     <Compile Include="Infrastructure\Mailing\RenderEmailTemplateHelper.cs" />
     <Compile Include="Infrastructure\WebSocketConnection\WebSocketStreamProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueryService\Queries\GetDeveloperQuery.cs" />
-    <Compile Include="QueryService\Queries\GetProjectQuery.cs" />
+    <Compile Include="QueryService\Queries\DeveloperQuery\GetDeveloperQuery.cs" />
+    <Compile Include="QueryService\Queries\ProjectQuery\GetProjectQuery.cs" />
     <Compile Include="QueryService\Queries\IQuery.cs" />
-    <Compile Include="QueryService\Views\GuestFullDeveloperView.cs" />
-    <Compile Include="QueryService\Views\SomeDevelopersView.cs" />
-    <Compile Include="QueryService\Views\AllProjectsView.cs" />
-    <Compile Include="QueryService\Views\MinProjectView.cs" />
-    <Compile Include="QueryService\Views\SomeProjectsView.cs" />
+    <Compile Include="QueryService\Queries\ProjectQuery\SaveProjectQuery.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\AllDevelopersView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\GuestFullDeveloperView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\ProjectSavedView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\SomeDevelopersView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\AllProjectsView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\MinProjectView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\SomeProjectsView.cs" />
     <Compile Include="QueryService\Views\DeveloperProjectView.cs" />
-    <Compile Include="QueryService\Views\FullDeveloperView.cs" />
-    <Compile Include="QueryService\Views\FullProjectView.cs" />
-    <Compile Include="QueryService\Views\ImageView.cs" />
-    <Compile Include="QueryService\Views\ProjectLinkView.cs" />
-    <Compile Include="QueryService\Views\ProjectMembershipView.cs" />
-    <Compile Include="QueryService\Views\MinDeveloperView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\FullDeveloperView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\FullProjectView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\ImageView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\ProjectLinkView.cs" />
+    <Compile Include="QueryService\Views\ProjectView\ProjectMembershipView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\MinDeveloperView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

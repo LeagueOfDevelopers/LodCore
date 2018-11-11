@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LodCoreLibrary.QueryService.Queries
+namespace LodCoreLibrary.QueryService.Queries.DeveloperQuery
 {
     public class GetDeveloperQuery : IQuery<FullDeveloperView>
     {
@@ -13,8 +13,8 @@ namespace LodCoreLibrary.QueryService.Queries
         {
             DeveloperId = developerId;
             Sql = "SELECT * FROM accounts AS Account " +
-                "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId" +
-                "LEFT JOIN projects AS Project ON projMembership.projectId = project.projectId" +
+                "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId " +
+                "LEFT JOIN projects AS Project ON projMembership.projectId = project.projectId " +
                 $"WHERE Account.userId = {DeveloperId};";
         }
 

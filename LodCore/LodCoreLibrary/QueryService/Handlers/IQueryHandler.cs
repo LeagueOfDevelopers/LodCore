@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LodCoreLibrary.QueryService
+namespace LodCoreLibrary.QueryService.Handlers
 {
     public interface IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {

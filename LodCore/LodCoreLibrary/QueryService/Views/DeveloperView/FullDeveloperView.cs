@@ -53,6 +53,14 @@ namespace LodCoreLibrary.QueryService.Views
         public string Specialization { get; }
         public List<DeveloperProjectView> Projects { get; }
 
+        public bool IsVisible(AccountRole callingUser)
+        {
+            if (callingUser == AccountRole.Administrator)
+                return ConfirmationStatus != ConfirmationStatus.Unconfirmed;
+            else
+                return ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !IsHidden;
+        }
+
         public GuestFullDeveloperView GetGuestView()
         {
             return new GuestFullDeveloperView(this);

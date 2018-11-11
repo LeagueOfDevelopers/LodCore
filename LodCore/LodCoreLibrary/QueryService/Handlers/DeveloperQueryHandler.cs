@@ -1,7 +1,9 @@
 ﻿using Dapper;
 using LodCoreLibrary.QueryService.DTOs;
 using LodCoreLibrary.QueryService.Queries;
+using LodCoreLibrary.QueryService.Queries.DeveloperQuery;
 using LodCoreLibrary.QueryService.Views;
+using LodCoreLibrary.QueryService.Views.DeveloperView;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,7 +14,8 @@ using System.Threading.Tasks;
 namespace LodCoreLibrary.QueryService.Handlers
 {
     public class DeveloperQueryHandler : IQueryHandler<GetSomeDevelopersQuery, SomeDevelopersView>,
-        IQueryHandler<GetDeveloperQuery, FullDeveloperView>
+        IQueryHandler<GetDeveloperQuery, FullDeveloperView>,
+        IQueryHandler<AllDevelopersQuery, AllDevelopersView>
     {
         public DeveloperQueryHandler(string connectionString)
         {
@@ -79,6 +82,20 @@ namespace LodCoreLibrary.QueryService.Handlers
             }
 
             return new FullDeveloperView(result);
+        }
+
+        public AllDevelopersView Handle(AllDevelopersQuery query)
+        {
+            List<AccountDto> result;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var resultDictionary = new Dictionary<int, AccountDto>();
+
+                result = connection.Query<AccountDto>(query.Sql).ToList();
+            }
+
+            return query.FormResult(result);
         }
 
         private string _connectionString;

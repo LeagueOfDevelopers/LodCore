@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using LodCoreLibrary.QueryService.DTOs;
 using LodCoreLibrary.QueryService.Queries;
+using LodCoreLibrary.QueryService.Queries.ProjectQuery;
 using LodCoreLibrary.QueryService.Views;
 using System;
 using System.Collections.Generic;
