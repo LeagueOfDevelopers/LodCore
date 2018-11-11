@@ -140,7 +140,7 @@
     <Compile Include="QueryService\Handlers\DeveloperQueryHandler.cs" />
     <Compile Include="QueryService\Handlers\ProjectQueryHandler.cs" />
     <Compile Include="QueryService\Handlers\IQueryHandler.cs" />
-    <Compile Include="QueryService\Queries\DeveloperQuery\AllDevelopersQuery.cs" />
+    <Compile Include="QueryService\Queries\DeveloperQuery\AllAccountsQuery.cs" />
     <Compile Include="QueryService\Queries\DeveloperQuery\GetSomeDevelopersQuery.cs" />
     <Compile Include="QueryService\Queries\ProjectQuery\AllProjectsQuery.cs" />
     <Compile Include="QueryService\Queries\ProjectQuery\GetSomeProjectsQuery.cs" />
@@ -301,7 +301,7 @@
     <Compile Include="QueryService\Queries\ProjectQuery\GetProjectQuery.cs" />
     <Compile Include="QueryService\Queries\IQuery.cs" />
     <Compile Include="QueryService\Queries\ProjectQuery\SaveProjectQuery.cs" />
-    <Compile Include="QueryService\Views\DeveloperView\AllDevelopersView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\AllAccountsView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\GuestFullDeveloperView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\MinAccountView.cs" />
     <Compile Include="QueryService\Views\ProjectView\ProjectSavedView.cs" />

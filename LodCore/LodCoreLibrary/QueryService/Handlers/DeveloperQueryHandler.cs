@@ -15,7 +15,7 @@ namespace LodCoreLibrary.QueryService.Handlers
 {
     public class DeveloperQueryHandler : IQueryHandler<GetSomeDevelopersQuery, SomeDevelopersView>,
         IQueryHandler<GetDeveloperQuery, FullDeveloperView>,
-        IQueryHandler<AllDevelopersQuery, AllDevelopersView>
+        IQueryHandler<AllAccountsQuery, AllAccountsView>
     {
         public DeveloperQueryHandler(string connectionString)
         {
@@ -84,7 +84,7 @@ namespace LodCoreLibrary.QueryService.Handlers
             return new FullDeveloperView(result);
         }
 
-        public AllDevelopersView Handle(AllDevelopersQuery query)
+        public AllAccountsView Handle(AllAccountsQuery query)
         {
             List<AccountDto> result;
 

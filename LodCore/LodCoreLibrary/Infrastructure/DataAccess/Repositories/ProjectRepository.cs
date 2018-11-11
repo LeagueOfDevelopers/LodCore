@@ -11,6 +11,8 @@ using System.Data.SqlClient;
 using Dapper;
 using LodCoreLibrary.QueryService.DTOs;
 using Dapper.Contrib.Extensions;
+using LodCoreLibrary.QueryService.Handlers;
+using LodCoreLibrary.QueryService.Queries.ProjectQuery;
 
 namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 {
@@ -18,10 +20,12 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
     {
         private readonly string _connectionString;
         private readonly IDatabaseSessionProvider _databaseSessionProvider;
+        private readonly ProjectQueryHandler _projectQueryHandler;
 
-        public ProjectRepository(string connectionString)
+        public ProjectRepository(string connectionString, ProjectQueryHandler projectQueryHandler)
         {
             _connectionString = connectionString;
+            _projectQueryHandler = projectQueryHandler;
         }
         
         public int[] GetAllProjectRelativeIds(int projectId)
@@ -67,48 +71,12 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 
         public int SaveProject(Project project)
         {
-            int projectId = 1;
-
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                SqlTransaction sqlTransaction = connection.BeginTransaction();
-
-                var result = connection.Insert(
-                    new { Name = project.Name, Info = project.Info,
-                        ProjectStatus = project.ProjectStatus,
-                        BigPhotoUri = project.LandingImage.BigPhotoUri.ToString(),
-                        SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString() }, sqlTransaction);
-                /*
-                var sqlQuery = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
-                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
-                    "SELECT CAST(SCOPE_IDENTITY() as int)";
-                projectId = connection.Query<int>(sqlQuery, projectDto, sqlTransaction).FirstOrDefault();
-                
-                foreach (var image in projectDto.Screenshots)
-                {
-                    var sql = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
-                        $"VALUES({projectId}, @BigPhotoUri, @SmallPhotoUri);";
-                    connection.Execute(sql, image, sqlTransaction);
-                }
-
-                foreach (var type in projectDto.Types)
-                {
-                    var sql = "INSERT INTO projectTypes (projectId, type) " +
-                        $"VALUES({projectId}, @Type);";
-                    connection.Execute(sql, type, sqlTransaction);
-                }*/
-
-                sqlTransaction.Commit();
-                connection.Close();
-            }
-
-            return projectId;
+            return _projectQueryHandler.Handle(new SaveProjectQuery(project)).Id;
         }
 
         public void UpdateProject(Project project)
         {
-            var projectDto = new ProjectDto(project);
+            var projectDto = new ProjectDto();
 
             using (var connection = new SqlConnection(_connectionString))
             {

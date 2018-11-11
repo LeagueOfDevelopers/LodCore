@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Views.DeveloperView
 {
-    public class AllDevelopersView
+    public class AllAccountsView
     {
-        public AllDevelopersView(IEnumerable<AccountDto> developers)
+        public AllAccountsView(IEnumerable<AccountDto> developers)
         {
             Developers = developers.Select(d => new MinAccountView(d));
             _rawResult = developers;

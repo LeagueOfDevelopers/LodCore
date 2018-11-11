@@ -1,13 +1,9 @@
 ﻿using LodCoreLibrary.Domain.ProjectManagment;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LodCoreLibrary.QueryService.Views;
 
 namespace LodCoreLibrary.QueryService.Queries.ProjectQuery
 {
-    public class SaveProjectQuery
+    public class SaveProjectQuery : IQuery<ProjectSavedView>
     {
         public SaveProjectQuery(Project savingProject)
         {
@@ -16,9 +12,16 @@ namespace LodCoreLibrary.QueryService.Queries.ProjectQuery
             SqlForGettingId = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
                     "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
                     "SELECT CAST(SCOPE_IDENTITY() as int)";
+
+            SqlForScreenshots = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
+                        $"VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
+                        
+            SqlForTypes = $"INSERT INTO projectTypes (projectId, type) VALUES(@ProjectId, @Type);";
         }
 
         public Project SavingProject { get; }
         public string SqlForGettingId { get; }
+        public string SqlForScreenshots { get; }
+        public string SqlForTypes { get; }
     }
 }

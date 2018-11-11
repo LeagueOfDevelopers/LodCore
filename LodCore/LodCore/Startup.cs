@@ -62,9 +62,13 @@ namespace LodCore
             IEventPublisher eventPublisher = eventPublisherProvider.GetEventPublisher();
             IWebSocketStreamProvider webSocketStreamProvider = new WebSocketStreamProvider();
 
+            ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            DeveloperQueryHandler developerQueryHandler = new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+
             IValidationRequestsRepository validationRequestsRepository = new ValidationRequestsRepository(databaseSessionProvider);
             IUserRepository userRepository = new UserRepository(databaseSessionProvider);
-            IProjectRepository projectRepository = new ProjectRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            IProjectRepository projectRepository = new ProjectRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
+                projectQueryHandler);
             IProjectMembershipRepostiory projectMembershipRepostiory = new ProjectMembershipRepository(databaseSessionProvider);
             IPasswordChangeRequestRepository passwordChangeRequestRepository = new PasswordChangeRequestRepository(databaseSessionProvider);
             IEventRepository eventRepository = new EventRepository(databaseSessionProvider, webSocketStreamProvider);
@@ -83,9 +87,7 @@ namespace LodCore
             ProjectsMapper projectsMapper = new ProjectsMapper(userManager);
             EventMapper eventMapper = new EventMapper(notificationService);
             IContactsService contactsService = new ContactsService(eventPublisher);
-            ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
-            DeveloperQueryHandler developerQueryHandler = new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
-
+            
             IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>(databaseSessionProvider);
             IPaginationWrapper<Delivery> paginationDeliveryWrapper = new PaginationWrapper<Delivery>(paginableDeliveryRepository);
             IPaginableRepository<Project> paginableProjectRepository = new PaginableRepository<Project>(databaseSessionProvider);

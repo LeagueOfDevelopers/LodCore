@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Queries.DeveloperQuery
 {
-    public class AllDevelopersQuery : IQuery<AllDevelopersView>
+    public class AllAccountsQuery : IQuery<AllAccountsView>
     {
-        public AllDevelopersQuery()
+        public AllAccountsQuery()
         {
             Sql = "SELECT * FROM accounts;";
         }
 
         public string Sql { get; }
 
-        public AllDevelopersView FormResult(List<AccountDto> rawResult)
+        public AllAccountsView FormResult(List<AccountDto> rawResult)
         {
-            return new AllDevelopersView(rawResult);
+            return new AllAccountsView(rawResult);
         }
     }
 }

@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Handlers
 {
-    public class ProjectQueryHandler : IQueryHandler<GetSomeProjectsQuery, SomeProjectsView>, 
+    public class ProjectQueryHandler : 
+        IQueryHandler<GetSomeProjectsQuery, SomeProjectsView>, 
         IQueryHandler<GetProjectQuery, FullProjectView>,
-        IQueryHandler<AllProjectsQuery, AllProjectsView>
+        IQueryHandler<AllProjectsQuery, AllProjectsView>,
+        IQueryHandler<SaveProjectQuery, ProjectSavedView>
     {
         private string _connectionString;
 
@@ -104,6 +106,37 @@ namespace LodCoreLibrary.QueryService.Handlers
             }
 
             return query.FormResult(result);
+        }
+
+        public ProjectSavedView Handle(SaveProjectQuery query)
+        {
+            ProjectSavedView result;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    var projectId = connection.Query<int>(query.SqlForGettingId,
+                        new { query.SavingProject.Name, query.SavingProject.Info, query.SavingProject.ProjectStatus,
+                        BigPhotoUri = query.SavingProject.LandingImage.BigPhotoUri.ToString(),
+                        SmallPhotoUri = query.SavingProject.LandingImage.SmallPhotoUri.ToString()}, 
+                        transaction).FirstOrDefault();
+
+                    query.SavingProject.Screenshots.ToList().ForEach(s => connection.Execute(query.SqlForScreenshots,
+                        new { ProjectId = projectId, BigPhotoUri = s.BigPhotoUri.ToString(),
+                            SmallPhotoUri = s.SmallPhotoUri.ToString()}, transaction));
+
+                    query.SavingProject.ProjectTypes.ToList().ForEach(t => connection.Execute(query.SqlForTypes, 
+                        new { ProjectId = projectId, Type = t}, transaction));
+
+                    transaction.Commit();
+                    result = new ProjectSavedView(projectId);
+                }
+                connection.Close();
+            }
+
+            return result;
         }
 
         // Future mapping-method

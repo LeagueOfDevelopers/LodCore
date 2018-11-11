@@ -12,23 +12,7 @@ namespace LodCoreLibrary.QueryService.DTOs
         public ProjectDto()
         {
         }
-
-        public ProjectDto(Project project)
-        {
-            ProjectId = project.ProjectId;
-            Name = project.Name;
-            Info = project.Info;
-            ProjectStatus = project.ProjectStatus;
-            BigPhotoUri = project.LandingImage.BigPhotoUri.ToString();
-            SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString();
-
-            Screenshots = new HashSet<ImageDto>();
-            project.Screenshots.ToList().ForEach(s => Screenshots.Add(new ImageDto(s, ProjectId)));
-
-            Types = new HashSet<ProjectTypeDto>();
-            project.ProjectTypes.ToList().ForEach(t => Types.Add(new ProjectTypeDto(t, ProjectId)));
-        }
-
+                
         public int ProjectId { get; set; }
         public string Name { get; set; }
         public string Info { get; set; }

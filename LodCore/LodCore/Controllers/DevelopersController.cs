@@ -36,7 +36,7 @@ namespace LodCore.Controllers
         {
             Require.ZeroOrGreater(count, nameof(count));
 
-            var result = _developerQueryHandler.Handle(new AllDevelopersQuery());
+            var result = _developerQueryHandler.Handle(new AllAccountsQuery());
             result.SelectRandomDevelopers(count, GetUserRole());
 
             return Ok(result);
