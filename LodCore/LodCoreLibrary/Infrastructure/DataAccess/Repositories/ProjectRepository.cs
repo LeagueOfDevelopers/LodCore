@@ -71,7 +71,49 @@ namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 
         public int SaveProject(Project project)
         {
-            return _projectQueryHandler.Handle(new SaveProjectQuery(project)).Id;
+            int projectId;
+
+            var sqlForGettingId = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
+                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
+                    "SELECT CAST(SCOPE_IDENTITY() as int)";
+            var sqlForScreenshots = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
+                        "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
+            var sqlForTypes = "INSERT INTO projectTypes (projectId, type) VALUES(@ProjectId, @Type);";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                using (var transaction = connection.BeginTransaction())
+                {
+                    projectId = connection.Query<int>(sqlForGettingId,
+                                new
+                                {
+                                    project.Name,
+                                    project.Info,
+                                    project.ProjectStatus,
+                                    BigPhotoUri = project.LandingImage.BigPhotoUri.ToString(),
+                                    SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString()
+                                },
+                                transaction).FirstOrDefault();
+
+                    project.Screenshots.ToList().ForEach(s => connection.Execute(sqlForScreenshots,
+                        new
+                        {
+                            ProjectId = projectId,
+                            BigPhotoUri = s.BigPhotoUri.ToString(),
+                            SmallPhotoUri = s.SmallPhotoUri.ToString()
+                        }, transaction));
+
+                    project.ProjectTypes.ToList().ForEach(t => connection.Execute(sqlForTypes,
+                        new { ProjectId = projectId, Type = t }, transaction));
+
+                    transaction.Commit();
+                }
+                connection.Close();
+            }
+
+            return projectId;
         }
 
         public void UpdateProject(Project project)

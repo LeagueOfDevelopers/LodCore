@@ -2,6 +2,7 @@
 using LodCoreLibrary.Domain.ProjectManagment;
 using LodCoreLibrary.QueryService.DTOs;
 using LodCoreLibrary.QueryService.Views;
+using LodCoreLibrary.QueryService.Views.ProjectView;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

@@ -1,4 +1,5 @@
 ﻿using LodCoreLibrary.QueryService.Views;
+using LodCoreLibrary.QueryService.Views.DeveloperView;
 using System;
 using System.Collections.Generic;
 using System.Linq;

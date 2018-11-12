@@ -300,16 +300,14 @@
     <Compile Include="QueryService\Queries\DeveloperQuery\GetDeveloperQuery.cs" />
     <Compile Include="QueryService\Queries\ProjectQuery\GetProjectQuery.cs" />
     <Compile Include="QueryService\Queries\IQuery.cs" />
-    <Compile Include="QueryService\Queries\ProjectQuery\SaveProjectQuery.cs" />
     <Compile Include="QueryService\Views\DeveloperView\AllAccountsView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\GuestFullDeveloperView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\MinAccountView.cs" />
-    <Compile Include="QueryService\Views\ProjectView\ProjectSavedView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\SomeDevelopersView.cs" />
     <Compile Include="QueryService\Views\ProjectView\AllProjectsView.cs" />
     <Compile Include="QueryService\Views\ProjectView\MinProjectView.cs" />
     <Compile Include="QueryService\Views\ProjectView\SomeProjectsView.cs" />
-    <Compile Include="QueryService\Views\DeveloperProjectView.cs" />
+    <Compile Include="QueryService\Views\DeveloperView\DeveloperProjectView.cs" />
     <Compile Include="QueryService\Views\DeveloperView\FullDeveloperView.cs" />
     <Compile Include="QueryService\Views\ProjectView\FullProjectView.cs" />
     <Compile Include="QueryService\Views\ProjectView\ImageView.cs" />

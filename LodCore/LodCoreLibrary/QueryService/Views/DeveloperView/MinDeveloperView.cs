@@ -1,11 +1,12 @@
 ﻿using LodCoreLibrary.QueryService.DTOs;
+using LodCoreLibrary.QueryService.Views.ProjectView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LodCoreLibrary.QueryService.Views
+namespace LodCoreLibrary.QueryService.Views.DeveloperView
 {
     public class MinDeveloperView
     {

@@ -1,4 +1,5 @@
 ﻿using LodCoreLibrary.QueryService.DTOs;
+using LodCoreLibrary.QueryService.Views.ProjectView;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace LodCoreLibrary.QueryService.Handlers
 {
-    public class DeveloperQueryHandler : IQueryHandler<GetSomeDevelopersQuery, SomeDevelopersView>,
+    public class DeveloperQueryHandler : 
+        IQueryHandler<GetSomeDevelopersQuery, SomeDevelopersView>,
         IQueryHandler<GetDeveloperQuery, FullDeveloperView>,
         IQueryHandler<AllAccountsQuery, AllAccountsView>
     {
