@@ -10,9 +10,7 @@ using LodCoreLibrary.Domain.ProjectManagment;
 using System.Data.SqlClient;
 using Dapper;
 using LodCoreLibrary.QueryService.DTOs;
-using Dapper.Contrib.Extensions;
 using LodCoreLibrary.QueryService.Handlers;
-using LodCoreLibrary.QueryService.Queries.ProjectQuery;
 
 namespace LodCoreLibrary.Infrastructure.DataAccess.Repositories
 {

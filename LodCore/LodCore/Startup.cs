@@ -59,6 +59,7 @@ namespace LodCore
                 Configuration.GetSection("EventBusSettings").GetValue<string>("UserName"),
                 Configuration.GetSection("EventBusSettings").GetValue<string>("Password")), 
                 databaseSessionProvider);
+            
             IEventPublisher eventPublisher = eventPublisherProvider.GetEventPublisher();
             IWebSocketStreamProvider webSocketStreamProvider = new WebSocketStreamProvider();
 
