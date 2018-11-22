@@ -5,7 +5,7 @@ namespace LodCoreApi.Models
 {
     public class ProfileUpdateRequest
     {
-        public LodCoreLibrary.Common.Image Image { get; set; }
+        public LodCore.Common.Image Image { get; set; }
 
         [MaxLength(100)]
         [RegularExpression("^(http|https)?://vk.com/.+$")]

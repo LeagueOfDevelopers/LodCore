@@ -1,8 +1,8 @@
-﻿using LodCoreLibrary.Domain.NotificationService;
-using LodCoreLibrary.Domain.ProjectManagment;
-using LodCoreLibrary.Facades;
-using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
-using LodCoreLibrary.Infrastructure.EventBus;
+﻿using LodCore.Domain.NotificationService;
+using LodCore.Domain.ProjectManagment;
+using LodCore.Facades;
+using LodCore.Infrastructure.DataAccess.Repositories;
+using LodCore.Infrastructure.EventBus;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Ploeh.AutoFixture;

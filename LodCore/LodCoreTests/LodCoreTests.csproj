@@ -135,12 +135,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LodCoreApi\LodCoreApi.csproj">
-      <Project>{aa48634f-8781-4e58-b0d0-aaf107c73a9a}</Project>
+      <Project>{ca186f94-1044-4418-b327-997959097b1f}</Project>
       <Name>LodCoreApi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LodCoreLibrary\LodCoreLibrary.csproj">
-      <Project>{2E2FD871-0BD5-440A-87F0-19B42BC08679}</Project>
-      <Name>LodCoreLibrary</Name>
+    <ProjectReference Include="..\LodCore\LodCore.csproj">
+      <Project>{8b6541c5-9dfb-4fa7-b1f9-0a02f50e6ec5}</Project>
+      <Name>LodCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

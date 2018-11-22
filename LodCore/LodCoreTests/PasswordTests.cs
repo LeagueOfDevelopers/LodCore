@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using LodCoreLibrary.Common;
+using LodCore.Common;
 
 namespace CommonTests
 {

@@ -1,5 +1,5 @@
-﻿using LodCoreLibrary.Common;
-using LodCoreLibrary.Domain.ProjectManagment;
+﻿using LodCore.Common;
+using LodCore.Domain.ProjectManagment;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,20 +11,20 @@ namespace LodCoreApi.Models
         [MaxLength(50)]
         [Required]
         public string Name { get; set; }
-
+        
         [Required]
         public ProjectType[] ProjectTypes { get; set; }
-
+        
         [MaxLength(9000)]
         public string Info { get; set; }
         
         [Required]
         public ProjectStatus ProjectStatus { get; set; }
+        
+        public LodCore.Common.Image LandingImage { get; set; }
 
-        public LodCoreLibrary.Common.Image LandingImage { get; set; }
-
-        public LodCoreLibrary.Common.Image[] Screenshots { get; set; }
-
+        public LodCore.Common.Image[] Screenshots { get; set; }
+        
         [ProjectLinksValidation]
         public ProjectLink[] Links { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using Journalist;
-using LodCoreLibrary.Infrastructure.DataAccess.Pagination;
+using LodCore.Infrastructure.DataAccess.Pagination;
 
 namespace LodCoreApi.Models
 {

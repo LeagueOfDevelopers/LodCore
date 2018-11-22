@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
-using LodCoreLibrary.Domain.UserManagement;
+using LodCore.Domain.UserManagement;
 using LodCoreLibrary.Common;
 
 namespace IntegrationControllerTests.Helpers

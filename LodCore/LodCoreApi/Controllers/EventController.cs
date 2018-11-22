@@ -1,23 +1,24 @@
 ﻿using System.Linq;
-using System.Web.Http;
-using LodCoreApi.App_Data;
-using LodCoreApi.App_Data.Mappers;
-using LodCoreApi.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using LodCoreApi.Mappers;
 using LodCoreApi.Models;
 using Journalist;
-using LodCoreLibrary.Domain.NotificationService;
-using LodCoreLibrary.Domain.UserManagement;
+using LodCore.Domain.NotificationService;
+using LodCoreApi.Pagination;
+using LodCoreApi.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LodCoreApi.Controllers
 {
-    public class EventController : ApiController
+    [Produces("application/json")]
+    public class EventController : Controller
     {
         private readonly INotificationService _notificationService;
         private readonly EventMapper _eventMapper;
-        private readonly IPaginationWrapper<Delivery> _paginationWrapper; 
+        private readonly IPaginationWrapper<Delivery> _paginationWrapper;
 
-        public EventController(INotificationService notificationService, 
-                               EventMapper eventMapper, 
+        public EventController(INotificationService notificationService,
+                               EventMapper eventMapper,
                                IPaginationWrapper<Delivery> paginationWrapper)
         {
             _notificationService = notificationService;
@@ -27,22 +28,24 @@ namespace LodCoreApi.Controllers
 
         [HttpPut]
         [Route("event/read")]
-        [Authorization(AccountRole.User)]
-        public IHttpActionResult MarkEventsAsRead([FromBody] int[] eventIds)
+        //[Authorization(AccountRole.User)]
+        [Authorize]
+        public IActionResult MarkEventsAsRead([FromBody] int[] eventIds)
         {
-            var userId = User.Identity.GetId();
+            var userId = Request.GetUserId();
             _notificationService.MarkEventsAsRead(userId, eventIds);
             return Ok();
         }
 
         [HttpGet]
         [Route("event/{pageId}")]
-        [Authorization(AccountRole.User)]
+        //[Authorization(AccountRole.User)]
+        [Authorize]
         public PaginableObject GetEventsByPage(int pageId)
         {
             Require.ZeroOrGreater(pageId, nameof(pageId));
 
-            var userId = User.Identity.GetId();
+            var userId = Request.GetUserId();
 
             var events = _notificationService.GetEventsForUser(userId, pageId).ToList();
 

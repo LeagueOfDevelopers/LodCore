@@ -1,6 +1,6 @@
 ﻿using System;
 using Journalist;
-using LodCoreLibrary.Domain.ProjectManagment;
+using LodCore.Domain.ProjectManagment;
 
 namespace LodCoreApi.Models
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Journalist;
-using LodCoreLibrary.Domain.ProjectManagment;
+using LodCore.Domain.ProjectManagment;
 
 namespace LodCoreApi.Models
 {
@@ -13,9 +13,9 @@ namespace LodCoreApi.Models
             ProjectType[] projectType,
             string info,
             ProjectStatus projectStatus,
-            LodCoreLibrary.Common.Image landingImage,
+            LodCore.Common.Image landingImage,
             HashSet<ProjectMembership> projectDevelopers,
-            HashSet<LodCoreLibrary.Common.Image> screenshots,
+            HashSet<LodCore.Common.Image> screenshots,
             HashSet<Uri> linksToGithubRepositories)
         {
             Require.Positive(projectId, nameof(projectId));
@@ -24,12 +24,12 @@ namespace LodCoreApi.Models
 
             ProjectId = projectId;
             Name = name;
-            ProjectType = projectType ?? new[] {LodCoreLibrary.Domain.ProjectManagment.ProjectType.Other};
+            ProjectType = projectType ?? new[] { LodCore.Domain.ProjectManagment.ProjectType.Other};
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
             ProjectMemberships = projectDevelopers ?? new HashSet<ProjectMembership>();
-            Screenshots = screenshots ?? new HashSet<LodCoreLibrary.Common.Image>();
+            Screenshots = screenshots ?? new HashSet<LodCore.Common.Image>();
             LinksToGithubRepositories = linksToGithubRepositories ?? new HashSet<Uri>();
         }
 
@@ -43,11 +43,11 @@ namespace LodCoreApi.Models
 
         public ProjectStatus ProjectStatus { get; private set; }
 
-        public LodCoreLibrary.Common.Image LandingImage { get; private set; }
+        public LodCore.Common.Image LandingImage { get; private set; }
 
         public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
 
-        public HashSet<LodCoreLibrary.Common.Image> Screenshots { get; private set; }
+        public HashSet<LodCore.Common.Image> Screenshots { get; private set; }
 
         public HashSet<Uri> LinksToGithubRepositories { get; private set; }
     }

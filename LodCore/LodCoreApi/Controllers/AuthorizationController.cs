@@ -1,43 +1,51 @@
 ﻿using System;
-using System.Net;
-using System.Web.Http;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using LodCoreApi.Models;
-using Journalist;
+using LodCoreApi.Security;
+using LodCore.Common;
+using LodCore.Domain.Exceptions;
+using LodCore.Facades;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using LodCoreLibrary.Domain.UserManagement;
-using LodCoreLibrary.Domain.Exceptions;
-using LodCoreLibrary.Common;
 
 namespace LodCoreApi.Controllers
 {
-    public class AuthorizationController : ApiController
+    [Produces("application/json")]
+    public class AuthorizationController : Controller
     {
-        private readonly IAuthorizer _authorizer;
+        private readonly IJwtIssuer _jwtIssuer;
+        private readonly SecuritySettings _securitySettings;
+        private readonly IUserManager _userManager;
 
-        public AuthorizationController(IAuthorizer authorizer)
+        public AuthorizationController(IJwtIssuer jwtIssuer, SecuritySettings securitySettings, IUserManager userManager)
         {
-            Require.NotNull(authorizer, nameof(authorizer));
-            _authorizer = authorizer;
+            _jwtIssuer = jwtIssuer;
+            _securitySettings = securitySettings;
+            _userManager = userManager;
         }
 
         [HttpPost]
         [Route("login")]
-        public AuthorizationTokenInfo Authorize([FromBody] Credentials credentials)
+        public IActionResult Login([FromBody] LoginRequest request)
         {
             try
             {
-                var token = _authorizer.Authorize(credentials.Email, new Password(credentials.Password));
-                return token;
+                //var account = _userManager.GetUserByCredentials(request.Email, request.Password);
+                var token = _jwtIssuer.IssueJwt(Claims.Roles.User, 1);
+                return Ok(token);
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message, ex.StackTrace);
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                Log.Error("Failed to get user with email={0}. {1} StackTrace: {2}", request.Email, ex.Message, ex.StackTrace);
+                return NotFound();
             }
             catch (UnauthorizedAccessException ex)
             {
-                Log.Error("Failed to allow access to user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message, ex.StackTrace);
-                throw new HttpResponseException(HttpStatusCode.Unauthorized);
+                Log.Error("Failed to allow access to user with email={0}. {1} StackTrace: {2}", request.Email, ex.Message, ex.StackTrace);
+                return Unauthorized();
             }
         }
     }

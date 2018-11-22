@@ -1,7 +1,7 @@
 ﻿using System;
 using Journalist;
 using Journalist.Collections;
-using LodCoreLibrary.Domain.UserManagement;
+using LodCore.Domain.UserManagement;
 
 namespace LodCoreApi.Models
 {

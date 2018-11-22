@@ -1,12 +1,13 @@
-﻿using System.Web.Http;
+﻿using Microsoft.AspNetCore.Mvc;
 using LodCoreApi.Models;
 using Journalist;
-using LodCoreLibrary.Infrastructure.ContactContext;
-using LodCoreLibrary.Domain.NotificationService;
+using LodCore.Infrastructure.ContactContext;
+using LodCore.Domain.NotificationService;
 
 namespace LodCoreApi.Controllers
 {
-    public class ContactController : ApiController
+    [Produces("application/json")]
+    public class ContactController : Controller
     {
         private readonly IContactsService _contactsService;
 
@@ -18,7 +19,7 @@ namespace LodCoreApi.Controllers
 
         [HttpPost]
         [Route("contact")]
-        public IHttpActionResult SendContactMessage([FromBody] ContactMessage contactMessage)
+        public IActionResult SendContactMessage([FromBody] ContactMessage contactMessage)
         {
             if (!ModelState.IsValid)
             {

@@ -1,4 +1,4 @@
-﻿using LodCoreLibrary.Domain.UserManagement;
+﻿using LodCore.Domain.UserManagement;
 using System.ComponentModel.DataAnnotations;
 
 namespace LodCoreApi.Models

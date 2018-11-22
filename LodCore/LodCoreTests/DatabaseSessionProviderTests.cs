@@ -1,4 +1,4 @@
-﻿using LodCoreLibrary.Infrastructure.DataAccess;
+﻿using LodCore.Infrastructure.DataAccess;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DataAccessTests

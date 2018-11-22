@@ -1,7 +1,7 @@
-﻿using LodCoreLibrary.Domain.NotificationService;
-using LodCoreLibrary.Domain.UserManagement;
-using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
-using LodCoreLibrary.Infrastructure.Mailing;
+﻿using LodCore.Domain.NotificationService;
+using LodCore.Domain.UserManagement;
+using LodCore.Infrastructure.DataAccess.Repositories;
+using LodCore.Infrastructure.Mailing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

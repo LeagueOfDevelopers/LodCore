@@ -2,100 +2,109 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web.Http;
-using LodCoreApi.App_Data;
-using LodCoreApi.App_Data.Authorization;
-using LodCoreApi.App_Data.Mappers;
-using LodCoreApi.Authorization;
-using LodCoreApi.Models;
 using Journalist;
 using Journalist.Extensions;
-using Image = LodCoreLibrary.Common.Image;
-using Project = LodCoreLibrary.Domain.ProjectManagment.Project;
-using ProjectActionRequest = LodCoreApi.Models.ProjectActionRequest;
+using Image = LodCore.Common.Image;
+using Project = LodCore.Domain.ProjectManagment.Project;
 using Serilog;
-using LodCoreLibrary.Facades;
-using LodCoreLibrary.Domain.UserManagement;
-using LodCoreLibrary.Domain.ProjectManagment;
-using LodCoreLibrary.Domain.Exceptions;
-using LodCoreLibrary.Common;
+using LodCore.Facades;
+using LodCore.Domain.UserManagement;
+using LodCore.Domain.ProjectManagment;
+using LodCore.Domain.Exceptions;
+using LodCore.Common;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
+using LodCoreApi.Mappers;
+using LodCoreApi.Pagination;
+using LodCoreApi.Models;
+using LodCoreApi.Extensions;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using LodCoreApi.Security;
+using LodCore.QueryService;
+using LodCore.QueryService.Queries;
+using LodCore.QueryService.DTOs;
+using LodCore.QueryService.Handlers;
+using LodCore.QueryService.Views;
+using LodCore.QueryService.Queries.ProjectQuery;
+using LodCore.QueryService.Views.ProjectView;
 
 namespace LodCoreApi.Controllers
 {
-    public class ProjectController : ApiController
+    [Produces("application/json")]
+    public class ProjectController : Controller
     {
-        private const string CategoriesQueryParameterName = "categories";
         private const string PageParameterName = "page";
 
         private readonly IProjectProvider _projectProvider;
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
-        private readonly IPaginationWrapper<Project> _paginationWrapper; 
+        private readonly IPaginationWrapper<Project> _paginationWrapper;
+        private readonly ProjectQueryHandler _projectQueryHandler;
 
         public ProjectController(
             IProjectProvider projectProvider,
             ProjectsMapper projectsMapper,
-            IUserManager userManager, 
-            IPaginationWrapper<Project> paginationWrapper)
+            IUserManager userManager,
+            IPaginationWrapper<Project> paginationWrapper,
+            ProjectQueryHandler projectQueryHandler)
         {
             Require.NotNull(projectProvider, nameof(projectProvider));
             Require.NotNull(projectsMapper, nameof(projectsMapper));
             Require.NotNull(userManager, nameof(userManager));
             Require.NotNull(paginationWrapper, nameof(paginationWrapper));
+            Require.NotNull(projectQueryHandler, nameof(projectQueryHandler));
 
             _projectProvider = projectProvider;
             _projectsMapper = projectsMapper;
             _userManager = userManager;
             _paginationWrapper = paginationWrapper;
-        }
-
-        [Route("projects/random/{count}")]
-        public IEnumerable<IndexPageProject> GetRandomIndexPageProjects(int count)
-        {
-            Require.ZeroOrGreater(count, nameof(count));
-
-            List<Project> requiredProjects;
-            if (User.IsInRole(AccountRole.User))
-            {
-                requiredProjects = _projectProvider.GetProjects();
-            }
-            else
-            {
-                requiredProjects = _projectProvider.GetProjects(
-                    project => ProjectsPolicies.OnlyDoneOrInProgress(project));
-            }
-
-            var randomProjects = requiredProjects.GetRandom(count);
-
-            return randomProjects.Select(_projectsMapper.ToIndexPageProject);
+            _projectQueryHandler = projectQueryHandler;
         }
 
         [HttpGet]
-        [Route("projects/{projectsToSkip}/{projectsToReturn}")]
-        public PaginableObject GetAllProjects(int projectsToSkip, int projectsToReturn)
+        [Authorize]
+        [AllowAnonymous]
+        [Route("projects/random/{count}")]
+        public IActionResult GetRandomIndexPageProjects(int count)
         {
-            var paramsQuery = Request.RequestUri.Query;
-
-            var paramsDictionary =
-                paramsQuery.Split(new[] {'?', '&'}, StringSplitOptions.RemoveEmptyEntries)
-                    .ToDictionary(i => i.Split('=')[0], i => i.Split('=')[1]);
-
-            var requiredProjects = GetSomeProjects(projectsToSkip, projectsToReturn, paramsDictionary);
-
-            if (!User.IsInRole(AccountRole.User))
+            Require.ZeroOrGreater(count, nameof(count));
+            
+            var result = _projectQueryHandler.Handle(new AllProjectsQuery());
+            if (!User.Identity.IsAuthenticated)
             {
-                requiredProjects = requiredProjects
-                    .Where(ProjectsPolicies.OnlyDoneOrInProgress);
+                result.FilterResult();
             }
 
-            var projecsPreviews = requiredProjects.Select(_projectsMapper.ToProjectPreview);
-            return _paginationWrapper.WrapResponse(projecsPreviews, GetPublicProjectsCounterExpression(paramsDictionary));
+            result.SelectRandomProjects(count);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
+        [Route("projects")]
+        [SwaggerResponse(200, Type = typeof(SomeProjectsView))]
+        public IActionResult GetAllProjects(
+            [FromQuery(Name = "count")] int count, 
+            [FromQuery(Name = "offset")] int offset,
+            [FromQuery(Name = "category")] int[] categories)
+        {
+            var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories));
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                resultOfQuery.FilterResult();
+            }
+            
+            return Ok(resultOfQuery);
         }
 
         [HttpPost]
         [Route("projects")]
-        [Authorization(AccountRole.Administrator)]
-        public IHttpActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
+        //[Authorize(Policy = "AdminOnly")]
+        public IActionResult CreateProject([FromBody] ProjectActionRequest createProjectRequest)
         {
             if (!ModelState.IsValid)
             {
@@ -119,15 +128,16 @@ namespace LodCoreApi.Controllers
 
         [HttpPost]
         [Route("projects/{projectId}/developer/{developerId}")]
-        [Authorization(AccountRole.User)]
-        public IHttpActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody] string role)
+        //[Authorization(AccountRole.User]
+        [Authorize]
+        public IActionResult AddDeveloperToProject(int projectId, int developerId, [FromBody] string role)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            User.AssertResourceOwnerOrAdmin(developerId);
+            //User.AssertResourceOwnerOrAdmin(developerId);
             Project project;
             Account user;
             try
@@ -152,9 +162,10 @@ namespace LodCoreApi.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error("Failed to add user with id={0}(role={1}) to project with id={2}. {3} StackTrace: {4}", 
+                Log.Error("Failed to add user with id={0}(role={1}) to project with id={2}. {3} StackTrace: {4}",
                     developerId.ToString(), role, projectId.ToString(), ex.Message, ex.StackTrace);
-                return Conflict();
+                //return Conflict;
+                return BadRequest();
             }
 
             return Ok();
@@ -162,7 +173,7 @@ namespace LodCoreApi.Controllers
 
         [HttpPut]
         [Route("projects/{projectId}")]
-        public IHttpActionResult UpdateProject(int projectId, [FromBody] ProjectActionRequest updateProjectRequest)
+        public IActionResult UpdateProject(int projectId, [FromBody] ProjectActionRequest updateProjectRequest)
         {
             Require.Positive(projectId, nameof(projectId));
 
@@ -189,15 +200,16 @@ namespace LodCoreApi.Controllers
 
         [HttpDelete]
         [Route("projects/{projectId}/developer/{developerId}")]
-        [Authorization(AccountRole.User)]
-        public IHttpActionResult DeleteDeveloperFromProject(int projectId, int developerId)
+        //[Authorization(AccountRole.User)]
+        [Authorize]
+        public IActionResult DeleteDeveloperFromProject(int projectId, int developerId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            User.AssertResourceOwnerOrAdmin(developerId);
+            //User.AssertResourceOwnerOrAdmin(developerId);
             Project projectToDeleteUser;
             Account user;
 
@@ -230,29 +242,21 @@ namespace LodCoreApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
         [Route("projects/{projectId}")]
-        public IHttpActionResult GetProject(int projectId)
+        public IActionResult GetProject(int projectId)
         {
             Require.Positive(projectId, nameof(projectId));
-
-            var issueTypes = new[] {IssueType.Research, IssueType.Task}.ToList();
-            var statusOfIssues = new[] {IssueStatus.Ready, IssueStatus.InProgress}.ToList();
-
+            
             try
             {
-                var project = _projectProvider.GetProject(projectId, issueTypes, statusOfIssues);
-
-                if (User.IsInRole(AccountRole.User))
-                {
-                    return Ok(_projectsMapper.ToAdminProject(project));
-                }
-
-                if (!ProjectsPolicies.OnlyDoneOrInProgress(project))
-                {
+                var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
+                
+                if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
                     return Unauthorized();
-                }
-
-                return Ok(_projectsMapper.ToProject(project));
+                else
+                    return Ok(project);
             }
             catch (ProjectNotFoundException ex)
             {
@@ -260,41 +264,5 @@ namespace LodCoreApi.Controllers
                 return NotFound();
             }
         }
-
-        private IEnumerable<Project> GetSomeProjects(int projectsToSkip, int projectsToReturn, Dictionary<string, string> paramsDictionary)
-        {
-            string categoriesQuery;
-
-            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
-
-            var projectTypes = categoriesQuery.IsNullOrEmpty()
-                ? Enum.GetValues(typeof (ProjectType)) as IEnumerable<ProjectType>
-                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType) category).ToArray();
-
-
-            var requiredProjects = _projectProvider.GetProjects(projectsToSkip, projectsToReturn,
-                project => project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
-                .OrderByDescending(project => project.ProjectTypes.Intersect(projectTypes).Count());
-
-            return requiredProjects;
-        }
-
-        private Expression<Func<Project, bool>> GetPublicProjectsCounterExpression(Dictionary<string, string> paramsDictionary)
-        {
-            string categoriesQuery;
-
-            paramsDictionary.TryGetValue(CategoriesQueryParameterName, out categoriesQuery);
-
-            var projectTypes = categoriesQuery.IsNullOrEmpty()
-                ? Enum.GetValues(typeof(ProjectType)) as IEnumerable<ProjectType>
-                : categoriesQuery.Split(',').Select(int.Parse).Select(category => (ProjectType)category).ToArray();
-
-            return User.IsInRole(AccountRole.Administrator) || User.IsInRole(AccountRole.User)
-                ? (Expression<Func<Project, bool>>) (project =>
-                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)))
-                : (project =>
-                    project.ProjectTypes.Any(projectType => projectTypes.Contains(projectType)) && 
-                    (project.ProjectStatus == ProjectStatus.Done || project.ProjectStatus == ProjectStatus.InProgress));
-        } 
     }
 }
