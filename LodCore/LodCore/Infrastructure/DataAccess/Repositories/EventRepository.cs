@@ -1,18 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Journalist;
 using LodCore.Common;
 using LodCore.Domain.NotificationService;
 using LodCore.Infrastructure.WebSocketConnection;
+using LodCore.QueryService.Handlers;
+using LodCore.QueryService.Queries.NotificationQuery;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class EventRepository : IEventRepository, INumberOfNotificationsProvider
     {
         private readonly IWebSocketStreamProvider _webSocketStreamProvider;
+        private readonly string _connectionString;
+        private readonly NotificationHandler notificationHandler;
 
-        public EventRepository(IWebSocketStreamProvider webSocketStreamProvider)
+        public EventRepository(IWebSocketStreamProvider webSocketStreamProvider, string connectionString, NotificationHandler notificationHandler)
         {
-            _webSocketStreamProvider = webSocketStreamProvider;
+            _webSocketStreamProvider = webSocketStreamProvider ?? throw new ArgumentNullException(nameof(webSocketStreamProvider));
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
+            this.notificationHandler = notificationHandler ?? throw new ArgumentNullException(nameof(notificationHandler));
         }
 
         public void SaveEvent(Event @event, DistributionPolicy distributionPolicy)
@@ -31,6 +38,13 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
         public Event[] GetEventsByUser(int userId, bool newOnly)
         {
+            if (newOnly)
+            {
+                return null;
+            } else
+            {
+                return null; // notificationHandler.Handle(new AllNotificationForDeveloperQuery(userId)); cast to Event
+            }
             /*
             var session = _sessionProvider.GetCurrentSession();
             var userDeliveries = session.Query<Delivery>().Where(delivery => delivery.UserId == userId);
