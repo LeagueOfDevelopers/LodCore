@@ -109,10 +109,27 @@ namespace LodCore.QueryService.Handlers
             {
                 var resultDictionary = new Dictionary<int, AccountDto>();
 
-                result = connection.Query<AccountDto>(query.Sql).ToList();
+                result = connection.Query<AccountDto, ProjectMembershipDto, AccountDto>(query.Sql,
+                    (account, projectMembership) =>
+                    {
+                        AccountDto accountEntry;
+
+                        if (!resultDictionary.TryGetValue(account.UserId, out accountEntry))
+                        {
+                            accountEntry = account;
+                            accountEntry.ProjectMemberships = new List<ProjectMembershipDto>();
+                            resultDictionary.Add(accountEntry.UserId, accountEntry);
+                        }
+
+                        if (projectMembership != null && !accountEntry.ProjectMemberships.Any(m => m.ProjectId == projectMembership.ProjectId))
+                            accountEntry.ProjectMemberships.Add(projectMembership);
+
+                        return accountEntry;
+
+                    }, splitOn: "membershipId").Distinct().ToList();
             }
 
-            return null;
+            return new SearchDevelopersView(result);
         }
 
         private string _connectionString;

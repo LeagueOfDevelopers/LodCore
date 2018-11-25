@@ -10,9 +10,9 @@ namespace LodCore.QueryService.Views.DeveloperView
 {
     public class SomeDevelopersView
     {
-        public SomeDevelopersView(IEnumerable<AccountDto> developers, int allDevelopersCount)
+        public SomeDevelopersView(List<AccountDto> developers, int allDevelopersCount)
         {
-            Developers = developers.ToList().Select(d => new MinDeveloperView(d));
+            Developers = developers.Select(d => new MinDeveloperView(d));
 
             AllDevelopersCount = allDevelopersCount;
             _rawResult = developers;
