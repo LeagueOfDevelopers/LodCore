@@ -8,6 +8,7 @@ namespace IntegrationControllerTests
     [TestClass]
     public class ProjectsTest
     {
+        /*
         [TestMethod]
         [TestCategory("Integration")]
         public async Task ProperProjectCreatedSuccessfully()
@@ -17,6 +18,6 @@ namespace IntegrationControllerTests
             Assert.IsTrue(response.IsSuccessStatusCode);
         }
         
-        private Fixture Fixture => new Fixture(); 
+        private Fixture Fixture => new Fixture(); */
     }
 }

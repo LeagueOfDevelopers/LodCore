@@ -7,6 +7,10 @@ namespace LodCore.Domain.ProjectManagment
 {
     public class Project
     {
+        public Project()
+        {
+        }
+
         public Project(
             string name, 
             ISet<ProjectType> projectTypes, 
@@ -39,7 +43,7 @@ namespace LodCore.Domain.ProjectManagment
         public string Info { get; set; }
         public ProjectStatus ProjectStatus { get; set; }
         public Image LandingImage { get; set; }
-        public ISet<ProjectMembership> ProjectMemberships { get; protected set; }
+        public virtual ISet<ProjectMembership> ProjectMemberships { get; protected set; }
         public ISet<Image> Screenshots { get; set; }
         public ISet<ProjectLink> Links { get; set; }
         public ISet<Uri> LinksToGithubRepositories { get; set; }
