@@ -12,14 +12,11 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
     public class EventRepository : IEventRepository, INumberOfNotificationsProvider
     {
         private readonly IWebSocketStreamProvider _webSocketStreamProvider;
-        private readonly string _connectionString;
-        private readonly NotificationHandler notificationHandler;
 
-        public EventRepository(IWebSocketStreamProvider webSocketStreamProvider, string connectionString, NotificationHandler notificationHandler)
+        public EventRepository(IWebSocketStreamProvider webSocketStreamProvider)
         {
             _webSocketStreamProvider = webSocketStreamProvider ?? throw new ArgumentNullException(nameof(webSocketStreamProvider));
-            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
-            this.notificationHandler = notificationHandler ?? throw new ArgumentNullException(nameof(notificationHandler));
+            
         }
 
         public void SaveEvent(Event @event, DistributionPolicy distributionPolicy)
