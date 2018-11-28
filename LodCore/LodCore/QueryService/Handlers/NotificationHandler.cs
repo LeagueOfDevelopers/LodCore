@@ -10,7 +10,7 @@ using Dapper;
 namespace LodCore.QueryService.Handlers
 {
     public class NotificationHandler :
-        IQueryHandler<AllNotificationForDeveloperQuery, AllNotificationView>
+        IQueryHandler<PageNotificationForDeveloperQuery, PageNotificationView>
     {
         private readonly string _connectionString;
 
@@ -19,16 +19,16 @@ namespace LodCore.QueryService.Handlers
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-        public AllNotificationView Handle(AllNotificationForDeveloperQuery query)
+        public PageNotificationView Handle(PageNotificationForDeveloperQuery query)
         {
-            List<NotificationDto> result;
+            List<NotificationView> result;
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                result = connection.Query<NotificationDto>(query.Sql).AsList();
+                result = connection.Query<NotificationView>(query.Sql).AsList();
             }
 
-            return query.FormResult(result);
+            return new PageNotificationView(result);
         }
     }
 }

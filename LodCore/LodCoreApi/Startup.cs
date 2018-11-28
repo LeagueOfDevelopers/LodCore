@@ -53,6 +53,7 @@ namespace LodCoreApi
             StartLogger();
             ConfigureSecurity(services);
             
+            
             EventConsumersContainer eventConsumersContainer = new EventConsumersContainer(
                 new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
                 Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
@@ -73,7 +74,7 @@ namespace LodCoreApi
             IProjectMembershipRepostiory projectMembershipRepostiory = new ProjectMembershipRepository();
             IPasswordChangeRequestRepository passwordChangeRequestRepository = new PasswordChangeRequestRepository();
             IEventRepository eventRepository = new EventRepository(webSocketStreamProvider);
-
+            
             IConfirmationService confirmationService = new ConfirmationService(userRepository, validationRequestsRepository, eventPublisher);
             IPasswordManager passwordManager = new PasswordManager(passwordChangeRequestRepository, userRepository);
             IProjectProvider projectProvider = new ProjectProvider(projectRepository, eventPublisher);
@@ -84,6 +85,8 @@ namespace LodCoreApi
                 new ApplicationLocationSettings("backend", "frontend"),
                 passwordManager,
                 eventPublisher);
+
+            NotificationHandler notificationHandler = new NotificationHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
             INotificationService notificationService = new LodCore.Domain.NotificationService.NotificationService(eventRepository, new PaginationSettings(10));
             ProjectsMapper projectsMapper = new ProjectsMapper(userManager);
             EventMapper eventMapper = new EventMapper(notificationService);
@@ -94,6 +97,7 @@ namespace LodCoreApi
             IPaginableRepository<Project> paginableProjectRepository = new PaginableRepository<Project>();
             IPaginationWrapper<Project> paginationProjectWrapper = new PaginationWrapper<Project>(paginableProjectRepository);
 
+            
             services.AddSingleton(projectProvider);
             services.AddSingleton(projectsMapper);
             services.AddSingleton(userManager);
@@ -104,6 +108,7 @@ namespace LodCoreApi
             services.AddSingleton(paginationDeliveryWrapper);
             services.AddSingleton(projectQueryHandler);
             services.AddSingleton(developerQueryHandler);
+            services.AddSingleton(notificationHandler);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             
