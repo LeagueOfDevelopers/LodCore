@@ -3,7 +3,7 @@ using System.Configuration;
 using System.IO;
 using Newtonsoft.Json;
 using LodCore.Domain.UserManagement;
-using LodCoreLibrary.Common;
+using LodCore.Common;
 
 namespace IntegrationControllerTests.Helpers
 {

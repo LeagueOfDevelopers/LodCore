@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
-using LodCoreLibrary.Domain.ProjectManagment;
+using LodCore.Infrastructure.DataAccess.Repositories;
+using LodCore.Domain.ProjectManagment;
 
 namespace ProjectManagementTests
 {

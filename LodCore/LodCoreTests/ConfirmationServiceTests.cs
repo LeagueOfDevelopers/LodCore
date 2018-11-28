@@ -1,7 +1,7 @@
-﻿using LodCoreLibrary.Common;
-using LodCoreLibrary.Domain.UserManagement;
-using LodCoreLibrary.Infrastructure.DataAccess.Repositories;
-using LodCoreLibrary.Infrastructure.EventBus;
+﻿using LodCore.Common;
+using LodCore.Domain.UserManagement;
+using LodCore.Infrastructure.DataAccess.Repositories;
+using LodCore.Infrastructure.EventBus;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

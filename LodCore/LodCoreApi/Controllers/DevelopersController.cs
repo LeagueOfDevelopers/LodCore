@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using LodCore.QueryService.Queries.ProjectQuery;
 
 namespace LodCoreApi.Controllers
 {
@@ -79,6 +80,16 @@ namespace LodCoreApi.Controllers
                 Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
                 return NotFound();
             }
+        }
+
+        [HttpGet]
+        [Route("developers/search/{searchString}")]
+        public IActionResult SearchDevelopers(string searchString)
+        {
+            var result = _developerQueryHandler.Handle(new SearchDevelopersQuery(searchString));
+            result.FilterResult(GetUserRole());
+
+            return Ok(result);
         }
 
         private AccountRole GetUserRole()

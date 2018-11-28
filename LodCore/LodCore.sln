@@ -3,12 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LodCoreTests", "LodCoreTests\LodCoreTests.csproj", "{AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B}"
-	ProjectSection(ProjectDependencies) = postProject
-		{CA186F94-1044-4418-B327-997959097B1F} = {CA186F94-1044-4418-B327-997959097B1F}
-		{8B6541C5-9DFB-4FA7-B1F9-0A02F50E6EC5} = {8B6541C5-9DFB-4FA7-B1F9-0A02F50E6EC5}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LodCoreLibraryOld", "LodCoreLibraryOld\LodCoreLibraryOld.csproj", "{69C5CFB9-B1DA-497F-A373-1319BA1B46CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LodCoreApiOld", "LodCoreApiOld\LodCoreApiOld.csproj", "{AA48634F-8781-4E58-B0D0-AAF107C73A9A}"
@@ -23,16 +17,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LodCoreApi", "LodCoreApi\Lo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LodCore", "LodCore\LodCore.csproj", "{8B6541C5-9DFB-4FA7-B1F9-0A02F50E6EC5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LodCoreTests", "LodCoreTests\LodCoreTests.csproj", "{B70D4CB8-9B3C-4CAC-9CD3-0FB8918FB8A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB9B19DD-14C8-42C9-AA51-BF2B0D226D6B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{69C5CFB9-B1DA-497F-A373-1319BA1B46CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69C5CFB9-B1DA-497F-A373-1319BA1B46CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69C5CFB9-B1DA-497F-A373-1319BA1B46CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +41,10 @@ Global
 		{8B6541C5-9DFB-4FA7-B1F9-0A02F50E6EC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B6541C5-9DFB-4FA7-B1F9-0A02F50E6EC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B6541C5-9DFB-4FA7-B1F9-0A02F50E6EC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B70D4CB8-9B3C-4CAC-9CD3-0FB8918FB8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70D4CB8-9B3C-4CAC-9CD3-0FB8918FB8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70D4CB8-9B3C-4CAC-9CD3-0FB8918FB8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70D4CB8-9B3C-4CAC-9CD3-0FB8918FB8A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

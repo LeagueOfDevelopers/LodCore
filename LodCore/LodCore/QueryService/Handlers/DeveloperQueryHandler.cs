@@ -2,6 +2,7 @@
 using LodCore.QueryService.DTOs;
 using LodCore.QueryService.Queries;
 using LodCore.QueryService.Queries.DeveloperQuery;
+using LodCore.QueryService.Queries.ProjectQuery;
 using LodCore.QueryService.Views;
 using LodCore.QueryService.Views.DeveloperView;
 using System;
@@ -16,7 +17,8 @@ namespace LodCore.QueryService.Handlers
     public class DeveloperQueryHandler : 
         IQueryHandler<GetSomeDevelopersQuery, SomeDevelopersView>,
         IQueryHandler<GetDeveloperQuery, FullDeveloperView>,
-        IQueryHandler<AllAccountsQuery, AllAccountsView>
+        IQueryHandler<AllAccountsQuery, AllAccountsView>,
+        IQueryHandler<SearchDevelopersQuery, SearchDevelopersView>
     {
         public DeveloperQueryHandler(string connectionString)
         {
@@ -97,6 +99,37 @@ namespace LodCore.QueryService.Handlers
             }
 
             return query.FormResult(result);
+        }
+
+        public SearchDevelopersView Handle(SearchDevelopersQuery query)
+        {
+            List<AccountDto> result;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var resultDictionary = new Dictionary<int, AccountDto>();
+
+                result = connection.Query<AccountDto, ProjectMembershipDto, AccountDto>(query.Sql,
+                    (account, projectMembership) =>
+                    {
+                        AccountDto accountEntry;
+
+                        if (!resultDictionary.TryGetValue(account.UserId, out accountEntry))
+                        {
+                            accountEntry = account;
+                            accountEntry.ProjectMemberships = new List<ProjectMembershipDto>();
+                            resultDictionary.Add(accountEntry.UserId, accountEntry);
+                        }
+
+                        if (projectMembership != null && !accountEntry.ProjectMemberships.Any(m => m.ProjectId == projectMembership.ProjectId))
+                            accountEntry.ProjectMemberships.Add(projectMembership);
+
+                        return accountEntry;
+
+                    }, splitOn: "membershipId").Distinct().ToList();
+            }
+
+            return new SearchDevelopersView(result);
         }
 
         private string _connectionString;

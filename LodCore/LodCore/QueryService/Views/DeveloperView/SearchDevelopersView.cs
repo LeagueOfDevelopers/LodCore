@@ -4,22 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.DeveloperView
 {
-    public class SomeDevelopersView
+    public class SearchDevelopersView
     {
-        public SomeDevelopersView(List<AccountDto> developers, int allDevelopersCount)
+        public SearchDevelopersView(List<AccountDto> developers)
         {
             Developers = developers.Select(d => new MinDeveloperView(d));
-
-            AllDevelopersCount = allDevelopersCount;
             _rawResult = developers;
         }
 
         public IEnumerable<MinDeveloperView> Developers { get; private set; }
-        public int AllDevelopersCount { get; }
 
         public void FilterResult(AccountRole callingUser)
         {

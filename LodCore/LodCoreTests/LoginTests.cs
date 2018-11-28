@@ -7,6 +7,7 @@ namespace IntegrationControllerTests
     [TestClass]
     public class LoginTests
     {
+        /*
         [TestMethod]
         [TestCategory("Integration")]
         public async Task LoginToExistantAccountSucceeds()
@@ -14,6 +15,6 @@ namespace IntegrationControllerTests
             var responseMessage = await RequestHelper.LoginToAdminAsync();
 
             Assert.IsTrue(responseMessage.IsSuccessStatusCode);
-        }
+        }*/
     }
 }

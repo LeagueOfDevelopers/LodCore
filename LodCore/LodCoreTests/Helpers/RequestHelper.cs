@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
-using LodCore.Models;
+using LodCoreApi.Models;
 using Newtonsoft.Json;
-using Image = LodCoreLibrary.Common.Image;
+using Image = LodCore.Common.Image;
 using LodCore.Domain.ProjectManagment;
 
 namespace IntegrationControllerTests.Helpers

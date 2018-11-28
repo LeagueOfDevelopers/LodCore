@@ -25,7 +25,7 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
 
         public SomeDevelopersView FormResult(IEnumerable<AccountDto> rawResult)
         {
-            var necessaryDevelopers = rawResult.Skip(Offset).Take(Count);
+            var necessaryDevelopers = rawResult.Skip(Offset).Take(Count).ToList();
             return new SomeDevelopersView(necessaryDevelopers, rawResult.Count());
         }
     }
