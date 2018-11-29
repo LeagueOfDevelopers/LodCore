@@ -18,10 +18,9 @@ namespace LodCore.QueryService.Queries.ProjectQuery
         {
             ProjectId = projectId;
             Sql = "SELECT * FROM projects AS Project " +
-                "LEFT JOIN screenshots AS Screenshot ON Project.projectId = Screenshot.projectId " +
-                "LEFT JOIN projectMemberships AS ProjMembership ON Project.projectId = ProjMembership.projectId " +
-                "LEFT JOIN projectLinks AS Link ON Project.projectId = Link.projectId " +
-                "LEFT JOIN projectTypes AS Type ON Project.projectId = Type.projectId " +
+                "LEFT JOIN screenshots AS Screenshot ON Project.projectId = Screenshot.project_key " +
+                "LEFT JOIN projectMembership AS ProjMembership ON Project.projectId = ProjMembership.projectId " +
+                "LEFT JOIN projecttypes AS Type ON Project.projectId = Type.project_key " +
                 $"WHERE Project.projectId = {ProjectId};";
         }
 

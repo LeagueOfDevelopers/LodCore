@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace LodCore.QueryService.Handlers
 {
@@ -28,12 +29,13 @@ namespace LodCore.QueryService.Handlers
         public SomeProjectsView Handle(GetSomeProjectsQuery query)
         {
             List<ProjectDto> result;
+            int projectsCount;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, ProjectDto>();
 
-                result = connection.Query<ProjectDto, ProjectTypeDto, ProjectDto>(query.Sql,
+                result = connection.Query<ProjectDto, ProjectTypeDto, ProjectDto>(query.SqlForSomeProjects,
                     (project, projectType) =>
                     {
                         ProjectDto projectEntry;
@@ -46,22 +48,25 @@ namespace LodCore.QueryService.Handlers
                         }
                         
                         return projectEntry;
-                    }, splitOn: "projectId").Distinct().ToList();
+                    }, new { query.Categories, query.IsAuthenticatedCallingUser, query.Offset, query.Count}, 
+                    splitOn: "project_key").Distinct().ToList();
+
+                projectsCount = connection.Query(query.SqlForAllProjects).Count();
             }
 
-            return query.FormResult(result);
+            return new SomeProjectsView(result, projectsCount);
         }
 
         public FullProjectView Handle(GetProjectQuery query)
         {
             ProjectDto result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, ProjectDto>();
 
-                result = connection.Query<ProjectDto, ImageDto, ProjectMembershipDto, ProjectLinkDto, ProjectTypeDto, ProjectDto>(query.Sql,
-                    (project, screenshot, projectMembership, projectLink, projectType) =>
+                result = connection.Query<ProjectDto, ImageDto, ProjectMembershipDto, ProjectTypeDto, ProjectDto>(query.Sql,
+                    (project, screenshot, projectMembership, projectType) =>
                     {
                         ProjectDto projectEntry;
 
@@ -81,14 +86,11 @@ namespace LodCore.QueryService.Handlers
                         if (projectMembership != null && !projectEntry.Developers.Any(d => d.MembershipId == projectMembership.MembershipId))
                             projectEntry.Developers.Add(projectMembership);
 
-                        if (projectLink != null && !projectEntry.Links.Any(l => l.Uri == projectLink.Uri))
-                            projectEntry.Links.Add(projectLink);
-
-                        if (projectType != null && !projectEntry.Types.Any(t => t.Type == projectType.Type))
+                        if (projectType != null && !projectEntry.Types.Any(t => t.Id == projectType.Id))
                             projectEntry.Types.Add(projectType);
 
                         return projectEntry;
-                    }, splitOn: "projectId,membershipId,projectId,projectId").Distinct().ToList().First();
+                    }, splitOn: "project_key,membershipId,project_key").Distinct().ToList().First();
             }
             
             return new FullProjectView(result);

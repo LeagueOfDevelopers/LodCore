@@ -13,13 +13,13 @@ namespace LodCore.QueryService.DTOs
         {
         }
 
-        public ProjectTypeDto(ProjectType projectType, int projectId)
+        public ProjectTypeDto(ProjectType id, int projectKey)
         {
-            Type = projectType;
-            ProjectId = projectId;
+            ProjectKey = projectKey;
+            Id = id;
         }
 
-        public int ProjectId { get; set; }
-        public ProjectType Type { get; set; }
+        public int ProjectKey { get; set; }
+        public ProjectType Id { get; set; }
     }
 }

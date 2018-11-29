@@ -20,7 +20,7 @@ namespace LodCore.QueryService.Views.ProjectView
             LandingImage = new ImageView(projectDto.BigPhotoUri, projectDto.SmallPhotoUri);
 
             ProjectTypes = new List<ProjectType>();
-            projectDto.Types.ToList().ForEach(t => ProjectTypes.Add(t.Type));
+            projectDto.Types.ToList().ForEach(t => ProjectTypes.Add(t.Id));
 
             ProjectMemberships = new List<ProjectMembershipView>();
             projectDto.Developers.ToList().ForEach(d => ProjectMemberships.Add(new ProjectMembershipView(d.DeveloperId, d.Role)));

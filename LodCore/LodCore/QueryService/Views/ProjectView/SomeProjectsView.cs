@@ -27,11 +27,5 @@ namespace LodCore.QueryService.Views.ProjectView
 
         public IEnumerable<MinProjectView> Projects { get; private set; }
         public int AllProjectsCount { get; }
-
-        public void FilterResult()
-        {
-            Projects = Projects.Where(p => p.ProjectStatus == ProjectStatus.Done
-                || p.ProjectStatus == ProjectStatus.InProgress);
-        }
     }
 }
