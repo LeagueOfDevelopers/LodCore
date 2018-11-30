@@ -28,30 +28,20 @@ namespace LodCore.QueryService.Handlers
 
         public SomeProjectsView Handle(GetSomeProjectsQuery query)
         {
-            List<ProjectDto> result;
+            List<ShortDeveloperInfoView> result;
             int projectsCount;
 
             using (var connection = new MySqlConnection(_connectionString))
             {
-                var resultDictionary = new Dictionary<int, ProjectDto>();
+                var resultDictionary = new Dictionary<int, ShortDeveloperInfoView>();
 
-                result = connection.Query<ProjectDto, ProjectTypeDto, ProjectDto>(query.SqlForSomeProjects,
-                    (project, projectType) =>
-                    {
-                        ProjectDto projectEntry;
+                result = connection.Query(query.SqlForSomeProjects,
+                    new { Categories = string.Join(",", query.Categories), query.IsAuthenticatedCallingUser, query.Offset, query.Count }).
+                    Select(e => new ShortDeveloperInfoView(e)).ToList();
 
-                        if (!resultDictionary.TryGetValue(project.ProjectId, out projectEntry))
-                        {
-                            projectEntry = project;
-                            projectEntry.Types = new HashSet<ProjectTypeDto>();
-                            resultDictionary.Add(projectEntry.ProjectId, projectEntry);
-                        }
-                        
-                        return projectEntry;
-                    }, new { query.Categories, query.IsAuthenticatedCallingUser, query.Offset, query.Count}, 
-                    splitOn: "project_key").Distinct().ToList();
-
-                projectsCount = connection.Query(query.SqlForAllProjects).Count();
+                projectsCount = connection.Query(query.SqlForAllProjects,
+                    new { Categories = string.Join(",", query.Categories), query.IsAuthenticatedCallingUser, query.Offset, query.Count }).
+                    Count();
             }
 
             return new SomeProjectsView(result, projectsCount);

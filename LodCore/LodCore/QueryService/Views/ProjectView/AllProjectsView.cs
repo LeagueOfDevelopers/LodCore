@@ -13,10 +13,10 @@ namespace LodCore.QueryService.Views.ProjectView
     {
         public AllProjectsView(IEnumerable<ProjectDto> projects)
         {
-            Projects = projects.Select(p => new MinProjectView(p));
+            Projects = projects.Select(p => new ShortDeveloperInfoView(p));
         }
 
-        public IEnumerable<MinProjectView> Projects { get; private set; }
+        public IEnumerable<ShortDeveloperInfoView> Projects { get; private set; }
 
         public void FilterResult()
         {

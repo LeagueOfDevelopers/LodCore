@@ -21,12 +21,16 @@ namespace LodCore.QueryService.Queries.ProjectQuery
             Categories = categories;
             IsAuthenticatedCallingUser = IsAuthenticatedCallingUser;
 
-            SqlForSomeProjects = "SELECT * FROM projects AS Project LEFT JOIN projectTypes AS ProjectType " +
+            SqlForSomeProjects = "SELECT DISTINCT ProjectId, Name, ProjectStatus, BigPhotoUri, SmallPhotoUri " +
+                "FROM projects AS Project LEFT JOIN projectTypes AS ProjectType " +
                 "ON Project.ProjectId = ProjectType.project_key WHERE id IN(@categories) " +
                 "AND IF(@isAuthenticatedCallingUser, ProjectStatus IN(0,1,2,3), ProjectStatus=1 OR ProjectStatus=3) " +
                 "LIMIT @offset,@count; ";
 
-            SqlForAllProjects = "SELECT * FROM projects;";
+            SqlForAllProjects = "SELECT DISTINCT ProjectId, Name, ProjectStatus, BigPhotoUri, SmallPhotoUri " +
+                "FROM projects AS Project LEFT JOIN projectTypes AS ProjectType " +
+                "ON Project.ProjectId = ProjectType.project_key WHERE id IN(@categories) " +
+                "AND IF(@isAuthenticatedCallingUser, ProjectStatus IN(0,1,2,3), ProjectStatus=1 OR ProjectStatus=3);";
         }
         
         public int Offset { get; }

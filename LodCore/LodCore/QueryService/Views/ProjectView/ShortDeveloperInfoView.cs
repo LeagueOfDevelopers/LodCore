@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.ProjectView
 {
-    public class MinProjectView 
+    public class ShortDeveloperInfoView
     {
-        public MinProjectView(ProjectDto projectDto)
+        public ShortDeveloperInfoView(dynamic project)
         {
-            Id = projectDto.ProjectId;
-            Name = projectDto.Name;
-            ProjectStatus = projectDto.ProjectStatus;
-            LandingImage = new ImageView(projectDto.BigPhotoUri, projectDto.SmallPhotoUri);
+            Id = project.ProjectId;
+            Name = project.Name;
+            ProjectStatus = (ProjectStatus)project.ProjectStatus;
+            LandingImage = new ImageView(project.BigPhotoUri, project.SmallPhotoUri);
         }
 
         public int Id { get; }

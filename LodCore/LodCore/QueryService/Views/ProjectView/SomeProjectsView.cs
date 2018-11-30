@@ -10,22 +10,13 @@ namespace LodCore.QueryService.Views.ProjectView
 {
     public class SomeProjectsView
     {
-        public SomeProjectsView(IEnumerable<ProjectDto> allProjects, int allProjectCount)
-        {
-            var result = new List<MinProjectView>();
-            allProjects.ToList().ForEach(p => result.Add(new MinProjectView(p)));
-            Projects = result;
-
-            AllProjectsCount = allProjectCount;
-        }
-
-        public SomeProjectsView(IEnumerable<MinProjectView> projects, int allProjectsCount)
+        public SomeProjectsView(IEnumerable<ShortDeveloperInfoView> projects, int allProjectsCount)
         {
             Projects = projects;
             AllProjectsCount = allProjectsCount;
         }
 
-        public IEnumerable<MinProjectView> Projects { get; private set; }
+        public IEnumerable<ShortDeveloperInfoView> Projects { get; }
         public int AllProjectsCount { get; }
     }
 }
