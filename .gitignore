@@ -216,3 +216,5 @@ ConnectionStrings.config
 Files/
 Images/
 ExternalLibs/
+
+NotTest.cs
