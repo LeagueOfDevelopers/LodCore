@@ -19,7 +19,7 @@ namespace LodCoreApi.Controllers
         private readonly INotificationService _notificationService;
         private readonly EventMapper _eventMapper;
         private readonly IPaginationWrapper<Delivery> _paginationWrapper;
-        private readonly NotificationHandler _notificationHandler;
+        private readonly INotificationHandler _notificationHandler;
 
 
         public EventController(INotificationService notificationService,
@@ -48,18 +48,14 @@ namespace LodCoreApi.Controllers
         [Route("event/{pageId}")]
         //[Authorization(AccountRole.User)]
         [Authorize]
-        public PageNotificationView GetEventsByPage(int pageId, 
+        public IActionResult GetEventsByPage(int pageId,
             [FromQuery(Name = "offset")] int pageSize)
         {
             Require.ZeroOrGreater(pageId, nameof(pageId));
-            
             var userId = Request.GetUserId();
-            
-            //var events = _notificationService.GetEventsForUser(userId, pageId).ToList();
-            //var eventsPreview = events.Select(@event => _eventMapper.ToEventPageEvent(@event, userId));
-            //return _paginationWrapper.WrapResponse(eventsPreview, @event => @event.UserId == userId);
 
-            return _notificationHandler.Handle(new PageNotificationForDeveloperQuery(userId,pageId * pageSize, pageSize));
+            return Ok(_notificationHandler.Handle(
+                new PageNotificationForDeveloperQuery(userId, pageId * pageSize, pageSize)));
         }
     }
 }

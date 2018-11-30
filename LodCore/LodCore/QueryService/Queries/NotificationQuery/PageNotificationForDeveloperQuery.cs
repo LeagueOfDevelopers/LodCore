@@ -14,11 +14,13 @@ namespace LodCore.QueryService.Queries.NotificationQuery
             Sql = "SELECT WasRead, EventId, OccuredOn, EventType, EventInfo FROM test.delivery" +
                   "JOIN test.accounts ON test.accounts.UserId = test.delivery.OrderId" +
                   "JOIN test.eventinfo ON test.eventinfo.Id = test.delivery.EventId" +
-                  $"where test.accounts.UserId = {developerID}"+
-                  $"LIMIT {pageSize} OFFSET {offset}";
+                  "where test.accounts.UserId = @developerID" +
+                  "LIMIT @pageSize OFFSET @offset";
         }
 
         public string Sql { get; }
         public int DeveloperID { get; }
+        public int Offset { get; }
+        public int PageSize { get; }
     }
 }

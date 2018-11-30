@@ -9,8 +9,7 @@ using Dapper;
 
 namespace LodCore.QueryService.Handlers
 {
-    public class NotificationHandler :
-        IQueryHandler<PageNotificationForDeveloperQuery, PageNotificationView>
+    public class NotificationHandler : INotificationHandler
     {
         private readonly string _connectionString;
 
@@ -25,7 +24,11 @@ namespace LodCore.QueryService.Handlers
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                result = connection.Query<NotificationView>(query.Sql).AsList();
+                result = connection.Query<NotificationView>(query.Sql, new {
+                    developerID = query.DeveloperID,
+                    offset = query.Offset,
+                    pageSize = query.PageSize
+                }).AsList();
             }
 
             return new PageNotificationView(result);

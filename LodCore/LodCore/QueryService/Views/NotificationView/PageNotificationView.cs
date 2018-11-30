@@ -11,7 +11,7 @@ namespace LodCore.QueryService.Views.NotificationView
             Notifications = notifications ?? throw new ArgumentNullException(nameof(NotificationView));
         }
 
-        public IEnumerable<NotificationView> Notifications { get; private set; }
+        public IEnumerable<NotificationView> Notifications { get; }
 
     }
 }
