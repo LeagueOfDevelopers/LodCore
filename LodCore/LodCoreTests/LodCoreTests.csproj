@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NotTest.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoFixture" Version="3.40.0" />
     <PackageReference Include="AutoFixture.AutoMoq" Version="3.40.0" />
     <PackageReference Include="Castle.Core" Version="4.3.1" />

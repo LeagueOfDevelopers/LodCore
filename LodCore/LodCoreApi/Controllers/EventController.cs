@@ -48,14 +48,15 @@ namespace LodCoreApi.Controllers
         [Route("event/{pageId}")]
         //[Authorization(AccountRole.User)]
         [Authorize]
-        public IActionResult GetEventsByPage(int pageId,
-            [FromQuery(Name = "offset")] int pageSize)
+        public IActionResult GetEventsByPage(int pageId)
         {
             Require.ZeroOrGreater(pageId, nameof(pageId));
             var userId = Request.GetUserId();
 
             return Ok(_notificationHandler.Handle(
-                new PageNotificationForDeveloperQuery(userId, pageId * pageSize, pageSize)));
+                new PageNotificationForDeveloperQuery(userId,
+                pageId * _notificationHandler.PaginationSettings,
+                _notificationHandler.PaginationSettings)));
         }
     }
 }

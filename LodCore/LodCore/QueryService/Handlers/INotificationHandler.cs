@@ -5,6 +5,7 @@ namespace LodCore.QueryService.Handlers
 {
     public interface INotificationHandler : 
         IQueryHandler<PageNotificationForDeveloperQuery, PageNotificationView>
-    {        
+    {
+        int PaginationSettings { get; }
     }
 }

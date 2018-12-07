@@ -86,7 +86,9 @@ namespace LodCoreApi
                 passwordManager,
                 eventPublisher);
 
-            NotificationHandler notificationHandler = new NotificationHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            NotificationHandler notificationHandler = new NotificationHandler(
+                Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
+                Configuration.GetSection("NotificationPaginationSettings").GetValue<int>("PageSize"));
             INotificationService notificationService = new LodCore.Domain.NotificationService.NotificationService(eventRepository, new PaginationSettings(10));
             ProjectsMapper projectsMapper = new ProjectsMapper(userManager);
             EventMapper eventMapper = new EventMapper(notificationService);
