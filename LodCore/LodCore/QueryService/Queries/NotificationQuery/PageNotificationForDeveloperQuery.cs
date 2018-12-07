@@ -11,11 +11,13 @@ namespace LodCore.QueryService.Queries.NotificationQuery
         public PageNotificationForDeveloperQuery(int developerID, int offset, int pageSize)
         {
             DeveloperID = developerID;
-            Sql = "SELECT WasRead, EventId, OccuredOn, EventType, EventInfo FROM test.delivery" +
-                  "JOIN test.accounts ON test.accounts.UserId = test.delivery.OrderId" +
-                  "JOIN test.eventinfo ON test.eventinfo.Id = test.delivery.EventId" +
-                  "where test.accounts.UserId = @developerID" +
-                  "LIMIT @pageSize OFFSET @offset";
+            Offset = offset;
+            PageSize = pageSize;
+            Sql = "SELECT WasRead, EventId, OccuredOn, EventType, EventInfo FROM delivery " +
+                  "JOIN accounts ON accounts.UserId = delivery.OrderId " +
+                  "JOIN eventinfo ON eventinfo.Id = delivery.EventId " +
+                  "where accounts.UserId = @developerID " +
+                  "LIMIT @pageSize OFFSET @offset ";
         }
 
         public string Sql { get; }
