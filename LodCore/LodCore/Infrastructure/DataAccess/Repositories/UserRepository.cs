@@ -1,16 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using Dapper;
 using Journalist;
 using Journalist.Extensions;
 using LodCore.Domain.UserManagement;
+using MySql.Data.MySqlClient;
+using System.Net.Mail;
+using LodCore.Common;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class UserRepository : IUserRepository, IUsersRepository
     {
-        public UserRepository()
+        private readonly string _connectionString;
+
+        public UserRepository(string connectionString)
         {
+            _connectionString = connectionString;
         }
 
         public int CreateAccount(Account account)
@@ -35,14 +44,45 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
         public Account GetAccount(int accountId)
         {
-            /*
             Require.Positive(accountId, nameof(accountId));
 
-            var session = _sessionProvider.GetCurrentSession();
-            var account = session.Get<Account>(accountId);
-            return account;*/
-            return null;
+            var sql = "SELECT Firstname, Lastname, Email, Password, AccountRole, " +
+                "ConfirmationStatus, RegistrationTime, BigPhotoUri, SmallPhotoUri, VkProfileUri, GitHubProfileUri, " +
+                "PhoneNumber, StudentAccessionYear, IsGraduated, StudyingDirection, InstituteName, Specialization " +
+                "FROM accounts " +
+                "WHERE UserId =@UserId ";
+            Account account;
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                account = connection.Query<dynamic>(sql, new { UserId = 1 })
+                    .Select(p =>
+                    new Account(p.Firstname,
+                                p.Lastname,
+                                new MailAddress(p.Email),
+                                Password.FromPlainString(p.Password),
+                                (AccountRole)p.AccountRole,
+                                (ConfirmationStatus)p.ConfirmationStatus,
+                                p.RegistrationTime,
+                                new Profile {
+                                    Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
+                                    VkProfileUri = new Uri(p.VkProfileUri),
+                                    LinkToGithubProfile = new Uri(p.GitHubProfileUri),
+                                    PhoneNumber = p.PhoneNumber,
+                                    StudentAccessionYear = p.StudentAccessionYear,
+                                    IsGraduated = p.IsGraduated,
+                                    StudyingDirection = p.StudyingDirection,
+                                    InstituteName = p.InstituteName,
+                                    Specialization = p.Specialization
+                                }
+                                    ))
+                     .First();
+            }
+            
+            return account;
         }
+
+
 
         public Account GetAccountByLinkToGithubProfile(string link)
         {
