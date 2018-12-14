@@ -68,7 +68,7 @@ namespace LodCoreApi
             DeveloperQueryHandler developerQueryHandler = new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
 
             IValidationRequestsRepository validationRequestsRepository = new ValidationRequestsRepository();
-            IUserRepository userRepository = new UserRepository();
+            IUserRepository userRepository = new UserRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
             IProjectRepository projectRepository = new ProjectRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
                 projectQueryHandler);
             IProjectMembershipRepostiory projectMembershipRepostiory = new ProjectMembershipRepository();

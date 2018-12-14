@@ -46,16 +46,14 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
         {
             Require.Positive(accountId, nameof(accountId));
 
-            var sql = "SELECT Firstname, Lastname, Email, Password, AccountRole, " +
-                "ConfirmationStatus, RegistrationTime, BigPhotoUri, SmallPhotoUri, VkProfileUri, GitHubProfileUri, " +
-                "PhoneNumber, StudentAccessionYear, IsGraduated, StudyingDirection, InstituteName, Specialization " +
+            var sql = "SELECT * " +
                 "FROM accounts " +
                 "WHERE UserId =@UserId ";
             Account account;
             using (var connection = new MySqlConnection(_connectionString))
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                account = connection.Query<dynamic>(sql, new { UserId = 1 })
+                account = connection.Query<dynamic>(sql, new { UserId = accountId })
                     .Select(p =>
                     new Account(p.Firstname,
                                 p.Lastname,
@@ -64,7 +62,8 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                                 (AccountRole)p.AccountRole,
                                 (ConfirmationStatus)p.ConfirmationStatus,
                                 p.RegistrationTime,
-                                new Profile {
+                                new Profile
+                                {
                                     Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
                                     VkProfileUri = new Uri(p.VkProfileUri),
                                     LinkToGithubProfile = new Uri(p.GitHubProfileUri),
@@ -74,11 +73,10 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                                     StudyingDirection = p.StudyingDirection,
                                     InstituteName = p.InstituteName,
                                     Specialization = p.Specialization
-                                }
-                                    ))
-                     .First();
+                                }))
+                     .FirstOrDefault();
             }
-            
+
             return account;
         }
 
@@ -107,9 +105,9 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
         }
 
         public List<Account> GetSomeAccounts<TComparable>(
-            int skipCount, 
+            int skipCount,
             int takeCount,
-            Func<Account, TComparable> orderer, 
+            Func<Account, TComparable> orderer,
             Func<Account, bool> predicate = null)
         {
             /*
