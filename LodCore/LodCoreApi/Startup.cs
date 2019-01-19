@@ -113,7 +113,8 @@ namespace LodCoreApi
             services.AddSingleton(notificationHandler);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
+            services.AddCors();
+
             services.AddMvc();
             services.AddSwaggerGen(c =>
             {
@@ -149,6 +150,10 @@ namespace LodCoreApi
 
             app.UseStaticFiles();
             app.UseMvc();
+
+            string origin = Configuration.GetValue<string>("BackendDomain");
+            app.UseCors(builder => 
+                builder.WithOrigins(origin));
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
