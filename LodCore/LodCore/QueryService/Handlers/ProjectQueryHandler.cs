@@ -4,9 +4,9 @@ using LodCore.QueryService.Queries;
 using LodCore.QueryService.Queries.ProjectQuery;
 using LodCore.QueryService.Views;
 using LodCore.QueryService.Views.ProjectView;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +22,7 @@ namespace LodCore.QueryService.Handlers
 
         public ProjectQueryHandler(string connectionString)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             _connectionString = connectionString;
         }
 
@@ -29,7 +30,7 @@ namespace LodCore.QueryService.Handlers
         {
             List<ProjectDto> result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, ProjectDto>();
 
@@ -46,7 +47,7 @@ namespace LodCore.QueryService.Handlers
                         }
                         
                         return projectEntry;
-                    }, splitOn: "projectId").Distinct().ToList();
+                    }, splitOn: "project_key").Distinct().ToList();
             }
 
             return query.FormResult(result);
@@ -56,7 +57,7 @@ namespace LodCore.QueryService.Handlers
         {
             ProjectDto result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, ProjectDto>();
 
@@ -98,7 +99,7 @@ namespace LodCore.QueryService.Handlers
         {
             List<ProjectDto> result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, ProjectDto>();
 

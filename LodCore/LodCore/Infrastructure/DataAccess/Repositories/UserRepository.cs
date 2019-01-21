@@ -96,12 +96,37 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
         public List<Account> GetAllAccounts(Func<Account, bool> predicate = null)
         {
-            /*
-            var session = _sessionProvider.GetCurrentSession();
-            return predicate == null
-                ? session.Query<Account>().ToList()
-                : session.Query<Account>().Where(predicate).ToList();*/
-            return null;
+            var sql = "SELECT * " +
+                "FROM accounts ";
+
+            List<Account> accounts;
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                accounts = connection.Query<dynamic>(sql)
+                    .Select(p =>
+                    new Account(p.Firstname,
+                                p.Lastname,
+                                new MailAddress(p.Email),
+                                Password.FromPlainString(p.Password),
+                                (AccountRole)p.AccountRole,
+                                (ConfirmationStatus)p.ConfirmationStatus,
+                                p.RegistrationTime,
+                                new Profile
+                                {
+                                    Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
+                                    VkProfileUri = new Uri(p.VkProfileUri),
+                                    LinkToGithubProfile = new Uri(p.GitHubProfileUri),
+                                    PhoneNumber = p.PhoneNumber,
+                                    StudentAccessionYear = p.StudentAccessionYear,
+                                    IsGraduated = p.IsGraduated,
+                                    StudyingDirection = p.StudyingDirection,
+                                    InstituteName = p.InstituteName,
+                                    Specialization = p.Specialization
+                                }))
+                     .ToList();
+            }
+            return accounts;
         }
 
         public List<Account> GetSomeAccounts<TComparable>(

@@ -6,7 +6,7 @@ using LodCoreLibraryOld.QueryService.Views;
 using LodCoreLibraryOld.QueryService.Views.DeveloperView;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using System.Data.MySqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +27,7 @@ namespace LodCoreLibraryOld.QueryService.Handlers
         {
             List<AccountDto> result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new  MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, AccountDto>();
 

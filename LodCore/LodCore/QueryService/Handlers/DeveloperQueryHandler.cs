@@ -5,9 +5,9 @@ using LodCore.QueryService.Queries.DeveloperQuery;
 using LodCore.QueryService.Queries.ProjectQuery;
 using LodCore.QueryService.Views;
 using LodCore.QueryService.Views.DeveloperView;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +22,7 @@ namespace LodCore.QueryService.Handlers
     {
         public DeveloperQueryHandler(string connectionString)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             _connectionString = connectionString;
         }
 
@@ -29,7 +30,7 @@ namespace LodCore.QueryService.Handlers
         {
             List<AccountDto> result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, AccountDto>();
 
@@ -60,7 +61,7 @@ namespace LodCore.QueryService.Handlers
         {
             AccountWithProjectsDto result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, AccountWithProjectsDto>();
 
@@ -91,7 +92,7 @@ namespace LodCore.QueryService.Handlers
         {
             List<AccountDto> result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, AccountDto>();
 
@@ -105,7 +106,7 @@ namespace LodCore.QueryService.Handlers
         {
             List<AccountDto> result;
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 var resultDictionary = new Dictionary<int, AccountDto>();
 
