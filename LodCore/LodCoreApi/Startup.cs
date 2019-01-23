@@ -64,7 +64,7 @@ namespace LodCoreApi
             IEventPublisher eventPublisher = eventConsumersContainer.GetEventPublisher();
             IWebSocketStreamProvider webSocketStreamProvider = new WebSocketStreamProvider();
 
-            ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+           ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
             DeveloperQueryHandler developerQueryHandler = new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
 
             IValidationRequestsRepository validationRequestsRepository = new ValidationRequestsRepository();

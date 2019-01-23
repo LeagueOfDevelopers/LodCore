@@ -16,7 +16,7 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
             Offset = offset;
             Count = count;
             Sql = "SELECT * FROM accounts AS Account " +
-                "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId;";
+                "LEFT JOIN projectMembership AS projMembership ON Account.userId = projMembership.developerId;";
         }
 
         public string Sql { get; }

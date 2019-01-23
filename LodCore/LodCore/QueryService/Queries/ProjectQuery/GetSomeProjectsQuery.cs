@@ -20,8 +20,9 @@ namespace LodCore.QueryService.Queries.ProjectQuery
             Count = count;
             Categories = categories;
 
-            Sql = "SELECT * FROM projects AS Project LEFT JOIN projectTypes AS ProjectType " +
-                $"ON Project.projectid = ProjectType.projectId WHERE type IN({string.Join(",", Categories)});";
+            Sql = "SELECT * FROM projects AS Project " +
+                  "LEFT JOIN projectTypes AS ProjectType ON Project.ProjectId = ProjectType.project_key " +
+                 $"WHERE id IN ({string.Join(",", Categories)});";
         }
 
         public SomeProjectsView FormResult(List<ProjectDto> rawResult)

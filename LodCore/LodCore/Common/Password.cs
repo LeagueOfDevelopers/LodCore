@@ -36,11 +36,9 @@ namespace LodCore.Common
         {
         }
 
-        public virtual string Value { get; protected set; }
-
         public static Password FromPlainString(string value)
         {
-            Require.NotEmpty(value, nameof(value));
+            if (value == null) return null;
             return new Password { Value = value };
         }
 
@@ -71,5 +69,7 @@ namespace LodCore.Common
         {
             return Regex.IsMatch(passwordToCheck, "^.{8,50}$");
         }
+
+        public virtual string Value { get; protected set; }
     }
 }
