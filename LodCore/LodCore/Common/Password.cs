@@ -38,6 +38,7 @@ namespace LodCore.Common
 
         public static Password FromPlainString(string value)
         {
+            if (value == null) return null;
             return new Password { Value = value };
         }
 

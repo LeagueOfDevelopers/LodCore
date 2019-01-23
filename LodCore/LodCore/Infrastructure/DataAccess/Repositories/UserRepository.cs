@@ -96,8 +96,7 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
         public List<Account> GetAllAccounts(Func<Account, bool> predicate = null)
         {
-            var sql = "SELECT * " +
-                "FROM accounts ";
+            var sql = "SELECT * FROM accounts ";
 
             List<Account> accounts;
             using (var connection = new MySqlConnection(_connectionString))
@@ -105,7 +104,7 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                 accounts = connection.Query<dynamic>(sql)
                     .Select(p =>
-                    new Account(p.Firstname,
+                        new Account(p.Firstname,
                                 p.Lastname,
                                 new MailAddress(p.Email),
                                 Password.FromPlainString(p.Password),
