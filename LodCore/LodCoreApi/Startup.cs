@@ -34,6 +34,7 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
+using LodCoreApi.Filters;
 
 namespace LodCoreApi
 {
@@ -115,7 +116,9 @@ namespace LodCoreApi
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddCors();
 
-            services.AddMvc();
+            services.AddMvc(options => 
+                options.Filters.Add(typeof(DBExceptionFilter)));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
