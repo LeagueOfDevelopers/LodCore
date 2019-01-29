@@ -53,8 +53,12 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            
-            
+            services.AddCors(policy =>
+                policy.AddPolicy("Share", builder =>
+                    builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()));
+
             EventConsumersContainer eventConsumersContainer = new EventConsumersContainer(
                 new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
                 Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
@@ -114,7 +118,6 @@ namespace LodCoreApi
             services.AddSingleton(notificationHandler);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddCors();
 
             services.AddMvc(options => 
                 options.Filters.Add(typeof(DBExceptionFilter)));
@@ -155,8 +158,8 @@ namespace LodCoreApi
             app.UseMvc();
 
             //string origin = Configuration.GetValue<string>("BackendDomain");
-            app.UseCors(builder => 
-                builder.AllowAnyOrigin());
+            //app.UseCors(builder => 
+            //    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
