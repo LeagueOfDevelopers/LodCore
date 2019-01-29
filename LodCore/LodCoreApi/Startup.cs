@@ -157,9 +157,7 @@ namespace LodCoreApi
             app.UseStaticFiles();
             app.UseMvc();
 
-            //string origin = Configuration.GetValue<string>("BackendDomain");
-            //app.UseCors(builder => 
-            //    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("Share");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
