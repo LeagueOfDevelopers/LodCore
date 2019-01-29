@@ -53,9 +53,11 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
+
+            string frontDomain = Configuration.GetValue<string>("FrontendDomain");
             services.AddCors(policy =>
                 policy.AddPolicy("Share", builder =>
-                    builder.AllowAnyOrigin()
+                    builder.WithOrigins(frontDomain)
                     .AllowAnyMethod()
                     .AllowAnyHeader()));
 
@@ -154,10 +156,10 @@ namespace LodCoreApi
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseCors("Share");
             app.UseStaticFiles();
             app.UseMvc();
 
-            app.UseCors("Share");
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
