@@ -53,8 +53,8 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            
-            
+            services.AddCors();
+
             EventConsumersContainer eventConsumersContainer = new EventConsumersContainer(
                 new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
                 Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
@@ -114,7 +114,6 @@ namespace LodCoreApi
             services.AddSingleton(notificationHandler);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddCors();
 
             services.AddMvc(options => 
                 options.Filters.Add(typeof(DBExceptionFilter)));
@@ -151,7 +150,6 @@ namespace LodCoreApi
                 app.UseExceptionHandler("/Error");
             }
 
-            //string origin = Configuration.GetValue<string>("BackendDomain");
             app.UseCors(builder => 
                 builder.WithOrigins(@"http://test.lod-misis.ru/", @"http://lod-misis.ru/")
                 .AllowAnyMethod()
