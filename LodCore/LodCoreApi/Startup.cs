@@ -151,12 +151,16 @@ namespace LodCoreApi
                 app.UseExceptionHandler("/Error");
             }
 
+            //string origin = Configuration.GetValue<string>("BackendDomain");
+            app.UseCors(builder => 
+                builder.WithOrigins(@"http://test.lod-misis.ru/", @"http://lod-misis.ru/")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+
             app.UseStaticFiles();
             app.UseMvc();
 
-            //string origin = Configuration.GetValue<string>("BackendDomain");
-            app.UseCors(builder => 
-                builder.AllowAnyOrigin());
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
