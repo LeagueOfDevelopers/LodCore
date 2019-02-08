@@ -39,7 +39,7 @@ namespace LodCoreApi.Controllers
 
             var result = _developerQueryHandler.Handle(new AllAccountsQuery());
             result.SelectRandomDevelopers(count, GetUserRole());
-
+            
             return Ok(result);
         }
 

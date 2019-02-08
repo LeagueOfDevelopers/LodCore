@@ -35,6 +35,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
 using LodCoreApi.Filters;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace LodCoreApi
 {
@@ -53,7 +54,15 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            services.AddCors();
+            string frontDomain = Configuration.GetValue<string>("FrontendDomain");
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CommonPolicy", builder =>
+                builder.WithOrigins(frontDomain)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
 
             EventConsumersContainer eventConsumersContainer = new EventConsumersContainer(
                 new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
@@ -115,8 +124,11 @@ namespace LodCoreApi
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddMvc(options => 
-                options.Filters.Add(typeof(DBExceptionFilter)));
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(DBExceptionFilter));
+                //options.Filters.Add(new CorsAuthorizationFilterFactory("CommonPolicy"));
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -150,11 +162,7 @@ namespace LodCoreApi
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseCors(builder => 
-                builder.WithOrigins(@"http://test.lod-misis.ru/", @"http://lod-misis.ru/")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+            app.UseCors("CommonPolicy");
 
             app.UseStaticFiles();
             app.UseMvc();
