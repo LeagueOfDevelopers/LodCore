@@ -127,7 +127,6 @@ namespace LodCoreApi
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(DBExceptionFilter));
-                //options.Filters.Add(new CorsAuthorizationFilterFactory("CommonPolicy"));
             });
 
             services.AddSwaggerGen(c =>
