@@ -54,11 +54,11 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            string frontDomain = Configuration.GetValue<string>("FrontendDomain");
+            string[] origins = Configuration.GetSection("Origins").GetChildren().Select(c => c.Value).ToArray();
             services.AddCors(options =>
             {
                 options.AddPolicy("CommonPolicy", builder =>
-                builder.WithOrigins(frontDomain)
+                builder.WithOrigins(origins)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials());
