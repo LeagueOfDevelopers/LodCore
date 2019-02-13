@@ -14,7 +14,7 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
         {
             DeveloperId = developerId;
             Sql = "SELECT * FROM accounts AS Account " +
-                "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId " +
+                "LEFT JOIN projectmembership AS projMembership ON Account.userId = projMembership.developerId " +
                 "LEFT JOIN projects AS Project ON projMembership.projectId = project.projectId " +
                 $"WHERE Account.userId = {DeveloperId};";
         }
