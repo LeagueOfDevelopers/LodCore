@@ -54,7 +54,7 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            string[] origins = Configuration.GetSection("Origins").GetChildren().Select(c => c.Value).ToArray();
+            string[] origins = Configuration.GetValue<string>("Origins").Split(',');
             services.AddCors(options =>
             {
                 options.AddPolicy("CommonPolicy", builder =>
