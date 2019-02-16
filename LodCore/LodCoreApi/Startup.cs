@@ -34,6 +34,8 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
+using LodCoreApi.Filters;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace LodCoreApi
 {
@@ -52,8 +54,16 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            
-            
+            string[] origins = Configuration.GetValue<string>("Origins").Split(',');
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CommonPolicy", builder =>
+                builder.WithOrigins(origins)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+
             EventConsumersContainer eventConsumersContainer = new EventConsumersContainer(
                 new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
                 Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
@@ -113,9 +123,12 @@ namespace LodCoreApi
             services.AddSingleton(notificationHandler);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddCors();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(DBExceptionFilter));
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -148,12 +161,11 @@ namespace LodCoreApi
                 app.UseExceptionHandler("/Error");
             }
 
+            app.UseCors("CommonPolicy");
+
             app.UseStaticFiles();
             app.UseMvc();
 
-            //string origin = Configuration.GetValue<string>("BackendDomain");
-            app.UseCors(builder => 
-                builder.AllowAnyOrigin());
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

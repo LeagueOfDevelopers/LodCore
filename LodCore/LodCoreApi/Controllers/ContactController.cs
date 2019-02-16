@@ -17,21 +17,21 @@ namespace LodCoreApi.Controllers
             _contactsService = contactsService;
         }
 
-        [HttpPost]
-        [Route("contact")]
-        public IActionResult SendContactMessage([FromBody] ContactMessage contactMessage)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            _contactsService.SendContactMessage(
-                new NewContactMessage(
-                    contactMessage.ClientName,
-                    contactMessage.ClientEmail,
-                    contactMessage.MessageTopic,
-                    contactMessage.MessageBody));
-            return Ok();
-        }
+        //[HttpPost]
+        //[Route("contact")]
+        //public IActionResult SendContactMessage([FromBody] ContactMessage contactMessage)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    _contactsService.SendContactMessage(
+        //        new NewContactMessage(
+        //            contactMessage.ClientName,
+        //            contactMessage.ClientEmail,
+        //            contactMessage.MessageTopic,
+        //            contactMessage.MessageBody));
+        //    return Ok();
+        //}
     }
 }
