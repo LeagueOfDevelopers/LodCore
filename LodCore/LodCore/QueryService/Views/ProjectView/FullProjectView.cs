@@ -32,14 +32,30 @@ namespace LodCore.QueryService.Views.ProjectView
             projectDto.Links.ToList().ForEach(l => Links.Add(new ProjectLinkView(l.Name, l.Uri)));
         }
 
+        public FullProjectView(int projectId,
+            string name,
+            string info,
+            ProjectStatus projectStatus
+            )
+        {
+            ProjectId = projectId;
+            Name = name;
+            Info = info;
+            ProjectStatus = projectStatus;
+            ProjectTypes = new List<ProjectType>();
+            ProjectMemberships = new List<ProjectMembershipView>();
+            Screenshots = new List<ImageView>();
+            Links = new List<ProjectLinkView>();
+        }
+
         public int ProjectId { get; }
         public string Name { get; }
-        public List<ProjectType> ProjectTypes { get; }
         public string Info { get; }
         public ProjectStatus ProjectStatus { get; }
-        public ImageView LandingImage { get; }
-        public List<ProjectMembershipView> ProjectMemberships { get; }
-        public List<ImageView> Screenshots { get; }
+        public ImageView LandingImage { get; set; }
+        public List<ProjectType> ProjectTypes { get; set; }
+        public List<ProjectMembershipView> ProjectMemberships { get; set; }
+        public List<ImageView> Screenshots { get; set; }
         public List<ProjectLinkView> Links { get; set; }
 
         public bool IsInProgressOrDone()

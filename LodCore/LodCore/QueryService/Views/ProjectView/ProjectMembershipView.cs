@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.ProjectView
 {
-    public class ProjectMembershipView
+    public class ProjectMembershipView : IEquatable<ProjectMembershipView>
     {
         public ProjectMembershipView(int developerId, string role)
         {
@@ -16,5 +16,10 @@ namespace LodCore.QueryService.Views.ProjectView
 
         public int DeveloperId { get; }
         public string Role { get; }
+
+        public bool Equals(ProjectMembershipView other)
+        {
+            return DeveloperId == other.DeveloperId;
+        }
     }
 }

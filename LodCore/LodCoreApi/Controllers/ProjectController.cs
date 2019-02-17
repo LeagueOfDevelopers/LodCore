@@ -241,28 +241,28 @@ namespace LodCoreApi.Controllers
         //    return Ok();
         //}
 
-        //[HttpGet]
-        //[Authorize]
-        //[AllowAnonymous]
-        //[Route("projects/{projectId}")]
-        //public IActionResult GetProject(int projectId)
-        //{
-        //    Require.Positive(projectId, nameof(projectId));
-            
-        //    try
-        //    {
-        //        var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
-                
-        //        if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
-        //            return Unauthorized();
-        //        else
-        //            return Ok(project);
-        //    }
-        //    catch (ProjectNotFoundException ex)
-        //    {
-        //        Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
-        //        return NotFound();
-        //    }
-        //}
+        [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
+        [Route("projects/{projectId}")]
+        public IActionResult GetProject(int projectId)
+        {
+            Require.Positive(projectId, nameof(projectId));
+
+            try
+            {
+                var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
+
+                if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
+                    return Unauthorized();
+                else
+                    return Ok(project);
+            }
+            catch (ProjectNotFoundException ex)
+            {
+                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
     }
 }
