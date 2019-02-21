@@ -66,14 +66,11 @@ namespace LodCoreApi.Controllers
                 var userRole = GetUserRole();
 
                 var result = _developerQueryHandler.Handle(new GetDeveloperQuery(id));
-                if (result.IsVisible(userRole))
-                {
-                    if (userRole != AccountRole.Unknown)
-                        return Ok(result);
 
-                    return Ok(result.GetGuestView());
-                }
-                return Unauthorized();
+                if (!result.IsVisible(userRole)) return Unauthorized();
+                
+                    if (userRole != AccountRole.Unknown) return Ok(result);
+                    else return Ok(result.GetGuestView());
             }
             catch (AccountNotFoundException ex)
             {
