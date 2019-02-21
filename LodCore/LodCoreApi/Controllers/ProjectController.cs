@@ -69,7 +69,7 @@ namespace LodCoreApi.Controllers
         public IActionResult GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-            
+
             var result = _projectQueryHandler.Handle(new AllProjectsQuery());
             if (!User.Identity.IsAuthenticated)
             {
@@ -87,17 +87,14 @@ namespace LodCoreApi.Controllers
         [Route("projects")]
         [SwaggerResponse(200, Type = typeof(SomeProjectsView))]
         public IActionResult GetAllProjects(
-            [FromQuery(Name = "count")] int count, 
+            [FromQuery(Name = "count")] int count,
             [FromQuery(Name = "offset")] int offset,
             [FromQuery(Name = "category")] int[] categories)
         {
             var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories));
 
-            if (!User.Identity.IsAuthenticated)
-            {
-                resultOfQuery.FilterResult();
-            }
-            
+            if (!User.Identity.IsAuthenticated) resultOfQuery.FilterResult();
+
             return Ok(resultOfQuery);
         }
 
