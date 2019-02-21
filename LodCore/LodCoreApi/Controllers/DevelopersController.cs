@@ -54,33 +54,30 @@ namespace LodCoreApi.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //[Authorize]
-        //[AllowAnonymous]
-        //[Route("developers/{id}")]
-        //public IActionResult GetDeveloper(int id)
-        //{
-        //    Require.Positive(id, nameof(id));
-        //    try
-        //    {
-        //        var userRole = GetUserRole();
+        [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
+        [Route("developers/{id}")]
+        public IActionResult GetDeveloper(int id)
+        {
+            Require.Positive(id, nameof(id));
+            try
+            {
+                var userRole = GetUserRole();
 
-        //        var result = _developerQueryHandler.Handle(new GetDeveloperQuery(id));
-        //        if (result.IsVisible(userRole))
-        //        {
-        //            if (userRole != AccountRole.Unknown)
-        //                return Ok(result);
+                var result = _developerQueryHandler.Handle(new GetDeveloperQuery(id));
 
-        //            return Ok(result.GetGuestView());
-        //        }
-        //        return Unauthorized();
-        //    }
-        //    catch (AccountNotFoundException ex)
-        //    {
-        //        Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
-        //        return NotFound();
-        //    }
-        //}
+                if (!result.IsVisible(userRole)) return Unauthorized();
+                
+                    if (userRole != AccountRole.Unknown) return Ok(result);
+                    else return Ok(result.GetGuestView());
+            }
+            catch (AccountNotFoundException ex)
+            {
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
 
         //[HttpGet]
         //[Route("developers/search/{searchString}")]
