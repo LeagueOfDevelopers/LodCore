@@ -69,7 +69,7 @@ namespace LodCoreApi.Controllers
         public IActionResult GetRandomIndexPageProjects(int count)
         {
             Require.ZeroOrGreater(count, nameof(count));
-            
+
             var result = _projectQueryHandler.Handle(new AllProjectsQuery());
             if (!User.Identity.IsAuthenticated)
             {
@@ -87,17 +87,14 @@ namespace LodCoreApi.Controllers
         [Route("projects")]
         [SwaggerResponse(200, Type = typeof(SomeProjectsView))]
         public IActionResult GetAllProjects(
-            [FromQuery(Name = "count")] int count, 
+            [FromQuery(Name = "count")] int count,
             [FromQuery(Name = "offset")] int offset,
             [FromQuery(Name = "category")] int[] categories)
         {
             var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories));
 
-            if (!User.Identity.IsAuthenticated)
-            {
-                resultOfQuery.FilterResult();
-            }
-            
+            if (!User.Identity.IsAuthenticated) resultOfQuery.FilterResult();
+
             return Ok(resultOfQuery);
         }
 
@@ -241,28 +238,28 @@ namespace LodCoreApi.Controllers
         //    return Ok();
         //}
 
-        //[HttpGet]
-        //[Authorize]
-        //[AllowAnonymous]
-        //[Route("projects/{projectId}")]
-        //public IActionResult GetProject(int projectId)
-        //{
-        //    Require.Positive(projectId, nameof(projectId));
-            
-        //    try
-        //    {
-        //        var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
-                
-        //        if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
-        //            return Unauthorized();
-        //        else
-        //            return Ok(project);
-        //    }
-        //    catch (ProjectNotFoundException ex)
-        //    {
-        //        Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
-        //        return NotFound();
-        //    }
-        //}
+        [HttpGet]
+        [Authorize]
+        [AllowAnonymous]
+        [Route("projects/{projectId}")]
+        public IActionResult GetProject(int projectId)
+        {
+            Require.Positive(projectId, nameof(projectId));
+
+            try
+            {
+                var project = _projectQueryHandler.Handle(new GetProjectQuery(projectId));
+
+                if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
+                    return Unauthorized();
+                else
+                    return Ok(project);
+            }
+            catch (ProjectNotFoundException ex)
+            {
+                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
+                return NotFound();
+            }
+        }
     }
 }

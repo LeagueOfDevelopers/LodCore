@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.ProjectView
 {
-    public class ProjectLinkView
+    public class ProjectLinkView : IEquatable<ProjectLinkView>
     {
         public ProjectLinkView(string name, string uri)
         {
@@ -16,5 +16,10 @@ namespace LodCore.QueryService.Views.ProjectView
 
         public string Name { get; }
         public string Uri { get; }
+
+        public bool Equals(ProjectLinkView other)
+        {
+            return Uri == Uri;
+        }
     }
 }
