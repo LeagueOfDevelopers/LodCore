@@ -10,9 +10,8 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
         public SearchDevelopersQuery(string searchString)
         {
             SearchString = searchString;
-            Sql = $"SELECT * FROM accounts AS Account LEFT JOIN projectMemberships AS projMembership " +
-                $"ON Account.userId = projMembership.developerId WHERE firstname LIKE '%{searchString}%' " +
-                $"OR lastname LIKE '%{searchString}%' OR specialization LIKE '%{searchString}%'";
+            Sql = "SELECT * FROM accounts AS Account " +
+                  "LEFT JOIN projectmembership ON Account.userId = projectmembership.developerId ";
         }
 
         public string SearchString { get; }

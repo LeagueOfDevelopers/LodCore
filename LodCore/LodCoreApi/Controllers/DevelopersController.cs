@@ -79,15 +79,15 @@ namespace LodCoreApi.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("developers/search/{searchString}")]
-        //public IActionResult SearchDevelopers(string searchString)
-        //{
-        //    var result = _developerQueryHandler.Handle(new SearchDevelopersQuery(searchString));
-        //    result.FilterResult(GetUserRole());
+        [HttpGet]
+        [Route("developers/search/{searchString}")]
+        public IActionResult SearchDevelopers(string searchString)
+        {
+            var result = _developerQueryHandler.Handle(new SearchDevelopersQuery(searchString));
+            result.FilterResult(GetUserRole());
 
-        //    return Ok(result);
-        //}
+            return Ok(result);
+        }
 
         private AccountRole GetUserRole()
         {

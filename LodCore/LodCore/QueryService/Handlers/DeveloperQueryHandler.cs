@@ -127,10 +127,25 @@ namespace LodCore.QueryService.Handlers
 
                         return accountEntry;
 
-                    }, splitOn: "membershipId").Distinct().ToList();
+                    }, splitOn: "MembershipId").Distinct().ToList();
             }
 
-            return new SearchDevelopersView(result);
+            return new SearchDevelopersView(SearchDevelopers(query.SearchString ,result));
+        }
+
+        private IEnumerable<AccountDto> SearchDevelopers(string searchString, IEnumerable<AccountDto> accounts)
+        {
+            string[] words = searchString
+                .Split(' ', ',', ';')
+                .Select(w => w.ToLower())
+                .ToArray();
+
+            return accounts.Where(ac =>
+            {
+                return words.Any(w => ac.Firstname.ToLower().Contains(w))
+                || words.Any(w => ac.Lastname.ToLower().Contains(w))
+                || words.Any(w => ac.Email.ToLower().Contains(w));
+            });
         }
 
         private string _connectionString;
