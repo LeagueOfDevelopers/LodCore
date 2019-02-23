@@ -17,12 +17,14 @@ namespace LodCore.QueryService.Queries.ProjectQuery
         public GetProjectQuery(int projectId)
         {
             ProjectId = projectId;
-            Sql = "SELECT * FROM projects AS Project " +
-                "LEFT JOIN screenshots AS Screenshot ON Project.projectId = Screenshot.projectId " +
-                "LEFT JOIN projectMemberships AS ProjMembership ON Project.projectId = ProjMembership.projectId " +
-                "LEFT JOIN projectLinks AS Link ON Project.projectId = Link.projectId " +
-                "LEFT JOIN projectTypes AS Type ON Project.projectId = Type.projectId " +
-                $"WHERE Project.projectId = {ProjectId};";
+            Sql = "SELECT projects.ProjectId, Name, Info, ProjectStatus, projects.BigPhotoUri, projects.SmallPhotoUri, " +
+                  "screenshots.BigPhotoUri, screenshots.SmallPhotoUri, projecttypes.id AS Type, projectmembership.DeveloperId, " +
+                  "projectmembership.Role, Name, githubrepositorieslinks.id AS Uri FROM projects " +
+                  "LEFT JOIN screenshots ON projects.ProjectId = screenshots.project_key " +
+                  "LEFT JOIN projectmembership ON projects.ProjectId = projectmembership.ProjectId " +
+                  "LEFT JOIN projecttypes ON projects.ProjectId = projecttypes.project_key " +
+                  "LEFT JOIN githubrepositorieslinks ON githubrepositorieslinks.project_key = projects.ProjectId " +
+                  "WHERE projects.ProjectId = @ProjectId";
         }
 
         public int ProjectId { get; }
