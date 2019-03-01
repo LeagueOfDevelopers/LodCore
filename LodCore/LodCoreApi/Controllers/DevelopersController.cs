@@ -81,10 +81,14 @@ namespace LodCoreApi.Controllers
 
         [HttpGet]
         [Route("developers/search/{searchString}")]
-        public IActionResult SearchDevelopers(string searchString)
+        public IActionResult SearchDevelopers(
+            string searchString,
+            [FromQuery(Name = "count")] int count,
+            [FromQuery(Name = "offset")] int offset)
         {
             var result = _developerQueryHandler.Handle(new SearchDevelopersQuery(searchString));
             result.FilterResult(GetUserRole());
+            result.CutOff(count, offset);
 
             return Ok(result);
         }
