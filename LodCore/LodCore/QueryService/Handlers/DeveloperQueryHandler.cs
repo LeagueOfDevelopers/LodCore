@@ -142,9 +142,14 @@ namespace LodCore.QueryService.Handlers
 
             return accounts.Where(ac =>
             {
-                return words.Any(w => ac.Firstname.ToLower().Contains(w))
-                || words.Any(w => ac.Lastname.ToLower().Contains(w))
-                || words.Any(w => ac.Email.ToLower().Contains(w));
+                foreach(string word in words)
+                {
+                    if ((ac.Firstname != null && ac.Firstname.ToLower().Contains(word))
+                        || (ac.Lastname != null && ac.Lastname.ToLower().Contains(word))
+                        || (ac.Email != null && ac.Email.ToLower().Contains(word))
+                        ) return true;
+                }
+                return false;
             });
         }
 

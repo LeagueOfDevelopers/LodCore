@@ -26,10 +26,11 @@ namespace LodCore.QueryService.Views.DeveloperView
             else
                 Developers = _rawResult.Where(d => d.ConfirmationStatus == ConfirmationStatus.FullyConfirmed &&
                 !d.IsHidden).Select(d => new MinDeveloperView(d));
+            AllDevelopersCount = Developers.Count();
         }
 
         public IEnumerable<MinDeveloperView> Developers { get; private set; }
-        public int AllDevelopersCount { get; }
+        public int AllDevelopersCount { get; private set; }
 
         private IEnumerable<AccountDto> _rawResult;
     }

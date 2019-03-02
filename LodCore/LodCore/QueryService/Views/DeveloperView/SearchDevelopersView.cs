@@ -12,10 +12,9 @@ namespace LodCore.QueryService.Views.DeveloperView
         public SearchDevelopersView(IEnumerable<AccountDto> developers)
         {
             Developers = developers.Select(d => new MinDeveloperView(d));
+            AllDevelopersCount = Developers.Count();
             _rawResult = developers;
         }
-
-        public IEnumerable<MinDeveloperView> Developers { get; private set; }
 
         public void FilterResult(AccountRole callingUser)
         {
@@ -25,8 +24,16 @@ namespace LodCore.QueryService.Views.DeveloperView
             else
                 Developers = _rawResult.Where(d => d.ConfirmationStatus == ConfirmationStatus.FullyConfirmed &&
                 !d.IsHidden).Select(d => new MinDeveloperView(d));
+            AllDevelopersCount = Developers.Count();
         }
 
+        public void CutOff(int count, int offset)
+        {
+            Developers = Developers.Skip(offset).Take(count);
+        }
+
+        public IEnumerable<MinDeveloperView> Developers { get; private set; }
+        public int AllDevelopersCount { get; private set; }
         private IEnumerable<AccountDto> _rawResult;
     }
 }
