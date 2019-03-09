@@ -19,21 +19,41 @@ namespace LodCore.QueryService.Queries.ProjectQuery
             Offset = offset;
             Count = count;
             Categories = categories;
-
+            BDCategories = CategoryOffset();
             Sql = "SELECT * FROM projects AS Project " +
                   "LEFT JOIN projectTypes AS ProjectType ON Project.ProjectId = ProjectType.project_key " +
-                 $"WHERE id IN ({string.Join(",", Categories)});";
+                 $"WHERE id IN ({string.Join(",", BDCategories)});";
         }
 
         public SomeProjectsView FormResult(List<ProjectDto> rawResult)
         {
-            var necessaryProjects = rawResult.Skip(Offset).Take(Count);
-            return new SomeProjectsView(necessaryProjects, rawResult.Count());
+            return new SomeProjectsView(rawResult, rawResult.Count());
+        }
+        //Смещает номера категорий для работы с бд
+        private int[] CategoryOffset()
+        {
+            int[] newCategories = new int[Categories.Length];
+            Categories.CopyTo(newCategories, 0);
+
+            for(int i =0; i < newCategories.Length; i++)
+            {
+                if (newCategories[i] == 0)
+                {
+                    newCategories = ((int[])Enum.GetValues(typeof(ProjectType)))
+                        .Skip(1)
+                        .Select(el => el - 1)
+                        .ToArray();
+                    return newCategories;
+                }
+                newCategories[i]--;
+            }
+            return newCategories;
         }
         
         public int Offset { get; }
         public int Count { get; }
-        public int[] Categories { get; }
+        public int[] Categories { get; private set; }
         public string Sql { get; }
+        private int[] BDCategories;
     }
 }

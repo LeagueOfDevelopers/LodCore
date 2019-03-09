@@ -2,6 +2,7 @@
 {
     public enum ProjectType
     {
+        All,
         Website,
         MobileApp,
         Desktop,

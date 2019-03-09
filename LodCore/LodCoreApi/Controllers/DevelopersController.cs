@@ -51,7 +51,7 @@ namespace LodCoreApi.Controllers
         {
             var result = _developerQueryHandler.Handle(new GetSomeDevelopersQuery(offset, count));
             result.FilterResult(GetUserRole());
-            return Ok(result);
+            return Ok(result.Take(count, offset));
         }
 
         [HttpGet]
