@@ -91,11 +91,12 @@ namespace LodCoreApi.Controllers
             [FromQuery(Name = "offset")] int offset,
             [FromQuery(Name = "category")] int[] categories)
         {
-            var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, categories));
+            int[] cat = categories.Length != 0 ? categories : new int[] { 1 };
+            var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, cat));
 
             if (!User.Identity.IsAuthenticated) resultOfQuery.FilterResult();
 
-            return Ok(resultOfQuery);
+            return Ok(resultOfQuery.Take(offset,count));
         }
 
         //[HttpPost]

@@ -29,9 +29,6 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
                 .Where(dev => !dev.IsHidden);
 
             int countVisableDevelopers = visableDevelopers.Count();
-            visableDevelopers = visableDevelopers
-                .Skip(Offset)
-                .Take(Count);
                 
             return new SomeDevelopersView(visableDevelopers.ToList(), countVisableDevelopers);
         }
