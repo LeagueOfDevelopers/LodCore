@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Journalist;
+using LodCore.Common;
+using LodCore.Domain.Exceptions;
+using LodCore.Domain.NotificationService;
+using LodCore.Domain.ProjectManagment;
 using LodCore.Infrastructure.DataAccess.Repositories;
 using LodCore.Infrastructure.EventBus;
-using LodCore.Domain.ProjectManagment;
-using LodCore.Domain.Exceptions;
-using LodCore.Common;
-using LodCore.Domain.NotificationService;
 
 namespace LodCore.Facades
 {
     public class ProjectProvider : IProjectProvider
     {
+        private readonly IEventPublisher _eventPublisher;
+
+        private readonly IProjectRepository _projectRepository;
+
         public ProjectProvider(
             IProjectRepository projectRepository,
             IEventPublisher eventPublisher
-            )
+        )
         {
             Require.NotNull(projectRepository, nameof(projectRepository));
             Require.NotNull(eventPublisher, nameof(eventPublisher));
@@ -32,7 +36,8 @@ namespace LodCore.Facades
             return allProjects.ToList();
         }
 
-        public List<Project> GetProjects(int projectsToSkip, int projectsToReturn, Expression<Func<Project, bool>> predicate = null)
+        public List<Project> GetProjects(int projectsToSkip, int projectsToReturn,
+            Expression<Func<Project, bool>> predicate = null)
         {
             var requiredProjects = _projectRepository.GetSomeProjects(
                 projectsToSkip,
@@ -41,7 +46,9 @@ namespace LodCore.Facades
                     ? 1 // i can't figure out, how to sort it other way
                     : project.ProjectStatus == ProjectStatus.InProgress // even simple switch clause doesn't work here
                         ? 2 // proper way to do this is rearrange enum values and change database accordingly
-                        : project.ProjectStatus == ProjectStatus.Planned ? 3 : 4, // but it would be tough to do this all the time i want to change order
+                        : project.ProjectStatus == ProjectStatus.Planned
+                            ? 3
+                            : 4, // but it would be tough to do this all the time i want to change order
                 predicate); // so let it be so
             return requiredProjects.ToList();
         }
@@ -50,13 +57,10 @@ namespace LodCore.Facades
         {
             Require.Positive(projectId, nameof(projectId));
             var project = _projectRepository.GetProject(projectId);
-            if (project == null)
-            {
-                throw new ProjectNotFoundException();
-            }
+            if (project == null) throw new ProjectNotFoundException();
 
             return project;
-        } 
+        }
 
         public int CreateProject(CreateProjectRequest request)
         {
@@ -69,15 +73,15 @@ namespace LodCore.Facades
                 request.ProjectStatus,
                 request.LandingImage,
                 null,
-                request.Screenshots != null 
-                ? new HashSet<Image>(request.Screenshots) 
-                : null,
+                request.Screenshots != null
+                    ? new HashSet<Image>(request.Screenshots)
+                    : null,
                 request.Links != null
-                ? new HashSet<ProjectLink>(request.Links)
-                :null,
+                    ? new HashSet<ProjectLink>(request.Links)
+                    : null,
                 request.LinksToGithubRepositories != null
-                ? new HashSet<Uri>(request.LinksToGithubRepositories)
-                : null);
+                    ? new HashSet<Uri>(request.LinksToGithubRepositories)
+                    : null);
             var projectId = _projectRepository.SaveProject(project);
 
             var @event = new NewProjectCreated(projectId, project.Name);
@@ -94,19 +98,18 @@ namespace LodCore.Facades
             _projectRepository.UpdateProject(project);
         }
 
-        public void AddUserToProject(int projectId, int userId, string role, string firstName, string lastName, string projectName)
+        public void AddUserToProject(int projectId, int userId, string role, string firstName, string lastName,
+            string projectName)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
             if (project.ProjectMemberships.Any(developer => developer.DeveloperId == userId))
-            {
                 throw new InvalidOperationException("Attempt to add developer who is already on project");
-            }
 
             project.ProjectMemberships.Add(new ProjectMembership(
-                userId, 
+                userId,
                 role));
 
             UpdateProject(project);
@@ -116,16 +119,15 @@ namespace LodCore.Facades
             _eventPublisher.PublishEvent(@event);
         }
 
-        public void RemoveUserFromProject(int projectId, int userId, string firstName, string lastName, string projectName)
+        public void RemoveUserFromProject(int projectId, int userId, string firstName, string lastName,
+            string projectName)
         {
             Require.Positive(projectId, nameof(projectId));
             Require.Positive(userId, nameof(userId));
 
             var project = GetProject(projectId);
             if (project.ProjectMemberships.All(developer => developer.DeveloperId != userId))
-            {
                 throw new InvalidOperationException("Attempt to remove developer who is not on project");
-            }
 
             var developerToDelete = project.ProjectMemberships
                 .SingleOrDefault(developer => developer.DeveloperId == userId);
@@ -137,8 +139,5 @@ namespace LodCore.Facades
 
             _eventPublisher.PublishEvent(@event);
         }
-		
-        private readonly IProjectRepository _projectRepository;
-        private readonly IEventPublisher _eventPublisher;
     }
 }

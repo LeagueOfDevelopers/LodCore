@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using LodCore.Domain.ProjectManagment;
+using LodCore.Infrastructure.DataAccess.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using LodCore.Infrastructure.DataAccess.Repositories;
-using LodCore.Domain.ProjectManagment;
 
 namespace ProjectManagementTests
 {
@@ -38,7 +37,7 @@ namespace ProjectManagementTests
         public void NoRoles_ReturnDefaultRole()
         {
             var userId = 1;
-            var roles = new string[] {};
+            var roles = new string[] { };
             SetupMockReturnThisRolesList(roles, userId);
             var analyzer = new UserRoleAnalyzer(_projectRepositoryStub.Object, _userRoleAnalyzerSettings);
 
@@ -78,8 +77,8 @@ namespace ProjectManagementTests
             _projectRepositoryStub
                 .Setup(repo => repo.GetUserRoles(userId))
                 .Returns(projects.SelectMany(project => project.Object.ProjectMemberships
-                .Where(memberships => memberships.DeveloperId == userId)
-                .Select(memberships => memberships.Role)));
+                    .Where(memberships => memberships.DeveloperId == userId)
+                    .Select(memberships => memberships.Role)));
         }
     }
 }

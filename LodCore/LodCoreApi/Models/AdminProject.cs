@@ -24,7 +24,7 @@ namespace LodCoreApi.Models
 
             ProjectId = projectId;
             Name = name;
-            ProjectType = projectType ?? new[] { LodCore.Domain.ProjectManagment.ProjectType.Other};
+            ProjectType = projectType ?? new[] {LodCore.Domain.ProjectManagment.ProjectType.Other};
             Info = info;
             ProjectStatus = projectStatus;
             LandingImage = landingImage;
@@ -33,22 +33,22 @@ namespace LodCoreApi.Models
             LinksToGithubRepositories = linksToGithubRepositories ?? new HashSet<Uri>();
         }
 
-        public int ProjectId { get; private set; }
+        public int ProjectId { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public ProjectType[] ProjectType { get; private set; }
+        public ProjectType[] ProjectType { get; }
 
-        public string Info { get; private set; }
+        public string Info { get; }
 
-        public ProjectStatus ProjectStatus { get; private set; }
+        public ProjectStatus ProjectStatus { get; }
 
-        public LodCore.Common.Image LandingImage { get; private set; }
+        public LodCore.Common.Image LandingImage { get; }
 
-        public HashSet<ProjectMembership> ProjectMemberships { get; private set; }
+        public HashSet<ProjectMembership> ProjectMemberships { get; }
 
-        public HashSet<LodCore.Common.Image> Screenshots { get; private set; }
+        public HashSet<LodCore.Common.Image> Screenshots { get; }
 
-        public HashSet<Uri> LinksToGithubRepositories { get; private set; }
+        public HashSet<Uri> LinksToGithubRepositories { get; }
     }
 }

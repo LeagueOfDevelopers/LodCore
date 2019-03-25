@@ -11,9 +11,9 @@ namespace UserManagerTests
     public class ConfirmationServiceTests
     {
         private ConfirmationService _confirmationService;
+        private Mock<IEventPublisher> _eventBus;
         private Mock<IUserRepository> _userRepoStub;
         private Mock<IValidationRequestsRepository> _validationRequesRepoStub;
-        private Mock<IEventPublisher> _eventBus;
 
         [TestInitialize]
         public void Setup()
@@ -34,7 +34,7 @@ namespace UserManagerTests
             //arrange
             var userId = 42;
             _userRepoStub.Setup(rep => rep.GetAccount(42))
-                .Returns((new Mock<Account>()).Object);
+                .Returns(new Mock<Account>().Object);
 
             //act
             _confirmationService.SetupEmailConfirmation(userId);

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using Journalist;
+using Dapper;
 using Journalist.Extensions;
 using LodCore.Domain.ProjectManagment;
-using System.Data.SqlClient;
-using Dapper;
 using LodCore.QueryService.DTOs;
 using LodCore.QueryService.Handlers;
 
@@ -22,14 +21,14 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
             _connectionString = connectionString;
             _projectQueryHandler = projectQueryHandler;
         }
-        
+
         public int[] GetAllProjectRelativeIds(int projectId)
         {
             return GetProject(projectId)
                 .ProjectMemberships
                 .SelectToArray(developer => developer.DeveloperId);
         }
-        
+
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)
         {
             /*
@@ -43,9 +42,9 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
         }
 
         public Project[] GetSomeProjects(
-            int skipCount, 
-            int takeCount, 
-            Expression<Func<Project, int>> orderer, 
+            int skipCount,
+            int takeCount,
+            Expression<Func<Project, int>> orderer,
             Expression<Func<Project, bool>> predicate = null)
         {
             /*
@@ -75,10 +74,10 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
             int projectId;
 
             var sqlForGettingId = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
-                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
-                    "SELECT CAST(SCOPE_IDENTITY() as int)";
+                                  "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
+                                  "SELECT CAST(SCOPE_IDENTITY() as int)";
             var sqlForScreenshots = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
-                        "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
+                                    "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
             var sqlForTypes = "INSERT INTO projectTypes (projectId, type) VALUES(@ProjectId, @Type);";
 
             using (var connection = new SqlConnection(_connectionString))
@@ -88,15 +87,15 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                 using (var transaction = connection.BeginTransaction())
                 {
                     projectId = connection.Query<int>(sqlForGettingId,
-                                new
-                                {
-                                    project.Name,
-                                    project.Info,
-                                    project.ProjectStatus,
-                                    BigPhotoUri = project.LandingImage.BigPhotoUri.ToString(),
-                                    SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString()
-                                },
-                                transaction).FirstOrDefault();
+                        new
+                        {
+                            project.Name,
+                            project.Info,
+                            project.ProjectStatus,
+                            BigPhotoUri = project.LandingImage.BigPhotoUri.ToString(),
+                            SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString()
+                        },
+                        transaction).FirstOrDefault();
 
                     project.Screenshots.ToList().ForEach(s => connection.Execute(sqlForScreenshots,
                         new
@@ -107,10 +106,11 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                         }, transaction));
 
                     project.ProjectTypes.ToList().ForEach(t => connection.Execute(sqlForTypes,
-                        new { ProjectId = projectId, Type = t }, transaction));
+                        new {ProjectId = projectId, Type = t}, transaction));
 
                     transaction.Commit();
                 }
+
                 connection.Close();
             }
 
@@ -124,9 +124,10 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                SqlTransaction sqlTransaction = connection.BeginTransaction();
+                var sqlTransaction = connection.BeginTransaction();
 
-                var sqlQuery = $"UPDATE projects SET name={projectDto.Name}, info={projectDto.Info} WHERE projectId={projectDto.ProjectId};";
+                var sqlQuery =
+                    $"UPDATE projects SET name={projectDto.Name}, info={projectDto.Info} WHERE projectId={projectDto.ProjectId};";
                 connection.Execute(sqlQuery, projectDto, sqlTransaction);
 
                 sqlTransaction.Commit();
@@ -134,7 +135,7 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
             }
         }
 
-        public IEnumerable<string> GetUserRoles(int userId )
+        public IEnumerable<string> GetUserRoles(int userId)
         {
             /*
             Require.Positive(userId, nameof(userId));

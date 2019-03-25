@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Mail;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using LodCore.Common;
 using LodCore.Domain.UserManagement;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace UserManagerTests
 {

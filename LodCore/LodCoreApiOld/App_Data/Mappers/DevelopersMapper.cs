@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Journalist;
 using LodCoreApiOld.App_Data.Authorization;
 using LodCoreApiOld.Models;
-using Journalist;
-using LodCoreLibraryOld.Facades;
 using LodCoreLibraryOld.Domain.ProjectManagment;
 using LodCoreLibraryOld.Domain.UserManagement;
+using LodCoreLibraryOld.Facades;
+using Project = LodCoreLibraryOld.Domain.ProjectManagment.Project;
 
 namespace LodCoreApiOld.App_Data.Mappers
 {
@@ -47,8 +48,8 @@ namespace LodCoreApiOld.App_Data.Mappers
 
             var projectCount =
                 _projectProvider.GetProjects(
-                    project => project.ProjectMemberships.Any(
-                        membership => membership.DeveloperId == account.UserId))
+                        project => project.ProjectMemberships.Any(
+                            membership => membership.DeveloperId == account.UserId))
                     .Count;
 
             return new DeveloperPageDeveloper(
@@ -87,7 +88,7 @@ namespace LodCoreApiOld.App_Data.Mappers
                 account.Profile?.VkProfileUri,
                 account.Profile?.PhoneNumber,
                 account.Profile?.StudentAccessionYear,
-                (bool)account.Profile?.IsGraduated,
+                (bool) account.Profile?.IsGraduated,
                 account.Profile?.StudyingDirection,
                 account.Profile?.InstituteName,
                 account.Profile?.Specialization,
@@ -100,8 +101,8 @@ namespace LodCoreApiOld.App_Data.Mappers
             Require.NotNull(account, nameof(account));
 
             var projectList = _projectProvider.GetProjects(
-                project => project.ProjectMemberships.Any(
-                    membership => membership.DeveloperId == account.UserId))
+                    project => project.ProjectMemberships.Any(
+                        membership => membership.DeveloperId == account.UserId))
                 .Where(ProjectsPolicies.OnlyDoneOrInProgress);
             var projectPreviews = GetDeveloperProjectPreviews(account, projectList.ToList());
 
@@ -114,7 +115,7 @@ namespace LodCoreApiOld.App_Data.Mappers
                 account.Profile?.VkProfileUri,
                 account.Profile?.LinkToGithubProfile,
                 account.Profile?.StudentAccessionYear,
-                (bool)account.Profile?.IsGraduated,
+                (bool) account.Profile?.IsGraduated,
                 account.Profile?.StudyingDirection,
                 account.Profile?.InstituteName,
                 account.Profile?.Specialization,
@@ -122,7 +123,7 @@ namespace LodCoreApiOld.App_Data.Mappers
                 projectPreviews.ToArray());
         }
 
-        private DeveloperPageProjectPreview ToDeveloperPageProjectPreview(int userId, LodCoreLibraryOld.Domain.ProjectManagment.Project project)
+        private DeveloperPageProjectPreview ToDeveloperPageProjectPreview(int userId, Project project)
         {
             var userMembership = project.ProjectMemberships.Single(membership => membership.DeveloperId == userId);
             return new DeveloperPageProjectPreview(
@@ -135,7 +136,7 @@ namespace LodCoreApiOld.App_Data.Mappers
 
         private IEnumerable<DeveloperPageProjectPreview> GetDeveloperProjectPreviews(
             Account account,
-            List<LodCoreLibraryOld.Domain.ProjectManagment.Project> userProjects)
+            List<Project> userProjects)
         {
             var projectPreviews = userProjects.Select(
                 project => ToDeveloperPageProjectPreview(account.UserId, project));

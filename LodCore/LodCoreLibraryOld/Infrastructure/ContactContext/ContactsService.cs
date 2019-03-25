@@ -6,6 +6,8 @@ namespace LodCoreLibraryOld.Infrastructure.ContactContext
 {
     public class ContactsService : IContactsService
     {
+        private readonly IEventPublisher _eventPublisher;
+
         public ContactsService(IEventPublisher eventPublisher)
         {
             _eventPublisher = eventPublisher;
@@ -16,7 +18,5 @@ namespace LodCoreLibraryOld.Infrastructure.ContactContext
             Require.NotNull(contactMessage, nameof(contactMessage));
             _eventPublisher.PublishEvent(contactMessage);
         }
-		
-        private readonly IEventPublisher _eventPublisher;
     }
 }

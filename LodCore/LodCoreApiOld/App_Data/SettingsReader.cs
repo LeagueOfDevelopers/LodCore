@@ -1,13 +1,12 @@
-﻿using LodCoreLibraryOld.Common;
+﻿using System;
+using System.Collections.Specialized;
+using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Domain.ProjectManagment;
 using LodCoreLibraryOld.Domain.UserManagement;
 using LodCoreLibraryOld.Infrastructure.EventBus;
 using LodCoreLibraryOld.Infrastructure.FilesManagement;
 using LodCoreLibraryOld.Infrastructure.Gateway;
 using LodCoreLibraryOld.Infrastructure.Mailing;
-using System;
-using System.Collections.Specialized;
-using System.Web.Configuration;
 
 namespace LodCoreApiOld.App_Data
 {
@@ -22,9 +21,9 @@ namespace LodCoreApiOld.App_Data
                 settings["GithubGateway.OrganizationName"]);
         }
 
-        public static LodCoreLibraryOld.Domain.UserManagement.ProfileSettings ReadProfileSettings(NameValueCollection settings)
+        public static ProfileSettings ReadProfileSettings(NameValueCollection settings)
         {
-            return new LodCoreLibraryOld.Domain.UserManagement.ProfileSettings(settings["Profile.FrontendProfileUri"]);
+            return new ProfileSettings(settings["Profile.FrontendProfileUri"]);
         }
 
         public static EventBusSettings ReadEventBusSettings(NameValueCollection settings)
@@ -82,7 +81,7 @@ namespace LodCoreApiOld.App_Data
                 settings["FileStorage.ImageFolder"],
                 settings["FileStorage.ImageExtensions"].Split(','));
         }
-        
+
         public static PaginationSettings ReadNotificationsPaginationSettings(
             NameValueCollection settings)
         {

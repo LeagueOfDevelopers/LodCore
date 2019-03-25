@@ -1,7 +1,4 @@
 ﻿using LodCore.QueryService.Views.DeveloperView;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace LodCore.QueryService.Queries.DeveloperQuery
 {

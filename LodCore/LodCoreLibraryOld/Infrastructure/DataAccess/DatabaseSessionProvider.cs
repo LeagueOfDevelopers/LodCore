@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Threading;
 using System.Web;
+using LodCoreLibraryOld.Common;
+using LodCoreLibraryOld.Infrastructure.DataAccess.Mappings;
 using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Tool.hbm2ddl;
 using Serilog;
-using LodCoreLibraryOld.Common;
-using LodCoreLibraryOld.Infrastructure.DataAccess.Mappings;
 
 namespace LodCoreLibraryOld.Infrastructure.DataAccess
 {
     public class DatabaseSessionProvider : IDatabaseSessionProvider
     {
+        private const string SessionKey = "NHibernateSession";
+        private const string TransactionKey = "NHibernateTransaction";
         private readonly ISessionFactory _factory;
 
         public DatabaseSessionProvider()
@@ -34,11 +36,46 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess
                 _factory = configuration.BuildSessionFactory();
                 new SchemaUpdate(configuration).Execute(false, true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Debug(ex, "Database failure: {0}", ex.Message);
             }
+
             Log.Information("DatabaseSessionProvider has started");
+        }
+
+        private ISession Session
+        {
+            get
+            {
+                var session = HttpContext.Current?.Items[SessionKey] as ISession;
+                return session
+                       ?? Thread.GetData(Thread.GetNamedDataSlot(SessionKey)) as ISession;
+            }
+            set
+            {
+                if (HttpContext.Current != null)
+                    HttpContext.Current.Items[SessionKey] = value;
+                else
+                    Thread.SetData(Thread.GetNamedDataSlot(SessionKey), value);
+            }
+        }
+
+        private ITransaction Transaction
+        {
+            get
+            {
+                var transaction = HttpContext.Current?.Items[TransactionKey] as ITransaction;
+                return transaction
+                       ?? Thread.GetData(Thread.GetNamedDataSlot(TransactionKey)) as ITransaction;
+            }
+            set
+            {
+                if (HttpContext.Current != null)
+                    HttpContext.Current.Items[TransactionKey] = value;
+                else
+                    Thread.SetData(Thread.GetNamedDataSlot(TransactionKey), value);
+            }
         }
 
         public ISession GetCurrentSession()
@@ -56,23 +93,14 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess
 
         public void OpenSession()
         {
-            if (Session == null || !Session.IsOpen)
-            {
-                Session = _factory.OpenSession();
-            }
-            
-            if (!Transaction?.IsActive ?? true)
-            {
-                Transaction = Session.BeginTransaction();
-            }
+            if (Session == null || !Session.IsOpen) Session = _factory.OpenSession();
+
+            if (!Transaction?.IsActive ?? true) Transaction = Session.BeginTransaction();
         }
 
         public void CloseSession()
         {
-            if (Transaction != null && Transaction.IsActive)
-            {
-                Transaction.Commit();
-            }
+            if (Transaction != null && Transaction.IsActive) Transaction.Commit();
             Session?.Dispose();
         }
 
@@ -92,51 +120,6 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess
             OpenSession();
             action();
             CloseSession();
-        }
-
-        private const string SessionKey = "NHibernateSession";
-        private const string TransactionKey = "NHibernateTransaction";
-
-        private ISession Session
-        {
-            get
-            {
-                var session = HttpContext.Current?.Items[SessionKey] as ISession;
-                return session 
-                    ?? Thread.GetData(Thread.GetNamedDataSlot(SessionKey)) as ISession;
-            }
-            set
-            {
-                if (HttpContext.Current != null)
-                {
-                    HttpContext.Current.Items[SessionKey] = value;
-                }
-                else
-                {
-                    Thread.SetData(Thread.GetNamedDataSlot(SessionKey), value);
-                }
-            }
-        }
-
-        private ITransaction Transaction
-        {
-            get
-            {
-                var transaction = HttpContext.Current?.Items[TransactionKey] as ITransaction;
-                return transaction
-                   ?? Thread.GetData(Thread.GetNamedDataSlot(TransactionKey)) as ITransaction;
-            }
-            set
-            {
-                if (HttpContext.Current != null)
-                {
-                    HttpContext.Current.Items[TransactionKey] = value;
-                }
-                else
-                {
-                    Thread.SetData(Thread.GetNamedDataSlot(TransactionKey), value);
-                }
-            }
         }
     }
 }

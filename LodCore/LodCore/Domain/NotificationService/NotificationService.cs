@@ -6,8 +6,12 @@ namespace LodCore.Domain.NotificationService
 {
     public class NotificationService : INotificationService
     {
-        public NotificationService(IEventRepository eventRepository, 
-                                   PaginationSettings notificationsPaginationSettings)
+        private readonly IEventRepository _eventRepository;
+
+        private readonly PaginationSettings _notificationsPaginationSettings;
+
+        public NotificationService(IEventRepository eventRepository,
+            PaginationSettings notificationsPaginationSettings)
         {
             _eventRepository = eventRepository;
             _notificationsPaginationSettings = notificationsPaginationSettings;
@@ -38,9 +42,5 @@ namespace LodCore.Domain.NotificationService
         {
             return _eventRepository.WasThisEventRead(eventId, userId);
         }
-
-        private readonly IEventRepository _eventRepository;
-
-        private readonly PaginationSettings _notificationsPaginationSettings;
     }
 }

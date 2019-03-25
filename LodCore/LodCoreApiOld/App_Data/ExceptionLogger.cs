@@ -12,9 +12,9 @@ namespace LodCoreApiOld.App_Data
                 requestContent = requestContent.Substring(0, 200);
 
             Log.Warning(actionExecutedContext.Exception,
-                        "Exception {0} occured while processing request with content {1}",
-                        actionExecutedContext.Exception.Message,
-                        requestContent);
+                "Exception {0} occured while processing request with content {1}",
+                actionExecutedContext.Exception.Message,
+                requestContent);
         }
     }
 }

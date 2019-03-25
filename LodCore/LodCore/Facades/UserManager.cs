@@ -3,30 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using Journalist;
-using LodCore.Domain.UserManagement;
-using LodCore.Infrastructure.DataAccess.Repositories;
-using LodCore.Domain.ProjectManagment;
-using LodCore.Infrastructure.EventBus;
 using LodCore.Common;
 using LodCore.Domain.Exceptions;
+using LodCore.Domain.ProjectManagment;
+using LodCore.Domain.UserManagement;
+using LodCore.Infrastructure.DataAccess.Repositories;
+using LodCore.Infrastructure.EventBus;
 
 namespace LodCore.Facades
 {
     public class UserManager : IUserManager
     {
         private readonly IConfirmationService _confirmationService;
-        private readonly IUserRepository _userRepository;
-        private readonly ProjectPaginationSettings _paginationSettings;
-        private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
-        private readonly IPasswordManager _passwordManager;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ProjectPaginationSettings _paginationSettings;
+        private readonly IPasswordManager _passwordManager;
+        private readonly IProjectMembershipRepostiory _projectMembershipRepostiory;
+        private readonly IUserRepository _userRepository;
 
         public UserManager(
             IUserRepository userRepository,
-            IConfirmationService confirmationService, 
-            ProjectPaginationSettings paginationSettings, 
-            IProjectMembershipRepostiory projectMembershipRepostiory, 
-            ApplicationLocationSettings applicationLocationSettings, 
+            IConfirmationService confirmationService,
+            ProjectPaginationSettings paginationSettings,
+            IProjectMembershipRepostiory projectMembershipRepostiory,
+            ApplicationLocationSettings applicationLocationSettings,
             IPasswordManager passwordManager,
             IEventPublisher eventPublisher)
         {
@@ -53,13 +53,13 @@ namespace LodCore.Facades
 
         public List<Account> GetUserList(int pageNumber, Func<Account, bool> criteria = null)
         {
-            var projectToSkip = _paginationSettings.NumberOfProjects*pageNumber;
+            var projectToSkip = _paginationSettings.NumberOfProjects * pageNumber;
             var projectsToTake = _paginationSettings.NumberOfProjects;
 
             return _userRepository.GetSomeAccounts(
-                projectToSkip, 
-                projectsToTake, 
-                account => account.RegistrationTime, 
+                projectToSkip,
+                projectsToTake,
+                account => account.RegistrationTime,
                 criteria);
         }
 
@@ -68,10 +68,7 @@ namespace LodCore.Facades
             Require.Positive(userId, nameof(userId));
 
             var account = _userRepository.GetAccount(userId);
-            if (account == null)
-            {
-                throw new AccountNotFoundException();
-            }
+            if (account == null) throw new AccountNotFoundException();
 
             return account;
         }
@@ -92,10 +89,7 @@ namespace LodCore.Facades
             //var doesExist = EnumerableExtensions.Any(GetUserList(account => account.Email.Address == request.Email));
             // for while
             var doesExist = false;
-            if (doesExist)
-            {
-                throw new AccountAlreadyExistsException();
-            }
+            if (doesExist) throw new AccountAlreadyExistsException();
 
             var newAccount = new Account(
                 request.Firstname,
@@ -132,10 +126,7 @@ namespace LodCore.Facades
             Require.NotNull(account, nameof(account));
 
             var accountExists = _userRepository.GetAccount(account.UserId) != null;
-            if (!accountExists)
-            {
-                throw new AccountNotFoundException();
-            }
+            if (!accountExists) throw new AccountNotFoundException();
 
             _userRepository.UpdateAccount(account);
         }
@@ -148,19 +139,13 @@ namespace LodCore.Facades
             var user = _userRepository.GetAccount(userId);
 
             var accountExists = user != null;
-            if (!accountExists)
-            {
-                throw new AccountNotFoundException();
-            }
+            if (!accountExists) throw new AccountNotFoundException();
 
             _passwordManager.UpdateUserPassword(userId, newPassword);
 
             var requestToDelete = _passwordManager.GetPasswordChangeRequest(userId);
 
-            if (requestToDelete != null)
-            {
-                _passwordManager.DeletePasswordChangeRequest(requestToDelete);
-            }
+            if (requestToDelete != null) _passwordManager.DeletePasswordChangeRequest(requestToDelete);
         }
 
         public void InitiatePasswordChangingProcedure(int userId)
@@ -190,7 +175,7 @@ namespace LodCore.Facades
 
             var allUsersToSearchByRole =
                 new HashSet<Account>(
-                    allProjectMemberships.Select(membership => allUsers.Single(account => 
+                    allProjectMemberships.Select(membership => allUsers.Single(account =>
                         account.UserId == membership.DeveloperId)));
 
             var userRolesDictionary = allUsersToSearchByRole.ToDictionary(user => user,
@@ -199,8 +184,8 @@ namespace LodCore.Facades
                         .Select(that => that.Role));
 
             return userRolesDictionary.Where(
-                pair =>
-                    pair.Value.Any(role => Extensions.Contains(role, searchString)))
+                    pair =>
+                        pair.Value.Any(role => Extensions.Contains(role, searchString)))
                 .Select(pair => pair.Key)
                 .Union(
                     allUsers.Where(
@@ -215,11 +200,8 @@ namespace LodCore.Facades
             var account = _userRepository.GetAllAccounts().First(a => a.Email == new MailAddress(email));
 
             if (account.Password.Value == password)
-            {
                 return account;
-            }
-            else throw new Exception("Неверный пароль");
-
+            throw new Exception("Неверный пароль");
         }
     }
 }

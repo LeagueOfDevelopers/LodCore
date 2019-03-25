@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using IntegrationControllerTests.Helpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Ploeh.AutoFixture;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IntegrationControllerTests
 {

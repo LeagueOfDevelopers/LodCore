@@ -1,25 +1,34 @@
 ﻿using System;
+using System.Net;
+using System.Net.Mail;
+using System.Web;
 using System.Web.Http;
 using Journalist;
 using LodCoreApiOld.Models;
-using System.Net.Mail;
-using Serilog;
-using System.Web;
-using System.Net;
-using LodCoreLibraryOld.Infrastructure.Gateway;
-using LodCoreLibraryOld.Facades;
-using LodCoreLibraryOld.Domain.UserManagement;
 using LodCoreLibraryOld.Common;
-using LodCoreLibraryOld.Infrastructure.EventBus;
 using LodCoreLibraryOld.Domain.Exceptions;
 using LodCoreLibraryOld.Domain.NotificationService;
+using LodCoreLibraryOld.Domain.UserManagement;
+using LodCoreLibraryOld.Facades;
+using LodCoreLibraryOld.Infrastructure.EventBus;
+using LodCoreLibraryOld.Infrastructure.Gateway;
+using Serilog;
 
 namespace LodCoreApiOld.Controllers
 {
     public class AuthController : ApiController
     {
+        private const string frontendCallbackComponentName = "frontend_callback";
+        private readonly ApplicationLocationSettings _applicationLocationSettings;
+        private readonly IAuthorizer _authorizer;
+        private readonly IConfirmationService _confirmationService;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IGithubGateway _githubGateway;
+        private readonly ProfileSettings _profileSettings;
+        private readonly IUserManager _userManager;
+
         public AuthController(
-            IGithubGateway githubGateway, 
+            IGithubGateway githubGateway,
             IUserManager userManager,
             ProfileSettings profileSettings,
             IAuthorizer authorizer,
@@ -46,20 +55,23 @@ namespace LodCoreApiOld.Controllers
 
         [HttpPost]
         [Route("signup/github")]
-        public string GetRedirectionToAuthenticationGitHubFormToSignUp([FromBody] RegisterDeveloperWithGithubRequest request)
+        public string GetRedirectionToAuthenticationGitHubFormToSignUp(
+            [FromBody] RegisterDeveloperWithGithubRequest request)
         {
             var queryString = Request.RequestUri.Query;
             string frontCallback;
             try
             {
-                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                frontCallback =
+                    QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
             }
-            catch(HttpParseException ex)
+            catch (HttpParseException ex)
             {
-                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}", 
+                Log.Error("There is no parameter with key={0} in query string={1}. {2} StackTrace: {3}",
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
             var createAccountRequest = new CreateAccountRequest(
                 request.LastName,
                 request.FirstName,
@@ -101,6 +113,7 @@ namespace LodCoreApiOld.Controllers
                     userId.ToString(), ex.Message, ex.StackTrace);
                 return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, false));
             }
+
             var @event = new NewEmailConfirmedDeveloper(user.UserId, user.Firstname, user.Lastname);
             _eventPublisher.PublishEvent(@event);
             return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, true));
@@ -114,7 +127,8 @@ namespace LodCoreApiOld.Controllers
             string frontCallback;
             try
             {
-                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                frontCallback =
+                    QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
             }
             catch (HttpParseException ex)
             {
@@ -122,16 +136,18 @@ namespace LodCoreApiOld.Controllers
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
             var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPage(frontCallback);
             return githubLoginUrl;
         }
 
         [HttpGet]
         [Route("github/callback/login")]
-        public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string frontend_callback, string code, string state)
+        public IHttpActionResult GetRedirectionToAuthorizationWithGithub(string frontend_callback, string code,
+            string state)
         {
-            string encodedToken = "";
-            string link = "";
+            var encodedToken = "";
+            var link = "";
             var success = true;
             try
             {
@@ -146,7 +162,8 @@ namespace LodCoreApiOld.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with linkToGithubProfile={0}. {1} StackTrace: {2}", link, ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with linkToGithubProfile={0}. {1} StackTrace: {2}", link, ex.Message,
+                    ex.StackTrace);
                 success = false;
             }
             catch (Exception ex)
@@ -154,7 +171,9 @@ namespace LodCoreApiOld.Controllers
                 Log.Error(ex.Message + "StackTrace:" + ex.StackTrace);
                 success = false;
             }
-            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}/{encodedToken}", success));
+
+            return Redirect(
+                ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}/{encodedToken}", success));
         }
 
         [HttpGet]
@@ -165,7 +184,8 @@ namespace LodCoreApiOld.Controllers
             string frontCallback;
             try
             {
-                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                frontCallback =
+                    QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
             }
             catch (HttpParseException ex)
             {
@@ -173,13 +193,15 @@ namespace LodCoreApiOld.Controllers
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
             var githubLoginUrl = _githubGateway.GetLinkToGithubLoginPageToBind(frontCallback, id);
             return githubLoginUrl;
         }
 
         [HttpGet]
         [Route("github/callback/auth/{id}")]
-        public IHttpActionResult GetAuthenticationTokenByCode(int id, string frontend_callback, string code, string state)
+        public IHttpActionResult GetAuthenticationTokenByCode(int id, string frontend_callback, string code,
+            string state)
         {
             try
             {
@@ -198,14 +220,5 @@ namespace LodCoreApiOld.Controllers
                 return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, false));
             }
         }
-
-        private const string frontendCallbackComponentName = "frontend_callback";
-        private readonly IGithubGateway _githubGateway;
-        private readonly IUserManager _userManager;
-        private readonly ProfileSettings _profileSettings;
-        private readonly IAuthorizer _authorizer;
-        private readonly ApplicationLocationSettings _applicationLocationSettings;
-        private readonly IEventPublisher _eventPublisher;
-        private readonly IConfirmationService _confirmationService;
     }
 }

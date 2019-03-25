@@ -3,7 +3,7 @@
     public class NewEmailConfirmedDeveloper
     {
         public NewEmailConfirmedDeveloper(
-            string userName, 
+            string userName,
             string developerName,
             string developerEmail)
         {

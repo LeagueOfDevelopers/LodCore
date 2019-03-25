@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using LodCoreApiOld.Models;
 using Journalist;
+using LodCoreApiOld.Models;
+using LodCoreLibraryOld.Common;
+using LodCoreLibraryOld.Facades;
+using Image = LodCoreLibraryOld.Common.Image;
 using Project = LodCoreLibraryOld.Domain.ProjectManagment.Project;
 using ProjectMembership = LodCoreLibraryOld.Domain.ProjectManagment.ProjectMembership;
 using ProjectMembershipDto = LodCoreApiOld.Models.ProjectMembership;
-using LodCoreLibraryOld.Facades;
-using LodCoreLibraryOld.Domain.ProjectManagment;
 
 namespace LodCoreApiOld.App_Data.Mappers
 {
@@ -50,8 +52,8 @@ namespace LodCoreApiOld.App_Data.Mappers
                 project.ProjectStatus,
                 project.LandingImage,
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<LodCoreLibraryOld.Common.Image>(project.Screenshots),
-                new HashSet<System.Uri>(project.LinksToGithubRepositories));
+                new HashSet<Image>(project.Screenshots),
+                new HashSet<Uri>(project.LinksToGithubRepositories));
         }
 
         public Models.Project ToProject(Project project)
@@ -64,9 +66,9 @@ namespace LodCoreApiOld.App_Data.Mappers
                 project.ProjectStatus,
                 project.LandingImage,
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<LodCoreLibraryOld.Common.Image>(project.Screenshots),
-                new HashSet<LodCoreLibraryOld.Common.ProjectLink>(project.Links),
-                new HashSet<System.Uri>(project.LinksToGithubRepositories));
+                new HashSet<Image>(project.Screenshots),
+                new HashSet<ProjectLink>(project.Links),
+                new HashSet<Uri>(project.LinksToGithubRepositories));
         }
 
         private ProjectMembershipDto ToProjectMembershipDto(ProjectMembership projectMembership)

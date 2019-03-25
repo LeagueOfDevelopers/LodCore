@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Principal;
-using Serilog;
 using LodCoreLibraryOld.Domain.UserManagement;
+using Serilog;
 
 namespace LodCoreApiOld.Authorization
 {
@@ -16,10 +16,7 @@ namespace LodCoreApiOld.Authorization
         public static int GetId(this IIdentity identity)
         {
             var lodIdentity = identity as LodIdentity;
-            if (lodIdentity != null)
-            {
-                return lodIdentity.UserId;
-            }
+            if (lodIdentity != null) return lodIdentity.UserId;
             var ex = new ArgumentException("Identity is not lod identity");
             Log.Warning(ex, ex.Message);
             throw ex;

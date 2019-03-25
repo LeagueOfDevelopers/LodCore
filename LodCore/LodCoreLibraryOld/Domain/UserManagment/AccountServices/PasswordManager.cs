@@ -1,4 +1,5 @@
 ﻿using Journalist;
+using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Infrastructure.DataAccess.Repositories;
 
 namespace LodCoreLibraryOld.Domain.UserManagement
@@ -8,8 +9,8 @@ namespace LodCoreLibraryOld.Domain.UserManagement
         private readonly IPasswordChangeRequestRepository _passwordChangeRequestRepository;
         private readonly IUserRepository _userRepository;
 
-        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository, 
-                               IUserRepository userRepository)
+        public PasswordManager(IPasswordChangeRequestRepository passwordChangeRequestRepository,
+            IUserRepository userRepository)
         {
             _passwordChangeRequestRepository = passwordChangeRequestRepository;
             _userRepository = userRepository;
@@ -19,8 +20,8 @@ namespace LodCoreLibraryOld.Domain.UserManagement
         {
             var request = _passwordChangeRequestRepository.GetPasswordChangeRequest(token);
 
-            return request == null 
-                ? null 
+            return request == null
+                ? null
                 : _userRepository.GetAccount(request.UserId);
         }
 
@@ -29,7 +30,7 @@ namespace LodCoreLibraryOld.Domain.UserManagement
             Require.Positive(userId, nameof(userId));
             Require.NotEmpty(newPassword, nameof(newPassword));
             var account = _userRepository.GetAccount(userId);
-            account.Password = new Common.Password(newPassword);
+            account.Password = new Password(newPassword);
             _userRepository.UpdateAccount(account);
         }
 

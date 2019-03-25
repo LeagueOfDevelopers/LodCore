@@ -1,9 +1,10 @@
-﻿using System.Web.Http;
+﻿using System.Configuration;
+using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Configuration;
-using LodCoreApiOld.Authorization;
 using LodCoreApiOld.App_Data;
+using LodCoreApiOld.Authorization;
 using LodCoreLibraryOld.Domain.UserManagement;
+using Newtonsoft.Json;
 
 namespace LodCoreApiOld
 {
@@ -17,20 +18,17 @@ namespace LodCoreApiOld
 
             config.Routes.MapHttpRoute(
                 "DefaultApi", "{controller}/{id}", new {id = RouteParameter.Optional}
-                );
+            );
 
-            var authorizer = config.DependencyResolver.GetService(typeof (IAuthorizer)) as IAuthorizer;
+            var authorizer = config.DependencyResolver.GetService(typeof(IAuthorizer)) as IAuthorizer;
             config.Filters.Add(new AuthenticateAttribute(authorizer));
             config.Filters.Add(new ExceptionLogger());
 
             var isLocalLaunch = ConfigurationManager.AppSettings["LocalLaunch"];
-            if (isLocalLaunch.Equals("false"))
-            {
-                config.Filters.Add(new HttpsValidator());
-            }
+            if (isLocalLaunch.Equals("false")) config.Filters.Add(new HttpsValidator());
 
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
-                Newtonsoft.Json.PreserveReferencesHandling.Objects;
+                PreserveReferencesHandling.Objects;
             config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
 
@@ -38,7 +36,7 @@ namespace LodCoreApiOld
         {
             var frontendDomain = ConfigurationManager.AppSettings["FrontendDomain"];
             var cors = new EnableCorsAttribute(frontendDomain, "*", "*")
-            { SupportsCredentials = true };
+                {SupportsCredentials = true};
             config.EnableCors(cors);
         }
     }

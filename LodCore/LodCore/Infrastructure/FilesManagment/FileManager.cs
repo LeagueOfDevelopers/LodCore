@@ -11,6 +11,9 @@ namespace LodCore.Infrastructure.FilesManagement
 {
     public class FileManager : IFileManager
     {
+        private readonly FileStorageSettings _fileStorageSettings;
+        private readonly IImageResizer _imageResizer;
+
         public FileManager(FileStorageSettings fileStorageSettings, IImageResizer imageResizer)
         {
             Require.NotNull(fileStorageSettings, nameof(fileStorageSettings));
@@ -34,8 +37,8 @@ namespace LodCore.Infrastructure.FilesManagement
         {
             Require.NotNull(content, nameof(content));
             var filePath = await UploadAnyFileAsync(
-                content, 
-                _fileStorageSettings.AllowedFileExtensions, 
+                content,
+                _fileStorageSettings.AllowedFileExtensions,
                 _fileStorageSettings.FileStorageFolder);
             var fileName = Path.GetFileName(filePath);
             var newFileName = SaltFileNameWithCurrentDate(fileName);
@@ -66,23 +69,17 @@ namespace LodCore.Infrastructure.FilesManagement
         {
             var fullPath = Path.Combine(folderPath, fileName);
             var exists = File.Exists(fullPath);
-            if (!exists)
-            {
-                throw new FileNotFoundException();
-            }
+            if (!exists) throw new FileNotFoundException();
 
             return new FileStream(fullPath, FileMode.Open, FileAccess.Read);
         }
 
         private async Task<string> UploadAnyFileAsync(
-            HttpContent httpContent, 
-            string[] allowedExtensions, 
+            HttpContent httpContent,
+            string[] allowedExtensions,
             string folderPath)
         {
-            if (!httpContent.IsMimeMultipartContent("form-data"))
-            {
-                throw new NotSupportedException();
-            }
+            if (!httpContent.IsMimeMultipartContent("form-data")) throw new NotSupportedException();
 
             var provider = new CustomMultipartStreamProvider(folderPath);
             await httpContent.ReadAsMultipartAsync(provider);
@@ -91,7 +88,7 @@ namespace LodCore.Infrastructure.FilesManagement
             if (!allowedExtensions.Contains(extension))
             {
                 await Task.Factory.StartNew(() => File.Delete(fullFileName));
-                throw new InvalidDataException("Extension {0} is not allowed".FormatString(extension)); 
+                throw new InvalidDataException("Extension {0} is not allowed".FormatString(extension));
             }
 
             return fullFileName;
@@ -105,14 +102,10 @@ namespace LodCore.Infrastructure.FilesManagement
         private void CreateFoldersIfNeeded()
         {
             if (!Directory.Exists(_fileStorageSettings.FileStorageFolder))
-            {
                 Directory.CreateDirectory(_fileStorageSettings.FileStorageFolder);
-            }
 
             if (!Directory.Exists(_fileStorageSettings.ImageStorageFolder))
-            {
                 Directory.CreateDirectory(_fileStorageSettings.ImageStorageFolder);
-            }
         }
 
         private string GenerateRandomFileName(string fileName)
@@ -124,9 +117,9 @@ namespace LodCore.Infrastructure.FilesManagement
         private string SaltFileNameWithCurrentDate(string fileName)
         {
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            var newFileName = fileNameWithoutExtension 
-                + DateTime.Now.ToString("s").Replace(":", string.Empty) 
-                + Path.GetExtension(fileName);
+            var newFileName = fileNameWithoutExtension
+                              + DateTime.Now.ToString("s").Replace(":", string.Empty)
+                              + Path.GetExtension(fileName);
             return newFileName;
         }
 
@@ -134,8 +127,5 @@ namespace LodCore.Infrastructure.FilesManagement
         {
             File.Move(originalFullName, newFileFullName);
         }
-
-        private readonly FileStorageSettings _fileStorageSettings;
-        private readonly IImageResizer _imageResizer;
     }
 }

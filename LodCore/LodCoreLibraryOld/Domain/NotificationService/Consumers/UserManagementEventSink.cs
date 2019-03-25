@@ -8,13 +8,13 @@ namespace LodCoreLibraryOld.Domain.NotificationService
     public class UserManagementEventSink<T> : EventSinkBase<T> where T : IEventInfo
     {
         public UserManagementEventSink(IDistributionPolicyFactory distributionPolicyFactory,
-            IEventRepository eventRepository, 
-            IMailer mailer, 
+            IEventRepository eventRepository,
+            IMailer mailer,
             IUserPresentationProvider userPresentationProvider)
-            : base(distributionPolicyFactory, 
-                  eventRepository, 
-                  mailer, 
-                  userPresentationProvider)
+            : base(distributionPolicyFactory,
+                eventRepository,
+                mailer,
+                userPresentationProvider)
         {
         }
 
@@ -22,7 +22,7 @@ namespace LodCoreLibraryOld.Domain.NotificationService
         {
             Require.NotNull(eventInfo, nameof(eventInfo));
 
-            var distributionPolicy = GetDistributionPolicyForEvent((dynamic)eventInfo);
+            var distributionPolicy = GetDistributionPolicyForEvent((dynamic) eventInfo);
 
             EventRepository.SaveEvent(new Event(eventInfo), distributionPolicy);
 

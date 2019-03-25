@@ -1,18 +1,10 @@
-﻿using LodCore.Domain.ProjectManagment;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using LodCore.Domain.ProjectManagment;
 
 namespace LodCore.QueryService.DTOs
 {
     public class ProjectDto
     {
-        public ProjectDto()
-        {
-        }
-                
         public int ProjectId { get; set; }
         public string Name { get; set; }
         public string Info { get; set; }

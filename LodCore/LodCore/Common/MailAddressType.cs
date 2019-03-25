@@ -6,6 +6,10 @@ namespace LodCore.Common
 {
     public class MailAddressType //: IUserType
     {
+        public Type ReturnedType => typeof(MailAddress);
+
+        public bool IsMutable => false;
+
         public new bool Equals(object x, object y)
         {
             if (x == null && y == null) return true;
@@ -65,16 +69,6 @@ namespace LodCore.Common
         public object Disassemble(object value)
         {
             return value;
-        }
-
-        public Type ReturnedType
-        {
-            get { return typeof (MailAddress); }
-        }
-
-        public bool IsMutable
-        {
-            get { return false; }
         }
     }
 }

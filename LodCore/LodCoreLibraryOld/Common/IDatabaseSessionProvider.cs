@@ -1,5 +1,5 @@
-﻿using NHibernate;
-using System;
+﻿using System;
+using NHibernate;
 
 namespace LodCoreLibraryOld.Common
 {

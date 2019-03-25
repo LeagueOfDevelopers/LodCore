@@ -5,12 +5,12 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
-using LodCoreApiOld.Authorization;
 using Journalist;
-using Image = LodCoreApiOld.Models.Image;
-using Serilog;
+using LodCoreApiOld.Authorization;
+using LodCoreApiOld.Models;
 using LodCoreLibraryOld.Domain.UserManagement;
 using LodCoreLibraryOld.Infrastructure.FilesManagement;
+using Serilog;
 
 namespace LodCoreApiOld.Controllers
 {
@@ -50,7 +50,7 @@ namespace LodCoreApiOld.Controllers
             }
             catch (NotSupportedException ex)
             {
-                Log.Error("Failed to upload file with requets content headers={@0}. {1} StackTrace: {2}", 
+                Log.Error("Failed to upload file with requets content headers={@0}. {1} StackTrace: {2}",
                     Request.Content.Headers, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
@@ -71,8 +71,8 @@ namespace LodCoreApiOld.Controllers
             {
                 var image = await _fileManager.UploadImageAsync(Request.Content);
 
-                return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath), 
-                           Path.GetFileName(image.SmallPhotoUri.LocalPath));
+                return new Image(Path.GetFileName(image.BigPhotoUri.LocalPath),
+                    Path.GetFileName(image.SmallPhotoUri.LocalPath));
             }
             catch (NotSupportedException ex)
             {

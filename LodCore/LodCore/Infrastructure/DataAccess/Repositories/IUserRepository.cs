@@ -1,6 +1,6 @@
-﻿using LodCore.Domain.UserManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using LodCore.Domain.UserManagement;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
@@ -16,6 +16,7 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
         List<Account> GetAllAccounts(Func<Account, bool> predicate = null);
 
-        List<Account> GetSomeAccounts<TComparable>(int skipCount, int takeCount, Func<Account, TComparable> orderer, Func<Account, bool> criteria = null);
+        List<Account> GetSomeAccounts<TComparable>(int skipCount, int takeCount, Func<Account, TComparable> orderer,
+            Func<Account, bool> criteria = null);
     }
 }

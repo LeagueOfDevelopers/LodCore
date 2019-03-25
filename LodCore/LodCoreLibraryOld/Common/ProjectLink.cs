@@ -6,7 +6,6 @@ namespace LodCoreLibraryOld.Common
     {
         public ProjectLink()
         {
-
         }
 
         public ProjectLink(string name, Uri uri)

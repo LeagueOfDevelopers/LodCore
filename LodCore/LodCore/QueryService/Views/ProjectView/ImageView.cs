@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.ProjectView
 {
@@ -19,7 +15,7 @@ namespace LodCore.QueryService.Views.ProjectView
 
         public bool Equals(ImageView obj)
         {
-            return (BigPhotoUri == obj.BigPhotoUri) && (SmallPhotoUri == obj.SmallPhotoUri);
+            return BigPhotoUri == obj.BigPhotoUri && SmallPhotoUri == obj.SmallPhotoUri;
         }
     }
 }

@@ -8,7 +8,7 @@
             SmallPhotoName = smallPhotoName;
         }
 
-        public string BigPhotoName { get; private set; }
-        public string SmallPhotoName { get; private set; }
+        public string BigPhotoName { get; }
+        public string SmallPhotoName { get; }
     }
 }

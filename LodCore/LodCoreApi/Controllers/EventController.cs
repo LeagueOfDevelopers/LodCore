@@ -1,31 +1,24 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using LodCoreApi.Mappers;
-using LodCoreApi.Models;
-using Journalist;
-using LodCore.Domain.NotificationService;
-using LodCoreApi.Pagination;
-using LodCoreApi.Extensions;
-using Microsoft.AspNetCore.Authorization;
+﻿using LodCore.Domain.NotificationService;
 using LodCore.QueryService.Handlers;
-using LodCore.QueryService.Queries.NotificationQuery;
-using LodCore.QueryService.Views.NotificationView;
+using LodCoreApi.Mappers;
+using LodCoreApi.Pagination;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LodCoreApi.Controllers
 {
     [Produces("application/json")]
     public class EventController : Controller
     {
-        private readonly INotificationService _notificationService;
         private readonly EventMapper _eventMapper;
-        private readonly IPaginationWrapper<Delivery> _paginationWrapper;
         private readonly INotificationHandler _notificationHandler;
+        private readonly INotificationService _notificationService;
+        private readonly IPaginationWrapper<Delivery> _paginationWrapper;
 
 
         public EventController(INotificationService notificationService,
-                               EventMapper eventMapper,
-                               IPaginationWrapper<Delivery> paginationWrapper,
-                               NotificationHandler notificationHandler)
+            EventMapper eventMapper,
+            IPaginationWrapper<Delivery> paginationWrapper,
+            NotificationHandler notificationHandler)
         {
             _notificationHandler = notificationHandler;
             _notificationService = notificationService;

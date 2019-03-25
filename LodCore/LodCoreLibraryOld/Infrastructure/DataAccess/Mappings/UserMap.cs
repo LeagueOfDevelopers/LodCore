@@ -37,8 +37,10 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Mappings
                     mapper =>
                     {
                         mapper.Lazy(false);
-                        mapper.Property(image => image.BigPhotoUri, propertyMapper => propertyMapper.Column("BigPhotoUri"));
-                        mapper.Property(image => image.SmallPhotoUri, propertyMapper => propertyMapper.Column("SmallPhotoUri"));
+                        mapper.Property(image => image.BigPhotoUri,
+                            propertyMapper => propertyMapper.Column("BigPhotoUri"));
+                        mapper.Property(image => image.SmallPhotoUri,
+                            propertyMapper => propertyMapper.Column("SmallPhotoUri"));
                     });
                 m.Property(profile => profile.InstituteName, mapper => mapper.Column("InstituteName"));
                 m.Property(profile => profile.PhoneNumber, mapper => mapper.Column("PhoneNumber"));
@@ -47,7 +49,7 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Mappings
                 m.Property(profile => profile.IsGraduated, mapper => mapper.Column("IsGraduated"));
                 m.Property(profile => profile.StudyingDirection, mapper => mapper.Column("StudyingDirection"));
                 m.Property(profile => profile.VkProfileUri, mapper => mapper.Column("VkProfileUri"));
-                m.Property(profile => profile.LinkToGithubProfile, mapper => 
+                m.Property(profile => profile.LinkToGithubProfile, mapper =>
                 {
                     mapper.Column("GitHubProfileUri");
                     mapper.Unique(true);

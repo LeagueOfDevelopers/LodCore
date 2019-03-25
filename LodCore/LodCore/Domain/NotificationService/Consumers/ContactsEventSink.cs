@@ -8,9 +8,9 @@ namespace LodCore.Domain.NotificationService
     public class ContactsEventSink<T> : EventSinkBase<T> where T : IEventInfo
     {
         public ContactsEventSink(
-            IDistributionPolicyFactory distributionPolicyFactory, 
-            IEventRepository eventRepository, 
-            IMailer mailer, IUserPresentationProvider userPresentationProvider) : 
+            IDistributionPolicyFactory distributionPolicyFactory,
+            IEventRepository eventRepository,
+            IMailer mailer, IUserPresentationProvider userPresentationProvider) :
             base(distributionPolicyFactory, eventRepository, mailer, userPresentationProvider)
         {
         }

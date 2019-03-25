@@ -12,6 +12,6 @@ namespace LodCoreLibraryOld.Domain.UserManagement
             FrontendMailConfirmationUri = frontendMailConfirmationUri;
         }
 
-        public Uri FrontendMailConfirmationUri { get; private set; }
+        public Uri FrontendMailConfirmationUri { get; }
     }
 }

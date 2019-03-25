@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LodCore.QueryService.Views.NotificationView;
-using LodCore.QueryService.DTOs;
+﻿using LodCore.QueryService.Views.NotificationView;
 
 namespace LodCore.QueryService.Queries.NotificationQuery
 {

@@ -16,7 +16,6 @@ namespace LodCoreLibraryOld.Domain.UserManagement
 
         protected PasswordChangeRequest()
         {
-            
         }
 
         public virtual int UserId { get; protected set; }

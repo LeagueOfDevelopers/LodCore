@@ -9,14 +9,14 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
     {
         public MailerSettings(
             string smtpRelayer,
-            string smtpServer, 
-            int port, 
-            string password, 
-            string @from, 
+            string smtpServer,
+            int port,
+            string password,
+            string from,
             string displayName,
-            string caption, 
-            string messageTemplate, 
-            int basicEmailTimeoutInSecond, 
+            string caption,
+            string messageTemplate,
+            int basicEmailTimeoutInSecond,
             int timeoutIncrementInSeconds,
             int maxEmailTimeoutInSecond)
         {
@@ -24,22 +24,22 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
             Require.NotEmpty(smtpServer, nameof(smtpServer));
             Require.Positive(port, nameof(port));
             Require.NotEmpty(password, nameof(password));
-            Require.NotEmpty(@from, nameof(@from));
+            Require.NotEmpty(from, nameof(from));
             Require.NotEmpty(displayName, nameof(displayName));
             Require.NotEmpty(caption, nameof(caption));
             Require.NotEmpty(messageTemplate, nameof(messageTemplate));
             Require.Positive(basicEmailTimeoutInSecond, nameof(basicEmailTimeoutInSecond));
             Require.Positive(timeoutIncrementInSeconds, nameof(timeoutIncrementInSeconds));
             Require.True(
-                maxEmailTimeoutInSecond > basicEmailTimeoutInSecond, 
-                nameof(maxEmailTimeoutInSecond), 
+                maxEmailTimeoutInSecond > basicEmailTimeoutInSecond,
+                nameof(maxEmailTimeoutInSecond),
                 "Max email timeout needs to be higher than basic");
 
             SmtpRelayer = smtpRelayer;
             SmtpServer = smtpServer;
             Port = port;
             Password = password;
-            From = @from;
+            From = from;
             DisplayName = displayName;
             Caption = caption;
             MessageTemplate = messageTemplate;

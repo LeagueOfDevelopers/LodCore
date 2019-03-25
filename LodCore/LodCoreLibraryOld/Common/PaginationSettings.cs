@@ -11,6 +11,6 @@ namespace LodCoreLibraryOld.Common
             PageSize = pageSize;
         }
 
-        public int PageSize { get; private set; }
+        public int PageSize { get; }
     }
 }

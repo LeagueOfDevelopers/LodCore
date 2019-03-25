@@ -1,7 +1,7 @@
 ﻿using System;
 using Journalist;
-using LodCore.Infrastructure.DataAccess.Pagination;
 using LodCore.Domain.ProjectManagment;
+using LodCore.Infrastructure.DataAccess.Pagination;
 
 namespace LodCoreApi.Models
 {
@@ -25,14 +25,14 @@ namespace LodCoreApi.Models
             ProjectTypes = projectTypes;
         }
 
-        public int ProjectId { get; private set; }
+        public int ProjectId { get; }
 
-        public Uri PhotoUri { get; private set; }
+        public Uri PhotoUri { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public ProjectStatus ProjectStatus { get; private set; }
+        public ProjectStatus ProjectStatus { get; }
 
-        public ProjectType[] ProjectTypes { get; private set; }
+        public ProjectType[] ProjectTypes { get; }
     }
 }

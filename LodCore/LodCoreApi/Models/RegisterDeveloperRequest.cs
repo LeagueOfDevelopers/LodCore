@@ -16,8 +16,7 @@ namespace LodCoreApi.Models
         [RegularExpression(@"^[\d\w\s-]+$")]
         public string LastName { get; set; }
 
-        [MaxLength(50)]
-        public string Password { get; set; }
+        [MaxLength(50)] public string Password { get; set; }
 
         [MaxLength(100)]
         [RegularExpression("^(http|https)?://vk.com/.+$")]
@@ -40,8 +39,7 @@ namespace LodCoreApi.Models
         [RegularExpression(@"^[\d\w\s-]+$")]
         public string Department { get; set; }
 
-        [Range(typeof(int), "2000", "2030")]
-        public int AccessionYear { get; set; }
+        [Range(typeof(int), "2000", "2030")] public int AccessionYear { get; set; }
 
         public bool IsGraduated { get; set; }
     }

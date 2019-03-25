@@ -25,10 +25,7 @@ namespace LodCoreLibraryOld.Common
         {
             var property0 = NHibernateUtil.String.NullSafeGet(rs, names[0]);
 
-            if (property0 == null)
-            {
-                return null;
-            }
+            if (property0 == null) return null;
 
             var mailAddress = new MailAddress(property0.ToString());
 
@@ -68,19 +65,10 @@ namespace LodCoreLibraryOld.Common
             return value;
         }
 
-        public SqlType[] SqlTypes
-        {
-            get { return new[] {NHibernateUtil.String.SqlType}; }
-        }
+        public SqlType[] SqlTypes => new[] {NHibernateUtil.String.SqlType};
 
-        public Type ReturnedType
-        {
-            get { return typeof (MailAddress); }
-        }
+        public Type ReturnedType => typeof(MailAddress);
 
-        public bool IsMutable
-        {
-            get { return false; }
-        }
+        public bool IsMutable => false;
     }
 }

@@ -6,7 +6,6 @@ namespace LodCoreLibraryOld.Common
     {
         public Image()
         {
-            
         }
 
         public Image(Uri bigPhotoUri, Uri smallPhotoUri)
@@ -14,7 +13,7 @@ namespace LodCoreLibraryOld.Common
             BigPhotoUri = bigPhotoUri;
             SmallPhotoUri = smallPhotoUri;
         }
-        
+
         public virtual Uri BigPhotoUri { get; set; }
         public virtual Uri SmallPhotoUri { get; set; }
     }

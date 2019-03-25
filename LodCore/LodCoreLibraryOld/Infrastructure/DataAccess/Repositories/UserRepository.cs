@@ -53,7 +53,8 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 
             var session = _sessionProvider.GetCurrentSession();
             var account = session.Query<Account>().Where(user => user
-                                 .Profile.LinkToGithubProfile == new Uri(link)).SingleOrDefault();
+                                                                     .Profile.LinkToGithubProfile == new Uri(link))
+                .SingleOrDefault();
             return account;
         }
 
@@ -66,9 +67,9 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
         }
 
         public List<Account> GetSomeAccounts<TComparable>(
-            int skipCount, 
+            int skipCount,
             int takeCount,
-            Func<Account, TComparable> orderer, 
+            Func<Account, TComparable> orderer,
             Func<Account, bool> predicate = null)
         {
             var session = _sessionProvider.GetCurrentSession();

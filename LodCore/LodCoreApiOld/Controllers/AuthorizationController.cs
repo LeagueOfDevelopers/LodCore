@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Net;
 using System.Web.Http;
-using LodCoreApiOld.Models;
 using Journalist;
-using Serilog;
-using LodCoreLibraryOld.Domain.UserManagement;
-using LodCoreLibraryOld.Domain.Exceptions;
+using LodCoreApiOld.Models;
 using LodCoreLibraryOld.Common;
+using LodCoreLibraryOld.Domain.Exceptions;
+using LodCoreLibraryOld.Domain.UserManagement;
+using Serilog;
 
 namespace LodCoreApiOld.Controllers
 {
@@ -31,12 +31,14 @@ namespace LodCoreApiOld.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message,
+                    ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             catch (UnauthorizedAccessException ex)
             {
-                Log.Error("Failed to allow access to user with email={0}. {1} StackTrace: {2}", credentials.Email, ex.Message, ex.StackTrace);
+                Log.Error("Failed to allow access to user with email={0}. {1} StackTrace: {2}", credentials.Email,
+                    ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
         }

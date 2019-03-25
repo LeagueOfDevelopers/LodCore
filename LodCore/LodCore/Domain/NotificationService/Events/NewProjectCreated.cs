@@ -13,7 +13,7 @@ namespace LodCore.Domain.NotificationService
             ProjectName = projectName;
         }
 
-        public int ProjectId { get; private set; }
-        public string ProjectName { get; private set; }
+        public int ProjectId { get; }
+        public string ProjectName { get; }
     }
 }

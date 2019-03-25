@@ -4,6 +4,14 @@ namespace LodCoreLibraryOld.Infrastructure.EventBus
 {
     public class EventBusSettings
     {
+        public string HostName;
+
+        public string Password;
+
+        public string UserName;
+
+        public string VirtualHost;
+
         public EventBusSettings(
             string hostName,
             string virtualHost,
@@ -20,13 +28,5 @@ namespace LodCoreLibraryOld.Infrastructure.EventBus
             UserName = userName;
             Password = password;
         }
-
-        public string HostName;
-
-        public string VirtualHost;
-
-        public string UserName;
-
-        public string Password;
     }
 }

@@ -1,14 +1,22 @@
 ﻿using System;
-using Journalist;
-using Octokit;
 using System.Collections.Generic;
-using LodCore.Facades;
+using System.Net;
+using Journalist;
 using LodCore.Common;
+using LodCore.Facades;
+using Octokit;
+using Account = LodCore.Domain.UserManagement.Account;
+using Project = LodCore.Domain.ProjectManagment.Project;
 
 namespace LodCore.Infrastructure.Gateway
 {
     public class GithubGateway : IGithubGateway
     {
+        private readonly GitHubClient _gitHubClient;
+        private readonly GithubGatewaySettings _githubGatewaySettings;
+        private readonly IUserManager _userManager;
+        private string _csrf;
+
         public GithubGateway(GithubGatewaySettings githubGatewaySettings, IUserManager userManager)
         {
             Require.NotNull(githubGatewaySettings, nameof(githubGatewaySettings));
@@ -50,13 +58,16 @@ namespace LodCore.Infrastructure.Gateway
         // for collaborators management
         public string GetLinkToGithubLoginPage(string frontendCallback, int projectId, string developerIds)
         {
-            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/collaborators?ids={developerIds}";
+            var redirectUri =
+                $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/collaborators?ids={developerIds}";
             return CreateRequest(redirectUri, frontendCallback, "user", "admin:org", "repo");
         }
 
-        public string GetLinkToGithubLoginPageToRemoveCollaborator(string frontendCallback, int projectId, int developerId)
+        public string GetLinkToGithubLoginPageToRemoveCollaborator(string frontendCallback, int projectId,
+            int developerId)
         {
-            var redirectUri = $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete";
+            var redirectUri =
+                $"{_githubGatewaySettings.GithubApiDefaultCallbackUri}repositories/{projectId}/developer/{developerId}/delete";
             return CreateRequest(redirectUri, frontendCallback, "user", "admin:org", "repo");
         }
 
@@ -72,7 +83,7 @@ namespace LodCore.Infrastructure.Gateway
             if (!StateIsValid(state))
                 throw new InvalidOperationException(
                     "Security fail: the received state value doesn't correspond to the expected");
-            if (String.IsNullOrEmpty(code))
+            if (string.IsNullOrEmpty(code))
                 throw new InvalidOperationException("Value of code can't be blank or null");
             var token = GetTokenByCode(code);
             return token;
@@ -105,20 +116,20 @@ namespace LodCore.Infrastructure.Gateway
         public IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories()
         {
             var repositories = _gitHubClient.Repository.GetAllForOrg(_githubGatewaySettings.OrganizationName).Result;
-            List<GithubRepository> githubRepositories = new List<GithubRepository>();
+            var githubRepositories = new List<GithubRepository>();
             foreach (var repo in repositories)
                 githubRepositories.Add(new GithubRepository(repo.Name, repo.HtmlUrl));
             return githubRepositories;
         }
 
-        public void AddCollaboratorToRepository(string token, Array developerIds, Domain.ProjectManagment.Project project)
+        public void AddCollaboratorToRepository(string token, Array developerIds, Project project)
         {
             _gitHubClient.Credentials = new Credentials(token);
             foreach (var developerId in developerIds)
             {
-                var user = _userManager.GetUser((int)developerId);
+                var user = _userManager.GetUser((int) developerId);
                 if (user.Profile.LinkToGithubProfile == null)
-                    throw new NotFoundException("Link to GitHub profile is missed", System.Net.HttpStatusCode.NotFound);
+                    throw new NotFoundException("Link to GitHub profile is missed", HttpStatusCode.NotFound);
                 var repoLinks = project.LinksToGithubRepositories;
                 if (repoLinks.Count != 0)
                 {
@@ -126,14 +137,16 @@ namespace LodCore.Infrastructure.Gateway
                     foreach (var link in repoLinks)
                     {
                         var repoName = GetNameFromUri(link);
-                        if (!_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
-                            _gitHubClient.Repository.Collaborator.Add(_githubGatewaySettings.OrganizationName, repoName, userName);
+                        if (!_gitHubClient.Repository.Collaborator
+                            .IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
+                            _gitHubClient.Repository.Collaborator.Add(_githubGatewaySettings.OrganizationName, repoName,
+                                userName);
                     }
                 }
             }
         }
 
-        public void RemoveCollaboratorFromRepository(string token, Domain.UserManagement.Account user, Domain.ProjectManagment.Project project)
+        public void RemoveCollaboratorFromRepository(string token, Account user, Project project)
         {
             _gitHubClient.Credentials = new Credentials(token);
             var repoLinks = project.LinksToGithubRepositories;
@@ -141,15 +154,18 @@ namespace LodCore.Infrastructure.Gateway
             foreach (var link in repoLinks)
             {
                 var repoName = GetNameFromUri(link);
-                if (_gitHubClient.Repository.Collaborator.IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
-                   _gitHubClient.Repository.Collaborator.Delete(_githubGatewaySettings.OrganizationName, repoName, userName);
+                if (_gitHubClient.Repository.Collaborator
+                    .IsCollaborator(_githubGatewaySettings.OrganizationName, repoName, userName).Result)
+                    _gitHubClient.Repository.Collaborator.Delete(_githubGatewaySettings.OrganizationName, repoName,
+                        userName);
             }
         }
 
         public string CreateRepository(string token, string newRepositoryName)
         {
             _gitHubClient.Credentials = new Credentials(token);
-            return _gitHubClient.Repository.Create(_githubGatewaySettings.OrganizationName, new NewRepository(newRepositoryName)).Result.HtmlUrl;
+            return _gitHubClient.Repository
+                .Create(_githubGatewaySettings.OrganizationName, new NewRepository(newRepositoryName)).Result.HtmlUrl;
         }
 
         private string GetTokenByCode(string code)
@@ -180,7 +196,7 @@ namespace LodCore.Infrastructure.Gateway
         {
             var request = new OauthLoginRequest(_githubGatewaySettings.ClientId)
             {
-                Scopes = { String.Join(",", scopes) },
+                Scopes = {string.Join(",", scopes)},
                 State = SetCsrfToken(),
                 RedirectUri = BindFrontendCallbackToUrl(redirectUri, frontendCallback)
             };
@@ -199,10 +215,5 @@ namespace LodCore.Infrastructure.Gateway
         {
             return uri.AbsolutePath.Split('/')[uri.AbsolutePath.Split('/').Length - 1];
         }
-
-        private readonly GitHubClient _gitHubClient;
-        private string _csrf;
-        private readonly GithubGatewaySettings _githubGatewaySettings;
-        private readonly IUserManager _userManager;
     }
 }

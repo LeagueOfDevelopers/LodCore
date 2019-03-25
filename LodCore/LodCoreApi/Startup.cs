@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using LodCoreApi.Mappers;
-using LodCoreApi.Pagination;
-using LodCoreApi.Security;
 using LodCore.Common;
 using LodCore.Domain.NotificationService;
 using LodCore.Domain.ProjectManagment;
 using LodCore.Domain.UserManagement;
 using LodCore.Facades;
 using LodCore.Infrastructure.ContactContext;
-using LodCore.Infrastructure.DataAccess;
 using LodCore.Infrastructure.DataAccess.Pagination;
 using LodCore.Infrastructure.DataAccess.Repositories;
 using LodCore.Infrastructure.EventBus;
 using LodCore.Infrastructure.WebSocketConnection;
-using LodCore.QueryService;
 using LodCore.QueryService.Handlers;
-using LodCore.QueryService.Queries;
+using LodCoreApi.Filters;
+using LodCoreApi.Mappers;
+using LodCoreApi.Pagination;
+using LodCoreApi.Security;
 using Loggly;
 using Loggly.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,8 +29,6 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Swashbuckle.AspNetCore.Examples;
 using Swashbuckle.AspNetCore.Swagger;
-using LodCoreApi.Filters;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace LodCoreApi
 {
@@ -54,62 +47,72 @@ namespace LodCoreApi
         {
             StartLogger();
             ConfigureSecurity(services);
-            string[] origins = Configuration.GetValue<string>("Origins").Split(',');
+            var origins = Configuration.GetValue<string>("Origins").Split(',');
             services.AddCors(options =>
             {
                 options.AddPolicy("CommonPolicy", builder =>
-                builder.WithOrigins(origins)
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+                    builder.WithOrigins(origins)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
             });
 
-            EventConsumersContainer eventConsumersContainer = new EventConsumersContainer(
-                new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"), 
-                Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
-                Configuration.GetSection("EventBusSettings").GetValue<string>("UserName"),
-                Configuration.GetSection("EventBusSettings").GetValue<string>("Password")));
+            var eventConsumersContainer = new EventConsumersContainer(
+                new EventBusSettings(Configuration.GetSection("EventBusSettings").GetValue<string>("HostName"),
+                    Configuration.GetSection("EventBusSettings").GetValue<string>("VirtualHost"),
+                    Configuration.GetSection("EventBusSettings").GetValue<string>("UserName"),
+                    Configuration.GetSection("EventBusSettings").GetValue<string>("Password")));
             eventConsumersContainer.StartListening();
 
-            IEventPublisher eventPublisher = eventConsumersContainer.GetEventPublisher();
+            var eventPublisher = eventConsumersContainer.GetEventPublisher();
             IWebSocketStreamProvider webSocketStreamProvider = new WebSocketStreamProvider();
 
-           ProjectQueryHandler projectQueryHandler = new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
-            DeveloperQueryHandler developerQueryHandler = new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            var projectQueryHandler =
+                new ProjectQueryHandler(Configuration.GetSection("DatabaseSettings")
+                    .GetValue<string>("ConnectionString"));
+            var developerQueryHandler =
+                new DeveloperQueryHandler(Configuration.GetSection("DatabaseSettings")
+                    .GetValue<string>("ConnectionString"));
 
             IValidationRequestsRepository validationRequestsRepository = new ValidationRequestsRepository();
-            IUserRepository userRepository = new UserRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
-            IProjectRepository projectRepository = new ProjectRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
+            IUserRepository userRepository =
+                new UserRepository(Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"));
+            IProjectRepository projectRepository = new ProjectRepository(
+                Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
                 projectQueryHandler);
             IProjectMembershipRepostiory projectMembershipRepostiory = new ProjectMembershipRepository();
             IPasswordChangeRequestRepository passwordChangeRequestRepository = new PasswordChangeRequestRepository();
             IEventRepository eventRepository = new EventRepository(webSocketStreamProvider);
-            
-            IConfirmationService confirmationService = new ConfirmationService(userRepository, validationRequestsRepository, eventPublisher);
+
+            IConfirmationService confirmationService =
+                new ConfirmationService(userRepository, validationRequestsRepository, eventPublisher);
             IPasswordManager passwordManager = new PasswordManager(passwordChangeRequestRepository, userRepository);
             IProjectProvider projectProvider = new ProjectProvider(projectRepository, eventPublisher);
-            IUserManager userManager = new UserManager(userRepository, 
+            IUserManager userManager = new UserManager(userRepository,
                 confirmationService,
-                new ProjectPaginationSettings(10), 
-                projectMembershipRepostiory, 
+                new ProjectPaginationSettings(10),
+                projectMembershipRepostiory,
                 new ApplicationLocationSettings("backend", "frontend"),
                 passwordManager,
                 eventPublisher);
 
-            NotificationHandler notificationHandler = new NotificationHandler(
+            var notificationHandler = new NotificationHandler(
                 Configuration.GetSection("DatabaseSettings").GetValue<string>("ConnectionString"),
                 Configuration.GetSection("NotificationPaginationSettings").GetValue<int>("PageSize"));
-            INotificationService notificationService = new LodCore.Domain.NotificationService.NotificationService(eventRepository, new PaginationSettings(10));
-            ProjectsMapper projectsMapper = new ProjectsMapper(userManager);
-            EventMapper eventMapper = new EventMapper(notificationService);
+            INotificationService notificationService =
+                new LodCore.Domain.NotificationService.NotificationService(eventRepository, new PaginationSettings(10));
+            var projectsMapper = new ProjectsMapper(userManager);
+            var eventMapper = new EventMapper(notificationService);
             IContactsService contactsService = new ContactsService(eventPublisher);
-            
-            IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>();
-            IPaginationWrapper<Delivery> paginationDeliveryWrapper = new PaginationWrapper<Delivery>(paginableDeliveryRepository);
-            IPaginableRepository<Project> paginableProjectRepository = new PaginableRepository<Project>();
-            IPaginationWrapper<Project> paginationProjectWrapper = new PaginationWrapper<Project>(paginableProjectRepository);
 
-            
+            IPaginableRepository<Delivery> paginableDeliveryRepository = new PaginableRepository<Delivery>();
+            IPaginationWrapper<Delivery> paginationDeliveryWrapper =
+                new PaginationWrapper<Delivery>(paginableDeliveryRepository);
+            IPaginableRepository<Project> paginableProjectRepository = new PaginableRepository<Project>();
+            IPaginationWrapper<Project> paginationProjectWrapper =
+                new PaginationWrapper<Project>(paginableProjectRepository);
+
+
             services.AddSingleton(projectProvider);
             services.AddSingleton(projectsMapper);
             services.AddSingleton(userManager);
@@ -124,10 +127,7 @@ namespace LodCoreApi
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(DBExceptionFilter));
-            });
+            services.AddMvc(options => { options.Filters.Add(typeof(DBExceptionFilter)); });
 
             services.AddSwaggerGen(c =>
             {
@@ -168,10 +168,7 @@ namespace LodCoreApi
 
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "LodCore API");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "LodCore API"); });
         }
 
         private void StartLogger()
@@ -184,14 +181,14 @@ namespace LodCoreApi
             logglyConfig.Transport.EndpointPort = 6514;
             logglyConfig.Transport.LogTransport = LogTransport.SyslogSecure;
 
-            var ct = new ApplicationNameTag { Formatter = "application-{0}" };
+            var ct = new ApplicationNameTag {Formatter = "application-{0}"};
             logglyConfig.TagConfig.Tags.Add(ct);
-            
+
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.RollingFile(Path.Combine(Env.ContentRootPath, @"logs/log-{Date}.log"), shared: true)
                 .WriteTo.Loggly()
                 .CreateLogger();
-            
+
             Log.Information("Logger has started");
         }
 
@@ -199,7 +196,7 @@ namespace LodCoreApi
         {
             var securityConfiguration = Configuration.GetSection("Authorizer");
             var securitySettings = new SecuritySettings(
-                securityConfiguration["EncryptionKey"], 
+                securityConfiguration["EncryptionKey"],
                 securityConfiguration["Issue"],
                 securityConfiguration.GetValue<TimeSpan>("ExpirationPeriod"));
             var jwtIssuer = new JwtIssuer(securitySettings);

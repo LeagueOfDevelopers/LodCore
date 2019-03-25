@@ -21,7 +21,8 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
         }
 
 
-        public IEnumerable<ProjectMembership> GetAllProjectMemberships(Expression<Func<ProjectMembership, bool>> predicate = null)
+        public IEnumerable<ProjectMembership> GetAllProjectMemberships(
+            Expression<Func<ProjectMembership, bool>> predicate = null)
         {
             var session = _sessionProvider.GetCurrentSession();
             return predicate == null

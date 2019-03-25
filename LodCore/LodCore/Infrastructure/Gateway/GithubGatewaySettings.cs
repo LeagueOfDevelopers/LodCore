@@ -4,6 +4,11 @@ namespace LodCore.Infrastructure.Gateway
 {
     public class GithubGatewaySettings
     {
+        public readonly string ClientId;
+        public readonly string ClientSecret;
+        public readonly string GithubApiDefaultCallbackUri;
+        public readonly string OrganizationName;
+
         public GithubGatewaySettings(
             string clientId,
             string clientSecret,
@@ -20,10 +25,5 @@ namespace LodCore.Infrastructure.Gateway
             GithubApiDefaultCallbackUri = githubApiDefaultCallbackUri;
             OrganizationName = organizationName;
         }
-
-        public readonly string ClientId;
-        public readonly string ClientSecret;
-        public readonly string GithubApiDefaultCallbackUri;
-        public readonly string OrganizationName;
     }
 }

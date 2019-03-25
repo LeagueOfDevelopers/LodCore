@@ -7,15 +7,15 @@ namespace LodCoreLibraryOld.Domain.NotificationService
 {
     public class NotificationEventSink<T> : EventSinkBase<T> where T : IEventInfo
     {
-        public NotificationEventSink(IDistributionPolicyFactory distributionPolicyFactory, 
-                                     IEventRepository eventRepository, 
-                                     IMailer mailer, 
-                                     IUserPresentationProvider userPresentationProvider) : 
-                                base(distributionPolicyFactory, 
-                                     eventRepository, 
-                                     mailer, 
-                                     userPresentationProvider)
-        {   
+        public NotificationEventSink(IDistributionPolicyFactory distributionPolicyFactory,
+            IEventRepository eventRepository,
+            IMailer mailer,
+            IUserPresentationProvider userPresentationProvider) :
+            base(distributionPolicyFactory,
+                eventRepository,
+                mailer,
+                userPresentationProvider)
+        {
         }
 
         public override void Consume(T eventInfo)

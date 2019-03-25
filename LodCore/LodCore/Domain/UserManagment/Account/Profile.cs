@@ -1,5 +1,5 @@
-﻿using LodCore.Common;
-using System;
+﻿using System;
+using LodCore.Common;
 
 namespace LodCore.Domain.UserManagement
 {

@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Journalist;
-using LodCoreApi.Mappers;
-using LodCoreApi.Pagination;
-using LodCoreApi.Security;
 using LodCore.Domain.Exceptions;
 using LodCore.Domain.UserManagement;
-using LodCore.Facades;
 using LodCore.QueryService.Handlers;
-using LodCore.QueryService.Queries;
 using LodCore.QueryService.Queries.DeveloperQuery;
+using LodCoreApi.Security;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
-using LodCore.QueryService.Queries.ProjectQuery;
 
 namespace LodCoreApi.Controllers
 {
@@ -39,7 +30,7 @@ namespace LodCoreApi.Controllers
 
             var result = _developerQueryHandler.Handle(new AllAccountsQuery());
             result.SelectRandomDevelopers(count, GetUserRole());
-            
+
             return Ok(result);
         }
 
@@ -68,13 +59,14 @@ namespace LodCoreApi.Controllers
                 var result = _developerQueryHandler.Handle(new GetDeveloperQuery(id));
 
                 if (!result.IsVisible(userRole)) return Unauthorized();
-                
-                    if (userRole != AccountRole.Unknown) return Ok(result);
-                    else return Ok(result.GetGuestView());
+
+                if (userRole != AccountRole.Unknown) return Ok(result);
+                return Ok(result.GetGuestView());
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message,
+                    ex.StackTrace);
                 return NotFound();
             }
         }
@@ -96,14 +88,11 @@ namespace LodCoreApi.Controllers
         private AccountRole GetUserRole()
         {
             if (User.Identity.IsAuthenticated)
-            {
                 if (User.Claims.First(claim => claim.Type == "role").Value == Claims.Roles.Admin)
-                {
                     return AccountRole.Administrator;
-                }
-                else return AccountRole.User;
-            }
-            else return AccountRole.Unknown;
+                else
+                    return AccountRole.User;
+            return AccountRole.Unknown;
         }
     }
 }

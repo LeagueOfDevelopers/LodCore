@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Linq;
-using Journalist;
-using LodCore.Common;
 using LodCore.Domain.UserManagement;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class NotificationSettingsRepository : INotificationSettingsRepository
     {
-        public NotificationSettingsRepository()
-        {
-        }
-
         public NotificationSetting ReadNotificationSettingByCriteria(Func<NotificationSetting, bool> func)
         {
             /*

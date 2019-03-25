@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace LodCore.Infrastructure.WebSocketConnection
 {
     public class WebSocketStreamProvider : IWebSocketStreamProvider
     {
+        private static readonly Dictionary<int, WebSocket> _wsClients;
+
         static WebSocketStreamProvider()
         {
             _wsClients = new Dictionary<int, WebSocket>();
@@ -41,11 +42,10 @@ namespace LodCore.Infrastructure.WebSocketConnection
         public void SendMessage(int userId, string message)
         {
             if (_wsClients.ContainsKey(userId))
-            {
                 if (_wsClients[userId].State == WebSocketState.Open)
                 {
                     var encoded = Encoding.UTF8.GetBytes(message);
-                    var segment = new ArraySegment<Byte>(encoded, 0, encoded.Length);
+                    var segment = new ArraySegment<byte>(encoded, 0, encoded.Length);
                     _wsClients[userId].SendAsync(segment, WebSocketMessageType.Text,
                         true, CancellationToken.None);
                 }
@@ -53,9 +53,6 @@ namespace LodCore.Infrastructure.WebSocketConnection
                 {
                     _wsClients.Remove(userId);
                 }
-            }
         }
-        
-        private static readonly Dictionary<int, WebSocket> _wsClients;
     }
 }

@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace LodCoreApi.Extensions
 {
@@ -28,8 +25,9 @@ namespace LodCoreApi.Extensions
                 var handler = new JwtSecurityTokenHandler();
                 var userRole = handler.ReadJwtToken(token.Substring(7)).Claims.First(c => c.Type == "Role").Value;
 
-                return (userRole == "Admin" || userRole == role);
+                return userRole == "Admin" || userRole == role;
             }
+
             return false;
         }
     }

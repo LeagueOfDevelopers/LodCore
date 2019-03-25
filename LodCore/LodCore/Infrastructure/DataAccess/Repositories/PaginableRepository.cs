@@ -1,17 +1,11 @@
-﻿using LodCore.Common;
-using LodCore.Infrastructure.DataAccess.Pagination;
-using System;
-using System.Linq;
+﻿using System;
 using System.Linq.Expressions;
+using LodCore.Infrastructure.DataAccess.Pagination;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class PaginableRepository<T> : IPaginableRepository<T> where T : class
     {
-        public PaginableRepository()
-        {
-        }
-
         public int GetCountOfEntities(Expression<Func<T, bool>> criteria = null)
         {
             /*

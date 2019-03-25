@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using Journalist;
 
 namespace LodCore.Common
 {
@@ -18,10 +17,7 @@ namespace LodCore.Common
 
                 var sBuilder = new StringBuilder();
 
-                for (var i = 0; i < data.Length; i++)
-                {
-                    sBuilder.Append(data[i].ToString("x2"));
-                }
+                for (var i = 0; i < data.Length; i++) sBuilder.Append(data[i].ToString("x2"));
 
                 // Return the hexadecimal string.
                 Value = sBuilder.ToString();
@@ -36,10 +32,12 @@ namespace LodCore.Common
         {
         }
 
+        public virtual string Value { get; protected set; }
+
         public static Password FromPlainString(string value)
         {
             if (value == null) return null;
-            return new Password { Value = value };
+            return new Password {Value = value};
         }
 
         public Password GetHashed()
@@ -56,20 +54,18 @@ namespace LodCore.Common
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Password) obj);
         }
 
         public override int GetHashCode()
         {
-            return (Value != null ? Value.GetHashCode() : 0);
+            return Value != null ? Value.GetHashCode() : 0;
         }
 
         public static bool IsStringCorrectPassword(string passwordToCheck)
         {
             return Regex.IsMatch(passwordToCheck, "^.{8,50}$");
         }
-
-        public virtual string Value { get; protected set; }
     }
 }

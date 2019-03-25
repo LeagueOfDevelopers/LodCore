@@ -1,7 +1,7 @@
-﻿using LodCore.Domain.ProjectManagment;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using LodCore.Domain.ProjectManagment;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
@@ -9,7 +9,8 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
     {
         Project[] GetAllProjects(Func<Project, bool> criteria = null);
 
-        Project[] GetSomeProjects(int skipCount, int takeCount, Expression<Func<Project, int>> orderer = null, Expression<Func<Project, bool>> predicate = null);
+        Project[] GetSomeProjects(int skipCount, int takeCount, Expression<Func<Project, int>> orderer = null,
+            Expression<Func<Project, bool>> predicate = null);
 
         Project GetProject(int projectId);
 

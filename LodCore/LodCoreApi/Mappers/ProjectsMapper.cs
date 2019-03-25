@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using LodCoreApi.Models;
 using Journalist;
+using LodCore.Common;
+using LodCore.Facades;
+using LodCoreApi.Models;
+using Image = LodCore.Common.Image;
 using Project = LodCore.Domain.ProjectManagment.Project;
 using ProjectMembership = LodCore.Domain.ProjectManagment.ProjectMembership;
 using ProjectMembershipDto = LodCoreApi.Models.ProjectMembership;
-using LodCore.Facades;
-using LodCore.Domain.ProjectManagment;
 
 namespace LodCoreApi.Mappers
 {
@@ -50,8 +52,8 @@ namespace LodCoreApi.Mappers
                 project.ProjectStatus,
                 project.LandingImage,
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<LodCore.Common.Image>(project.Screenshots),
-                new HashSet<System.Uri>(project.LinksToGithubRepositories));
+                new HashSet<Image>(project.Screenshots),
+                new HashSet<Uri>(project.LinksToGithubRepositories));
         }
 
         public Models.Project ToProject(Project project)
@@ -64,9 +66,9 @@ namespace LodCoreApi.Mappers
                 project.ProjectStatus,
                 project.LandingImage,
                 new HashSet<ProjectMembershipDto>(project.ProjectMemberships.Select(ToProjectMembershipDto)),
-                new HashSet<LodCore.Common.Image>(project.Screenshots),
-                new HashSet<LodCore.Common.ProjectLink>(project.Links),
-                new HashSet<System.Uri>(project.LinksToGithubRepositories));
+                new HashSet<Image>(project.Screenshots),
+                new HashSet<ProjectLink>(project.Links),
+                new HashSet<Uri>(project.LinksToGithubRepositories));
         }
 
         private ProjectMembershipDto ToProjectMembershipDto(ProjectMembership projectMembership)

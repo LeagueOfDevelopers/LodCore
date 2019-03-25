@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Web.Http;
+using Journalist;
 using LodCoreApiOld.App_Data;
 using LodCoreApiOld.App_Data.Mappers;
 using LodCoreApiOld.Authorization;
 using LodCoreApiOld.Models;
-using Journalist;
 using LodCoreLibraryOld.Domain.NotificationService;
 using LodCoreLibraryOld.Domain.UserManagement;
 
@@ -12,13 +12,13 @@ namespace LodCoreApiOld.Controllers
 {
     public class EventController : ApiController
     {
-        private readonly INotificationService _notificationService;
         private readonly EventMapper _eventMapper;
-        private readonly IPaginationWrapper<Delivery> _paginationWrapper; 
+        private readonly INotificationService _notificationService;
+        private readonly IPaginationWrapper<Delivery> _paginationWrapper;
 
-        public EventController(INotificationService notificationService, 
-                               EventMapper eventMapper, 
-                               IPaginationWrapper<Delivery> paginationWrapper)
+        public EventController(INotificationService notificationService,
+            EventMapper eventMapper,
+            IPaginationWrapper<Delivery> paginationWrapper)
         {
             _notificationService = notificationService;
             _eventMapper = eventMapper;

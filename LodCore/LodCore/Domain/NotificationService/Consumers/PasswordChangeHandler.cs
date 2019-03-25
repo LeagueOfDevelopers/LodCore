@@ -7,6 +7,12 @@ namespace LodCore.Domain.NotificationService
 {
     public class PasswordChangeHandler : IEventConsumer<PasswordChangeRequest>
     {
+        private readonly ApplicationLocationSettings _applicationLocationSettings;
+
+        private readonly IMailer _mailer;
+        private readonly IPasswordManager _passwordManager;
+        private readonly IUserRepository _userRepository;
+
         public PasswordChangeHandler(
             IMailer mailer,
             IPasswordManager passwordManager,
@@ -19,16 +25,11 @@ namespace LodCore.Domain.NotificationService
             _userRepository = userRepository;
         }
 
-	    public void Consume(PasswordChangeRequest request)
-	    {
-			var user = _userRepository.GetAccount(request.UserId);
-		    var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{request.Token}";
-		    _mailer.SendPasswordResetMail(user.Firstname, link, user.Email);
-		}
-
-        private readonly IMailer _mailer;
-        private readonly IPasswordManager _passwordManager;
-        private readonly ApplicationLocationSettings _applicationLocationSettings;
-        private readonly IUserRepository _userRepository;
+        public void Consume(PasswordChangeRequest request)
+        {
+            var user = _userRepository.GetAccount(request.UserId);
+            var link = $"{_applicationLocationSettings.FrontendAdress}/password/recovery/{request.Token}";
+            _mailer.SendPasswordResetMail(user.Firstname, link, user.Email);
+        }
     }
 }

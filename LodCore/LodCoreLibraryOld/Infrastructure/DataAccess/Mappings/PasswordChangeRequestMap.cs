@@ -11,5 +11,4 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Mappings
             Property(model => model.UserId, mapper => mapper.Column("UserId"));
         }
     }
-
 }

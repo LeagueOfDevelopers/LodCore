@@ -7,18 +7,18 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Http;
+using Journalist;
 using LodCoreApiOld.App_Data;
 using LodCoreApiOld.App_Data.Mappers;
 using LodCoreApiOld.Authorization;
 using LodCoreApiOld.Models;
-using Journalist;
-using NotificationSetting = LodCoreApiOld.Models.NotificationSetting;
-using PasswordChangeRequest = LodCoreApiOld.Models.PasswordChangeRequest;
-using Serilog;
+using LodCoreLibraryOld.Common;
+using LodCoreLibraryOld.Domain.Exceptions;
 using LodCoreLibraryOld.Domain.UserManagement;
 using LodCoreLibraryOld.Facades;
-using LodCoreLibraryOld.Domain.Exceptions;
-using LodCoreLibraryOld.Common;
+using Serilog;
+using NotificationSetting = LodCoreApiOld.Models.NotificationSetting;
+using PasswordChangeRequest = LodCoreApiOld.Models.PasswordChangeRequest;
 
 namespace LodCoreApiOld.Controllers
 {
@@ -62,7 +62,7 @@ namespace LodCoreApiOld.Controllers
             Require.ZeroOrGreater(count, nameof(count));
 
             var users = _userManager.GetUserList(
-                GetAccountFilter())
+                    GetAccountFilter())
                 .GetRandom(count);
             var indexPageDevelopers = users.Select(_mapper.ToIndexPageDeveloper);
             return indexPageDevelopers;
@@ -122,26 +122,21 @@ namespace LodCoreApiOld.Controllers
         [AllowAnonymous]
         [Route("developers/{id}")]
         public IHttpActionResult GetDeveloper(int id)
-        { 
+        {
             Require.Positive(id, nameof(id));
             try
             {
                 var user = _userManager.GetUser(id);
-                if (!GetAccountFilter()(user))
-                {
-                    throw new AccountNotFoundException();
-                }
+                if (!GetAccountFilter()(user)) throw new AccountNotFoundException();
 
-                if (HttpContext.Current.User.IsInRole(AccountRole.User))
-                {
-                    return Ok(_mapper.ToDeveloper(user));
-                }
+                if (HttpContext.Current.User.IsInRole(AccountRole.User)) return Ok(_mapper.ToDeveloper(user));
 
                 return Ok(_mapper.ToGuestDeveloper(user));
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message,
+                    ex.StackTrace);
                 return NotFound();
             }
         }
@@ -150,10 +145,7 @@ namespace LodCoreApiOld.Controllers
         [Route("developers")]
         public IHttpActionResult RegisterNewDeveloper([FromBody] RegisterDeveloperRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var createAccountRequest = new CreateAccountRequest(
                 new MailAddress(request.Email),
@@ -177,10 +169,10 @@ namespace LodCoreApiOld.Controllers
             }
             catch (AccountAlreadyExistsException ex)
             {
-                Log.Error("Failed to register user with email={0}. {1} StackTrace: {2}", request.Email, ex.Message, ex.StackTrace);
+                Log.Error("Failed to register user with email={0}. {1} StackTrace: {2}", request.Email, ex.Message,
+                    ex.StackTrace);
                 return ResponseMessage(new HttpResponseMessage(HttpStatusCode.Conflict));
             }
-
         }
 
         [HttpPut]
@@ -193,10 +185,7 @@ namespace LodCoreApiOld.Controllers
 
             User.AssertResourceOwnerOrAdmin(id);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             Account userToChange;
             try
@@ -205,7 +194,8 @@ namespace LodCoreApiOld.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message,
+                    ex.StackTrace);
                 return NotFound();
             }
 
@@ -218,7 +208,9 @@ namespace LodCoreApiOld.Controllers
                 StudentAccessionYear = profileRequest.StudentAccessionYear,
                 IsGraduated = profileRequest.IsGraduated,
                 StudyingDirection = profileRequest.StudyingDirection,
-                VkProfileUri = String.IsNullOrWhiteSpace(profileRequest.VkProfileUri) ? null : new Uri(profileRequest.VkProfileUri),
+                VkProfileUri = string.IsNullOrWhiteSpace(profileRequest.VkProfileUri)
+                    ? null
+                    : new Uri(profileRequest.VkProfileUri),
                 LinkToGithubProfile = profileRequest.LinkToGithubProfile
             };
 
@@ -235,29 +227,17 @@ namespace LodCoreApiOld.Controllers
         {
             Account userToChange;
             if (User.IsInRole(AccountRole.User))
-            {
                 userToChange = _userManager.GetUser(User.Identity.GetId());
-            }
             else if (request.Token != null)
-            {
                 userToChange = _passwordManager.GetUserByPasswordRecoveryToken(request.Token);
-            }
             else
-            {
                 return BadRequest();
-            }
 
-            if (userToChange == null)
-            {
-                return NotFound();
-            }
+            if (userToChange == null) return NotFound();
 
             var userId = userToChange.UserId;
 
-            if (!Password.IsStringCorrectPassword(request.NewPassword))
-            {
-                return BadRequest();
-            }
+            if (!Password.IsStringCorrectPassword(request.NewPassword)) return BadRequest();
             _userManager.ChangeUserPassword(userId, request.NewPassword);
             return Ok();
         }
@@ -273,19 +253,12 @@ namespace LodCoreApiOld.Controllers
 
             User.AssertResourceOwnerOrAdmin(id);
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
             if (!User.IsInRole(AccountRole.Administrator))
-            {
                 if (notificationSettings?.Any(
-                    setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
-                {
+                        setting => setting.NotificationSettingValue == NotificationSettingValue.DontSend) ?? false)
                     return BadRequest("You can't turn off notification sending");
-                }
-            }
 
             try
             {
@@ -293,17 +266,17 @@ namespace LodCoreApiOld.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message,
+                    ex.StackTrace);
                 return NotFound();
             }
+
             foreach (var notificationSetting in notificationSettings)
-            {
                 _userPresentationProvider.UpdateNotificationSetting(
-                        new LodCoreLibraryOld.Domain.UserManagement.NotificationSetting(
-                            id,
-                            notificationSetting.NotificationType,
-                            notificationSetting.NotificationSettingValue));
-            }
+                    new LodCoreLibraryOld.Domain.UserManagement.NotificationSetting(
+                        id,
+                        notificationSetting.NotificationType,
+                        notificationSetting.NotificationSettingValue));
             return Ok();
         }
 
@@ -319,7 +292,8 @@ namespace LodCoreApiOld.Controllers
             }
             catch (AccountNotFoundException ex)
             {
-                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message, ex.StackTrace);
+                Log.Error("Failed to get user with id={0}. {1} StackTrace: {2}", id.ToString(), ex.Message,
+                    ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
@@ -343,12 +317,14 @@ namespace LodCoreApiOld.Controllers
             }
             catch (TokenNotFoundException ex)
             {
-                Log.Error("Failed to find confirmationToken={0}. {1} StackTrace: {2}", confirmationToken, ex.Message, ex.StackTrace);
+                Log.Error("Failed to find confirmationToken={0}. {1} StackTrace: {2}", confirmationToken, ex.Message,
+                    ex.StackTrace);
                 return BadRequest("Token not found");
             }
             catch (InvalidOperationException ex)
             {
-                Log.Error("Failed to confirm email by confirmationToken={0}. {1} StackTrace: {2}", confirmationToken, ex.Message, ex.StackTrace);
+                Log.Error("Failed to confirm email by confirmationToken={0}. {1} StackTrace: {2}", confirmationToken,
+                    ex.Message, ex.StackTrace);
                 return BadRequest(ex.Message);
             }
 
@@ -374,21 +350,17 @@ namespace LodCoreApiOld.Controllers
         private Func<Account, bool> GetAccountFilter()
         {
             if (User.IsInRole(AccountRole.Administrator))
-            {
                 return account => account.ConfirmationStatus == ConfirmationStatus.EmailConfirmed
                                   || account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
-            }
 
             return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !account.IsHidden;
         }
-        
+
         private Expression<Func<Account, bool>> GetAccountFilterExpression()
         {
             if (User.IsInRole(AccountRole.Administrator))
-            {
                 return account => account.ConfirmationStatus == ConfirmationStatus.EmailConfirmed
                                   || account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed;
-            }
 
             return account => account.ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !account.IsHidden;
         }

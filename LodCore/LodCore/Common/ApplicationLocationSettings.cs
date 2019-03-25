@@ -8,7 +8,7 @@
             FrontendAdress = frontendAdress;
         }
 
-        public string BackendAdress { get; private set; }
-        public string FrontendAdress { get; private set; }
+        public string BackendAdress { get; }
+        public string FrontendAdress { get; }
     }
 }

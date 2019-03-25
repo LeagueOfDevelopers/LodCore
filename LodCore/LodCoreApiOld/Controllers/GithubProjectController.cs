@@ -1,20 +1,26 @@
-﻿using LodCoreApiOld.Authorization;
-using Journalist;
+﻿using System;
 using System.Collections.Generic;
-using System.Web.Http;
-using System;
-using Serilog;
-using System.Web;
 using System.Net;
-using LodCoreLibraryOld.Infrastructure.Gateway;
-using LodCoreLibraryOld.Facades;
+using System.Web;
+using System.Web.Http;
+using Journalist;
+using LodCoreApiOld.Authorization;
 using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Domain.UserManagement;
+using LodCoreLibraryOld.Facades;
+using LodCoreLibraryOld.Infrastructure.Gateway;
+using Serilog;
 
 namespace LodCoreApiOld.Controllers
 {
     public class GithubProjectController : ApiController
     {
+        private const string frontendCallbackComponentName = "frontend_callback";
+        private readonly ApplicationLocationSettings _applicationLocationSettings;
+        private readonly IGithubGateway _githubGateway;
+        private readonly IProjectProvider _projectProvider;
+        private readonly IUserManager _userManager;
+
         public GithubProjectController(
             IGithubGateway githubGateway,
             IProjectProvider projectProvider,
@@ -39,7 +45,7 @@ namespace LodCoreApiOld.Controllers
         {
             return _githubGateway.GetLeagueOfDevelopersRepositories();
         }
-        
+
         [HttpPost]
         [Authorization(AccountRole.Administrator)]
         [Route("github/repositories/{projectId}")]
@@ -50,7 +56,8 @@ namespace LodCoreApiOld.Controllers
             string developerIdsJsonString;
             try
             {
-                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                frontCallback =
+                    QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
                 developerIdsJsonString = QueryStringParser.ParseQueryStringToGetParameter(queryString, "ids");
             }
             catch (HttpParseException ex)
@@ -59,6 +66,7 @@ namespace LodCoreApiOld.Controllers
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
             return _githubGateway.GetLinkToGithubLoginPage(frontCallback, projectId, developerIdsJsonString);
         }
 
@@ -71,7 +79,8 @@ namespace LodCoreApiOld.Controllers
             string frontCallback;
             try
             {
-                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                frontCallback =
+                    QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
             }
             catch (HttpParseException ex)
             {
@@ -79,6 +88,7 @@ namespace LodCoreApiOld.Controllers
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
             return _githubGateway.GetLinkToGithubLoginPageToRemoveCollaborator(frontCallback, projectId, developerId);
         }
 
@@ -91,7 +101,8 @@ namespace LodCoreApiOld.Controllers
             string frontCallback;
             try
             {
-                frontCallback = QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
+                frontCallback =
+                    QueryStringParser.ParseQueryStringToGetParameter(queryString, frontendCallbackComponentName);
             }
             catch (HttpParseException ex)
             {
@@ -99,12 +110,14 @@ namespace LodCoreApiOld.Controllers
                     frontendCallbackComponentName, queryString, ex.Message, ex.StackTrace);
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
+
             return _githubGateway.GetLinktoGithubLoginPageToCreateRepository(frontCallback, newRepositoryName);
         }
-        
+
         [HttpGet]
         [Route("github/callback/repositories/{projectId}/collaborators")]
-        public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, string frontend_callback, string code, string state)
+        public IHttpActionResult AddCollaboratorToProjectRepositories(int projectId, string frontend_callback,
+            string code, string state)
         {
             var project = _projectProvider.GetProject(projectId);
             var queryString = Request.RequestUri.Query;
@@ -125,12 +138,14 @@ namespace LodCoreApiOld.Controllers
                     projectId.ToString(), ex.Message, ex.StackTrace);
                 success = false;
             }
+
             return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, success));
         }
 
         [HttpGet]
         [Route("github/callback/repositories/{projectId}/developer/{developerId}/delete")]
-        public IHttpActionResult RemoveCollaboratorFromProjectRepositories(int projectId, int developerId, string frontend_callback, string code, string state)
+        public IHttpActionResult RemoveCollaboratorFromProjectRepositories(int projectId, int developerId,
+            string frontend_callback, string code, string state)
         {
             var project = _projectProvider.GetProject(projectId);
             var developer = _userManager.GetUser(developerId);
@@ -142,16 +157,19 @@ namespace LodCoreApiOld.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to remove collaborator with id={0} from project with id={1}: {2}. StackTrace: {3}", 
+                Log.Error(ex,
+                    "Failed to remove collaborator with id={0} from project with id={1}: {2}. StackTrace: {3}",
                     developerId.ToString(), projectId.ToString(), ex.Message, ex.StackTrace);
                 success = false;
             }
+
             return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs(frontend_callback, success));
         }
 
         [HttpGet]
         [Route("github/callback/repositories/{newRepositoryName}")]
-        public IHttpActionResult CreateRepository(string newRepositoryName, string frontend_callback, string code, string state)
+        public IHttpActionResult CreateRepository(string newRepositoryName, string frontend_callback, string code,
+            string state)
         {
             var success = true;
             var newRepositoryUrl = "";
@@ -160,19 +178,16 @@ namespace LodCoreApiOld.Controllers
                 var githubAccessToken = _githubGateway.GetToken(code, state);
                 newRepositoryUrl = _githubGateway.CreateRepository(githubAccessToken, newRepositoryName);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Failed to remove create repository with name={0}: {1}. StackTrace: {2}",
                     newRepositoryName, ex.Message, ex.StackTrace);
                 success = false;
             }
-            return Redirect(ResponseSuccessMarker.MarkRedirectUrlSuccessAs($"{frontend_callback}&repository_link={newRepositoryUrl}", success));
-        }
 
-        private const string frontendCallbackComponentName = "frontend_callback";
-        private readonly IGithubGateway _githubGateway;
-        private readonly IProjectProvider _projectProvider;
-        private readonly IUserManager _userManager;
-        private readonly ApplicationLocationSettings _applicationLocationSettings;
+            return Redirect(
+                ResponseSuccessMarker.MarkRedirectUrlSuccessAs(
+                    $"{frontend_callback}&repository_link={newRepositoryUrl}", success));
+        }
     }
 }

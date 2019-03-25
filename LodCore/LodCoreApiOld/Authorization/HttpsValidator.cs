@@ -18,7 +18,7 @@ namespace LodCoreApiOld.Authorization
                 actionContext.Response.Content = new StringContent
                     ("<p>Use https instead of http</p>", Encoding.UTF8, "text/html");
 
-                UriBuilder uriBuilder = new UriBuilder(actionContext.Request.RequestUri);
+                var uriBuilder = new UriBuilder(actionContext.Request.RequestUri);
                 uriBuilder.Scheme = Uri.UriSchemeHttps;
                 uriBuilder.Port = 44379;
 

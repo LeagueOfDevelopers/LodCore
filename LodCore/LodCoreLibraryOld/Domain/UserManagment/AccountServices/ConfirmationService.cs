@@ -1,15 +1,20 @@
 ﻿using System;
 using Journalist;
-using LodCoreLibraryOld.Infrastructure.DataAccess.Repositories;
-using LodCoreLibraryOld.Infrastructure.EventBus;
 using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Domain.Exceptions;
 using LodCoreLibraryOld.Domain.NotificationService;
+using LodCoreLibraryOld.Infrastructure.DataAccess.Repositories;
+using LodCoreLibraryOld.Infrastructure.EventBus;
 
 namespace LodCoreLibraryOld.Domain.UserManagement
 {
     public class ConfirmationService : IConfirmationService
     {
+        private readonly IEventPublisher _eventPublisher;
+
+        private readonly IUserRepository _userRepository;
+        private readonly IValidationRequestsRepository _validationRequestsRepository;
+
         public ConfirmationService(
             IUserRepository userRepository,
             IValidationRequestsRepository validationRequestsRepository,
@@ -38,16 +43,13 @@ namespace LodCoreLibraryOld.Domain.UserManagement
             Require.NotNull(confirmationToken, nameof(confirmationToken));
 
             var validationRequest = _validationRequestsRepository.GetMailValidationRequest(confirmationToken);
-            if (validationRequest == null)
-            {
-                throw new TokenNotFoundException();
-            }
+            if (validationRequest == null) throw new TokenNotFoundException();
             var userAccount = _userRepository.GetAccount(validationRequest.UserId);
 
             if (userAccount.ConfirmationStatus != ConfirmationStatus.Unconfirmed)
             {
                 _validationRequestsRepository.DeleteValidationToken(validationRequest);
-                throw new InvalidOperationException("Trying to confirm already confirmed profile ");    
+                throw new InvalidOperationException("Trying to confirm already confirmed profile ");
             }
 
             userAccount.ConfirmationStatus = ConfirmationStatus.EmailConfirmed;
@@ -56,7 +58,8 @@ namespace LodCoreLibraryOld.Domain.UserManagement
 
             _validationRequestsRepository.DeleteValidationToken(validationRequest);
 
-            var @event = new NewEmailConfirmedDeveloper(userAccount.UserId, userAccount.Firstname, userAccount.Lastname);
+            var @event =
+                new NewEmailConfirmedDeveloper(userAccount.UserId, userAccount.Firstname, userAccount.Lastname);
 
             _eventPublisher.PublishEvent(@event);
         }
@@ -67,15 +70,10 @@ namespace LodCoreLibraryOld.Domain.UserManagement
 
             var userAccount = _userRepository.GetAccount(userId);
 
-            if (userAccount == null)
-            {
-                throw new AccountNotFoundException();
-            }
+            if (userAccount == null) throw new AccountNotFoundException();
 
             if (userAccount.ConfirmationStatus == ConfirmationStatus.FullyConfirmed)
-            {
                 throw new InvalidOperationException("User is already confirmed");
-            }
 
             userAccount.ConfirmationStatus = ConfirmationStatus.FullyConfirmed;
 
@@ -85,9 +83,5 @@ namespace LodCoreLibraryOld.Domain.UserManagement
 
             _eventPublisher.PublishEvent(@event);
         }
-		
-        private readonly IUserRepository _userRepository;
-        private readonly IValidationRequestsRepository _validationRequestsRepository;
-        private readonly IEventPublisher _eventPublisher;
     }
 }

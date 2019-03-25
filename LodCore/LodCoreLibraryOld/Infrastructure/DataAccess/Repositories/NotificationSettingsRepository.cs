@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Journalist;
-using NHibernate.Linq;
 using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Domain.UserManagement;
+using NHibernate.Linq;
 
 namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 {

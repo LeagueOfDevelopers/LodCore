@@ -1,5 +1,5 @@
-﻿using LodCoreLibraryOld.Common;
-using System;
+﻿using System;
+using LodCoreLibraryOld.Common;
 
 namespace LodCoreLibraryOld.Domain.UserManagement
 {

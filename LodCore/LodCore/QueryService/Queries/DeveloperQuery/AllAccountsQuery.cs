@@ -1,10 +1,6 @@
-﻿using LodCore.QueryService.DTOs;
+﻿using System.Collections.Generic;
+using LodCore.QueryService.DTOs;
 using LodCore.QueryService.Views.DeveloperView;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Queries.DeveloperQuery
 {

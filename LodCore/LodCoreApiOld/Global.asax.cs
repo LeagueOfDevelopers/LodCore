@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Http;
-using SimpleInjector.Integration.WebApi;
 using LodCoreLibraryOld.Common;
+using SimpleInjector.Integration.WebApi;
 
 namespace LodCoreApiOld
 {
@@ -10,7 +10,8 @@ namespace LodCoreApiOld
         protected void Application_Start()
         {
             var container = new Bootstrapper().Configure();
-            GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver =
+                new SimpleInjectorWebApiDependencyResolver(container);
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }

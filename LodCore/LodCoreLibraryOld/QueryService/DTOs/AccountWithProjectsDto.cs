@@ -1,18 +1,11 @@
-﻿using LodCoreLibraryOld.Domain.UserManagement;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LodCoreLibraryOld.Domain.UserManagement;
 
 namespace LodCoreLibraryOld.QueryService.DTOs
 {
     public class AccountWithProjectsDto
     {
-        public AccountWithProjectsDto()
-        {
-        }
-
         public int UserId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }

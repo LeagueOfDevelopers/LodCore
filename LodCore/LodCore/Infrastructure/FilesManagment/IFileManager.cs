@@ -1,7 +1,7 @@
-﻿using LodCore.Common;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using LodCore.Common;
 
 namespace LodCore.Infrastructure.FilesManagement
 {
