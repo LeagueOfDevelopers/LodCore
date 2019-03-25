@@ -1,16 +1,9 @@
-﻿using System.Linq;
-using Journalist;
-using LodCore.Common;
-using LodCore.Domain.UserManagement;
+﻿using LodCore.Domain.UserManagement;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class ValidationRequestsRepository : IValidationRequestsRepository
     {
-        public ValidationRequestsRepository()
-        {
-        }
-
         public void SaveValidationRequest(MailValidationRequest request)
         {
             /*

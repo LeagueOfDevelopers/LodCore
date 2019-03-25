@@ -17,12 +17,12 @@ namespace LodCoreApiOld.Models
             Role = role;
         }
 
-        public int DeveloperId { get; private set; }
+        public int DeveloperId { get; }
 
-        public string FirstName { get; private set; }
+        public string FirstName { get; }
 
-        public string LastName { get; private set; }
+        public string LastName { get; }
 
-        public string Role { get; private set; }
+        public string Role { get; }
     }
 }

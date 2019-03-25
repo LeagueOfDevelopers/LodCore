@@ -1,16 +1,10 @@
 ﻿using LodCoreLibrary.QueryService.Views.ProjectView;
 using LodCoreLibraryOld.Domain.ProjectManagment;
-using LodCoreLibraryOld.Infrastructure.DataAccess.Pagination;
 using LodCoreLibraryOld.QueryService.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCoreLibraryOld.QueryService.Views.ProjectView
 {
-    public class MinProjectView 
+    public class MinProjectView
     {
         public MinProjectView(ProjectDto projectDto)
         {

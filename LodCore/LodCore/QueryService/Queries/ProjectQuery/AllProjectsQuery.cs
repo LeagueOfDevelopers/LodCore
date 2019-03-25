@@ -1,11 +1,6 @@
-﻿using LodCore.QueryService.DTOs;
-using LodCore.QueryService.Views;
+﻿using System.Collections.Generic;
+using LodCore.QueryService.DTOs;
 using LodCore.QueryService.Views.ProjectView;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Queries.ProjectQuery
 {

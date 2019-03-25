@@ -1,8 +1,8 @@
 ﻿using System.Web.Http;
-using LodCoreApiOld.Models;
 using Journalist;
-using LodCoreLibraryOld.Infrastructure.ContactContext;
+using LodCoreApiOld.Models;
 using LodCoreLibraryOld.Domain.NotificationService;
+using LodCoreLibraryOld.Infrastructure.ContactContext;
 
 namespace LodCoreApiOld.Controllers
 {
@@ -20,10 +20,7 @@ namespace LodCoreApiOld.Controllers
         [Route("contact")]
         public IHttpActionResult SendContactMessage([FromBody] ContactMessage contactMessage)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
             _contactsService.SendContactMessage(
                 new NewContactMessage(
                     contactMessage.ClientName,

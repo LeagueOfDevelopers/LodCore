@@ -1,11 +1,7 @@
-﻿using LodCoreLibraryOld.QueryService.DTOs;
-using LodCoreLibraryOld.QueryService.Views;
-using LodCoreLibraryOld.QueryService.Views.DeveloperView;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LodCoreLibraryOld.QueryService.DTOs;
+using LodCoreLibraryOld.QueryService.Views.DeveloperView;
 
 namespace LodCoreLibraryOld.QueryService.Queries.DeveloperQuery
 {
@@ -16,7 +12,7 @@ namespace LodCoreLibraryOld.QueryService.Queries.DeveloperQuery
             Offset = offset;
             Count = count;
             Sql = "SELECT * FROM accounts AS Account " +
-                "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId;";
+                  "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId;";
         }
 
         public string Sql { get; }

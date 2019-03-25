@@ -4,7 +4,7 @@ namespace LodCoreLibraryOld.Domain.NotificationService
 {
     public class DeveloperHasLeftProject : EventInfoBase
     {
-        public DeveloperHasLeftProject(int userId, int projectId, 
+        public DeveloperHasLeftProject(int userId, int projectId,
             string firstName, string lastName, string projectName)
         {
             Require.Positive(userId, nameof(userId));
@@ -20,10 +20,10 @@ namespace LodCoreLibraryOld.Domain.NotificationService
             ProjectName = projectName;
         }
 
-        public int UserId { get; private set; }
-        public int ProjectId { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public string ProjectName { get; private set; }
+        public int UserId { get; }
+        public int ProjectId { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
+        public string ProjectName { get; }
     }
 }

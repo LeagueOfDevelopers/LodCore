@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LodCore.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CommonTests
 {
@@ -22,7 +22,7 @@ namespace CommonTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ArgumentException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void InvalidPasswordThrowsArgumentException()
         {
             //arrange

@@ -1,17 +1,24 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.Mail;
 using Journalist;
-using Serilog;
-using System;
+using LodCoreLibraryOld.Domain.NotificationService;
 using LodCoreLibraryOld.Infrastructure.DataAccess.Repositories;
 using LodCoreLibraryOld.Infrastructure.EventBus;
-using LodCoreLibraryOld.Domain.NotificationService;
+using LodCoreLibraryOld.Infrastructure.Mailing.EmailModels;
+using Serilog;
 
 namespace LodCoreLibraryOld.Infrastructure.Mailing
 {
     public class Mailer : IMailer
     {
-        public Mailer(MailerSettings mailerSettings, 
+        private readonly IEventPublisher _eventPublisher;
+
+        private readonly MailerSettings _mailerSettings;
+        private readonly INotificationEmailDescriber _notificationEmailDescriber;
+        private readonly IUserRepository _usersRepository;
+
+        public Mailer(MailerSettings mailerSettings,
             INotificationEmailDescriber notificationEmailDescriber,
             IUserRepository usersRepository,
             IEventPublisher eventPublisher)
@@ -36,7 +43,8 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
             var client = _mailerSettings.GetSmtpClientRelayer();
 
             mail.Subject = MailingResources.ConfirmationMailCaption;
-            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.EmailConfirmation(userName, confirmationLink));
+            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailConfirmation(userName,
+                confirmationLink));
             mail.IsBodyHtml = true;
 
             try
@@ -46,10 +54,11 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
             }
             catch (SmtpFailedRecipientsException ex)
             {
-                for (int i = 0; i < ex.InnerExceptions.Length; i++)
+                for (var i = 0; i < ex.InnerExceptions.Length; i++)
                 {
-                    SmtpStatusCode status = ex.InnerExceptions[i].StatusCode;
-                    Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message, ex.InnerExceptions[i].StatusCode);
+                    var status = ex.InnerExceptions[i].StatusCode;
+                    Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message,
+                        ex.InnerExceptions[i].StatusCode);
                     client.Send(mail);
                     Log.Information("Retry: mail with event type of EmailConfirmation has sent to {@1}", mail.To);
                 }
@@ -73,7 +82,7 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
             var client = _mailerSettings.GetSmtpClientRelayer();
 
             mail.Subject = MailingResources.PasswordResetCaption;
-            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.PasswordRecovery(userName, resetLink));
+            mail.Body = RenderEmailTemplateHelper.RenderPartialToString(new PasswordRecovery(userName, resetLink));
             mail.IsBodyHtml = true;
 
             try
@@ -83,10 +92,11 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
             }
             catch (SmtpFailedRecipientsException ex)
             {
-                for (int i = 0; i < ex.InnerExceptions.Length; i++)
+                for (var i = 0; i < ex.InnerExceptions.Length; i++)
                 {
-                    SmtpStatusCode status = ex.InnerExceptions[i].StatusCode;
-                    Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message, ex.InnerExceptions[i].StatusCode);
+                    var status = ex.InnerExceptions[i].StatusCode;
+                    Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message,
+                        ex.InnerExceptions[i].StatusCode);
                     client.Send(mail);
                     Log.Information("Retry: mail with event type of PasswordRecovery has sent to {@1}", mail.To);
                 }
@@ -125,34 +135,39 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
                     try
                     {
                         client.Send(mail);
-                        Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
+                        Log.Information("Mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(),
+                            mail.To);
                     }
                     catch (SmtpFailedRecipientsException ex)
                     {
-                        for (int i = 0; i < ex.InnerExceptions.Length; i++)
+                        for (var i = 0; i < ex.InnerExceptions.Length; i++)
                         {
-                            SmtpStatusCode status = ex.InnerExceptions[i].StatusCode;
-                            Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To, ex.Message, ex.InnerExceptions[i].StatusCode);
+                            var status = ex.InnerExceptions[i].StatusCode;
+                            Log.Error(ex, "Failed to deliver mail to {@0}: {1}. ExceptionStatusCode: {2}", mail.To,
+                                ex.Message, ex.InnerExceptions[i].StatusCode);
                             client.Send(mail);
-                            Log.Information("Retry: mail with event type of {0} has sent to {@1}", eventInfo.GetEventType(), mail.To);
+                            Log.Information("Retry: mail with event type of {0} has sent to {@1}",
+                                eventInfo.GetEventType(), mail.To);
                         }
                     }
                     catch (SmtpException ex)
                     {
-                        Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message, ex.StackTrace);
-                        _eventPublisher.PublishEvent((EventInfoBase)eventInfo);
+                        Log.Error(ex, "Failed to send mail to {@0}: {1}. StackTrace: {2}", mail.To, ex.Message,
+                            ex.StackTrace);
+                        _eventPublisher.PublishEvent((EventInfoBase) eventInfo);
                     }
 
                     mail.To.Clear();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.Error(ex, "Failed to send mail. An error occured: {0}. StackTrace: {1}", ex.Message, ex.StackTrace);
             }
+
             client.Dispose();
         }
-        
+
         private MailMessage InitMail(MailAddress emailAddress)
         {
             var mail = new MailMessage();
@@ -160,10 +175,5 @@ namespace LodCoreLibraryOld.Infrastructure.Mailing
             mail.To.Add(emailAddress);
             return mail;
         }
-
-        private readonly MailerSettings _mailerSettings;
-        private readonly INotificationEmailDescriber _notificationEmailDescriber;
-        private readonly IUserRepository _usersRepository;
-        private readonly IEventPublisher _eventPublisher;
     }
 }

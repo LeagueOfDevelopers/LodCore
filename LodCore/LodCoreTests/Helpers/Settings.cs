@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
-using Newtonsoft.Json;
-using LodCore.Domain.UserManagement;
 using LodCore.Common;
+using LodCore.Domain.UserManagement;
+using Newtonsoft.Json;
 
 namespace IntegrationControllerTests.Helpers
 {
@@ -16,7 +16,7 @@ namespace IntegrationControllerTests.Helpers
             get
             {
                 var serializedAccount = File.ReadAllText("existantAccount.json");
-                var account = JsonConvert.DeserializeObject<Account>(serializedAccount, 
+                var account = JsonConvert.DeserializeObject<Account>(serializedAccount,
                     new JsonEmailConverter(), new JsonPasswordConverter());
                 return account;
             }

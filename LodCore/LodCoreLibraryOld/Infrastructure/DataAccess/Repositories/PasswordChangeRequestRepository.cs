@@ -22,6 +22,7 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 
             session.Save(request);
         }
+
 //    No needness in the function because of queue
         public PasswordChangeRequest GetPasswordChangeRequest(string token)
         {
@@ -38,7 +39,8 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 
             var session = _sessionProvider.GetCurrentSession();
 
-            return session.QueryOver<PasswordChangeRequest>().Where(request => request.UserId == userId).List().SingleOrDefault();
+            return session.QueryOver<PasswordChangeRequest>().Where(request => request.UserId == userId).List()
+                .SingleOrDefault();
         }
 
         public void DeletePasswordChangeRequest(PasswordChangeRequest request)
@@ -49,6 +51,5 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 
             session.Delete(request);
         }
-
     }
 }

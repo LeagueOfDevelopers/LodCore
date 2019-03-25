@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LodCoreApi.Models;
-using Journalist;
+﻿using Journalist;
 using LodCore.Infrastructure.ContactContext;
-using LodCore.Domain.NotificationService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LodCoreApi.Controllers
 {

@@ -5,7 +5,7 @@ namespace LodCore.Domain.ProjectManagment
     public class ProjectMembership
     {
         public ProjectMembership(
-            int developerId, 
+            int developerId,
             string role)
         {
             Require.Positive(developerId, nameof(developerId));

@@ -1,7 +1,7 @@
 ﻿using System;
 using Journalist;
-using LodCoreLibraryOld.Infrastructure.DataAccess.Pagination;
 using LodCoreLibraryOld.Domain.UserManagement;
+using LodCoreLibraryOld.Infrastructure.DataAccess.Pagination;
 
 namespace LodCoreApiOld.Models
 {
@@ -16,8 +16,8 @@ namespace LodCoreApiOld.Models
             DateTime registrationDate,
             int projectCount,
             Uri vkPageUri,
-            AccountRole accountRole, 
-            ConfirmationStatus confirmationStatus, 
+            AccountRole accountRole,
+            ConfirmationStatus confirmationStatus,
             bool isHidden)
         {
             Require.Positive(userId, nameof(userId));
@@ -39,26 +39,26 @@ namespace LodCoreApiOld.Models
             IsHidden = isHidden;
         }
 
-        public int UserId { get; private set; }
+        public int UserId { get; }
 
-        public string FirstName { get; private set; }
+        public string FirstName { get; }
 
-        public string LastName { get; private set; }
+        public string LastName { get; }
 
-        public Uri PhotoUri { get; private set; }
+        public Uri PhotoUri { get; }
 
-        public string Role { get; private set; }
+        public string Role { get; }
 
-        public DateTime RegistrationDate { get; private set; }
+        public DateTime RegistrationDate { get; }
 
-        public int ProjectCount { get; private set; }
+        public int ProjectCount { get; }
 
-        public Uri VkPageUri { get; private set; }
+        public Uri VkPageUri { get; }
 
-        public AccountRole AccountRole { get; private set; }
+        public AccountRole AccountRole { get; }
 
-        public ConfirmationStatus ConfirmationStatus { get; private set; }
+        public ConfirmationStatus ConfirmationStatus { get; }
 
-        public bool IsHidden { get; private set; }
+        public bool IsHidden { get; }
     }
 }

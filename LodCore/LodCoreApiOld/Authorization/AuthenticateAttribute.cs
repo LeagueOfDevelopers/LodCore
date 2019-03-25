@@ -34,7 +34,7 @@ namespace LodCoreApiOld.Authorization
             if (tokenInfo == null)
             {
                 context.ErrorResult = new UnauthorizedResult(
-                    new AuthenticationHeaderValue[] {},
+                    new AuthenticationHeaderValue[] { },
                     context.Request);
                 await context.ErrorResult.ExecuteAsync(cancellationToken);
                 SetupUnauthenticated();

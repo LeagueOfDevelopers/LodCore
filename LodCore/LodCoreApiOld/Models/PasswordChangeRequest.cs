@@ -8,7 +8,7 @@
             Token = token;
         }
 
-        public string NewPassword { get; private set; } 
-        public string Token { get; private set; }
+        public string NewPassword { get; }
+        public string Token { get; }
     }
 }

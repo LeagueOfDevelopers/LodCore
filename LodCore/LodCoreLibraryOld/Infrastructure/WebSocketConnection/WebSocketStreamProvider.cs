@@ -10,6 +10,8 @@ namespace LodCoreLibraryOld.Infrastructure.WebSocketConnection
 {
     public class WebSocketStreamProvider : IWebSocketStreamProvider
     {
+        private static readonly Dictionary<int, WebSocket> _wsClients;
+
         static WebSocketStreamProvider()
         {
             _wsClients = new Dictionary<int, WebSocket>();
@@ -25,15 +27,15 @@ namespace LodCoreLibraryOld.Infrastructure.WebSocketConnection
                 _wsClients[userId] = socket;
             const int maxMsgSize = 1024;
             var cancellationToken = new CancellationToken();
-            ArraySegment<Byte> receivedDataBuffer = new ArraySegment<Byte>(new Byte[maxMsgSize]);
+            var receivedDataBuffer = new ArraySegment<byte>(new byte[maxMsgSize]);
             while (socket.State == WebSocketState.Open)
             {
-                WebSocketReceiveResult webSocketReceiveResult =
-                  await socket.ReceiveAsync(receivedDataBuffer, cancellationToken);
+                var webSocketReceiveResult =
+                    await socket.ReceiveAsync(receivedDataBuffer, cancellationToken);
                 if (webSocketReceiveResult.MessageType == WebSocketMessageType.Close)
                 {
                     await socket.CloseAsync(WebSocketCloseStatus.NormalClosure,
-                      String.Empty, cancellationToken);
+                        string.Empty, cancellationToken);
                     _wsClients.Remove(userId);
                 }
             }
@@ -42,11 +44,10 @@ namespace LodCoreLibraryOld.Infrastructure.WebSocketConnection
         public void SendMessage(int userId, string message)
         {
             if (_wsClients.ContainsKey(userId))
-            {
                 if (_wsClients[userId].State == WebSocketState.Open)
                 {
                     var encoded = Encoding.UTF8.GetBytes(message);
-                    var segment = new ArraySegment<Byte>(encoded, 0, encoded.Length);
+                    var segment = new ArraySegment<byte>(encoded, 0, encoded.Length);
                     _wsClients[userId].SendAsync(segment, WebSocketMessageType.Text,
                         true, CancellationToken.None);
                 }
@@ -54,9 +55,6 @@ namespace LodCoreLibraryOld.Infrastructure.WebSocketConnection
                 {
                     _wsClients.Remove(userId);
                 }
-            }
         }
-        
-        private static readonly Dictionary<int, WebSocket> _wsClients;
     }
 }

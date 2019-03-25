@@ -7,7 +7,7 @@ namespace LodCore.Common
     {
         public static string GenerateToken()
         {
-            Regex rgx = new Regex("[^a-zA-Z0-9 -]");
+            var rgx = new Regex("[^a-zA-Z0-9 -]");
             var str = Convert
                 .ToBase64String(Guid.NewGuid().ToByteArray());
             return rgx.Replace(str, "");

@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using Dapper;
 using Journalist;
 using Journalist.Extensions;
-using NHibernate.Linq;
 using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Domain.ProjectManagment;
-using System.Data.SqlClient;
-using Dapper;
 using LodCoreLibraryOld.QueryService.DTOs;
 using LodCoreLibraryOld.QueryService.Handlers;
+using NHibernate.Linq;
 
 namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 {
@@ -25,14 +25,14 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
             _connectionString = connectionString;
             _projectQueryHandler = projectQueryHandler;
         }
-        
+
         public int[] GetAllProjectRelativeIds(int projectId)
         {
             return GetProject(projectId)
                 .ProjectMemberships
                 .SelectToArray(developer => developer.DeveloperId);
         }
-        
+
         public Project[] GetAllProjects(Func<Project, bool> criteria = null)
         {
             var session = _databaseSessionProvider.GetCurrentSession();
@@ -44,9 +44,9 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
         }
 
         public Project[] GetSomeProjects(
-            int skipCount, 
-            int takeCount, 
-            Expression<Func<Project, int>> orderer, 
+            int skipCount,
+            int takeCount,
+            Expression<Func<Project, int>> orderer,
             Expression<Func<Project, bool>> predicate = null)
         {
             var session = _databaseSessionProvider.GetCurrentSession();
@@ -72,10 +72,10 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
             int projectId;
 
             var sqlForGettingId = "INSERT INTO projects (name, info, projectstatus, bigphotouri, smallphotouri) " +
-                    "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
-                    "SELECT CAST(SCOPE_IDENTITY() as int)";
+                                  "VALUES(@Name, @Info, @ProjectStatus, @BigPhotoUri, @SmallPhotoUri); " +
+                                  "SELECT CAST(SCOPE_IDENTITY() as int)";
             var sqlForScreenshots = "INSERT INTO screenshots (projectId, bigphotouri, smallphotouri) " +
-                        "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
+                                    "VALUES(@ProjectId, @BigPhotoUri, @SmallPhotoUri);";
             var sqlForTypes = "INSERT INTO projectTypes (projectId, type) VALUES(@ProjectId, @Type);";
 
             using (var connection = new SqlConnection(_connectionString))
@@ -85,15 +85,15 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
                 using (var transaction = connection.BeginTransaction())
                 {
                     projectId = connection.Query<int>(sqlForGettingId,
-                                new
-                                {
-                                    project.Name,
-                                    project.Info,
-                                    project.ProjectStatus,
-                                    BigPhotoUri = project.LandingImage.BigPhotoUri.ToString(),
-                                    SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString()
-                                },
-                                transaction).FirstOrDefault();
+                        new
+                        {
+                            project.Name,
+                            project.Info,
+                            project.ProjectStatus,
+                            BigPhotoUri = project.LandingImage.BigPhotoUri.ToString(),
+                            SmallPhotoUri = project.LandingImage.SmallPhotoUri.ToString()
+                        },
+                        transaction).FirstOrDefault();
 
                     project.Screenshots.ToList().ForEach(s => connection.Execute(sqlForScreenshots,
                         new
@@ -104,10 +104,11 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
                         }, transaction));
 
                     project.ProjectTypes.ToList().ForEach(t => connection.Execute(sqlForTypes,
-                        new { ProjectId = projectId, Type = t }, transaction));
+                        new {ProjectId = projectId, Type = t}, transaction));
 
                     transaction.Commit();
                 }
+
                 connection.Close();
             }
 
@@ -121,9 +122,10 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                SqlTransaction sqlTransaction = connection.BeginTransaction();
+                var sqlTransaction = connection.BeginTransaction();
 
-                var sqlQuery = $"UPDATE projects SET name={projectDto.Name}, info={projectDto.Info} WHERE projectId={projectDto.ProjectId};";
+                var sqlQuery =
+                    $"UPDATE projects SET name={projectDto.Name}, info={projectDto.Info} WHERE projectId={projectDto.ProjectId};";
                 connection.Execute(sqlQuery, projectDto, sqlTransaction);
 
                 sqlTransaction.Commit();
@@ -131,7 +133,7 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
             }
         }
 
-        public IEnumerable<string> GetUserRoles(int userId )
+        public IEnumerable<string> GetUserRoles(int userId)
         {
             Require.Positive(userId, nameof(userId));
 

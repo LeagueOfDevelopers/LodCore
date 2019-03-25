@@ -11,10 +11,10 @@ namespace LodCoreApiOld.Models
             Name = name;
         }
 
-        public int ProjectId { get; private set; }
+        public int ProjectId { get; }
 
-        public Uri PhotoUri { get; private set; }
+        public Uri PhotoUri { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
     }
 }

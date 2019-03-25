@@ -1,15 +1,9 @@
-﻿using System.Linq;
-using Journalist;
-using LodCore.Domain.UserManagement;
+﻿using LodCore.Domain.UserManagement;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class PasswordChangeRequestRepository : IPasswordChangeRequestRepository
     {
-        public PasswordChangeRequestRepository()
-        {
-        }
-
         public void SavePasswordChangeRequest(PasswordChangeRequest request)
         {
             /*
@@ -19,6 +13,7 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
             session.Save(request);*/
         }
+
 //    No needness in the function because of queue
         public PasswordChangeRequest GetPasswordChangeRequest(string token)
         {
@@ -52,6 +47,5 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
 
             session.Delete(request);*/
         }
-
     }
 }

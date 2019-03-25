@@ -1,16 +1,18 @@
 ﻿using System.Linq;
 using Journalist;
+using LodCoreLibraryOld.Domain.UserManagement;
 using LodCoreLibraryOld.Infrastructure.DataAccess.Repositories;
 using LodCoreLibraryOld.Infrastructure.Mailing;
-using LodCoreLibraryOld.Domain.UserManagement;
 
 namespace LodCoreLibraryOld.Domain.NotificationService
 {
     public abstract class EventSinkBase<T> : IEventConsumer<T> where T : IEventInfo
     {
-        public EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory, 
+        private readonly IUserPresentationProvider _userPresentationProvider;
+
+        public EventSinkBase(IDistributionPolicyFactory distributionPolicyFactory,
             IEventRepository eventRepository,
-            IMailer mailer, 
+            IMailer mailer,
             IUserPresentationProvider userPresentationProvider)
         {
             Require.NotNull(distributionPolicyFactory, nameof(distributionPolicyFactory));
@@ -26,11 +28,9 @@ namespace LodCoreLibraryOld.Domain.NotificationService
 
         protected IMailer Mailer { get; }
 
-        protected IDistributionPolicyFactory DistributionPolicyFactory { get; private set; }
+        protected IDistributionPolicyFactory DistributionPolicyFactory { get; }
 
-        protected IEventRepository EventRepository { get; private set; }
-
-        private readonly IUserPresentationProvider _userPresentationProvider;
+        protected IEventRepository EventRepository { get; }
 
         public abstract void Consume(T @event);
 

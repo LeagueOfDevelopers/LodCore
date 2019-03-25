@@ -20,14 +20,14 @@ namespace LodCoreApiOld.Models
             WasRead = wasRead;
         }
 
-        public virtual int Id { get; private set; }
+        public virtual int Id { get; }
 
-        public virtual DateTime OccuredOn { get; private set; }
+        public virtual DateTime OccuredOn { get; }
 
-        public virtual string EventType { get; private set; }
+        public virtual string EventType { get; }
 
-        public virtual string EventInfo { get; private set; }
+        public virtual string EventInfo { get; }
 
-        public bool WasRead { get; private set; }
+        public bool WasRead { get; }
     }
 }

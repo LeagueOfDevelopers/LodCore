@@ -16,11 +16,11 @@ namespace LodCore.Domain.UserManagement
             Role = role;
         }
 
-        public int UserId { get; private set; }
+        public int UserId { get; }
 
-        public AccountRole Role { get; private set; }
+        public AccountRole Role { get; }
 
-        public string Token { get; private set; }
+        public string Token { get; }
 
         public DateTime CreationTime { get; set; }
     }

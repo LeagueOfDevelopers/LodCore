@@ -6,10 +6,10 @@ namespace LodCoreLibraryOld.Domain.UserManagement
     public class CreateAccountRequest
     {
         public CreateAccountRequest(
-            MailAddress email, 
-            string lastname, 
-            string firstname, 
-            string password, 
+            MailAddress email,
+            string lastname,
+            string firstname,
+            string password,
             Profile profile)
         {
             Require.NotNull(email, nameof(email));
@@ -37,14 +37,14 @@ namespace LodCoreLibraryOld.Domain.UserManagement
             Profile = profile;
         }
 
-        public string Email { get; private set; }
+        public string Email { get; }
 
-        public string Lastname { get; private set; }
+        public string Lastname { get; }
 
-        public string Firstname { get; private set; }
+        public string Firstname { get; }
 
-        public string Password { get; private set; }
+        public string Password { get; }
 
-        public Profile Profile { get; private set; }
+        public Profile Profile { get; }
     }
 }

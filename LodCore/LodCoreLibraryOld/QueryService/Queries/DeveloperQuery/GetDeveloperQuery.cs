@@ -1,10 +1,4 @@
-﻿using LodCoreLibraryOld.QueryService.Views;
-using LodCoreLibraryOld.QueryService.Views.DeveloperView;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LodCoreLibraryOld.QueryService.Views.DeveloperView;
 
 namespace LodCoreLibraryOld.QueryService.Queries.DeveloperQuery
 {
@@ -14,9 +8,9 @@ namespace LodCoreLibraryOld.QueryService.Queries.DeveloperQuery
         {
             DeveloperId = developerId;
             Sql = "SELECT * FROM accounts AS Account " +
-                "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId " +
-                "LEFT JOIN projects AS Project ON projMembership.projectId = project.projectId " +
-                $"WHERE Account.userId = {DeveloperId};";
+                  "LEFT JOIN projectMemberships AS projMembership ON Account.userId = projMembership.developerId " +
+                  "LEFT JOIN projects AS Project ON projMembership.projectId = project.projectId " +
+                  $"WHERE Account.userId = {DeveloperId};";
         }
 
         public int DeveloperId { get; }

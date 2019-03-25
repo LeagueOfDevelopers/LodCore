@@ -1,16 +1,15 @@
-﻿using LodCore.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
+using LodCore.Common;
 using LodCore.Domain.UserManagement;
 using LodCore.QueryService.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.DeveloperView
 {
     public class AllAccountsView
     {
+        private readonly IEnumerable<AccountDto> _rawResult;
+
         public AllAccountsView(IEnumerable<AccountDto> developers)
         {
             Developers = developers.Select(d => new MinAccountView(d));
@@ -26,9 +25,7 @@ namespace LodCore.QueryService.Views.DeveloperView
                     .Select(d => new MinAccountView(d)).GetRandom(count);
             else
                 Developers = _rawResult.Where(d => d.ConfirmationStatus == ConfirmationStatus.FullyConfirmed &&
-                !d.IsHidden).Select(d => new MinAccountView(d)).GetRandom(count);
+                                                   !d.IsHidden).Select(d => new MinAccountView(d)).GetRandom(count);
         }
-
-        private IEnumerable<AccountDto> _rawResult;
     }
 }

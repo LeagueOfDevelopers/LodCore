@@ -17,7 +17,7 @@ namespace LodCoreLibraryOld.Domain.ProjectManagment
         {
         }
 
-        public int ProjectId { get; protected set; } 
+        public int ProjectId { get; protected set; }
 
         public Uri ProjectUrl { get; protected set; }
     }

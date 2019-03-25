@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LodCoreApi.Models;
+﻿using LodCore.Facades;
 using LodCoreApi.Security;
-using LodCore.Common;
-using LodCore.Domain.Exceptions;
-using LodCore.Facades;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace LodCoreApi.Controllers
 {
@@ -20,7 +11,8 @@ namespace LodCoreApi.Controllers
         private readonly SecuritySettings _securitySettings;
         private readonly IUserManager _userManager;
 
-        public AuthorizationController(IJwtIssuer jwtIssuer, SecuritySettings securitySettings, IUserManager userManager)
+        public AuthorizationController(IJwtIssuer jwtIssuer, SecuritySettings securitySettings,
+            IUserManager userManager)
         {
             _jwtIssuer = jwtIssuer;
             _securitySettings = securitySettings;

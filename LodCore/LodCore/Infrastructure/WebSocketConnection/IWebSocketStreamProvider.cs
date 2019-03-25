@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace LodCore.Infrastructure.WebSocketConnection
+﻿namespace LodCore.Infrastructure.WebSocketConnection
 {
     public interface IWebSocketStreamProvider
     {

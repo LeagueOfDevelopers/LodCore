@@ -5,8 +5,8 @@ namespace LodCoreLibraryOld.Domain.NotificationService
     public class NewContactMessage : EventInfoBase
     {
         public NewContactMessage(
-            string clientName, 
-            string clientEmailAddress, 
+            string clientName,
+            string clientEmailAddress,
             string messageTopic,
             string messageBody)
         {
@@ -21,12 +21,12 @@ namespace LodCoreLibraryOld.Domain.NotificationService
             MessageBody = messageBody;
         }
 
-        public string ClientName { get; private set; }
+        public string ClientName { get; }
 
-        public string ClientEmailAddress { get; private set; }
+        public string ClientEmailAddress { get; }
 
-        public string MessageTopic { get; private set; }
+        public string MessageTopic { get; }
 
-        public string MessageBody { get; private set; }
+        public string MessageBody { get; }
     }
 }

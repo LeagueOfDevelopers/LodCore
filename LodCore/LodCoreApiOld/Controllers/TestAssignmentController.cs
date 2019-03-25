@@ -17,7 +17,7 @@ namespace LodCoreApiOld.Controllers
             return
                 statisticsEventString.Any()
                     ? statisticsEventString
-                        .Aggregate((@event1, @event2) => $"{@event1};{@event2}")
+                        .Aggregate((event1, event2) => $"{event1};{event2}")
                     : string.Empty;
         }
 

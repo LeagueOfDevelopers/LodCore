@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace LodCore.Common
 {
@@ -7,8 +9,8 @@ namespace LodCore.Common
         public static string Encode(dynamic obj)
         {
             string serializedObj = JsonConvert.SerializeObject(obj);
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(serializedObj);
-            var encoded = System.Convert.ToBase64String(plainTextBytes);
+            var plainTextBytes = Encoding.UTF8.GetBytes(serializedObj);
+            var encoded = Convert.ToBase64String(plainTextBytes);
             return encoded;
         }
     }

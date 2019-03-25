@@ -18,14 +18,14 @@ namespace LodCoreApi.Models
             Role = role;
         }
 
-        public int UserId { get; private set; }
+        public int UserId { get; }
 
-        public string FirstName { get; private set; }
+        public string FirstName { get; }
 
-        public string LastName { get; private set; }
+        public string LastName { get; }
 
-        public Uri PhotoUri { get; private set; }
+        public Uri PhotoUri { get; }
 
-        public string Role { get; private set; }
+        public string Role { get; }
     }
 }

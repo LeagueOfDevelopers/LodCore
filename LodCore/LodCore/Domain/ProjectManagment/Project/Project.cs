@@ -12,11 +12,11 @@ namespace LodCore.Domain.ProjectManagment
         }
 
         public Project(
-            string name, 
-            ISet<ProjectType> projectTypes, 
-            string info, 
-            ProjectStatus projectStatus, 
-            Image landingImage, 
+            string name,
+            ISet<ProjectType> projectTypes,
+            string info,
+            ProjectStatus projectStatus,
+            Image landingImage,
             ISet<ProjectMembership> projectDevelopers,
             ISet<Image> screenshots,
             ISet<ProjectLink> links,

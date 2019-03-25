@@ -13,8 +13,8 @@ namespace LodCore.Infrastructure.Gateway
             HtmlUrl = htmlUrl;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public string HtmlUrl { get; private set; }
+        public string HtmlUrl { get; }
     }
 }

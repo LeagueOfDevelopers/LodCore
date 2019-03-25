@@ -24,14 +24,14 @@ namespace LodCoreApiOld.Models
             DeveloperRole = developerRole;
         }
 
-        public int ProjectId { get; private set; }
+        public int ProjectId { get; }
 
-        public Uri PhotoUri { get; private set; }
+        public Uri PhotoUri { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public ProjectStatus ProjectStatus { get; private set; }
+        public ProjectStatus ProjectStatus { get; }
 
-        public string DeveloperRole { get; private set; }
+        public string DeveloperRole { get; }
     }
 }

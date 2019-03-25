@@ -1,11 +1,7 @@
-﻿using LodCore.QueryService.DTOs;
-using LodCore.QueryService.Views;
-using LodCore.QueryService.Views.DeveloperView;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LodCore.QueryService.DTOs;
+using LodCore.QueryService.Views.DeveloperView;
 
 namespace LodCore.QueryService.Queries.DeveloperQuery
 {
@@ -16,7 +12,7 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
             Offset = offset;
             Count = count;
             Sql = "SELECT * FROM accounts AS Account " +
-                "LEFT JOIN projectMembership AS projMembership ON Account.userId = projMembership.developerId;";
+                  "LEFT JOIN projectMembership AS projMembership ON Account.userId = projMembership.developerId;";
         }
 
         public string Sql { get; }
@@ -28,8 +24,8 @@ namespace LodCore.QueryService.Queries.DeveloperQuery
             var visableDevelopers = rawResult
                 .Where(dev => !dev.IsHidden);
 
-            int countVisableDevelopers = visableDevelopers.Count();
-                
+            var countVisableDevelopers = visableDevelopers.Count();
+
             return new SomeDevelopersView(visableDevelopers.ToList(), countVisableDevelopers);
         }
     }

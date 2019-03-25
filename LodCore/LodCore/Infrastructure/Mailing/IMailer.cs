@@ -1,5 +1,5 @@
-﻿using LodCore.Domain.NotificationService;
-using System.Net.Mail;
+﻿using System.Net.Mail;
+using LodCore.Domain.NotificationService;
 
 namespace LodCore.Infrastructure.Mailing
 {

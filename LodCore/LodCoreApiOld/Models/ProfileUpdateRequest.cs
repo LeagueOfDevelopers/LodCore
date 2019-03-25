@@ -18,18 +18,14 @@ namespace LodCoreApiOld.Models
         [StringLength(11)]
         public string PhoneNumber { get; set; }
 
-        [Range(typeof(int), "2000", "2030")]
-        public int? StudentAccessionYear { get; set; }
+        [Range(typeof(int), "2000", "2030")] public int? StudentAccessionYear { get; set; }
 
         public bool IsGraduated { get; set; }
 
-        [MaxLength(255)]
-        public string StudyingDirection { get; set; }
+        [MaxLength(255)] public string StudyingDirection { get; set; }
 
-        [MaxLength(10)]
-        public string InstituteName { get; set; }
+        [MaxLength(10)] public string InstituteName { get; set; }
 
-        [MaxLength(255)]
-        public string Specialization { get; set; }
+        [MaxLength(255)] public string Specialization { get; set; }
     }
 }

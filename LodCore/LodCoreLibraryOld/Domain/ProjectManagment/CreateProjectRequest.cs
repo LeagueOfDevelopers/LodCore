@@ -7,11 +7,11 @@ namespace LodCoreLibraryOld.Domain.ProjectManagment
     public class CreateProjectRequest
     {
         public CreateProjectRequest(
-            string name, 
-            ProjectType[] projectTypes, 
-            string info, 
+            string name,
+            ProjectType[] projectTypes,
+            string info,
             ProjectStatus projectStatus,
-            Image landingImage, 
+            Image landingImage,
             Image[] screenshots,
             ProjectLink[] links,
             Uri[] linksToGithubRepositories)
@@ -30,20 +30,20 @@ namespace LodCoreLibraryOld.Domain.ProjectManagment
             LinksToGithubRepositories = linksToGithubRepositories;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public ProjectType[] ProjectTypes { get; private set; }
+        public ProjectType[] ProjectTypes { get; }
 
-        public ProjectStatus ProjectStatus { get; private set; }
+        public ProjectStatus ProjectStatus { get; }
 
-        public string Info { get; private set; }
+        public string Info { get; }
 
-        public Image LandingImage { get; private set; }
+        public Image LandingImage { get; }
 
-        public Image[] Screenshots { get; private set; }
+        public Image[] Screenshots { get; }
 
-        public ProjectLink[] Links { get; private set; }
+        public ProjectLink[] Links { get; }
 
-        public Uri[] LinksToGithubRepositories { get; private set; }
+        public Uri[] LinksToGithubRepositories { get; }
     }
 }

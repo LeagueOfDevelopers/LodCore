@@ -1,15 +1,14 @@
-﻿using LodCoreLibraryOld.Domain.UserManagement;
-using LodCoreLibraryOld.QueryService.DTOs;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LodCoreLibraryOld.Domain.UserManagement;
+using LodCoreLibraryOld.QueryService.DTOs;
 
 namespace LodCoreLibraryOld.QueryService.Views.DeveloperView
 {
     public class SomeDevelopersView
     {
+        private readonly IEnumerable<AccountDto> _rawResult;
+
         public SomeDevelopersView(IEnumerable<AccountDto> developers, int allDevelopersCount)
         {
             Developers = developers.ToList().Select(d => new MinDeveloperView(d));
@@ -28,9 +27,7 @@ namespace LodCoreLibraryOld.QueryService.Views.DeveloperView
                     .Select(d => new MinDeveloperView(d));
             else
                 Developers = _rawResult.Where(d => d.ConfirmationStatus == ConfirmationStatus.FullyConfirmed &&
-                !d.IsHidden).Select(d => new MinDeveloperView(d));
+                                                   !d.IsHidden).Select(d => new MinDeveloperView(d));
         }
-
-        private IEnumerable<AccountDto> _rawResult;
     }
 }

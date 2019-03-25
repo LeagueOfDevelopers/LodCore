@@ -1,5 +1,5 @@
-﻿using LodCore.Domain.UserManagement;
-using System;
+﻿using System;
+using LodCore.Domain.UserManagement;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {

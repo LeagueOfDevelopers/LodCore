@@ -1,11 +1,7 @@
-﻿using LodCore.Common;
+﻿using System.Collections.Generic;
+using System.Linq;
 using LodCore.Domain.ProjectManagment;
 using LodCore.QueryService.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.ProjectView
 {
@@ -23,10 +19,12 @@ namespace LodCore.QueryService.Views.ProjectView
             projectDto.Types.ToList().ForEach(t => ProjectTypes.Add(t.Type));
 
             ProjectMemberships = new List<ProjectMembershipView>();
-            projectDto.Developers.ToList().ForEach(d => ProjectMemberships.Add(new ProjectMembershipView(d.DeveloperId, d.Role)));
+            projectDto.Developers.ToList()
+                .ForEach(d => ProjectMemberships.Add(new ProjectMembershipView(d.DeveloperId, d.Role)));
 
             Screenshots = new List<ImageView>();
-            projectDto.Screenshots.ToList().ForEach(s => Screenshots.Add(new ImageView(s.BigPhotoUri, s.SmallPhotoUri)));
+            projectDto.Screenshots.ToList()
+                .ForEach(s => Screenshots.Add(new ImageView(s.BigPhotoUri, s.SmallPhotoUri)));
 
             Links = new List<ProjectLinkView>();
             projectDto.Links.ToList().ForEach(l => Links.Add(new ProjectLinkView(l.Name, l.Uri)));
@@ -36,7 +34,7 @@ namespace LodCore.QueryService.Views.ProjectView
             string name,
             string info,
             ProjectStatus projectStatus
-            )
+        )
         {
             ProjectId = projectId;
             Name = name;

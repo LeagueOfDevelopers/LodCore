@@ -1,6 +1,8 @@
-﻿using Octokit;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Octokit;
+using Account = LodCoreLibraryOld.Domain.UserManagement.Account;
+using Project = LodCoreLibraryOld.Domain.ProjectManagment.Project;
 
 namespace LodCoreLibraryOld.Infrastructure.Gateway
 {
@@ -30,10 +32,10 @@ namespace LodCoreLibraryOld.Infrastructure.Gateway
 
         IEnumerable<GithubRepository> GetLeagueOfDevelopersRepositories();
 
-        void AddCollaboratorToRepository(string githubAccessToken, Array developerIds, Domain.ProjectManagment.Project project);
+        void AddCollaboratorToRepository(string githubAccessToken, Array developerIds, Project project);
 
-        void RemoveCollaboratorFromRepository(string token, Domain.UserManagement.Account user, 
-                                                            Domain.ProjectManagment.Project project);
+        void RemoveCollaboratorFromRepository(string token, Account user,
+            Project project);
 
         string CreateRepository(string token, string newRepositoryName);
     }

@@ -1,8 +1,8 @@
-﻿using RazorEngine;
-using RazorEngine.Templating;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
+using RazorEngine;
+using RazorEngine.Templating;
 
 namespace LodCore.Infrastructure.Mailing
 {
@@ -14,7 +14,7 @@ namespace LodCore.Infrastructure.Mailing
 
             var viewPath = $"~/Email_Templates/{modelType}.cshtml";
 
-            string viewAbsolutePath = MapPath(viewPath);
+            var viewAbsolutePath = MapPath(viewPath);
 
             var viewSource = File.ReadAllText(viewAbsolutePath);
 
@@ -25,7 +25,8 @@ namespace LodCore.Infrastructure.Mailing
 
         private static string MapPath(string filePath)
         {
-            return string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, filePath.Replace("~", string.Empty).TrimStart('/'));
+            return string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory,
+                filePath.Replace("~", string.Empty).TrimStart('/'));
         }
     }
 }

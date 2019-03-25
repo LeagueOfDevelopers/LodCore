@@ -8,6 +8,6 @@ namespace LodCoreApiOld.App_Data
 {
     public interface IPaginationWrapper<T> where T : class
     {
-        PaginableObject WrapResponse(IEnumerable<IPaginable> content,Expression<Func<T, bool>> criteria = null);
+        PaginableObject WrapResponse(IEnumerable<IPaginable> content, Expression<Func<T, bool>> criteria = null);
     }
 }

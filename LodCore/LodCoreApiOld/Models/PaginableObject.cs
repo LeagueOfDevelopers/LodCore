@@ -1,12 +1,11 @@
-﻿using LodCoreLibraryOld.Infrastructure.DataAccess.Pagination;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using LodCoreLibraryOld.Infrastructure.DataAccess.Pagination;
 
 namespace LodCoreApiOld.Models
 {
     public class PaginableObject
     {
-        public IEnumerable<IPaginable> Data;
-
         public int CountOfEntities;
+        public IEnumerable<IPaginable> Data;
     }
 }

@@ -14,10 +14,11 @@ namespace LodCore.Common
 
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof (MailAddress);
+            return objectType == typeof(MailAddress);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+            JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
             var address = jsonObject["address"].ToString();

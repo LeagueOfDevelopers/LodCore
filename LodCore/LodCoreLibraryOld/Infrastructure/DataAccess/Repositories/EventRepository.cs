@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using Journalist;
-using NHibernate.Linq;
 using LodCoreLibraryOld.Common;
 using LodCoreLibraryOld.Domain.NotificationService;
 using LodCoreLibraryOld.Infrastructure.WebSocketConnection;
+using NHibernate.Linq;
 
 namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
 {
@@ -12,7 +12,8 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
         private readonly IDatabaseSessionProvider _sessionProvider;
         private readonly IWebSocketStreamProvider _webSocketStreamProvider;
 
-        public EventRepository(IDatabaseSessionProvider sessionProvider, IWebSocketStreamProvider webSocketStreamProvider)
+        public EventRepository(IDatabaseSessionProvider sessionProvider,
+            IWebSocketStreamProvider webSocketStreamProvider)
         {
             Require.NotNull(sessionProvider, nameof(sessionProvider));
 
@@ -55,7 +56,8 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
                     .Skip(projectsToSkip)
                     .Take(takeCount)
                     .ToArray();
-            var unreadEventIds = userDeliveries.Where(delivery => !delivery.WasRead).Select(delivery => delivery.EventId);
+            var unreadEventIds = userDeliveries.Where(delivery => !delivery.WasRead)
+                .Select(delivery => delivery.EventId);
             var eventIds = userDeliveries.Select(delivery => delivery.EventId);
             var events =
                 session.Query<Event>()
@@ -71,12 +73,14 @@ namespace LodCoreLibraryOld.Infrastructure.DataAccess.Repositories
         {
             var session = _sessionProvider.GetCurrentSession();
             var deliveries =
-                session.Query<Delivery>().Where(delivery => eventIds.Contains(delivery.EventId) && delivery.UserId == userId).ToArray();
+                session.Query<Delivery>()
+                    .Where(delivery => eventIds.Contains(delivery.EventId) && delivery.UserId == userId).ToArray();
             foreach (var delivery in deliveries)
             {
                 delivery.WasRead = true;
                 session.Update(delivery);
             }
+
             SendNumberOfNotificationsViaWebSocket(userId);
         }
 

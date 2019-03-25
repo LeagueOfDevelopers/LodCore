@@ -5,6 +5,16 @@ namespace LodCore.Common
 {
     public class PasswordType
     {
+        /*
+        public SqlType[] SqlTypes
+        {
+            get { return new[] {NHibernateUtil.String.SqlType}; }
+        }*/
+
+        public Type ReturnedType => typeof(Password);
+
+        public bool IsMutable => false;
+
         public new bool Equals(object x, object y)
         {
             if (x == null && y == null) return true;
@@ -64,22 +74,6 @@ namespace LodCore.Common
         public object Disassemble(object value)
         {
             return value;
-        }
-
-        /*
-        public SqlType[] SqlTypes
-        {
-            get { return new[] {NHibernateUtil.String.SqlType}; }
-        }*/
-
-        public Type ReturnedType
-        {
-            get { return typeof (Password); }
-        }
-
-        public bool IsMutable
-        {
-            get { return false; }
         }
     }
 }

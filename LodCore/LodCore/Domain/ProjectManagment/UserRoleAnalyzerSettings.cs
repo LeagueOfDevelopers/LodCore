@@ -13,8 +13,8 @@ namespace LodCore.Domain.ProjectManagment
             DefaultRole = defaultRole;
         }
 
-        public int AppropriateEditDistance { get; private set; } 
-        
-        public string DefaultRole { get; private set; }
+        public int AppropriateEditDistance { get; }
+
+        public string DefaultRole { get; }
     }
 }

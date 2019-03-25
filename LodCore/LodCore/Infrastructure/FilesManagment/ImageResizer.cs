@@ -1,13 +1,24 @@
-﻿using ImageMagick;
-using LodCore.Common;
-using System;
+﻿using System;
 using System.IO;
+using ImageMagick;
+using LodCore.Common;
 
 namespace LodCore.Infrastructure.FilesManagement
 {
     public class ImageResizer : IImageResizer
     {
-        private ApplicationLocationSettings _applicationLocationSettings;
+        private readonly FileStorageSettings _fileStorageSettings;
+
+        private readonly int _lengthOfLongestSideOfResized;
+        private readonly ApplicationLocationSettings _applicationLocationSettings;
+
+        public ImageResizer(int lengthOfLongestSideOfResized, FileStorageSettings fileStorageSettings,
+            ApplicationLocationSettings applicationLocationSettings)
+        {
+            _lengthOfLongestSideOfResized = lengthOfLongestSideOfResized;
+            _fileStorageSettings = fileStorageSettings;
+            _applicationLocationSettings = applicationLocationSettings;
+        }
 
         public Uri ResizeImageByLengthOfLongestSide(Uri imageToResizeUri)
         {
@@ -34,16 +45,6 @@ namespace LodCore.Infrastructure.FilesManagement
         {
             var randomFileName = Path.GetRandomFileName();
             return Path.ChangeExtension(randomFileName, Path.GetExtension(fileName).TrimStart('.'));
-        }
-
-        private readonly int _lengthOfLongestSideOfResized;
-        private readonly FileStorageSettings _fileStorageSettings;
-
-        public ImageResizer(int lengthOfLongestSideOfResized, FileStorageSettings fileStorageSettings, ApplicationLocationSettings applicationLocationSettings)
-        {
-            _lengthOfLongestSideOfResized = lengthOfLongestSideOfResized;
-            this._fileStorageSettings = fileStorageSettings;
-            _applicationLocationSettings = applicationLocationSettings;
         }
     }
 }

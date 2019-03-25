@@ -1,10 +1,7 @@
-﻿using LodCore.Domain.ProjectManagment;
-using LodCore.QueryService.DTOs;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LodCore.Domain.ProjectManagment;
+using LodCore.QueryService.DTOs;
 
 namespace LodCore.QueryService.Views.ProjectView
 {
@@ -31,7 +28,7 @@ namespace LodCore.QueryService.Views.ProjectView
         public void FilterResult()
         {
             Projects = Projects.Where(p => p.ProjectStatus == ProjectStatus.Done
-                || p.ProjectStatus == ProjectStatus.InProgress);
+                                           || p.ProjectStatus == ProjectStatus.InProgress);
             AllProjectsCount = Projects.Count();
         }
 

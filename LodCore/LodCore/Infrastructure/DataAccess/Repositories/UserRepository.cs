@@ -5,11 +5,9 @@ using System.Net.Mail;
 using System.Text;
 using Dapper;
 using Journalist;
-using Journalist.Extensions;
+using LodCore.Common;
 using LodCore.Domain.UserManagement;
 using MySql.Data.MySqlClient;
-using System.Net.Mail;
-using LodCore.Common;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
@@ -47,39 +45,38 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
             Require.Positive(accountId, nameof(accountId));
 
             var sql = "SELECT * " +
-                "FROM accounts " +
-                "WHERE UserId =@UserId ";
+                      "FROM accounts " +
+                      "WHERE UserId =@UserId ";
             Account account;
             using (var connection = new MySqlConnection(_connectionString))
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                account = connection.Query<dynamic>(sql, new { UserId = accountId })
+                account = connection.Query<dynamic>(sql, new {UserId = accountId})
                     .Select(p =>
-                    new Account(p.Firstname,
-                                p.Lastname,
-                                new MailAddress(p.Email),
-                                Password.FromPlainString(p.Password),
-                                (AccountRole)p.AccountRole,
-                                (ConfirmationStatus)p.ConfirmationStatus,
-                                p.RegistrationTime,
-                                new Profile
-                                {
-                                    Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
-                                    VkProfileUri = new Uri(p.VkProfileUri),
-                                    LinkToGithubProfile = new Uri(p.GitHubProfileUri),
-                                    PhoneNumber = p.PhoneNumber,
-                                    StudentAccessionYear = p.StudentAccessionYear,
-                                    IsGraduated = p.IsGraduated,
-                                    StudyingDirection = p.StudyingDirection,
-                                    InstituteName = p.InstituteName,
-                                    Specialization = p.Specialization
-                                }))
-                     .FirstOrDefault();
+                        new Account(p.Firstname,
+                            p.Lastname,
+                            new MailAddress(p.Email),
+                            Password.FromPlainString(p.Password),
+                            (AccountRole) p.AccountRole,
+                            (ConfirmationStatus) p.ConfirmationStatus,
+                            p.RegistrationTime,
+                            new Profile
+                            {
+                                Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
+                                VkProfileUri = new Uri(p.VkProfileUri),
+                                LinkToGithubProfile = new Uri(p.GitHubProfileUri),
+                                PhoneNumber = p.PhoneNumber,
+                                StudentAccessionYear = p.StudentAccessionYear,
+                                IsGraduated = p.IsGraduated,
+                                StudyingDirection = p.StudyingDirection,
+                                InstituteName = p.InstituteName,
+                                Specialization = p.Specialization
+                            }))
+                    .FirstOrDefault();
             }
 
             return account;
         }
-
 
 
         public Account GetAccountByLinkToGithubProfile(string link)
@@ -105,26 +102,27 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                 accounts = connection.Query<dynamic>(sql)
                     .Select(p =>
                         new Account(p.Firstname,
-                                p.Lastname,
-                                new MailAddress(p.Email),
-                                Password.FromPlainString(p.Password),
-                                (AccountRole)p.AccountRole,
-                                (ConfirmationStatus)p.ConfirmationStatus,
-                                p.RegistrationTime,
-                                new Profile
-                                {
-                                    Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
-                                    VkProfileUri = new Uri(p.VkProfileUri),
-                                    LinkToGithubProfile = new Uri(p.GitHubProfileUri),
-                                    PhoneNumber = p.PhoneNumber,
-                                    StudentAccessionYear = p.StudentAccessionYear,
-                                    IsGraduated = p.IsGraduated,
-                                    StudyingDirection = p.StudyingDirection,
-                                    InstituteName = p.InstituteName,
-                                    Specialization = p.Specialization
-                                }))
-                     .ToList();
+                            p.Lastname,
+                            new MailAddress(p.Email),
+                            Password.FromPlainString(p.Password),
+                            (AccountRole) p.AccountRole,
+                            (ConfirmationStatus) p.ConfirmationStatus,
+                            p.RegistrationTime,
+                            new Profile
+                            {
+                                Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
+                                VkProfileUri = new Uri(p.VkProfileUri),
+                                LinkToGithubProfile = new Uri(p.GitHubProfileUri),
+                                PhoneNumber = p.PhoneNumber,
+                                StudentAccessionYear = p.StudentAccessionYear,
+                                IsGraduated = p.IsGraduated,
+                                StudyingDirection = p.StudyingDirection,
+                                InstituteName = p.InstituteName,
+                                Specialization = p.Specialization
+                            }))
+                    .ToList();
             }
+
             return accounts;
         }
 

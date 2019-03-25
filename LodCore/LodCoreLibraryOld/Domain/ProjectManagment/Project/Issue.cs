@@ -14,10 +14,10 @@ namespace LodCoreLibraryOld.Domain.ProjectManagment
             IssueType = issueType;
         }
 
-        public string Header { get; private set; }
+        public string Header { get; }
 
-        public string Descripton { get; private set; }
+        public string Descripton { get; }
 
-        public IssueType IssueType { get; private set; }
+        public IssueType IssueType { get; }
     }
 }

@@ -1,6 +1,12 @@
 ﻿using Journalist;
 using LodCore.Domain.NotificationService;
 using LodCore.Infrastructure.DataAccess.Repositories;
+using LodCore.Infrastructure.Mailing.EmailModels;
+using DeveloperHasLeftProject = LodCore.Domain.NotificationService.DeveloperHasLeftProject;
+using NewContactMessage = LodCore.Domain.NotificationService.NewContactMessage;
+using NewDeveloperOnProject = LodCore.Domain.NotificationService.NewDeveloperOnProject;
+using NewEmailConfirmedDeveloper = LodCore.Domain.NotificationService.NewEmailConfirmedDeveloper;
+using NewFullConfirmedDeveloper = LodCore.Domain.NotificationService.NewFullConfirmedDeveloper;
 
 namespace LodCore.Infrastructure.Mailing
 {
@@ -18,12 +24,12 @@ namespace LodCore.Infrastructure.Mailing
             _userRepository = userRepository;
         }
 
-        public string Describe(string userName, IEventInfo @eventInfo)
+        public string Describe(string userName, IEventInfo eventInfo)
         {
-            Require.NotNull(@eventInfo, nameof(@eventInfo));
+            Require.NotNull(eventInfo, nameof(eventInfo));
             Require.NotEmpty(userName, nameof(userName));
 
-            return Describe(userName, (dynamic) @eventInfo);
+            return Describe(userName, (dynamic) eventInfo);
         }
 
         private string Describe(string userName, NewContactMessage @event)
@@ -84,14 +90,14 @@ namespace LodCore.Infrastructure.Mailing
         {
             Require.NotNull(@event, nameof(@event));
             var project = _projectRepository.GetProject(@event.ProjectId);
-            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.NewProject(
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new NewProject(
                 userName, project.Name, project.Info));
             return template;
         }
 
         private string Describe(string userName, AdminNotificationInfo @event)
         {
-            var template = RenderEmailTemplateHelper.RenderPartialToString(new EmailModels.AdminNotification(
+            var template = RenderEmailTemplateHelper.RenderPartialToString(new AdminNotification(
                 userName, @event.InfoText));
             return template;
         }

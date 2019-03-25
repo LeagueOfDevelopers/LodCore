@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using Journalist;
-using LodCore.Common;
 using LodCore.Domain.ProjectManagment;
 
 namespace LodCore.Infrastructure.DataAccess.Repositories
 {
     public class ProjectMembershipRepository : IProjectMembershipRepostiory
     {
-        public ProjectMembershipRepository()
-        {
-        }
-
-
-        public IEnumerable<ProjectMembership> GetAllProjectMemberships(Expression<Func<ProjectMembership, bool>> predicate = null)
+        public IEnumerable<ProjectMembership> GetAllProjectMemberships(
+            Expression<Func<ProjectMembership, bool>> predicate = null)
         {
             /*
             var session = _sessionProvider.GetCurrentSession();

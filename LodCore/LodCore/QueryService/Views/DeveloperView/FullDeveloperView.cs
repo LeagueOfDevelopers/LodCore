@@ -1,11 +1,8 @@
-﻿using LodCore.Domain.UserManagement;
+﻿using System;
+using System.Collections.Generic;
+using LodCore.Domain.UserManagement;
 using LodCore.QueryService.DTOs;
 using LodCore.QueryService.Views.ProjectView;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LodCore.QueryService.Views.DeveloperView
 {
@@ -58,8 +55,7 @@ namespace LodCore.QueryService.Views.DeveloperView
         {
             if (callingUser == AccountRole.Administrator)
                 return ConfirmationStatus != ConfirmationStatus.Unconfirmed;
-            else
-                return ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !IsHidden;
+            return ConfirmationStatus == ConfirmationStatus.FullyConfirmed && !IsHidden;
         }
 
         public GuestFullDeveloperView GetGuestView()

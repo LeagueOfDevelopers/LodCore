@@ -12,10 +12,10 @@ namespace ProjectManagementTests
     [TestClass]
     public class ProjectProviderTests
     {
+        private Mock<IEventPublisher> _eventBus;
         private Fixture _fixture;
         private ProjectProvider _projectProvider;
         private Mock<IProjectRepository> _projectRepository;
-        private Mock<IEventPublisher> _eventBus;
 
         [TestInitialize]
         public void Setup()

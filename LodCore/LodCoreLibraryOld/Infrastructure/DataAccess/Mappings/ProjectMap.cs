@@ -1,5 +1,4 @@
-﻿using LodCoreLibraryOld.Common;
-using LodCoreLibraryOld.Domain.ProjectManagment;
+﻿using LodCoreLibraryOld.Domain.ProjectManagment;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 

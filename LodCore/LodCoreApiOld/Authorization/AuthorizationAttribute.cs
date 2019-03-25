@@ -1,7 +1,7 @@
-﻿using LodCoreLibraryOld.Domain.UserManagement;
-using System.Threading;
+﻿using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using LodCoreLibraryOld.Domain.UserManagement;
 
 namespace LodCoreApiOld.Authorization
 {

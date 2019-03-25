@@ -15,8 +15,8 @@ namespace LodCoreLibraryOld.Domain.NotificationService
             LastName = lastName;
         }
 
-        public int UserId { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
+        public int UserId { get; }
+        public string FirstName { get; }
+        public string LastName { get; }
     }
 }

@@ -1,33 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Journalist;
-using Journalist.Extensions;
-using Image = LodCore.Common.Image;
-using Project = LodCore.Domain.ProjectManagment.Project;
-using Serilog;
-using LodCore.Facades;
-using LodCore.Domain.UserManagement;
-using LodCore.Domain.ProjectManagment;
+﻿using Journalist;
 using LodCore.Domain.Exceptions;
-using LodCore.Common;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
-using LodCoreApi.Mappers;
-using LodCoreApi.Pagination;
-using LodCoreApi.Models;
-using LodCoreApi.Extensions;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using LodCoreApi.Security;
-using LodCore.QueryService;
-using LodCore.QueryService.Queries;
-using LodCore.QueryService.DTOs;
+using LodCore.Domain.ProjectManagment;
+using LodCore.Facades;
 using LodCore.QueryService.Handlers;
-using LodCore.QueryService.Views;
 using LodCore.QueryService.Queries.ProjectQuery;
 using LodCore.QueryService.Views.ProjectView;
+using LodCoreApi.Mappers;
+using LodCoreApi.Pagination;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace LodCoreApi.Controllers
 {
@@ -35,12 +18,12 @@ namespace LodCoreApi.Controllers
     public class ProjectController : Controller
     {
         private const string PageParameterName = "page";
+        private readonly IPaginationWrapper<Project> _paginationWrapper;
 
         private readonly IProjectProvider _projectProvider;
+        private readonly ProjectQueryHandler _projectQueryHandler;
         private readonly ProjectsMapper _projectsMapper;
         private readonly IUserManager _userManager;
-        private readonly IPaginationWrapper<Project> _paginationWrapper;
-        private readonly ProjectQueryHandler _projectQueryHandler;
 
         public ProjectController(
             IProjectProvider projectProvider,
@@ -71,10 +54,7 @@ namespace LodCoreApi.Controllers
             Require.ZeroOrGreater(count, nameof(count));
 
             var result = _projectQueryHandler.Handle(new AllProjectsQuery());
-            if (!User.Identity.IsAuthenticated)
-            {
-                result.FilterResult();
-            }
+            if (!User.Identity.IsAuthenticated) result.FilterResult();
 
             result.SelectRandomProjects(count);
 
@@ -91,12 +71,12 @@ namespace LodCoreApi.Controllers
             [FromQuery(Name = "offset")] int offset,
             [FromQuery(Name = "category")] int[] categories)
         {
-            int[] cat = categories.Length != 0 ? categories : new int[] { 1 };
+            var cat = categories.Length != 0 ? categories : new[] {1};
             var resultOfQuery = _projectQueryHandler.Handle(new GetSomeProjectsQuery(offset, count, cat));
 
             if (!User.Identity.IsAuthenticated) resultOfQuery.FilterResult();
 
-            return Ok(resultOfQuery.Take(offset,count));
+            return Ok(resultOfQuery.Take(offset, count));
         }
 
         //[HttpPost]
@@ -253,12 +233,12 @@ namespace LodCoreApi.Controllers
 
                 if (!User.Identity.IsAuthenticated && !project.IsInProgressOrDone())
                     return Unauthorized();
-                else
-                    return Ok(project);
+                return Ok(project);
             }
             catch (ProjectNotFoundException ex)
             {
-                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message, ex.StackTrace);
+                Log.Error("Failed to get project with id={0}. {1} StackTrace: {2}", projectId.ToString(), ex.Message,
+                    ex.StackTrace);
                 return NotFound();
             }
         }

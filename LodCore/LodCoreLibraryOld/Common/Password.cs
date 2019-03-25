@@ -18,10 +18,7 @@ namespace LodCoreLibraryOld.Common
 
                 var sBuilder = new StringBuilder();
 
-                for (var i = 0; i < data.Length; i++)
-                {
-                    sBuilder.Append(data[i].ToString("x2"));
-                }
+                for (var i = 0; i < data.Length; i++) sBuilder.Append(data[i].ToString("x2"));
 
                 // Return the hexadecimal string.
                 Value = sBuilder.ToString();
@@ -41,7 +38,7 @@ namespace LodCoreLibraryOld.Common
         public static Password FromPlainString(string value)
         {
             Require.NotEmpty(value, nameof(value));
-            return new Password { Value = value };
+            return new Password {Value = value};
         }
 
         public Password GetHashed()
@@ -58,13 +55,13 @@ namespace LodCoreLibraryOld.Common
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Password) obj);
         }
 
         public override int GetHashCode()
         {
-            return (Value != null ? Value.GetHashCode() : 0);
+            return Value != null ? Value.GetHashCode() : 0;
         }
 
         public static bool IsStringCorrectPassword(string passwordToCheck)
