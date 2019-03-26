@@ -197,11 +197,15 @@ namespace LodCore.Facades
         //TODO: доработать
         public Account GetUserByCredentials(string email, string password)
         {
-            var account = _userRepository.GetAllAccounts().First(a => a.Email == new MailAddress(email));
+            var account = _userRepository.GetAllAccounts().First(a => 
+                a.Email.Equals(new MailAddress(email)));
 
-            if (account.Password.Value == password)
-                return account;
-            throw new Exception("Неверный пароль");
+            var passwordHash = new Password(password).Value;
+
+            if (account.Password.Value != passwordHash)
+                throw new AccountNotFoundException();
+
+            return account;
         }
     }
 }

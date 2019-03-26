@@ -20,7 +20,6 @@ namespace LodCore.Domain.UserManagement
             Require.NotEmpty(firstname, nameof(firstname));
             Require.NotEmpty(lastname, nameof(lastname));
             Require.NotNull(email, nameof(email));
-            Require.NotNull(password, nameof(password));
 
             Firstname = firstname;
             Lastname = lastname;
