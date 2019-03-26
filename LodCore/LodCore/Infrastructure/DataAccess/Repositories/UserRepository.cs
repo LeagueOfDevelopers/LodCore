@@ -110,9 +110,10 @@ namespace LodCore.Infrastructure.DataAccess.Repositories
                             p.RegistrationTime,
                             new Profile
                             {
-                                Image = new Image(new Uri(p.BigPhotoUri), new Uri(p.SmallPhotoUri)),
-                                VkProfileUri = new Uri(p.VkProfileUri),
-                                LinkToGithubProfile = new Uri(p.GitHubProfileUri),
+                                Image = new Image(new Uri(p.BigPhotoUri ?? "about:blank"),
+                                    new Uri(p.SmallPhotoUri ?? "about:blank")),
+                                VkProfileUri = new Uri(p.VkProfileUri ?? "about:blank"),
+                                LinkToGithubProfile = new Uri(p.GitHubProfileUri ?? "about:blank"),
                                 PhoneNumber = p.PhoneNumber,
                                 StudentAccessionYear = p.StudentAccessionYear,
                                 IsGraduated = p.IsGraduated,
